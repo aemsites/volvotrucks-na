@@ -399,7 +399,7 @@ export const slugify = (text) => (
 );
 
 async function getConstantValues() {
-  const url = '/constants.json';
+  const url = `${getLanguagePath()}placeholder.json`;
   let constants;
   try {
     const response = await fetch(url).then((resp) => resp.json());
