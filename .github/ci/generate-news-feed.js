@@ -81,6 +81,14 @@ async function fetchBlogPosts(endpoint, limit) {
   return allPosts;
 }
 
+/**
+ * Returns the Blog Metadata
+ * 
+ * @async
+ * @param {string} endpointUrl blog metadata endpoint
+ * @returns {FeedMetadata} The first feed configuration
+ * @todo This in the future should return all of the configurations for all markets/feeds
+*/
 async function fetchBlogMetadata(infoEndpoint) {
   const infoResponse = await fetch(infoEndpoint);
   const feedInfoResult = await infoResponse.json();
