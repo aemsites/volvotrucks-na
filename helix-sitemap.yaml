@@ -1,5 +1,0 @@
-sitemaps:
-  allindex:
-    origin: https://www.volvotrucks.us
-    source: /query-index.json
-    destination: /sitemap.xml

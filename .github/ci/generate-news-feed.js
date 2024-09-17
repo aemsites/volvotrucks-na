@@ -20,7 +20,7 @@ async function main() {
     TARGET_DIRECTORY,
     LIMIT,
   } = newsFeedConfigurations;
-  
+
   const TARGET_FILE = `${TARGET_DIRECTORY}/feed.xml`;
   const PARSED_LIMIT = Number(LIMIT)
 
@@ -32,7 +32,6 @@ async function main() {
   const newestPost = allPosts
     .map((post) => new Date(post.publishDate * 1000))
     .reduce((maxDate, date) => (date > maxDate ? date : maxDate), new Date(0));
-
   const feed = new Feed({
     title: feedMetadata.title,
     description: feedMetadata.description,
@@ -42,7 +41,6 @@ async function main() {
     generator: 'AEM News feed generator (GitHub action)',
     language: feedMetadata.lang,
   });
-
   allPosts.forEach((post) => {
     const link = feedMetadata["site-root"] + post.path;
     feed.addItem({
@@ -67,22 +65,15 @@ async function fetchBlogPosts(endpoint, limit) {
   const allPosts = [];
 
   while (true) {
-    const api = new URL(endpointUrl);
-
+    const api = new URL(endpoint);
     api.searchParams.append('offset', JSON.stringify(offset));
     api.searchParams.append('limit', limit);
-
-    const result = await getJsonFromUrl(api);
-
-    if (result) {
-      allPosts.push(...result.data);
-  
-      if (result.offset + result.limit < result.total) {
-        // there are more pages
-        offset = result.offset + result.limit;
-      } else {
-        break;
-      }
+    const response = await fetch(api, {});
+    const result = await response.json();
+    allPosts.push(...result.data);
+    if (result.offset + result.limit < result.total) {
+      // there are more pages
+      offset = result.offset + result.limit;
     } else {
       break;
     }
@@ -90,42 +81,11 @@ async function fetchBlogPosts(endpoint, limit) {
   return allPosts;
 }
 
-/**
- * Returns the Blog Metadata
- * 
- * @async
- * @param {string} endpointUrl blog metadata endpoint
- * @returns {FeedMetadata} The first feed configuration
- * @todo This in the future should return all of the configurations for all markets/feeds
-*/
 async function fetchBlogMetadata(infoEndpoint) {
   const infoResponse = await fetch(infoEndpoint);
   const feedInfoResult = await infoResponse.json();
   return feedInfoResult.data[0];
 }
-
-/**
- * Returns a list of properties listed in the block
- * @param {string} route get the Json data from the route
- * @returns {Object} the json data object
-*/
-async function getJsonFromUrl(route) {
-  try {
-    const response = await fetch(route);
-    if (!response.ok) return null;
-    const json = await response.json();
-    return json;
-  } catch (error) {
-    console.error('getJsonFromUrl:', { error });
-  }
-  return null;
-};
-
-const Init = () => {
-  for (const feedItem of feedList) {
-    createFeed(feedItem)
-      .catch((e) => console.error(e));
-  }
-}
-
-Init();
+main()
+  .catch((e) => console.error(e));
+  
