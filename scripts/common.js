@@ -399,7 +399,7 @@ export const slugify = (text) => (
 );
 
 async function getConstantValues() {
-  const url = '/constants.json';
+  const url = `${getLanguagePath()}placeholder.json`;
   let constants;
   try {
     const response = await fetch(url).then((resp) => resp.json());
@@ -448,14 +448,18 @@ const {
   searchUrls,
   cookieValues,
   magazineConfig,
+  tools,
   headerConfig,
+  newsFeedConfig,
 } = await getConstantValues();
 
 // This data comes from the sharepoint 'constants.xlsx' file
+export const TOOLS_CONFIGS = formatValues(tools?.data);
 export const SEARCH_URLS = formatValues(searchUrls?.data);
 export const COOKIE_CONFIGS = formatValues(cookieValues?.data);
 export const MAGAZINE_CONFIGS = formatValues(magazineConfig?.data);
 export const HEADER_CONFIGS = formatValues(headerConfig?.data);
+export const NEWS_FEED_CONFIGS = formatValues(newsFeedConfig?.data);
 
 /**
  * Check if one trust group is checked.
@@ -483,6 +487,27 @@ export function isTargetingAllowed() {
 export function isSocialAllowed() {
   return checkOneTrustGroup(SOCIAL_COOKIE);
 }
+
+/**
+ * See https://www.aem.live/developer/spreadsheets#arrays
+ * Converts a string representation of an array, removing all brackets, backslashes, and quotes,
+ * into an actual JavaScript array. Splits on commas, trims each string, and filters out empty
+ * strings to ensure all elements contain valid data.
+ *
+ * @param {string} inputString - The string to be converted. It should mimic a serialized array,
+ *                               often found in JSON-like structures where arrays are represented
+ *                               as strings due to data transmission constraints.
+ * @returns {string[]} An array of strings derived from the cleaned input string. Each element
+ *                     is a trimmed, non-empty string that was separated by a comma in the
+ *                     original input.
+ */
+export const formatStringToArray = (inputString) => {
+  // eslint-disable-next-line no-useless-escape
+  const cleanedString = inputString.replace(/[\[\]\\'"]+/g, '');
+  return cleanedString.split(',')
+    .map((item) => item.trim())
+    .filter((item) => item);
+};
 
 /*
   The generateId function should be used only

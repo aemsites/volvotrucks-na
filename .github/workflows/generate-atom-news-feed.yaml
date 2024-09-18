@@ -39,19 +39,14 @@ jobs:
     - name: Generate Feed
       working-directory: ./.github/ci
       run:  node generate-news-feed.js
-      env:
-        NEWS_ENDPOINT: ${{ vars.NEWS_ENDPOINT }}
-        NEWS_FEED_INFO_ENDPOINT: ${{ vars.NEWS_FEED_INFO_ENDPOINT }}
-        NEWS_TARGET_DIRECTORY: ${{ vars.NEWS_TARGET_DIRECTORY }}
 
     - name: Print Feed
       run:  |
-        ls -la ${{ vars.NEWS_TARGET_FEED }}
-        head -20 ${{ vars.NEWS_TARGET_FEED }}
-        
+        ls -la news-and-stories/press-releases/feed.xml
+        head -20 news-and-stories/press-releases/feed.xml
 
     - name: Commit and push changes
       uses: stefanzweifel/git-auto-commit-action@v5
       with:
-        file_pattern: ${{ vars.NEWS_TARGET_FEED }}
+        file_pattern: news-and-stories/press-releases/feed.xml
         commit_message: "Update feed.xml"

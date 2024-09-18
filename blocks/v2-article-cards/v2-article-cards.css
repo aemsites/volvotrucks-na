@@ -65,6 +65,7 @@
 }
 
 .v2-article-cards__texts-wrapper .v2-article-cards__card-heading {
+  text-transform: unset;
   color: var(--text-color);
   font-size: var(--f-heading-5-font-size);
 }

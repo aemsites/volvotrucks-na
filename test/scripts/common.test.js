@@ -65,38 +65,6 @@ describe('createElement', () => {
   });
 });
 
-describe('addFavIcon', () => {
-  afterEach(() => {
-    // Clear the head after each test
-    document.head.innerHTML = '';
-  });
-
-  it('should add a new favicon link to the head', () => {
-    const newFavIconHref = 'new-favicon.svg';
-    commonScript.addFavIcon(newFavIconHref);
-
-    const link = document.querySelector('head link[rel="icon"]');
-    expect(link).to.exist;
-    expect(link.getAttribute('href')).to.equal(newFavIconHref);
-  });
-
-  it('should replace existing favicon link with a new one', () => {
-    const existingFavIconHref = 'existing-favicon.ico';
-    const newFavIconHref = 'new-favicon.svg';
-
-    const existingLink = commonScript.createElement('link', {
-      props: { rel: 'icon', type: 'image/x-icon', href: existingFavIconHref },
-    });
-    document.head.appendChild(existingLink);
-
-    commonScript.addFavIcon(newFavIconHref);
-
-    const link = document.querySelector('head link[rel="icon"]');
-    expect(link).to.exist;
-    expect(link.getAttribute('href')).to.equal(newFavIconHref);
-  });
-});
-
 describe('adjustPretitle', () => {
   afterEach(async () => {
     document.body.innerHTML = await readFile({ path: './body.html' });

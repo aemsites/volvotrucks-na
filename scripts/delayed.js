@@ -8,6 +8,8 @@ import {
   COOKIE_CONFIGS,
 } from './common.js';
 
+const devHosts = ['localhost', 'hlx.page', 'hlx.live', 'aem.page', 'aem.live'];
+
 // COOKIE ACCEPTANCE AND IDs default to false in case no ID is present
 const { 
   FACEBOOK_PIXEL_ID = false,
@@ -54,7 +56,7 @@ document.addEventListener('click', (e) => {
 
 // OneTrust Cookies Consent Notice start for volvotrucks.us
 if (!window.location.pathname.includes('srcdoc')
-  && !['localhost', 'hlx.page', 'hlx.live', 'aem.page', 'aem.live'].some((url) => window.location.host.includes(url))) {
+  && !devHosts.some((url) => window.location.host.includes(url))) {
   // when running on localhost in the block library host is empty but the path is srcdoc
   // on localhost/hlx.page/hlx.live the consent notice is displayed every time the page opens,
   // because the cookie is not persistent. To avoid this annoyance, disable unless on the
@@ -85,6 +87,10 @@ if (!window.location.pathname.includes('srcdoc')
       }
     });
   };
+}
+
+if (devHosts.some((url) => window.location.host.includes(url))) {
+  import('./validate-elements.js');
 }
 
 // Google Analytics

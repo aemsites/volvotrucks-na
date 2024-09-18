@@ -76,21 +76,6 @@
       }
     ]
   },
-  "headerConfig": {
-    "total": 2,
-    "offset": 0,
-    "limit": 2,
-    "data": [
-      {
-        "name": "SEARCH_DISABLED",
-        "value": "false"
-      },
-      {
-        "name": "LOGIN_DISABLED",
-        "value": "false"
-      }
-    ]
-  },
   "tools": {
     "total": 4,
     "offset": 0,
@@ -111,6 +96,45 @@
       {
         "name": "TAGS_URL",
         "value": "/news-and-stories/tags.plain.html"
+      },
+      {
+        "name": "v1SectionClasses",
+        "value": "[\"section-with-background\",\"section-with-title\",\"highlight\",\"tabbed-container-full-width\",\"tabbed-container\"]"
+      },
+      {
+        "name": "v2SectionClasses",
+        "value": "[\"section--gray-background\",\"section--black-background\",\"full-width\",\"expanded-width\",\"v2-iframe-container\"]"
+      },
+      {
+        "name": "v1AllowedBlocks",
+        "value": "[\"v2-embed\",\"v2-forms\"]"
+      },
+      {
+        "name": "v2AllowedBlocks",
+        "value": "[\"embed\",\"footer\",\"fragment\",\"header\",\"iframe\",\"library-metadata\"]"
+      }
+    ]
+  },
+  "newsFeedConfig": {
+    "total": 4,
+    "offset": 0,
+    "limit": 4,
+    "data": [
+      {
+        "name": "ENDPOINT",
+        "value": "https://www.volvotrucks.us/press-releases.json"
+      },
+      {
+        "name": "FEED_INFO_ENDPOINT",
+        "value": "https://www.volvotrucks.us/news-and-stories/press-releases/feed-info.json"
+      },
+      {
+        "name": "TARGET_DIRECTORY",
+        "value": "../../news-and-stories/press-releases"
+      },
+      {
+        "name": "LIMIT",
+        "value": "1000"
       }
     ]
   },
@@ -139,6 +163,7 @@
     "cookieValues",
     "headerConfig",
     "tools",
+    "newsFeedConfig",
     "magazineConfig"
   ],
   ":type": "multi-sheet"

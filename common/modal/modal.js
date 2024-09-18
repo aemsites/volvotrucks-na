@@ -4,7 +4,7 @@ import {
   decorateIcons,
   getTextLabel,
 } from '../../scripts/common.js';
-import { loadCSS } from '../../scripts/aem.js';
+import { loadCSS, updateSectionsStatus } from '../../scripts/aem.js';
 import {
   AEM_ASSETS,
   createIframe,
@@ -95,6 +95,12 @@ const createModal = () => {
     modalBackground.querySelector('.modal-top-bar-heading').textContent = '';
   };
 
+  const handleVideoLoad = (videoElement) => {
+    videoElement.addEventListener('loadeddata', () => {
+      updateSectionsStatus(modalContent);
+    }, { once: true });
+  };
+
   const handleNewContent = (newContent) => {
     clearModalContent();
     modalContent.scrollTo(0, 0);
@@ -118,6 +124,9 @@ const createModal = () => {
 
     modalContent.classList.add('modal-content--wide');
     modalContent.append(...newContent);
+
+    const videoElements = modalContent.querySelectorAll('video');
+    videoElements.forEach(handleVideoLoad);
   };
 
   async function showModal(newContent, {

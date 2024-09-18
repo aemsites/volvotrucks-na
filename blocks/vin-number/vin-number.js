@@ -1,4 +1,9 @@
-import { getTextLabel, createElement, getJsonFromUrl } from '../../scripts/common.js';
+import {
+  getTextLabel,
+  createElement,
+  getJsonFromUrl,
+  getPlaceholders,
+} from '../../scripts/common.js';
 
 const docRange = document.createRange();
 const isFrench = window.location.href.indexOf('fr') > -1;
@@ -251,6 +256,7 @@ function fetchRecalls(e) {
 }
 
 export default async function decorate(block) {
+  await getPlaceholders();
   fetchRefreshDate().then((response) => {
     let refreshDate = response || 'XX-XX-XXXX';
     if (response && isFrench) {
