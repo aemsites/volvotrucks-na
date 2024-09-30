@@ -1,0 +1,27 @@
+name: Search Connector - Delete
+
+on: 
+  repository_dispatch:
+    types:
+      - resource-unpublished
+
+jobs:
+  check-event-status:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo "Status: ${{ github.event.client_payload.status }}"
+        echo "Path: ${{ github.event.client_payload.path }}"
+  notify-connector:
+    if: (github.event.client_payload.status == 200 || github.event.client_payload.status == 204) && endsWith(github.event.client_payload.path, '.md')
+    runs-on: ubuntu-latest
+    steps:
+    - name: Notify delete endpoint
+      run: |
+        sleep 1s
+        PAGE_PATH=$(echo "${{ github.event.client_payload.path }}" | sed 's/\.md$//g')
+        WEBSITE_NAME="${{ vars.WEBSITE_NAME }}"        
+        URI=$(echo "${{ vars.OLD_CONNECTOR_DOMAIN }}/$WEBSITE_NAME?path=$PAGE_PATH")
+        response=$(curl -s -H "x-api-key: ${{ secrets.API_KEY }}" -X DELETE "$URI")
+        echo "response: $response"
+      shell: bash
