@@ -1,0 +1,28 @@
+name: Search Connector - Upsert
+
+on: 
+  repository_dispatch:
+    types:
+      - resource-published
+jobs:
+  check-event-status:
+    runs-on: ubuntu-latest
+    steps:
+    - run: |
+        echo "Status: ${{ github.event.client_payload.status }}"
+        echo "Path: ${{ github.event.client_payload.path }}"
+  notify-connector:
+    if: (github.event.client_payload.status == 200 || github.event.client_payload.status == 204) && endsWith(github.event.client_payload.path, '.md')
+    runs-on: ubuntu-latest
+    steps:
+    - name: Notify upsert endpoint
+      run: |
+        sleep 1s
+        PAGE_PATH=$(echo "${{ github.event.client_payload.path }}" | sed 's/\.md$//g')
+        WEBSITE_NAME="${{ vars.WEBSITE_NAME }}"
+        URI=$(echo "${{ vars.OLD_CONNECTOR_DOMAIN }}/$WEBSITE_NAME")
+        BODY='{ "paths": [ "'$PAGE_PATH'" ] }'
+        BODY="$(echo "$BODY" | jq -c)"
+        response=$(curl -s -H "x-api-key: ${{ secrets.OLD_API_KEY }}" -X POST "$URI" -d "$BODY")
+        echo "response: $response"
+      shell: bash
