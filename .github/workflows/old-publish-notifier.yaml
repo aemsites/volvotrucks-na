@@ -23,6 +23,6 @@ jobs:
         URI=$(echo "${{ vars.OLD_CONNECTOR_DOMAIN }}/$WEBSITE_NAME")
         BODY='{ "paths": [ "'$PAGE_PATH'" ] }'
         BODY="$(echo "$BODY" | jq -c)"
-        response=$(curl -s -H "x-api-key: ${{ secrets.API_KEY }}" -X POST "$URI" -d "$BODY")
+        response=$(curl -s -H "x-api-key: ${{ secrets.OLD_API_KEY }}" -X POST "$URI" -d "$BODY")
         echo "response: $response"
       shell: bash
