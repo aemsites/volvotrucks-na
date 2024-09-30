@@ -1,4 +1,4 @@
-name: Search Connector - Upsert
+name: Old Search Connector - Upsert
 
 on: 
   repository_dispatch:

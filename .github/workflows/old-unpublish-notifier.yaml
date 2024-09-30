@@ -1,4 +1,4 @@
-name: Search Connector - Delete
+name: Old Search Connector - Delete
 
 on: 
   repository_dispatch:
