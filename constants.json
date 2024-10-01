@@ -157,6 +157,21 @@
       }
     ]
   },
+  "truckConfiguratorUrls": {
+    "total": 2,
+    "offset": 0,
+    "limit": 2,
+    "data": [
+      {
+        "name": "JS",
+        "value": "[\"https://truckbuilder-vtna-9023.onecx.prod.rapidimages.net/runtime~app.7a4ccc26.bundle.js\",\"https://truckbuilder-vtna-9023.onecx.prod.rapidimages.net/254.7a4ccc26.bundle.js\",\"https://truckbuilder-vtna-9023.onecx.prod.rapidimages.net/app.7a4ccc26.bundle.js\"]"
+      },
+      {
+        "name": "CSS",
+        "value": "[\"https://truckbuilder-vtna-9023.onecx.prod.rapidimages.net/254.7a4ccc261017c53b42a4.css\",\"https://truckbuilder-vtna-9023.onecx.prod.rapidimages.net/app.7a4ccc261017c53b42a4.css\"]"
+      }
+    ]
+  },
   ":version": 3,
   ":names": [
     "searchUrls",

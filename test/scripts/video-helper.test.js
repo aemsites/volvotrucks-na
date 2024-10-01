@@ -363,7 +363,6 @@ describe('createIframe', () => {
 describe('createVideo function', () => {
   let createVideo;
   const videoSrc = 'https://example.com/example-video.mp4';
-  const externalVideoSrc = 'https://external.example.com/frame';
 
   before(async () => {
     createVideo = videoHelper.createVideo;
@@ -416,40 +415,5 @@ describe('createVideo function', () => {
     expect(source.tagName).to.equal('SOURCE');
     expect(source.src).to.equal(videoSrc);
     expect(source.type).to.equal('video/mp4');
-  });
-
-  it('should create an iframe for an external video with default attributes', () => {
-    const video = createVideo(externalVideoSrc, '', {}, false);
-    expect(video.tagName).to.equal('IFRAME');
-    expect(video.src).to.include(externalVideoSrc);
-    expect(video.className).to.equal('');
-    // Check for the presence of the attribute, which is a boolean
-    expect(video.hasAttribute('allowfullscreen')).to.be.true;
-  });
-
-  it('should create an iframe with custom classes and properties for an external video', () => {
-    const className = 'external-video-class';
-    const props = { title: 'External Video Title' };
-    const video = createVideo(externalVideoSrc, className, props, false);
-    expect(video.tagName).to.equal('IFRAME');
-    expect(video.className).to.equal(className);
-    expect(video.title).to.equal(props.title);
-  });
-
-  it('should apply video configurations for external videos using videoId', () => {
-    const videoId = 'externalVideo123';
-    const props = { title: 'Configured Video' };
-    createVideo(externalVideoSrc, '', props, false, videoId);
-
-    const config = videoHelper.getVideoConfig(videoId);
-    expect(config).to.deep.include(props);
-  });
-
-  // Ensure that createVideo can gracefully handle calls without a videoId for external videos
-  it('should handle empty or undefined videoId for external videos', () => {
-    const video = createVideo(externalVideoSrc, 'no-id-class', { title: 'No ID' }, false);
-    expect(video.tagName).to.equal('IFRAME');
-    expect(video.className).to.equal('no-id-class');
-    expect(video.title).to.equal('No ID');
   });
 });

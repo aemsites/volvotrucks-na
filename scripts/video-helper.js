@@ -6,6 +6,9 @@ import {
   getTextLabel,
 } from './common.js';
 
+export const VIDEO_JS_SCRIPT = '/scripts/videojs/video.min.js';
+export const VIDEO_JS_CSS = '/scripts/videojs/video-js.min.css';
+
 // videoURLRegex: verify if a given string follows a specific pattern indicating it is a video URL
 // videoIdRegex: extract the video ID from the URL
 export const AEM_ASSETS = {
@@ -33,6 +36,93 @@ export const standardVideoConfig = {
 };
 
 export const videoConfigs = {};
+
+async function waitForVideoJs() {
+  return new Promise((resolve) => {
+    const scriptTag = document.querySelector(`head > script[src="${VIDEO_JS_SCRIPT}"]`);
+    const cssLink = document.querySelector(`head > link[href="${VIDEO_JS_CSS}"]`);
+    const isJsLoaded = scriptTag && scriptTag.dataset.loaded;
+    const isCSSLoaded = cssLink && cssLink.dataset.loaded;
+    if (!isJsLoaded || !isCSSLoaded) {
+      const successHandler = () => {
+        document.removeEventListener('videojs-loaded', successHandler);
+        resolve();
+      };
+
+      document.addEventListener('videojs-loaded', successHandler);
+      return;
+    }
+
+    resolve();
+  });
+}
+
+function setupAutopause(videoElement, player) {
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((entry) => {
+      if (entry.isIntersecting) {
+        player.play();
+      } else {
+        player.pause();
+      }
+    });
+  }, {
+    threshold: [0.5],
+  });
+
+  observer.observe(videoElement);
+}
+
+export async function setupPlayer(url, videoContainer, config, video) {
+  let videoElement = video;
+  if (!videoElement) {
+    videoElement = document.createElement('video');
+    videoElement.id = `video-${Math.random().toString(36).substr(2, 9)}`;
+  }
+
+  videoElement.classList.add('video-js');
+
+  if (config.playsinline || config.autoplay) {
+    videoElement.setAttribute('playsinline', '');
+  }
+
+  videoContainer.append(videoElement);
+
+  const videojsConfig = {
+    ...config,
+    preload: config.poster && !config.autoplay ? 'none' : 'auto',
+    bigPlayButton: false,
+  };
+
+  if (config.autoplay) {
+    videojsConfig.muted = true;
+    videojsConfig.loop = true;
+    videojsConfig.autoplay = true;
+  }
+
+  await waitForVideoJs();
+
+  // eslint-disable-next-line no-undef
+  const player = videojs(videoElement, videojsConfig);
+  player.src(url);
+
+  player.ready(() => {
+    if (config.autoplay) {
+      setupAutopause(videoElement, player);
+    }
+  });
+
+  return player;
+}
+
+export function getDeviceSpecificVideoUrl(videoUrl) {
+  const { userAgent } = navigator;
+  const isIOS = /iPad|iPhone|iPod/.test(userAgent);
+  const isSafari = (/Safari/i).test(userAgent) && !(/Chrome/i).test(userAgent) && !(/CriOs/i).test(userAgent) && !(/Android/i).test(userAgent) && !(/Edg/i).test(userAgent);
+
+  const manifest = (isIOS || isSafari) ? 'manifest.m3u8' : 'manifest.mpd';
+  return videoUrl.replace(/manifest\.mpd|manifest\.m3u8|play/, manifest);
+}
 
 export const addVideoConfig = (videoId, props = {}) => {
   if (!videoConfigs[videoId]) {
@@ -75,6 +165,55 @@ export function selectVideoLink(links, preferredType, videoType = videoTypes.bot
   if (aemVideoLink) return aemVideoLink;
   if (prefersYouTube && youTubeLink) return youTubeLink;
   return localMediaLink;
+}
+
+function getVideoLinkContainer(link, usePosterAutoDetection) {
+  if (!usePosterAutoDetection) {
+    return link;
+  }
+
+  let poster = null;
+  let level = 2;
+  let parent = link;
+  while (parent !== null && level >= 0) {
+    poster = parent.querySelector('picture');
+    if (poster) {
+      break;
+    }
+
+    parent = parent.parentElement;
+    level -= 1;
+  }
+
+  return poster ? parent : link;
+}
+
+function parseVideoLink(link, usePosterAutoDetection) {
+  const isVideo = link ? isVideoLink(link) : false;
+  if (!isVideo) {
+    return null;
+  }
+
+  const container = getVideoLinkContainer(link, usePosterAutoDetection);
+  const poster = container.querySelector('picture')?.cloneNode(true);
+
+  return {
+    url: link.href,
+    poster,
+  };
+}
+
+export function cleanupVideoLink(block, link, hasPoster) {
+  const container = getVideoLinkContainer(link, hasPoster);
+  // Remove empty ancestor nodes after removing video container containing link and poster image
+  if (container) {
+    let parent = container;
+    while (parent?.parentElement?.children.length === 1 && parent?.parentElement !== block) {
+      parent = parent.parentElement;
+    }
+
+    parent.remove();
+  }
 }
 
 export function createLowResolutionBanner() {
@@ -210,152 +349,129 @@ export function createIframe(url, { parentEl, classes = [] }) {
   return iframe;
 }
 
-export function setPlaybackControls() {
-  const playbackControls = document.querySelectorAll('video > button');
-  playbackControls.forEach((control) => {
-    const { parentElement } = control.parentElement;
-    parentElement.append(control);
+export function setPlaybackControls(container) {
+  // Playback controls - play and pause button
+  const playPauseButton = createElement('button', {
+    props: { type: 'button', class: 'v2-video__playback-button' },
+  });
+
+  const videoControls = document.createRange().createContextualFragment(`
+    <span class="icon icon-pause-video">
+      <svg width="27" height="27" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <circle cx="36" cy="36" r="30" fill="white"/>
+          <rect x="28.25" y="24.45" width="2.75" height="23.09" fill="#141414"/>
+          <rect x="41" y="24.45" width="2.75" height="23.09" fill="#141414"/>
+      </svg>
+    </span>
+    <span class="icon icon-play-video">
+      <svg width="27" height="27" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <circle cx="36" cy="36" r="30" fill="white"/>
+        <path fill-rule="evenodd" clip-rule="evenodd" d="M49.3312 35.9998L29.3312 24.4528L29.3312 47.5468L49.3312 35.9998ZM44.3312 35.9998L31.8312 28.7829L31.8312 43.2167L44.3312 35.9998Z" fill="#141414"/>
+      </svg>
+    </span>`);
+
+  playPauseButton.append(...videoControls.children);
+  container.appendChild(playPauseButton);
+
+  const playIcon = container.querySelector('.icon-play-video');
+  const pauseIcon = container.querySelector('.icon-pause-video');
+
+  const pauseVideoLabel = getTextLabel('Pause video');
+  const playVideoLabel = getTextLabel('Play video');
+
+  playPauseButton.setAttribute('aria-label', pauseVideoLabel);
+
+  const togglePlayPauseIcon = (isPaused) => {
+    if (isPaused) {
+      pauseIcon.style.display = 'none';
+      playIcon.style.display = 'flex';
+      playPauseButton.setAttribute('aria-label', playVideoLabel);
+    } else {
+      pauseIcon.style.display = 'flex';
+      playIcon.style.display = 'none';
+      playPauseButton.setAttribute('aria-label', pauseVideoLabel);
+    }
+  };
+
+  const video = container.querySelector('video');
+  togglePlayPauseIcon(video.paused);
+
+  const togglePlayPause = (el) => {
+    el[video.paused ? 'play' : 'pause']();
+  };
+
+  playPauseButton.addEventListener('click', () => {
+    togglePlayPause(video);
+  });
+  video.addEventListener('playing', () => {
+    togglePlayPauseIcon(video.paused);
+  });
+  video.addEventListener('pause', () => {
+    togglePlayPauseIcon(video.paused);
   });
 }
 
-/**
- * Creates a video element or an iframe for a video, depending on whether the video is local
- * or not. Configures the element with specified classes, properties, and source.
- *
- * @param {string} src The source URL of the video.
- * @param {string} [className=''] Optional. CSS class names to apply to the video element or iframe.
- * @param {Object} [props={}] Optional. Properties and attributes for the video element or iframe,
- *                            including attributes like 'muted', 'autoplay', 'title'. All properties
- *                            are applied as attributes.
- * @param {boolean} [localVideo=true] Optional. Indicates if the video is a local file. If true,
- *                                    creates a <video> element with a <source> child. If false,
- *                                    creates an iframe for an external video.
- * @param {string} [videoId=''] Optional. Identifier for the video, used for external video sources.
- * @returns {HTMLElement} The created video element (<video> or <iframe>) with specified configs.
- */
-export const createVideo = (src, className = '', props = {}, localVideo = true, videoId = '') => {
-  let video = '';
+function createProgressivePlaybackVideo(src, className = '', props = {}) {
+  const video = createElement('video', {
+    classes: className,
+  });
 
-  if (localVideo) {
-    video = createElement('video', {
-      classes: className,
-    });
-    if (props.muted) {
-      video.muted = props.muted;
-    }
+  if (props.autoplay) {
+    video.muted = true;
+  }
 
-    if (props.autoplay) {
-      video.autoplay = props.autoplay;
-    }
-
-    if (props) {
-      Object.keys(props).forEach((propName) => {
-        video.setAttribute(propName, props[propName]);
-      });
-    }
-
-    const source = createElement('source', {
-      props: {
-        src,
-        type: 'video/mp4',
-      },
-    });
-
-    // Playback controls - play and pause button
-    const playPauseButton = createElement('button', {
-      props: { type: 'button', class: 'v2-video__playback-button' },
-    });
-
-    const videoControls = document.createRange().createContextualFragment(`
-      <span class="icon icon-pause-video">
-        <svg width="27" height="27" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="36" cy="36" r="30" fill="white"/>
-            <rect x="28.25" y="24.45" width="2.75" height="23.09" fill="#141414"/>
-            <rect x="41" y="24.45" width="2.75" height="23.09" fill="#141414"/>
-        </svg>
-      </span>
-      <span class="icon icon-play-video">
-        <svg width="27" height="27" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="36" cy="36" r="30" fill="white"/>
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M49.3312 35.9998L29.3312 24.4528L29.3312 47.5468L49.3312 35.9998ZM44.3312 35.9998L31.8312 28.7829L31.8312 43.2167L44.3312 35.9998Z" fill="#141414"/>
-        </svg>
-      </span>`);
-
-    playPauseButton.append(...videoControls.children);
-    video.appendChild(playPauseButton);
-
-    const playIcon = video.querySelector('.icon-play-video');
-    const pauseIcon = video.querySelector('.icon-pause-video');
-
-    const pauseVideoLabel = getTextLabel('Pause video');
-    const playVideoLabel = getTextLabel('Play video');
-
-    playPauseButton.setAttribute('aria-label', pauseVideoLabel);
-
-    const togglePlayPauseIcon = (isPaused) => {
-      if (isPaused) {
-        pauseIcon.style.display = 'none';
-        playIcon.style.display = 'flex';
-        playPauseButton.setAttribute('aria-label', playVideoLabel);
-      } else {
-        pauseIcon.style.display = 'flex';
-        playIcon.style.display = 'none';
-        playPauseButton.setAttribute('aria-label', pauseVideoLabel);
+  if (props) {
+    Object.keys(props).forEach((propName) => {
+      const value = props[propName];
+      if (typeof value !== 'boolean') {
+        video.setAttribute(propName, value);
+      } else if (value) {
+        video.setAttribute(propName, '');
       }
-    };
-    togglePlayPauseIcon(video.paused);
-
-    const togglePlayPause = (el) => {
-      el[video.paused ? 'play' : 'pause']();
-    };
-
-    playPauseButton.addEventListener('click', () => {
-      togglePlayPause(video);
-    });
-    video.addEventListener('playing', () => {
-      togglePlayPauseIcon(video.paused);
-    });
-    video.addEventListener('pause', () => {
-      togglePlayPauseIcon(video.paused);
-    });
-
-    // If the video is not playing, we’ll try to play again
-    if (props.autoplay) {
-      video.addEventListener('loadedmetadata', () => {
-        setTimeout(() => {
-          if (video.paused) {
-            // eslint-disable-next-line no-console
-            console.warn('Failed to autoplay video, fallback code executed');
-            video.play();
-          }
-        }, 500);
-      }, { once: true });
-    }
-
-    setPlaybackControls();
-
-    video.appendChild(source);
-  } else {
-    addVideoConfig(videoId, props);
-
-    video = createElement('iframe', {
-      classes: className,
-      props: {
-        allow: 'autoplay; fullscreen',
-        allowfullscreen: true,
-        title: props.title,
-        src,
-      },
     });
   }
 
-  return video;
-};
+  const source = createElement('source', {
+    props: {
+      src,
+      type: 'video/mp4',
+    },
+  });
 
-export function getDynamicVideoHeight(video, playbackControls) {
+  // If the video is not playing, we’ll try to play again
+  if (props.autoplay) {
+    video.addEventListener('loadedmetadata', () => {
+      setTimeout(() => {
+        if (video.paused) {
+          // eslint-disable-next-line no-console
+          console.warn('Failed to autoplay video, fallback code executed');
+          video.play();
+        }
+      }, 500);
+    }, { once: true });
+  }
+
+  // set playback controls after video container is attached to dom
+  if (!props.controls) {
+    setTimeout(() => {
+      setPlaybackControls(video.parentElement);
+    }, 0);
+  }
+
+  video.appendChild(source);
+
+  return video;
+}
+
+export function getDynamicVideoHeight(video) {
   // Get the element's height(use requestAnimationFrame to get actual height instead of 0)
   requestAnimationFrame(() => {
     const height = video.offsetHeight - 60;
+    const playbackControls = video.parentElement?.querySelector('.v2-video__playback-button');
+    if (!playbackControls) {
+      return;
+    }
+
     playbackControls.style.top = `${height.toString()}px`;
   });
 
@@ -364,6 +480,10 @@ export function getDynamicVideoHeight(video, playbackControls) {
     // eslint-disable-next-line no-restricted-syntax
     for (const entry of entries) {
       const height = entry.target.offsetHeight - 60;
+      const playbackControls = video.parentElement?.querySelector('.v2-video__playback-button');
+      if (!playbackControls) {
+        return;
+      }
       playbackControls.style.top = `${height.toString()}px`;
     }
   };
@@ -374,50 +494,149 @@ export function getDynamicVideoHeight(video, playbackControls) {
 
 /**
  * Creates a video element with a poster image.
- * @param {HTMLElement} linkEl - The link element that contains the video URL.
- * @param {HTMLPictureElement} poster - The URL of the poster image.
- * @param {string} blockName - The name of the CSS block for styling.
+ * @param {string} linkUrl - Video URL.
+ * @param {HTMLPictureElement} poster - Poster image.
+ * @param {string} className - The name of the CSS block for styling.
+ * @param {Object} videoConfig - Properties for video player.
  * @return {HTMLElement} - The container element that holds the video and poster.
  */
-export function createVideoWithPoster(linkEl, poster, blockName) {
-  const linkUrl = linkEl.getAttribute('href');
-  const videoContainer = document.createElement('div');
-  videoContainer.classList.add(`${blockName}__video-container`, `${blockName}--video-with-poster`);
+export function createVideoWithPoster(linkUrl, poster, className, videoConfig = {}) {
+  const deafultConfig = {
+    muted: false,
+    autoplay: false,
+    loop: false,
+    playsinline: true,
+    controls: true,
+  };
 
-  let videoOrIframe;
+  const config = {
+    ...deafultConfig,
+    ...videoConfig,
+  };
+
+  const videoContainer = document.createElement('div');
+  videoContainer.classList.add('video-wrapper', className);
+
   let playButton;
 
   const showVideo = (e) => {
-    const ele = e.currentTarget;
+    const ele = e.target.closest('.v2-video__big-play-button');
     const eleParent = ele.parentElement;
     const picture = eleParent?.querySelector('picture');
-    const video = eleParent?.querySelector('video');
-    const iframe = eleParent?.querySelector('iframe');
-    if (eleParent && picture) {
+    const video = eleParent?.querySelector('.video-js') || eleParent?.querySelector('video');
+    if (eleParent && picture && video) {
       ele.remove();
       picture.remove();
-      if (video) video.style.display = 'block';
-      if (iframe) iframe.style.display = 'block';
+      video.style.display = '';
+
+      if (video.classList.contains('video-js')) {
+        video.querySelector('video').style.display = '';
+        video.player.play();
+      } else {
+        video.play();
+      }
     }
   };
 
+  videoContainer.append(poster);
+
   if (isLowResolutionVideoUrl(linkUrl)) {
-    videoOrIframe = createVideo(linkUrl, `${blockName}__video`, {
-      muted: false, autoplay: false, loop: true, playsinline: true, controls: true,
-    });
+    const videoOrIframe = createProgressivePlaybackVideo(linkUrl, 'video-wrapper', config);
+    videoContainer.append(videoOrIframe);
   } else {
-    videoOrIframe = createIframe(linkUrl, { classes: `${blockName}__iframe` });
-    playButton = createElement('button', {
-      props: { type: 'button', class: 'v2-video__playback-button' },
-    });
-    addPlayIcon(playButton);
-    videoContainer.append(playButton);
+    const videoUrl = getDeviceSpecificVideoUrl(linkUrl);
+    const loadPlayer = async () => {
+      const playerSetupPromise = setupPlayer(videoUrl, videoContainer, {
+        fill: true,
+        ...config,
+      });
+
+      const video = videoContainer.querySelector('.video-js');
+      video.style.display = 'none';
+
+      const player = await playerSetupPromise;
+      if (config.autoplay) {
+        player.on('loadeddata', () => {
+          if (poster) {
+            video.style.display = '';
+            // Videojs copies all video element properties to it's wrapper
+            // remove display property that was set before loading videojs
+            if (video.parentElement.classList.contains('video-js')) {
+              video.parentElement.style.display = '';
+            }
+            poster.style.display = 'none';
+            if (!config.controls) {
+              setPlaybackControls(videoContainer);
+            }
+          }
+        });
+      }
+    };
+
+    if (config.autoplay) {
+      loadPlayer();
+    } else {
+      playButton = createElement('button', {
+        props: { type: 'button', class: 'v2-video__big-play-button' },
+      });
+      addPlayIcon(playButton);
+
+      playButton.addEventListener('click', async (evt) => {
+        await loadPlayer();
+        showVideo(evt);
+      });
+      videoContainer.append(playButton);
+    }
   }
-  videoContainer.append(poster, videoOrIframe);
-  videoContainer.querySelector('.v2-video__playback-button').addEventListener('click', showVideo);
-  videoContainer.querySelector('.icon-pause-video')?.remove();
   return videoContainer;
 }
+
+/**
+ * Creates a video element or videojs player, depending on whether the video is local
+ * or not. Configures the element with specified classes, properties, and source.
+ *
+ * @param {HTMLAnchorElement | string} src The link that contains video url or the URL of the video.
+ * @param {string} [className=''] Optional. CSS class names to apply to the video container.
+ * @param {Object} [props={}] Optional. Properties for video player,
+ *                            including attributes like 'muted', 'autoplay', 'title'.
+ * @returns {HTMLElement} The created video element or player with specified configs.
+ */
+export const createVideo = (link, className = '', props = {}) => {
+  let src;
+  let poster;
+
+  const { usePosterAutoDetection, ...videoConfig } = props;
+  if (link instanceof HTMLAnchorElement) {
+    const config = parseVideoLink(link, usePosterAutoDetection);
+    if (!config) {
+      return null;
+    }
+
+    src = config.url;
+    poster = config.poster;
+  } else {
+    src = link;
+  }
+
+  if (isLowResolutionVideoUrl(src)) {
+    return createProgressivePlaybackVideo(src, className, videoConfig);
+  }
+
+  if (poster) {
+    return createVideoWithPoster(src, poster, className, videoConfig);
+  }
+
+  const container = document.createElement('div');
+  container.classList.add(className);
+
+  const videoUrl = getDeviceSpecificVideoUrl(src);
+  setupPlayer(videoUrl, container, videoConfig);
+  if (!videoConfig.controls) {
+    setPlaybackControls(container);
+  }
+
+  return container;
+};
 
 const getMuteSvg = () => `<svg width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
     <circle cx="16.335" cy="16.335" r="13.335" fill="white"/>

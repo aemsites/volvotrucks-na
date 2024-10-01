@@ -9,6 +9,8 @@ import {
   getMetadata,
   toClassName,
   loadBlocks,
+  loadCSS,
+  loadScript,
 } from './aem.js';
 
 import {
@@ -22,6 +24,8 @@ import {
   createElement,
   slugify,
   variantsClassesToBEM,
+  formatStringToArray,
+  TRUCK_CONFIGURATOR_URLS,
 } from './common.js';
 
 import {
@@ -31,6 +35,8 @@ import {
   addVideoShowHandler,
   addSoundcloudShowHandler,
 } from './video-helper.js';
+
+import { validateCountries } from './validate-countries.js';
 
 const LCP_BLOCKS = ['teaser-grid']; // add your LCP blocks to the list
 window.hlx.RUM_GENERATION = 'project-1'; // add your RUM generation information here
@@ -790,4 +796,36 @@ const moveClassToHtmlEl = (className, elementSelector = 'main') => {
 moveClassToHtmlEl('redesign-v2');
 
 /* EXTERNAL APP CLASS CHECK */
-moveClassToHtmlEl('external-app');
+moveClassToHtmlEl('truck-configurator');
+
+const currentUrl = window.location.href;
+const isConfiguratorPage = document.documentElement.classList.contains('truck-configurator')
+  || currentUrl.includes('/summary?config=');
+
+if (isConfiguratorPage) {
+  const allowedCountries = getMetadata('allowed-countries');
+  const errorPageUrl = getMetadata('redirect-url');
+  if (allowedCountries && errorPageUrl) validateCountries(allowedCountries, errorPageUrl);
+
+  const container = createElement('div', { props: { id: 'configurator' } });
+  const main = document.querySelector('main');
+  main.innerHTML = '';
+  main.append(container);
+
+  const jsUrls = formatStringToArray(TRUCK_CONFIGURATOR_URLS.JS);
+  if (currentUrl.includes('/summary?config=')) {
+    document.documentElement.classList.add('external-app');
+    const truckConfiguratorBaseUrl = new URL(jsUrls[0]).origin;
+    const currentUrlHash = new URL(currentUrl).hash;
+    jsUrls.unshift(`${truckConfiguratorBaseUrl}/${currentUrlHash}`);
+  }
+  const cssUrls = formatStringToArray(TRUCK_CONFIGURATOR_URLS.CSS);
+
+  jsUrls.forEach((url) => {
+    loadScript(url, { type: 'text/javascript', charset: 'UTF-8', defer: 'defer' });
+  });
+
+  cssUrls.forEach((url) => {
+    loadCSS(url);
+  });
+}

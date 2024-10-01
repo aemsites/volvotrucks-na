@@ -13,6 +13,8 @@ import { smoothScrollHorizontal } from '../../scripts/motion-helper.js';
 
 const blockName = 'v2-stories-carousel';
 const locale = getMetadata('locale');
+const lowLimit = 3;
+const highLimit = 7;
 
 const updateActiveClass = (elements, targetElement) => {
   elements.forEach((el) => {
@@ -122,11 +124,20 @@ const createArrowControls = (carousel) => {
   return arrowControls;
 };
 
-const getMagazineArticles = async (limit = 5) => {
+const getMagazineArticles = async (limit = 5, tags = []) => {
   const indexUrl = new URL(`${getLanguagePath()}magazine-articles.json`, getOrigin());
-  const articles = ffetch(indexUrl).limit(limit).all();
+  let articles = await ffetch(indexUrl).all();
 
-  return articles;
+  if (tags.length > 0) {
+    articles = articles.filter((article) => tags.some((tag) => article.tags.includes(tag)));
+  }
+
+  if (articles.length < limit) {
+    const recentArticles = await ffetch(indexUrl).limit(limit - articles.length).all();
+    articles = articles.concat(recentArticles);
+  }
+
+  return articles.slice(0, limit);
 };
 
 const buildStoryCard = (entry) => {
@@ -184,11 +195,18 @@ const createStoriesCarousel = (block, stories) => {
 };
 
 export default async function decorate(block) {
-  let limit = parseFloat(block.textContent.trim()) || 5;
-  if (limit < 3) limit = 3;
+  const isRelatedArticles = block.classList.contains('related-articles');
+  let limit = parseFloat(block.textContent.trim()) || highLimit;
+  limit = Math.max(limit, lowLimit);
 
   block.innerHTML = '';
-  const stories = await getMagazineArticles(limit);
+  let stories;
+  if (isRelatedArticles) {
+    const tags = getMetadata('article:tag').split(',').map((tag) => tag.trim());
+    stories = await getMagazineArticles(limit, tags);
+  } else {
+    stories = await getMagazineArticles(limit);
+  }
   createStoriesCarousel(block, stories);
 
   const carousel = block.querySelector(`.${blockName}-items`);

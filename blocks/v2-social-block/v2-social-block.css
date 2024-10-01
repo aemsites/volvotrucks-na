@@ -7,7 +7,7 @@
 }
 
 .v2-social-block {
-  --social-block-padding: 24px 16px;
+  --social-block-padding: 16px;
   --social-block-gap: 16px;
   --social-block-list-gap: 24px;
   --social-link-color: var(--c-main-black);
@@ -40,8 +40,9 @@
   font-size: var(--f-body-2-font-size);
   letter-spacing: var(--f-body-2-letter-spacing);
   line-height: var(--f-body-2-line-height);
-  margin-bottom: 0;
+  margin-bottom: 16px;
   color: var(--social-text-color);
+  text-align: center;
 }
 
 .v2-social-block__list {
@@ -96,7 +97,7 @@
   }
 
   .v2-social-block {
-    --social-block-padding: 48px 40px;
+    --social-block-padding: 40px;
     --social-block-gap: 32px;
   }
 
@@ -104,5 +105,6 @@
     font-size: var(--f-heading-5-font-size);
     letter-spacing: var(--f-heading-5-letter-spacing);
     line-height: var(--f-heading-5-line-height);
+    margin-bottom: 32px;
   }
 }

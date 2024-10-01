@@ -92,6 +92,7 @@ export default function decorate(block) {
   const videoConfig = retrieveVideoConfig(block, aspectRatio);
   const videoProps = {
     ...videoConfig,
+    fill: true,
     title,
   };
 

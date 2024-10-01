@@ -39,15 +39,13 @@ export default async function decorate(block) {
 
       const videos = [...mediaSection.querySelectorAll('a')].filter((link) => isVideoLink(link));
       const picture = mediaSection.querySelector('picture');
-      const videoButtons = mediaSection.querySelectorAll('.button-container'); // need to remove it later from DOM
 
       if (videos.length) {
         const linkEl = selectVideoLink(videos);
 
         if (linkEl) {
           if (picture) {
-            const videoWithPoster = createVideoWithPoster(linkEl, picture, blockName);
-            videoButtons.forEach((button) => button.remove());
+            const videoWithPoster = createVideoWithPoster(linkEl.href, picture, `${blockName}--video-with-poster`);
             mediaSection.append(videoWithPoster);
           } else {
             mediaSection = addVideoToSection(blockName, mediaSection, linkEl);

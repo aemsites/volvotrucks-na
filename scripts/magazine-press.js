@@ -3,6 +3,7 @@ import {
   readBlockConfig,
   toClassName,
 } from './aem.js';
+import { createElement } from './common.js';
 
 /*
 * Common functions for searching the press releases and magazines
@@ -13,18 +14,22 @@ function getSelectionFromUrl(field) {
   );
 }
 
-function createFullText(name, searchTerm, placeholder) {
-  const container = document.createElement('div');
-  container.className = toClassName(`${name}-field`);
-  const input = document.createElement('input');
-  input.type = 'text';
-  input.name = name;
-  if (!searchTerm) {
-    input.placeholder = placeholder;
-  } else {
+function createInputSearch(name, searchTerm, placeholder) {
+  const container = createElement('div', {
+    classes: toClassName(`${name}-field`),
+  });
+  const input = createElement('input', {
+    props: {
+      type: 'text',
+      name,
+      placeholder,
+    },
+  });
+
+  if (searchTerm) {
     input.value = searchTerm;
   }
-  const btn = document.createElement('button');
+  const btn = createElement('button');
   btn.innerHTML = `
     <i class="fa fa-search"></i>
   `;
@@ -33,21 +38,25 @@ function createFullText(name, searchTerm, placeholder) {
 }
 
 function createDropdown(options, selected, name, placeholder, label) {
-  const container = document.createElement('div');
-  container.className = toClassName(`${name}-field`);
+  const container = createElement('div', {
+    classes: toClassName(`${name}-field`),
+  });
   if (label) {
-    const labelEl = document.createElement('label');
+    const labelEl = createElement('label', {
+      props: { for: name },
+    });
     labelEl.innerText = label;
-    labelEl.setAttribute('for', name);
     container.append(labelEl);
   }
-  const input = document.createElement('select');
-  input.name = name;
-  input.id = name;
+  const input = createElement('select', {
+    props: {
+      name,
+      id: name,
+    },
+  });
   if (placeholder) {
-    const optionTag = document.createElement('option');
+    const optionTag = createElement('option', { props: { value: '' } });
     optionTag.innerText = placeholder;
-    optionTag.value = '';
     if (!selected) {
       optionTag.selected = true;
     }
@@ -55,9 +64,10 @@ function createDropdown(options, selected, name, placeholder, label) {
   }
 
   options.forEach((option) => {
-    const optionTag = document.createElement('option');
+    const optionTag = createElement('option', {
+      props: { value: toClassName(option) },
+    });
     optionTag.innerText = option;
-    optionTag.value = toClassName(option);
     if (optionTag.value === selected) {
       optionTag.selected = true;
     }
@@ -69,36 +79,29 @@ function createDropdown(options, selected, name, placeholder, label) {
 
 function createPaginationLink(page, label) {
   const newUrl = new URL(window.location);
-  const listElement = document.createElement('li');
-  const link = document.createElement('a');
+  const listElement = createElement('li');
+  const link = createElement('a', { classes: label });
   newUrl.searchParams.set('page', page);
   link.href = newUrl.toString();
-  link.className = label;
   listElement.append(link);
   return listElement;
 }
 
 function createPagination(entries, page, limit) {
-  const listPagination = document.createElement('div');
-  listPagination.className = 'pager';
-
-  const totalResults = document.createElement('div');
-  totalResults.className = 'total';
+  const listPagination = createElement('div', { classes: 'pager' });
+  const totalResults = createElement('div', { classes: 'total' });
   totalResults.textContent = `${entries.length} results`;
   listPagination.appendChild(totalResults);
-  const pagination = document.createElement('div');
-  pagination.className = 'pagination';
+  const pagination = createElement('div', { classes: 'pagination' });
 
   if (entries.length > limit) {
     const maxPages = Math.ceil(entries.length / limit);
 
-    const listSize = document.createElement('span');
-    listSize.classList.add('size');
+    const listSize = createElement('span', { classes: 'size' });
     if (entries.length > limit) {
       listSize.innerHTML = `<strong>Page ${page}</strong> of ${maxPages}`;
     }
-    const list = document.createElement('ol');
-    list.className = 'scroll';
+    const list = createElement('ol', { classes: 'scroll' });
     if (page === 1) {
       list.append(createPaginationLink(page + 1, 'next'));
       list.append(createPaginationLink(maxPages, 'last'));
@@ -119,10 +122,7 @@ function createPagination(entries, page, limit) {
 }
 
 export function splitTags(tags) {
-  if (tags) {
-    return JSON.parse(tags);
-  }
-  return [];
+  return tags ? JSON.parse(tags) : [];
 }
 
 function getActiveFilters() {
@@ -138,14 +138,11 @@ function getActiveFilters() {
 
 async function renderFilters(data, createFilters) {
   // render filters
-  const filter = document.createElement('div');
-  filter.className = 'list-filter';
-  const form = document.createElement('form');
-  form.method = 'get';
-  form.name = 'list-filter';
-  const formFieldSet = document.createElement('fieldset');
+  const filter = createElement('div', { classes: 'list-filter' });
+  const form = createElement('form', { props: { method: 'get', name: 'list-filter' } });
+  const formFieldSet = createElement('fieldset');
 
-  const filters = await createFilters(data, getActiveFilters(), createDropdown, createFullText);
+  const filters = await createFilters(data, getActiveFilters(), createDropdown, createInputSearch);
   formFieldSet.append(
     ...filters,
   );
@@ -168,7 +165,7 @@ async function buildElements(pressReleases, filter, createFilters, buildPressRel
     };
     relatedPressReleases = true;
   }
-  let filteredData = filter ? filter(pressReleases, actFilter) : pressReleases;
+  let filteredData = filter ? await filter(pressReleases, actFilter) : pressReleases;
 
   let page = parseInt(getSelectionFromUrl('page'), 10);
   page = Number.isNaN(page) ? 1 : page;
@@ -186,10 +183,9 @@ async function buildElements(pressReleases, filter, createFilters, buildPressRel
     const start = (page - 1) * limitPerPage;
     filteredData = filteredData.slice(start, start + limitPerPage);
   }
-  const articleList = document.createElement('ul');
-  articleList.className = 'article-list';
+  const articleList = createElement('ul', { classes: 'article-list' });
   filteredData.forEach((pressRelease) => {
-    const articleItem = document.createElement('li');
+    const articleItem = createElement('li');
     const pressReleaseArticle = buildPressReleaseArticle(pressRelease);
     articleItem.appendChild(pressReleaseArticle);
     articleList.appendChild(articleItem);
@@ -214,7 +210,13 @@ export async function createList(pressReleases, filter, createFilters, buildPres
 
   function reloadFilteredList(event) {
     if (event) event.preventDefault();
-    reloadList(new URLSearchParams(new FormData(this)));
+    const params = new URLSearchParams(new FormData(this));
+    const urlParams = new URL(window.location).searchParams;
+    const page = urlParams.get('page');
+    if (page && +page > 1) {
+      params.set('page', 1);
+    }
+    reloadList(params);
   }
 
   function reloadPaginatedList(event) {
@@ -222,7 +224,7 @@ export async function createList(pressReleases, filter, createFilters, buildPres
     reloadList(new URL(event.target.href).searchParams);
   }
 
-  function attachSubmitListners(filter) {
+  function attachSubmitListeners(filter) {
     const form = filter.querySelector('form');
     if (form) {
       form.submit = reloadFilteredList.bind(form);
@@ -231,17 +233,17 @@ export async function createList(pressReleases, filter, createFilters, buildPres
     return filter;
   }
 
-  function attachClickListners(pagination) {
+  function attachClickListeners(pagination) {
     pagination.querySelectorAll('a').forEach((a) => a.addEventListener('click', reloadPaginatedList));
     return pagination;
   }
 
   function renderList(el, { filter, pagination, list }) {
     const children = [];
-    if (filter) children.push(attachSubmitListners(filter));
-    if (pagination) children.push(attachClickListners(pagination));
+    if (filter) children.push(attachSubmitListeners(filter));
+    if (pagination) children.push(attachClickListeners(pagination));
     children.push(list);
-    if (pagination) children.push(attachClickListners(pagination.cloneNode(true)));
+    if (pagination) children.push(attachClickListeners(pagination.cloneNode(true)));
     el.replaceChildren(...children);
   }
 

@@ -1,5 +1,5 @@
 import { createElement } from '../../scripts/common.js';
-import { autosuggestQuery, fetchData } from './search-api.js';
+import { autosuggestQuery, fetchData } from '../../scripts/search-api.js';
 
 const autoSuggestClass = 'autosuggest-results-item-highlighted';
 const tenant = 'franklin-vg-volvotrucks-us';

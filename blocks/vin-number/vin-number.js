@@ -157,7 +157,7 @@ function renderRecalls(recallsData) {
 function getAPIConfig() {
   let env = 'prod';
 
-  if (window.location.host.includes('hlx.page')) {
+  if (['hlx.page', 'aem.page'].some((host) => window.location.host.includes(host))) {
     env = 'qa';
   } else if (window.location.host.includes('localhost')) {
     env = 'dev';

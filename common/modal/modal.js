@@ -6,34 +6,12 @@ import {
 } from '../../scripts/common.js';
 import { loadCSS, updateSectionsStatus } from '../../scripts/aem.js';
 import {
-  AEM_ASSETS,
   createIframe,
-  createVideo,
-  handleVideoMessage,
   isAEMVideoUrl,
   isLowResolutionVideoUrl,
-  VideoEventManager,
+  setupPlayer,
+  getDeviceSpecificVideoUrl,
 } from '../../scripts/video-helper.js';
-
-const { videoIdRegex } = AEM_ASSETS;
-const videoEventManager = new VideoEventManager();
-
-class VideoComponent {
-  constructor(videoId) {
-    this.videoId = videoId;
-    this.blockName = 'modal';
-
-    videoEventManager.register(
-      this.videoId,
-      this.blockName,
-      (event) => handleVideoMessage(event, this.videoId, this.blockName),
-    );
-  }
-
-  unregister() {
-    videoEventManager.unregister(this.videoId, this.blockName);
-  }
-}
 
 const HIDE_MODAL_CLASS = 'modal-hidden';
 let currentModalClasses = null;
@@ -161,23 +139,19 @@ const createModal = () => {
         modalBackground.classList.add('modal--video');
         modalContent.append(videoOrIframe);
       } else if (isAEMVideoUrl) {
-        let videoId;
-        const match = newContent.match(videoIdRegex);
-        if (match) {
-          [videoId] = match;
-        }
+        videoOrIframe = document.createElement('div');
+        videoOrIframe.classList.add('modal-video');
 
-        // eslint-disable-next-line no-unused-vars
-        const modalVideoComponent = new VideoComponent(videoId);
-        videoOrIframe = createVideo(newContent, 'modal-video', {
+        const videoUrl = getDeviceSpecificVideoUrl(newContent);
+        await setupPlayer(videoUrl, videoOrIframe, {
           autoplay: 'any',
           disablePictureInPicture: true,
           loop: false,
           muted: false,
           playsinline: true,
-          title: 'video',
-          language: document.documentElement.lang,
-        }, false, videoId);
+          fill: true,
+        });
+
         modalBackground.classList.add('modal--video');
         modalContent.append(videoOrIframe);
       } else {

@@ -65,12 +65,7 @@ export default async function decorate(block) {
       section.prepend(newVideo);
       videoLinks[0].remove();
 
-      const playbackControls = newVideo.querySelector('button');
-      const { parentElement } = playbackControls.parentElement;
-      parentElement.style.position = 'relative';
-      parentElement.append(playbackControls);
-
-      getDynamicVideoHeight(newVideo, playbackControls);
+      getDynamicVideoHeight(newVideo);
     }
 
     // Add wrapper around the text content

@@ -1,304 +1,325 @@
 /* Filter magazine articles */
 .block.magazine-articles .list-filter {
-    background-color: var(--volvo-text-gray);
-    padding: 25px;
-    margin: 0 0 24px;
+  background-color: var(--volvo-text-gray);
+  padding: 25px;
+  margin: 0 0 24px;
 }
 
 .block.magazine-articles .list-filter input,
 .block.magazine-articles .list-filter select {
-    font-family: var(--ff-volvo-novum);
-    font-size: 1.6rem;
-    background-color: var(--c-white);
-    width: 100%;
-    margin-top: 1rem;
-    max-width: unset;
+  font-family: var(--ff-volvo-novum);
+  font-size: 1.6rem;
+  background-color: var(--c-white);
+  width: 100%;
+  margin-top: 1rem;
+  max-width: unset;
 }
 
 .magazine-articles-wrapper > div {
-    margin: 48px auto;
+  margin: 48px auto;
 }
 
 .block.magazine-articles .list-filter fieldset {
-    border: 0;
+  border: 0;
 }
 
 .block.magazine-articles .list-filter fieldset div {
-    flex-basis: 0;
-    -webkit-box-flex: 1;
-    flex-grow: 1;
-    max-width: 100%;
-    margin: 0 15px;
+  flex-basis: 0;
+  -webkit-box-flex: 1;
+  flex-grow: 1;
+  max-width: 100%;
+  margin: 0 15px;
 }
 
 .block.magazine-articles .search-field {
-    position: relative;
+  position: relative;
 }
 
 .block.magazine-articles .search-field button {
-    right: 1rem;
-    top: .8rem;
-    width: 2.6rem;
-    height: 2.6rem;
-    border-radius: 0.3rem;
-    position: absolute;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    box-sizing: border-box;
-    background-color: transparent;
-    border: 0;
+  right: 1rem;
+  top: 0.8rem;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 0.3rem;
+  position: absolute;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  box-sizing: border-box;
+  background-color: transparent;
+  border: 0;
 }
 
 .block.magazine-articles .pager {
-    font-size: 1.4rem;
-    display: grid;
-    margin: 1em 0;
-    grid-template-columns: repeat(2, 1fr);
+  font-size: 1.4rem;
+  display: grid;
+  margin: 1em 0;
+  grid-template-columns: repeat(2, 1fr);
 }
 
 .block.magazine-articles .category-field,
 .block.magazine-articles .topic-field,
-.block.magazine-articles .truck-field   {
-    display: block;
-    position: relative;
-    grid-template-columns: 1fr 68%;
-    align-items: center;
-    margin-bottom: 0.75em;
+.block.magazine-articles .truck-field {
+  display: block;
+  position: relative;
+  grid-template-columns: 1fr 68%;
+  align-items: center;
+  margin-bottom: 0.75em;
 }
 
 .block.magazine-articles .category-field::after,
 .block.magazine-articles .topic-field::after,
-.block.magazine-articles .truck-field::after  {
-    font-family: var(--ff-fontawesome);
-    color: var(--volvo-text-gray);
-    content: "\f107";
-    position: absolute;
-    display: inline-block;
-    right: 15px;
-    top: 5px;
-    bottom: 0;
-    font-size: 2.4rem;
-    pointer-events: none;
+.block.magazine-articles .truck-field::after {
+  font-family: var(--ff-fontawesome);
+  color: var(--volvo-text-gray);
+  content: "\f107";
+  position: absolute;
+  display: inline-block;
+  right: 15px;
+  top: 5px;
+  bottom: 0;
+  font-size: 2.4rem;
+  pointer-events: none;
 }
 
 /* Latest magazine articles */
 .block.latest .latest-magazine-articles article .content h3 a {
-    color: var(--c-cta-blue-default);
-    font-weight: 700;
-    border: none;
-    padding: 0;
+  color: var(--c-cta-blue-default);
+  font-weight: 700;
+  border: none;
+  padding: 0;
 }
 
 .block .latest-magazine-articles {
-    display: unset;
+  display: unset;
 }
 
 .block .latest-magazine-articles article {
-    margin-top: 24px;
+  margin-top: 24px;
 }
 
 .block .latest-magazine-articles article:first-child {
-    margin-top: -24px;
+  margin-top: -24px;
 }
 
 .block .latest-magazine-articles > article img,
 .block .latest-magazine-articles > article source {
-    display: block;
-    height: auto;
-    border: 0;
-    object-fit: cover;
+  display: block;
+  height: auto;
+  border: 0;
+  object-fit: cover;
 }
 
 .block .latest-magazine-articles .content h3 {
-    margin-bottom: 10px;
-    font-family: var(--ff-volvo-novum-medium);
-    letter-spacing: -.1px;
-    color: var(--volvo-text-gray);
-    margin-top: 24px;
-    font-weight: 400;
-    line-height: 32px;
-    position: relative;
-    text-rendering: optimizelegibility;
+  margin-bottom: 10px;
+  font-family: var(--ff-volvo-novum-medium);
+  letter-spacing: -0.1px;
+  color: var(--volvo-text-gray);
+  margin-top: 24px;
+  font-weight: 400;
+  line-height: 32px;
+  position: relative;
+  text-rendering: optimizelegibility;
 }
 
 .block .latest-magazine-articles .content p {
-    font-size: 13px;
-    position: relative;
-    margin: 0;
-    letter-spacing: -.1px;
-    font-weight: 400;
+  font-size: 13px;
+  position: relative;
+  margin: 0;
+  letter-spacing: -0.1px;
+  font-weight: 400;
 }
 
 /* Magazine articles */
 
 .block.magazine-articles .article-list article {
-    display: block;
-    padding: 1.5em 0;
-    border-top: 1px solid var(--background-light-gray);
+  display: block;
+  padding: 1.5em 0;
+  border-top: 1px solid var(--background-light-gray);
 }
 
 .section.magazine-articles-container > div > div > div.articles > article:nth-child(1) {
-    border-top: 1px solid var(--background-light-gray);
+  border-top: 1px solid var(--background-light-gray);
 }
 
 .block.magazine-articles article a.imgcover {
-    float: unset;
-    position: relative;
-    z-index: 50;
-    height: 250px;
-    display: block;
+  float: unset;
+  position: relative;
+  z-index: 50;
+  height: 250px;
+  display: block;
 }
 
 .block.magazine-articles article picture img {
-    margin-bottom: 16px;
-    height: 100%;
-    width: 100%;
-    object-fit: cover;
+  margin-bottom: 16px;
+  height: 100%;
+  width: 100%;
+  object-fit: cover;
+}
+
+.block.magazine-articles article picture.default-image img {
+  aspect-ratio: 16/9;
+  object-fit: contain;
 }
 
 .block.magazine-articles .article-list article h3 {
-    margin-top: 24px;
-    margin-bottom: 16px;
-    display: table;
-    font-family: var(--ff-volvo-novum-medium);
-    letter-spacing: -.1px!important;
-    color: var(--volvo-text-gray);
+  margin-top: 24px;
+  margin-bottom: 16px;
+  display: table;
+  font-family: var(--ff-volvo-novum-medium);
+  letter-spacing: -0.1px !important;
+  color: var(--volvo-text-gray);
 }
 
 .block.magazine-articles .article-list article .content {
-    position: relative;
-    min-height: 1px;
-    padding-right: 15px;
-    clear: none;
-    width: 75%;
+  position: relative;
+  min-height: 1px;
+  padding-right: 15px;
+  clear: none;
+  width: 75%;
 }
 
 .block.magazine-articles .article-list article p {
-    margin-top: unset;
-    margin-bottom: 8px;
+  margin-top: unset;
+  margin-bottom: 8px;
 }
 
 .block.magazine-articles article ul {
-    list-style-type: none;
-    padding-left: 0;
-    font-size: 12px;
+  list-style-type: none;
+  padding-left: 0;
+  font-size: 12px;
 }
 
-.block.magazine-articles article .content ul li{
-    display: inline;
+.block.magazine-articles article .content ul li {
+  display: inline;
 }
 
-.block.magazine-articles article .content  ul li:nth-child(2) {
-    color: var(--highlight-background-color);
+.block.magazine-articles article .content ul li:nth-child(2) {
+  color: var(--highlight-background-color);
 }
 
-.block.magazine-articles article .content  ul li+li::before {
-    content: " | ";
-    padding: 0 5px;
+.block.magazine-articles article .content ul li + li::before {
+  content: " | ";
+  padding: 0 5px;
 }
 
 .block.magazine-articles .article-list {
-    list-style: none;
-    margin: 0;
-    padding: 0;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 }
 
 .cta {
-    display: inline-block;
-    margin-bottom: 0;
-    font-weight: 700;
-    text-align: center;
-    vertical-align: middle;
-    touch-action: manipulation;
-    cursor: pointer;
-    white-space: nowrap;
-    font-size: 16px;
-    line-height: 1.5;
-    border-radius: 0;
-    user-select: none;
+  display: inline-block;
+  margin-bottom: 0;
+  font-weight: 700;
+  text-align: center;
+  vertical-align: middle;
+  touch-action: manipulation;
+  cursor: pointer;
+  white-space: nowrap;
+  font-size: 16px;
+  line-height: 1.5;
+  border-radius: 0;
+  user-select: none;
 }
 
 @media screen and (min-width: 768px) {
-    .block.magazine-articles .search-field button {
-        top: 1.8rem;
-    }
+  .block.magazine-articles .search-field button {
+    top: 1.8rem;
+  }
 
-    .block .latest-magazine-articles {
-        display: flex;
-        margin: 0 -15px;
-    }
+  .block .latest-magazine-articles {
+    display: flex;
+    margin: 0 -15px;
+  }
 
-    .block .latest-magazine-articles article {
-        position: relative;
-        min-height: 1px;
-        padding-left: 15px;
-        padding-right: 15px;
-        width: 33.3333%;
-    }
+  .block .latest-magazine-articles article {
+    position: relative;
+    min-height: 1px;
+    padding-left: 15px;
+    padding-right: 15px;
+    width: 33.3333%;
+  }
 
-    .block .latest-magazine-articles article:first-child {
-        margin-top: 24px;
-    }
+  .block .latest-magazine-articles article:first-child {
+    margin-top: 24px;
+  }
 
-    .block.magazine-articles .list-filter fieldset {
-        display: flex;
-        flex-wrap: wrap;
-        margin: 25px;
-    }
+  .block.magazine-articles .list-filter fieldset {
+    display: flex;
+    flex-wrap: wrap;
+    margin: 25px;
+  }
 
-    .block.magazine-articles .list-filter fieldset div {
-        flex: 1 1 auto;
-        margin: 0 15px;
-    }
+  .block.magazine-articles .list-filter fieldset div {
+    flex: 1 1 auto;
+    margin: 0 15px;
+  }
 
-    /* make sure the fields have the same width when stacked */
-    .block.magazine-articles .list-filter fieldset div:nth-of-type(odd) { min-width: 294px; }
-    .block.magazine-articles .list-filter fieldset div:nth-of-type(even) { min-width: 239px; }
+  /* make sure the fields have the same width when stacked */
+  .block.magazine-articles .list-filter fieldset div:nth-of-type(odd) {
+    min-width: 294px;
+  }
 
-    .block.magazine-articles .category-field::after,
-    .block.magazine-articles .topic-field::after,
-    .block.magazine-articles .truck-field::after  {
-        top: 15px;
-    }
+  .block.magazine-articles .list-filter fieldset div:nth-of-type(even) {
+    min-width: 239px;
+  }
+
+  .block.magazine-articles .category-field::after,
+  .block.magazine-articles .topic-field::after,
+  .block.magazine-articles .truck-field::after {
+    top: 15px;
+  }
 }
 
 @media screen and (min-width: 992px) {
-    .block .latest-magazine-articles article,
-    .block .related-magazine-articles article {
-        display: unset;
-    }
+  .block .latest-magazine-articles article,
+  .block .related-magazine-articles article {
+    display: unset;
+  }
 
-    .block.magazine-articles .articles article {
-        display: inline-flex;
-    }
+  .block.magazine-articles .articles article {
+    display: inline-flex;
+  }
 
-    .block.magazine-articles article a.imgcover {
-        padding-right: 15px;
-        height: auto;
-    }
+  .block.magazine-articles article a.imgcover {
+    padding-right: 15px;
+    height: auto;
+  }
 
-    .section.magazine-articles-container > div > div > div.articles > article > a > picture {
-        float: left;
-        height: 214px;
-        width: 380px;    
-    }
+  .section.magazine-articles-container > div > div > div.articles > article > a > picture {
+    float: left;
+    height: 214px;
+    width: 380px;
+  }
 
-    .block.magazine-articles .article-list article {
-        display: inline-flex;
-        width: 100%;
-    }
+  .block.magazine-articles .article-list article {
+    display: inline-flex;
+    width: 100%;
+  }
 
-    .block.magazine-articles .article-list article .content {
-        padding-left: 15px;
-    }
+  .block.magazine-articles article picture.default-image img {
+    object-fit: cover;
+  }
 
-    /* make sure the fields have the same width when stacked */
-    .block.magazine-articles .list-filter fieldset div:nth-of-type(odd) { min-width: 396px; }
-    .block.magazine-articles .list-filter fieldset div:nth-of-type(even) { min-width: 341px; }
+  .block.magazine-articles .article-list article .content {
+    padding-left: 15px;
+  }
+
+  /* make sure the fields have the same width when stacked */
+  .block.magazine-articles .list-filter fieldset div:nth-of-type(odd) {
+    min-width: 396px;
+  }
+
+  .block.magazine-articles .list-filter fieldset div:nth-of-type(even) {
+    min-width: 341px;
+  }
 }
 
 @media screen and (min-width: 1300px) {
-    .block.magazine-articles .list-filter fieldset div:nth-of-type(odd),
-    .block.magazine-articles .list-filter fieldset div:nth-of-type(even) { min-width: unset; }   
+  .block.magazine-articles .list-filter fieldset div:nth-of-type(odd),
+  .block.magazine-articles .list-filter fieldset div:nth-of-type(even) {
+    min-width: unset;
+  }
 }

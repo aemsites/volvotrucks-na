@@ -1,14 +1,17 @@
 // eslint-disable-next-line import/no-cycle
-import { loadScript, sampleRUM } from './aem.js';
+import { loadScript, loadCSS, sampleRUM } from './aem.js';
 import {
   isPerformanceAllowed,
   isTargetingAllowed,
   isSocialAllowed,
+  isDevHost,
   extractObjectFromArray,
   COOKIE_CONFIGS,
 } from './common.js';
-
-const devHosts = ['localhost', 'hlx.page', 'hlx.live', 'aem.page', 'aem.live'];
+import {
+  VIDEO_JS_SCRIPT,
+  VIDEO_JS_CSS,
+} from './video-helper.js';
 
 // COOKIE ACCEPTANCE AND IDs default to false in case no ID is present
 const { 
@@ -56,7 +59,7 @@ document.addEventListener('click', (e) => {
 
 // OneTrust Cookies Consent Notice start for volvotrucks.us
 if (!window.location.pathname.includes('srcdoc')
-  && !devHosts.some((url) => window.location.host.includes(url))) {
+  && !isDevHost()) {
   // when running on localhost in the block library host is empty but the path is srcdoc
   // on localhost/hlx.page/hlx.live the consent notice is displayed every time the page opens,
   // because the cookie is not persistent. To avoid this annoyance, disable unless on the
@@ -89,7 +92,7 @@ if (!window.location.pathname.includes('srcdoc')
   };
 }
 
-if (devHosts.some((url) => window.location.host.includes(url))) {
+if (isDevHost()) {
   import('./validate-elements.js');
 }
 
@@ -219,4 +222,26 @@ async function loadTiktokPixel() {
       // 'ViewContent', 'AddToCart', 'PlaceAnOrder', 'AddPaymentInfo', 'InitiateCheckout', 'Search', 
       // 'AddToWishlist', 'Subscribe', and 'Pageview' events with appropriate parameters and comments.
    }(window, document, 'ttq');
+}
+
+async function loadVideoJs() {
+  await Promise.all([
+    loadCSS(VIDEO_JS_CSS),
+    loadScript(VIDEO_JS_SCRIPT),
+  ]);
+
+  const jsScript = document.querySelector(`head > script[src="${VIDEO_JS_SCRIPT}"]`);
+  const cssScript = document.querySelector(`head > link[href="${VIDEO_JS_CSS}"]`);
+
+  jsScript.dataset.loaded = true;
+  cssScript.dataset.loaded = true;
+  document.dispatchEvent(new Event('videojs-loaded'));
+}
+
+const hasVideo = document.querySelector('.video-js')
+  || document.querySelector('.text-link-with-video')
+  || document.querySelector('.v2-video__big-play-button')
+  || document.querySelector('.v2-resource-gallery__video-list-item .icon-play-video')
+if (hasVideo) {
+  loadVideoJs();
 }

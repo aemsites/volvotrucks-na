@@ -6,6 +6,7 @@ import {
   loadHeader,
   buildBlock,
   decorateBlock,
+  getMetadata,
 } from './aem.js';
 // eslint-disable-next-line import/no-cycle
 import { createVideo, isVideoLink } from './video-helper.js';
@@ -114,9 +115,8 @@ export function addVideoToSection(blockName, section, link) {
     const video = createVideo(link.getAttribute('href'), `${blockName}__video`, {
       muted: true, autoplay: true, loop: true, playsinline: true,
     });
-    const playbackControls = video.querySelector('button');
     link.remove();
-    section.append(video, playbackControls);
+    section.append(video);
   }
   return section;
 }
@@ -239,8 +239,16 @@ export async function loadLazy(doc) {
   if (hash && element) element.scrollIntoView();
   const header = doc.querySelector('header');
 
-  loadHeader(header);
-  loadFooter(doc.querySelector('footer'));
+  const disableHeader = getMetadata('disable-header').toLowerCase() === 'true';
+  const disableFooter = getMetadata('disable-footer').toLowerCase() === 'true';
+
+  if (!disableHeader) {
+    loadHeader(header);
+  }
+
+  if (!disableFooter) {
+    loadFooter(doc.querySelector('footer'));
+  }
 
   const subnav = header?.querySelector('.block.sub-nav');
   if (subnav) {
@@ -267,21 +275,36 @@ export function loadDelayed() {
   // load anything that can be postponed to the latest here
 }
 
-export const removeEmptyTags = (block) => {
-  block.querySelectorAll('*').forEach((x) => {
-    const tagName = `</${x.tagName}>`;
+export const removeEmptyTags = (block, isRecursive) => {
+  const isEmpty = (node) => {
+    const tagName = `</${node.tagName}>`;
 
     // exclude iframes
-    if (x.tagName.toUpperCase() === 'IFRAME') {
-      return;
+    if (node.tagName.toUpperCase() === 'IFRAME') {
+      return false;
     }
     // checking that the tag is not autoclosed to make sure we don't remove <meta />
     // checking the innerHTML and trim it to make sure the content inside the tag is 0
-    if (
-      x.outerHTML.slice(tagName.length * -1).toUpperCase() === tagName
-      // && x.childElementCount === 0
-      && x.innerHTML.trim().length === 0) {
-      x.remove();
+    return node.outerHTML.slice(tagName.length * -1).toUpperCase() === tagName
+      && node.innerHTML.trim().length === 0;
+  };
+
+  if (isRecursive) {
+    block.querySelectorAll(':scope > *').forEach((node) => {
+      if (node.children.length > 0) {
+        removeEmptyTags(node, true);
+      }
+
+      if (isEmpty(node)) {
+        node.remove();
+      }
+    });
+    return;
+  }
+
+  block.querySelectorAll('*').forEach((node) => {
+    if (isEmpty(node)) {
+      node.remove();
     }
   });
 };
@@ -398,8 +421,11 @@ export const slugify = (text) => (
     .replace(/--+/g, '-')
 );
 
+/**
+ * loads the constants file where configuration values are stored
+ */
 async function getConstantValues() {
-  const url = `${getLanguagePath()}placeholder.json`;
+  const url = `${getLanguagePath()}constants.json`;
   let constants;
   try {
     const response = await fetch(url).then((resp) => resp.json());
@@ -451,6 +477,7 @@ const {
   tools,
   headerConfig,
   newsFeedConfig,
+  truckConfiguratorUrls,
 } = await getConstantValues();
 
 // This data comes from the sharepoint 'constants.xlsx' file
@@ -460,6 +487,7 @@ export const COOKIE_CONFIGS = formatValues(cookieValues?.data);
 export const MAGAZINE_CONFIGS = formatValues(magazineConfig?.data);
 export const HEADER_CONFIGS = formatValues(headerConfig?.data);
 export const NEWS_FEED_CONFIGS = formatValues(newsFeedConfig?.data);
+export const TRUCK_CONFIGURATOR_URLS = formatValues(truckConfiguratorUrls?.data);
 
 /**
  * Check if one trust group is checked.
@@ -564,4 +592,9 @@ export const deepMerge = (target, source) => {
     }
   });
   return target;
+};
+
+export const isDevHost = () => {
+  const devHosts = ['localhost', 'hlx.page', 'hlx.live', 'aem.page', 'aem.live'];
+  return devHosts.some((url) => window.location.host.includes(url));
 };

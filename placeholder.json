@@ -326,6 +326,14 @@
     {
       "Key": "readMoreBtn",
       "Text": "Read More"
+    },
+    {
+      "Key": "defaultAuthor",
+      "Text": "Volvo Trucks NA"
+    },
+    {
+      "Key": "defaultReadTime",
+      "Text": "10 min"
     }
   ],
   ":type": "sheet"

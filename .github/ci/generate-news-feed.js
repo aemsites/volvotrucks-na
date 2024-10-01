@@ -2,25 +2,24 @@ import { Feed } from 'feed';
 import fs from 'fs';
 
 async function main() {
-  let newsFeedConfigurations;
-
   async function getConfigs() {
+    let newsFeedConfigurations;
     try {
       const NEWS_FEED_CONFIGS = await import('/generate-news-feed-config.js');
       newsFeedConfigurations = NEWS_FEED_CONFIGS;
     } catch (error) {
       console.error('Error importing or processing object:', error);
     }
+    return newsFeedConfigurations
   }
-  getConfigs()
-
+  
   const {
     ENDPOINT,
     FEED_INFO_ENDPOINT,
     TARGET_DIRECTORY,
     LIMIT,
-  } = newsFeedConfigurations;
-
+  } = await getConfigs();
+  
   const TARGET_FILE = `${TARGET_DIRECTORY}/feed.xml`;
   const PARSED_LIMIT = Number(LIMIT)
 
@@ -70,7 +69,9 @@ async function fetchBlogPosts(endpoint, limit) {
     api.searchParams.append('limit', limit);
     const response = await fetch(api, {});
     const result = await response.json();
+
     allPosts.push(...result.data);
+
     if (result.offset + result.limit < result.total) {
       // there are more pages
       offset = result.offset + result.limit;
@@ -81,19 +82,11 @@ async function fetchBlogPosts(endpoint, limit) {
   return allPosts;
 }
 
-/**
- * Returns the Blog Metadata
- * 
- * @async
- * @param {string} endpointUrl blog metadata endpoint
- * @returns {FeedMetadata} The first feed configuration
- * @todo This in the future should return all of the configurations for all markets/feeds
-*/
 async function fetchBlogMetadata(infoEndpoint) {
   const infoResponse = await fetch(infoEndpoint);
   const feedInfoResult = await infoResponse.json();
   return feedInfoResult.data[0];
 }
+
 main()
   .catch((e) => console.error(e));
-  
