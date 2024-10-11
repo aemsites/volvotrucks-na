@@ -21,7 +21,7 @@ jobs:
     - name: Notify delete endpoint
       run: |
         sleep 1s
-        PAGE_PATH=$(echo "${{ github.event.client_payload.path }}" | sed 's/\.md$//g')
+        PAGE_PATH=$(echo "${{ github.event.client_payload.path }}" | awk '{sub("/index.md$", ""); sub(".md$", ""); print}')
         WEBSITE_NAME="${{ github.event.client_payload.site }}"      
         URI=$(echo "${{ vars.CONNECTOR_DOMAIN }}/$WEBSITE_NAME?path=$PAGE_PATH")
         response=$(curl -s -H "x-api-key: ${{ secrets.API_KEY }}" -X DELETE "$URI")
