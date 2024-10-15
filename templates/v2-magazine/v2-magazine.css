@@ -9,6 +9,10 @@
   max-width: 932px;
 }
 
+.v2-magazine .section.v2-video-container .v2-video-wrapper {
+  margin: 0 auto;
+}
+
 .v2-magazine-article-hero__container {
   padding: var(--hero-heading-padding);
   display: grid;

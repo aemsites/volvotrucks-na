@@ -8,7 +8,9 @@ import {
 } from '../../scripts/common.js';
 import {
   createOptimizedPicture,
+  loadCSS,
 } from '../../scripts/aem.js';
+import createPagination from '../../common/pagination/pagination.js';
 
 const blockName = 'v2-article-cards';
 const indexUrl = new URL(`${getLanguagePath()}magazine-articles.json`, getOrigin());
@@ -116,11 +118,12 @@ export default async function decorate(block) {
   }
 
   if (selectedArticles.length > 0) {
+    block.querySelector('.pagination-content')?.remove();
     createArticleCards(block, selectedArticles, amountOfLinks);
   } else {
     const uniqueArticles = removeArtsInPage(allArticles);
-    const sortedArticles = uniqueArticles?.data.sort((a, b) => a.date > b.date);
-    // After sorting aticles by date, set the chunks of the array for future pagination
+    const sortedArticles = uniqueArticles?.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+    // After sorting articles by date, set the chunks of the array for future pagination
     const chunkedArticles = sortedArticles?.reduce((resultArray, item, index) => {
       const chunkIndex = Math.floor(index / limitAmount);
       if (!resultArray[chunkIndex]) resultArray[chunkIndex] = [];
@@ -128,8 +131,18 @@ export default async function decorate(block) {
       return resultArray;
     }, []);
 
-    // Create articles from first chunk
-    createArticleCards(block, chunkedArticles[0]);
+    if (chunkedArticles && chunkedArticles.length > 0) {
+      let contentArea = block.querySelector('.pagination-content');
+      if (!contentArea) {
+        contentArea = createElement('div', { classes: ['pagination-content'] });
+        block.appendChild(contentArea);
+      }
+      await loadCSS('../../common/pagination/pagination.css');
+      createPagination(chunkedArticles, block, createArticleCards, contentArea, 0);
+    } else {
+      // eslint-disable-next-line no-console
+      console.error('No chunked articles created.');
+    }
   }
   unwrapDivs(block);
 }

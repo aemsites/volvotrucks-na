@@ -334,6 +334,22 @@
     {
       "Key": "defaultReadTime",
       "Text": "10 min"
+    },
+    {
+      "Key": "paginationNavAriaLabel",
+      "Text": "pagination"
+    },
+    {
+      "Key": "paginationPageAriaLabel",
+      "Text": "page"
+    },
+    {
+      "Key": "paginationPreviousPageAriaLabel",
+      "Text": "previous page"
+    },
+    {
+      "Key": "paginationNextPageAriaLabel",
+      "Text": "next page"
     }
   ],
   ":type": "sheet"

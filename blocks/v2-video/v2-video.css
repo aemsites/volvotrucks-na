@@ -44,12 +44,15 @@ body .section.v2-video-container .v2-video-wrapper {
   --video-inset: inset(0 0 round 0);
 }
 
+.v2-video video {
+  object-fit: cover;
+  object-position: center;
+}
+
 .v2-video .v2-video__video {
   position: absolute;
   top: 0;
   height: 100%;
-  object-fit: cover;
-  object-position: center;
   max-width: 100%;
   width: 100%;
 }
