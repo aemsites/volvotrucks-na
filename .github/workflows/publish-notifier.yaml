@@ -20,7 +20,7 @@ jobs:
     - name: Notify upsert endpoint
       run: |
         sleep 1s
-        PAGE_PATH=$(echo "${{ github.event.client_payload.path }}" | sed 's/\.md$//g')
+        PAGE_PATH=$(echo "${{ github.event.client_payload.path }}" | awk '{sub("/index.md$", ""); sub(".md$", ""); print}')
         WEBSITE_NAME="${{ github.event.client_payload.site }}"
         URI=$(echo "${{ vars.CONNECTOR_DOMAIN }}/$WEBSITE_NAME")
         BODY='{ "paths": [ "'$PAGE_PATH'" ] }'
