@@ -93,15 +93,16 @@ export async function setupPlayer(url, videoContainer, config, video) {
     ...config,
     preload: config.poster && !config.autoplay ? 'none' : 'auto',
     bigPlayButton: false,
+    controls: true,
   };
 
-  const videoHasSound = (getMetadata('video-sound')).toLowerCase() === 'on';
   if (config.autoplay) {
-    videojsConfig.muted = !videoHasSound;
     videojsConfig.loop = true;
     videojsConfig.autoplay = true;
-    videojsConfig.controls = true;
   }
+
+  const videoHasSound = (getMetadata('video-sound')).toLowerCase() === 'on';
+  videojsConfig.muted = !videoHasSound;
 
   await waitForVideoJs();
 
