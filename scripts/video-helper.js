@@ -5,6 +5,7 @@ import {
   deepMerge,
   getTextLabel,
 } from './common.js';
+import { getMetadata } from './aem.js';
 
 export const VIDEO_JS_SCRIPT = '/scripts/videojs/video.min.js';
 export const VIDEO_JS_CSS = '/scripts/videojs/video-js.min.css';
@@ -92,13 +93,16 @@ export async function setupPlayer(url, videoContainer, config, video) {
     ...config,
     preload: config.poster && !config.autoplay ? 'none' : 'auto',
     bigPlayButton: false,
+    controls: true,
   };
 
   if (config.autoplay) {
-    videojsConfig.muted = true;
     videojsConfig.loop = true;
     videojsConfig.autoplay = true;
   }
+
+  const videoHasSound = (getMetadata('video-sound')).toLowerCase() === 'on';
+  videojsConfig.muted = !videoHasSound;
 
   await waitForVideoJs();
 
