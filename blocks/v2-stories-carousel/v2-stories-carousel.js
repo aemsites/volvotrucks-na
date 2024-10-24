@@ -9,6 +9,8 @@ import {
   getLanguagePath,
   getOrigin,
   getDateFromTimestamp,
+  MAGAZINE_CONFIGS,
+  extractObjectFromArray,
 } from '../../scripts/common.js';
 import { smoothScrollHorizontal } from '../../scripts/motion-helper.js';
 
@@ -156,7 +158,11 @@ const buildStoryCard = (entry) => {
   const picture = createOptimizedPicture(image, title, false);
   const pictureTag = picture.outerHTML;
   const readMore = (linkText || 'Read full story');
-  const formattedDate = getDateFromTimestamp(publishDate);
+
+  const { DATE_OPTIONS } = MAGAZINE_CONFIGS;
+  const dateOptions = extractObjectFromArray(JSON.parse(DATE_OPTIONS));
+  const formattedDate = getDateFromTimestamp(publishDate, dateOptions);
+
   const svgArrowRight = createElement('span', { classes: ['icon', 'icon-arrow-right'] });
   const cardFragment = document.createRange().createContextualFragment(`
     <a href="${path}">
