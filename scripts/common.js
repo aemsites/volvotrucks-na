@@ -598,3 +598,15 @@ export const isDevHost = () => {
   const devHosts = ['localhost', 'hlx.page', 'hlx.live', 'aem.page', 'aem.live'];
   return devHosts.some((url) => window.location.host.includes(url));
 };
+
+/**
+ * Function that recieves a timestamp in seconds and returns a date
+ * in its locale's format. Defaults to US format date (MM/DD/YYYY)
+ * @param {string} timestamp The date in seconds as a string
+*/
+export const getDateFromTimestamp = (timestamp) => {
+  const locale = getMetadata('locale') || 'en-us';
+  const date = new Date((timestamp * 1000) + (new Date().getTimezoneOffset() * 60000));
+  const localeDate = Intl.DateTimeFormat(locale).format(date).replaceAll('-', '/');
+  return localeDate;
+};

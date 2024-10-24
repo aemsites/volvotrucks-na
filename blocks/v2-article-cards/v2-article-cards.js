@@ -5,6 +5,7 @@ import {
   createElement,
   unwrapDivs,
   getTextLabel,
+  getDateFromTimestamp,
 } from '../../scripts/common.js';
 import {
   createOptimizedPicture,
@@ -28,14 +29,14 @@ const createCard = (article) => {
   const card = createElement('a', { classes: `${blockName}__article-card`, props: { href: path } });
   const picture = createOptimizedPicture(image, shortTitle, false, [{ width: '380', height: '214' }]);
   const pictureTag = picture.outerHTML;
-  const date = new Date((publishDate * 1000) + (new Date().getTimezoneOffset() * 60000));
+  const formattedDate = getDateFromTimestamp(publishDate);
   const cardContent = document.createRange().createContextualFragment(`
     <div class="${blockName}__image-wrapper">
         ${pictureTag}
     </div>
     <div class="${blockName}__texts-wrapper">
         <p class="${blockName}__card-date">
-            ${date.toLocaleDateString()}
+            ${formattedDate}
         </p>
         <h4 class="${blockName}__card-heading">
             ${shortTitle}

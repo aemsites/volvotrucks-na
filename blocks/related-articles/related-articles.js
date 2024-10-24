@@ -1,6 +1,7 @@
 import {
   getLanguagePath,
   getOrigin,
+  getDateFromTimestamp,
 } from '../../scripts/common.js';
 import {
   ffetch,
@@ -23,15 +24,16 @@ function buildRelatedMagazineArticle(entry) {
     readingTime,
     publishDate,
   } = entry;
+
   const card = document.createElement('article');
   const picture = createOptimizedPicture(image, title, false, [{ width: '380', height: '214' }]);
   const pictureTag = picture.outerHTML;
-  const date = new Date((publishDate * 1000) + (new Date().getTimezoneOffset() * 60000));
+  const formattedDate = getDateFromTimestamp(publishDate);
   card.innerHTML = `<a href="${path}" class="imgcover">
   ${pictureTag}
   </a>
   <div class="content">
-  <ul><li>${date.toLocaleDateString()}</li></ul>
+  <ul><li>${formattedDate}</li></ul>
   <h3><a href="${path}">${title}</a></h3>
   <ul>
   <li>${author}</li>

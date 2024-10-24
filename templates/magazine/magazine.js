@@ -14,6 +14,7 @@ async function buildArticleHero(container) {
   const readtime = getMetadata('readingtime');
   const headPic = getMetadata('og:image');
   const headAlt = getMetadata('og:image:alt');
+  const locale = getMetadata('locale');
 
   const row = createElement('div', { classes: ['row', 'size-img'] });
   const headImg = createOptimizedPicture(headPic, headAlt);
@@ -23,7 +24,7 @@ async function buildArticleHero(container) {
   const calendarIcon = createElement('i', { classes: ['fa', 'fa-calendar'] });
   topDetails.append(calendarIcon);
   const pubDateSpan = createElement('span', { classes: 'date' });
-  pubDateSpan.innerHTML = pubdate;
+  pubDateSpan.innerHTML = new Intl.DateTimeFormat(locale).format(new Date(pubdate)).replaceAll('-', '/');
   topDetails.append(pubDateSpan);
 
   const timeIcon = createElement('i', { classes: ['fa', 'fa-clock-o'] });

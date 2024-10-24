@@ -3,17 +3,16 @@ import {
   getOrigin,
   getTextLabel,
   createElement,
+  getDateFromTimestamp,
 } from '../../scripts/common.js';
 import {
   createList,
 } from '../../scripts/magazine-press.js';
 import {
   createOptimizedPicture,
-  getMetadata,
 } from '../../scripts/aem.js';
 import { fetchData, magazineSearchQuery } from '../../scripts/search-api.js';
 
-const locale = getMetadata('locale');
 const defaultAuthor = getTextLabel('defaultAuthor');
 const defaultReadTime = getTextLabel('defaultReadTime');
 
@@ -29,16 +28,17 @@ function buildMagazineArticle(entry) {
     publishDate,
     isDefaultImage,
   } = entry;
+
   const card = createElement('article');
   const picture = createOptimizedPicture(image, title, false, [{ width: '380', height: '214' }]);
   const pictureTag = picture.outerHTML;
-  const date = new Date((publishDate * 1000) + (new Date().getTimezoneOffset() * 60000));
+  const formattedDate = getDateFromTimestamp(publishDate);
   const categoryItem = createElement('li');
   card.innerHTML = `<a href="${path}" class="imgcover">
     ${pictureTag}
     </a>
     <div class="content">
-    <ul><li>${date.toLocaleDateString(locale)}</li>
+    <ul><li>${formattedDate}</li>
     ${(category ? categoryItem.textContent(category) : '')}</ul>
     <h3><a href="${path}">${title}</a></h3>
     <p>${description}</p>
