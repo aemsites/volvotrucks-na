@@ -50,9 +50,9 @@ const buildMetaAuthor = () => {
 
 // Build the 2nd element of the metadata row
 const buildMetaPubDate = () => {
-  const { DATE_LANGUAGE, DATE_OPTIONS, DATE_OPTIONS_MOBILE } = MAGAZINE_CONFIGS;
+  const { DATE_OPTIONS, DATE_OPTIONS_MOBILE } = MAGAZINE_CONFIGS;
   let pubDate = getMetadata('publish-date');
-  const locale = getMetadata('locale') || DATE_LANGUAGE;
+  const locale = getMetadata('locale');
   const mobileDateOptions = extractObjectFromArray(JSON.parse(DATE_OPTIONS_MOBILE));
   const desktopDateOptions = extractObjectFromArray(JSON.parse(DATE_OPTIONS));
   const formatDateOptions = MQ.matches ? mobileDateOptions : desktopDateOptions;

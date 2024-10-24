@@ -8,11 +8,13 @@ import {
   createElement,
   getLanguagePath,
   getOrigin,
+  getDateFromTimestamp,
+  MAGAZINE_CONFIGS,
+  extractObjectFromArray,
 } from '../../scripts/common.js';
 import { smoothScrollHorizontal } from '../../scripts/motion-helper.js';
 
 const blockName = 'v2-stories-carousel';
-const locale = getMetadata('locale');
 const lowLimit = 3;
 const highLimit = 7;
 
@@ -150,12 +152,17 @@ const buildStoryCard = (entry) => {
     publishDate,
     readingTime,
   } = entry;
+
   const title = originalTitle.split('|')[0].trim();
   const li = createElement('article', { classes: `${blockName}-item` });
   const picture = createOptimizedPicture(image, title, false);
   const pictureTag = picture.outerHTML;
   const readMore = (linkText || 'Read full story');
-  const date = new Date((publishDate * 1000) + (new Date().getTimezoneOffset() * 60000));
+
+  const { DATE_OPTIONS } = MAGAZINE_CONFIGS;
+  const dateOptions = extractObjectFromArray(JSON.parse(DATE_OPTIONS));
+  const formattedDate = getDateFromTimestamp(publishDate, dateOptions);
+
   const svgArrowRight = createElement('span', { classes: ['icon', 'icon-arrow-right'] });
   const cardFragment = document.createRange().createContextualFragment(`
     <a href="${path}">
@@ -166,8 +173,8 @@ const buildStoryCard = (entry) => {
       <p>${description}</p>
       <ul class="${blockName}-meta">
         <li class="${blockName}-date">
-          <time datetime="${date}" pubdate="pubdate">
-            ${date.toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' })}
+          <time datetime="${formattedDate}" pubdate="pubdate">
+            ${formattedDate}
           </time>
         </li>
         <li class="${blockName}-timetoread">
