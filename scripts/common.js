@@ -603,9 +603,9 @@ export const isDevHost = () => {
  * Function that recieves a timestamp in seconds and returns a date
  * in its locale's format. Defaults to US format date (MM/DD/YYYY)
  * @param {string} timestamp The date in seconds as a string
- * @param {object} options The date options for a specific format
+ * @param {object} options The date options obj for a specific format
 */
-export const getDateFromTimestamp = (timestamp, options = undefined) => {
+export const getDateFromTimestamp = (timestamp, options) => {
   const locale = getMetadata('locale') || 'en-us';
   const date = new Date((timestamp * 1000) + (new Date().getTimezoneOffset() * 60000));
   const localeDate = Intl.DateTimeFormat(locale, options).format(date).replaceAll('-', '/');

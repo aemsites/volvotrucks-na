@@ -160,7 +160,7 @@ const buildStoryCard = (entry) => {
   const readMore = (linkText || 'Read full story');
 
   const { DATE_OPTIONS } = MAGAZINE_CONFIGS;
-  const dateOptions = extractObjectFromArray(JSON.parse(DATE_OPTIONS));
+  const dateOptions = DATE_OPTIONS ? extractObjectFromArray(JSON.parse(DATE_OPTIONS)) : {};
   const formattedDate = getDateFromTimestamp(publishDate, dateOptions);
 
   const svgArrowRight = createElement('span', { classes: ['icon', 'icon-arrow-right'] });
