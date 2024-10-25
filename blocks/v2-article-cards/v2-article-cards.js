@@ -137,7 +137,8 @@ export default async function decorate(block) {
         contentArea = createElement('div', { classes: ['pagination-content'] });
         block.appendChild(contentArea);
       }
-      await loadCSS('../../common/pagination/pagination.css');
+      const baseURL = window.location.origin;
+      await loadCSS(`${baseURL}/common/pagination/pagination.css`);
       createPagination(chunkedArticles, block, createArticleCards, contentArea, 0);
     } else {
       // eslint-disable-next-line no-console
