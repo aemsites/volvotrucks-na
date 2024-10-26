@@ -1,7 +1,4 @@
 import {
-  getJsonFromUrl,
-  getLanguagePath,
-  getOrigin,
   createElement,
   unwrapDivs,
   getTextLabel,
@@ -11,10 +8,14 @@ import {
   createOptimizedPicture,
   loadCSS,
 } from '../../scripts/aem.js';
+import {
+  fetchMagazineArticles,
+  removeArticlesWithNoImage,
+  sortArticlesByDateField,
+} from '../../scripts/services/magazine.service.js';
 import createPagination from '../../common/pagination/pagination.js';
 
 const blockName = 'v2-article-cards';
-const indexUrl = new URL(`${getLanguagePath()}magazine-articles.json`, getOrigin());
 
 const createCard = (article) => {
   const {
@@ -80,16 +81,18 @@ const createArticleCards = (block, articles = null, amount = null) => {
 const removeArtsInPage = (articles) => {
   const existingArticles = document.querySelectorAll(`h4.${blockName}__card-heading`);
   const articleTitles = Array.from(existingArticles).map((article) => article.textContent.trim());
-  articles.data = articles.data.filter((art) => {
+  const clearedArticles = articles.filter((art) => {
     const title = art.title.split('|')[0].trim();
     return !articleTitles.includes(title);
   });
-  return articles;
+  return clearedArticles;
 };
 
 export default async function decorate(block) {
-  const allArticles = await getJsonFromUrl(indexUrl);
-  if (!allArticles) return;
+  const allArticles = await fetchMagazineArticles();
+  const articles = removeArticlesWithNoImage(allArticles);
+
+  if (!articles) return;
 
   const amountOfLinks = block.children.length;
   const blockClassList = [...block.classList];
@@ -109,7 +112,7 @@ export default async function decorate(block) {
     const buttons = block.querySelectorAll('.button-container');
     buttons.forEach((a) => {
       const link = a.querySelector('a')?.href;
-      [...allArticles.data].forEach((el) => {
+      articles.forEach((el) => {
         if (link?.includes(el.path)) {
           el.button = a;
           selectedArticles.push(el);
@@ -117,13 +120,12 @@ export default async function decorate(block) {
       });
     });
   }
-
   if (selectedArticles.length > 0) {
     block.querySelector('.pagination-content')?.remove();
     createArticleCards(block, selectedArticles, amountOfLinks);
   } else {
-    const uniqueArticles = removeArtsInPage(allArticles);
-    const sortedArticles = uniqueArticles?.data.sort((a, b) => new Date(b.date) - new Date(a.date));
+    const uniqueArticles = removeArtsInPage(articles);
+    const sortedArticles = sortArticlesByDateField(uniqueArticles);
     // After sorting articles by date, set the chunks of the array for future pagination
     const chunkedArticles = sortedArticles?.reduce((resultArray, item, index) => {
       const chunkIndex = Math.floor(index / limitAmount);
@@ -131,14 +133,14 @@ export default async function decorate(block) {
       resultArray[chunkIndex].push(item);
       return resultArray;
     }, []);
-
     if (chunkedArticles && chunkedArticles.length > 0) {
       let contentArea = block.querySelector('.pagination-content');
       if (!contentArea) {
         contentArea = createElement('div', { classes: ['pagination-content'] });
         block.appendChild(contentArea);
       }
-      await loadCSS('../../common/pagination/pagination.css');
+      const baseURL = window.location.origin;
+      await loadCSS(`${baseURL}/common/pagination/pagination.css`);
       createPagination(chunkedArticles, block, createArticleCards, contentArea, 0);
     } else {
       // eslint-disable-next-line no-console

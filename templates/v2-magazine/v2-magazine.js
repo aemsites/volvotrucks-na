@@ -5,6 +5,7 @@ import {
   getPlaceholders,
   extractObjectFromArray,
   MAGAZINE_CONFIGS,
+  getLocale,
 } from '../../scripts/common.js';
 
 const templateName = 'v2-magazine';
@@ -52,9 +53,13 @@ const buildMetaAuthor = () => {
 const buildMetaPubDate = () => {
   const { DATE_OPTIONS, DATE_OPTIONS_MOBILE } = MAGAZINE_CONFIGS;
   let pubDate = getMetadata('publish-date');
-  const locale = getMetadata('locale');
-  const mobileDateOptions = extractObjectFromArray(JSON.parse(DATE_OPTIONS_MOBILE));
-  const desktopDateOptions = extractObjectFromArray(JSON.parse(DATE_OPTIONS));
+  const locale = getLocale();
+  const mobileDateOptions = DATE_OPTIONS_MOBILE
+    ? extractObjectFromArray(JSON.parse(DATE_OPTIONS_MOBILE))
+    : {};
+  const desktopDateOptions = DATE_OPTIONS
+    ? extractObjectFromArray(JSON.parse(DATE_OPTIONS))
+    : {};
   const formatDateOptions = MQ.matches ? mobileDateOptions : desktopDateOptions;
   const pubDateEl = createElement('date', {
     classes: `${articleHero}__pubdate`,

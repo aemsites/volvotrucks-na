@@ -26,6 +26,7 @@ import {
   variantsClassesToBEM,
   formatStringToArray,
   TRUCK_CONFIGURATOR_URLS,
+  getLocale,
 } from './common.js';
 
 import {
@@ -727,7 +728,7 @@ async function loadEager(doc) {
   if (main) {
     decorateMain(main, head);
     document.body.classList.add('appear');
-    const language = getMetadata('locale') || 'en';
+    const language = getLocale();
     document.documentElement.lang = language;
     const templateName = getMetadata('template');
     if (templateName) await loadTemplate(doc, templateName);

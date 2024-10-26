@@ -34,19 +34,21 @@ function buildMagazineArticle(entry) {
   const pictureTag = picture.outerHTML;
   const formattedDate = getDateFromTimestamp(publishDate);
   const categoryItem = createElement('li');
-  card.innerHTML = `<a href="${path}" class="imgcover">
-    ${pictureTag}
-    </a>
+  card.innerHTML = `
+    <a href="${path}" class="imgcover">${pictureTag}</a>
     <div class="content">
-    <ul><li>${formattedDate}</li>
-    ${(category ? categoryItem.textContent(category) : '')}</ul>
-    <h3><a href="${path}">${title}</a></h3>
-    <p>${description}</p>
-    <ul>
-    <li>${author}</li>
-    <li>${readingTime}</li>
-    </ul>
-    </div>`;
+      <ul>
+        <li>${formattedDate}</li>
+      ${(category ? categoryItem.textContent(category) : '')}
+      </ul>
+      <h3><a href="${path}">${title}</a></h3>
+      <p>${description}</p>
+      <ul>
+        <li>${author}</li>
+        <li>${readingTime}</li>
+      </ul>
+    </div>
+  `;
   card.querySelector('picture').classList.toggle('default-image', isDefaultImage);
   return card;
 }
@@ -63,14 +65,14 @@ function buildLatestMagazineArticle(entry) {
   const picture = createOptimizedPicture(image, title, false, [{ width: '590', height: '410' }]);
   const pictureTag = picture.outerHTML;
   const readMore = (linkText || 'Read more...');
-  card.innerHTML = `<a href="${path}" class="imgcover">
-    ${pictureTag}
-    </a>
+  card.innerHTML = `
+    <a href="${path}" class="imgcover">${pictureTag}</a>
     <div class="content">
-    <h3>${title}</h3>
-    <p>${description}</p>
-    <a href="${path}" class="cta">${readMore}</a>
-    </div>`;
+      <h3>${title}</h3>
+      <p>${description}</p>
+      <a href="${path}" class="cta">${readMore}</a>
+    </div>
+  `;
   return card;
 }
 

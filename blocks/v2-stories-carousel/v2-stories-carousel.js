@@ -1,4 +1,3 @@
-import { ffetch } from '../../scripts/lib-ffetch.js';
 import {
   createOptimizedPicture,
   getMetadata,
@@ -6,12 +5,17 @@ import {
 } from '../../scripts/aem.js';
 import {
   createElement,
-  getLanguagePath,
-  getOrigin,
   getDateFromTimestamp,
   MAGAZINE_CONFIGS,
   extractObjectFromArray,
 } from '../../scripts/common.js';
+import {
+  clearCurrentArticle,
+  fetchMagazineArticles,
+  isMagazineTemplate,
+  removeArticlesWithNoImage,
+  sortArticlesByDateField,
+} from '../../scripts/services/magazine.service.js';
 import { smoothScrollHorizontal } from '../../scripts/motion-helper.js';
 
 const blockName = 'v2-stories-carousel';
@@ -127,16 +131,25 @@ const createArrowControls = (carousel) => {
 };
 
 const getMagazineArticles = async (limit = 5, tags = []) => {
-  const indexUrl = new URL(`${getLanguagePath()}magazine-articles.json`, getOrigin());
-  let articles = await ffetch(indexUrl).all();
+  const allArticles = await fetchMagazineArticles();
+  const artsWithImage = removeArticlesWithNoImage(allArticles);
+  let articles = clearCurrentArticle(artsWithImage);
 
+  if (isMagazineTemplate) {
+    articles = clearCurrentArticle(articles);
+  }
+
+  // If there are tags, filter the article list by that tag
   if (tags.length > 0) {
     articles = articles.filter((article) => tags.some((tag) => article.tags.includes(tag)));
   }
 
+  // If there are less articles than the limit complete the list with the rest of articles
   if (articles.length < limit) {
-    const recentArticles = await ffetch(indexUrl).limit(limit - articles.length).all();
-    articles = articles.concat(recentArticles);
+    const missingArts = artsWithImage.filter((art) => !tags.some((tag) => art.tags.includes(tag)));
+    const sortedArticles = sortArticlesByDateField(missingArts);
+    const missingArticles = sortedArticles.slice(0, limit - articles.length);
+    articles = articles.concat(missingArticles);
   }
 
   return articles.slice(0, limit);
