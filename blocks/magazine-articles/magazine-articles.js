@@ -35,7 +35,9 @@ function buildMagazineArticle(entry) {
   const formattedDate = getDateFromTimestamp(publishDate);
   const categoryItem = createElement('li');
   card.innerHTML = `
-    <a href="${path}" class="imgcover">${pictureTag}</a>
+    <a href="${path}" class="imgcover">
+      ${pictureTag}
+    </a>
     <div class="content">
       <ul>
         <li>${formattedDate}</li>
@@ -66,7 +68,9 @@ function buildLatestMagazineArticle(entry) {
   const pictureTag = picture.outerHTML;
   const readMore = (linkText || 'Read more...');
   card.innerHTML = `
-    <a href="${path}" class="imgcover">${pictureTag}</a>
+    <a href="${path}" class="imgcover">
+      ${pictureTag}
+    </a>
     <div class="content">
       <h3>${title}</h3>
       <p>${description}</p>
