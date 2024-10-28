@@ -20,7 +20,7 @@ const dateValues = {
 };
 
 const dateFormatter = (date, locale, options) => new Intl.DateTimeFormat(locale, options)
-  .format(new Date(date));
+  .format(new Date(date)).replaceAll('-', '/');
 
 const buildHeroTitle = () => {
   let title = getMetadata('og:title');
