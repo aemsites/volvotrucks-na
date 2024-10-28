@@ -37,8 +37,6 @@ import {
   addSoundcloudShowHandler,
 } from './video-helper.js';
 
-// import { validateCountries } from './validate-countries.js';
-
 const LCP_BLOCKS = ['teaser-grid']; // add your LCP blocks to the list
 window.hlx.RUM_GENERATION = 'project-1'; // add your RUM generation information here
 
@@ -804,10 +802,6 @@ const isConfiguratorPage = document.documentElement.classList.contains('truck-co
   || currentUrl.includes('/summary?config=');
 
 if (isConfiguratorPage) {
-  // const allowedCountries = getMetadata('allowed-countries');
-  // const errorPageUrl = getMetadata('redirect-url');
-  // if (allowedCountries && errorPageUrl) validateCountries(allowedCountries, errorPageUrl);
-
   const container = createElement('div', { props: { id: 'configurator' } });
   const main = document.querySelector('main');
   main.innerHTML = '';
