@@ -1,12 +1,12 @@
 import {
   createOptimizedPicture,
-  getMetadata,
   readBlockConfig,
 } from '../../scripts/aem.js';
-import { getOrigin } from '../../scripts/common.js';
+import {
+  getOrigin,
+  getDateFromTimestamp,
+} from '../../scripts/common.js';
 import { ffetch } from '../../scripts/lib-ffetch.js';
-
-const locale = getMetadata('locale');
 
 async function getArticles(path, limit) {
   const indexUrl = new URL(path, getOrigin());
@@ -50,8 +50,7 @@ function buildNews(elm, releases, quantity) {
     div.querySelector('.image-container a').href = release.path;
     div.querySelector('.image-container img').src = release.image;
     div.querySelector('.image-container img').alt = release.title;
-    const excelDate = new Date(release.date * 1000);
-    div.querySelector('.news-item-date').textContent = excelDate.toLocaleDateString(locale);
+    div.querySelector('.news-item-date').textContent = getDateFromTimestamp(release.date);
     div.querySelector('.news-item-content h3 a').innerText = release.title;
     div.querySelector('.news-item-content h3 a').href = release.path;
     div.querySelector('.news-item-content p').textContent = release.description;

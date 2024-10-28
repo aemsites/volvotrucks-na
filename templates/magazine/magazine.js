@@ -5,6 +5,7 @@ import {
 import {
   createElement,
   decorateIcons,
+  getLocale,
 } from '../../scripts/common.js';
 
 async function buildArticleHero(container) {
@@ -23,7 +24,7 @@ async function buildArticleHero(container) {
   const calendarIcon = createElement('i', { classes: ['fa', 'fa-calendar'] });
   topDetails.append(calendarIcon);
   const pubDateSpan = createElement('span', { classes: 'date' });
-  pubDateSpan.innerHTML = pubdate;
+  pubDateSpan.innerHTML = new Intl.DateTimeFormat(getLocale()).format(new Date(pubdate)).replaceAll('-', '/');
   topDetails.append(pubDateSpan);
 
   const timeIcon = createElement('i', { classes: ['fa', 'fa-clock-o'] });

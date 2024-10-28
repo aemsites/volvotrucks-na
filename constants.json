@@ -144,10 +144,6 @@
     "limit": 3,
     "data": [
       {
-        "name": "DATE_LANGUAGE",
-        "value": "en-US"
-      },
-      {
         "name": "DATE_OPTIONS",
         "value": "[\"month: short\",\"day: numeric\",\"year: numeric\"]"
       },

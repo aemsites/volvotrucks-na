@@ -598,3 +598,27 @@ export const isDevHost = () => {
   const devHosts = ['localhost', 'hlx.page', 'hlx.live', 'aem.page', 'aem.live'];
   return devHosts.some((url) => window.location.host.includes(url));
 };
+
+/**
+ * Function that checks for the locale field in metadata an returns it.
+ * It defaults to 'en-us'
+ * @returns {string} The locale string
+*/
+export const getLocale = () => {
+  // const locale = 'en-ca';
+  // const locale = 'es-mx';
+  const locale = getMetadata('locale') || 'en-us';
+  return locale;
+};
+
+/**
+ * Function that recieves a timestamp in seconds and returns a date
+ * in its locale's format. Defaults to US format date (MM/DD/YYYY)
+ * @param {string} timestamp The date in seconds as a string
+ * @param {object} options The date options obj for a specific format
+*/
+export const getDateFromTimestamp = (timestamp, options) => {
+  const date = new Date((timestamp * 1000) + (new Date().getTimezoneOffset() * 60000));
+  const localeDate = Intl.DateTimeFormat(getLocale(), options).format(date).replaceAll('-', '/');
+  return localeDate;
+};
