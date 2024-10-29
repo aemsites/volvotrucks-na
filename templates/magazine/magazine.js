@@ -24,7 +24,7 @@ async function buildArticleHero(container) {
   const calendarIcon = createElement('i', { classes: ['fa', 'fa-calendar'] });
   topDetails.append(calendarIcon);
   const pubDateSpan = createElement('span', { classes: 'date' });
-  pubDateSpan.innerHTML = new Intl.DateTimeFormat(getLocale()).format(new Date(pubdate)).replaceAll('-', '/');
+  pubDateSpan.innerHTML = new Intl.DateTimeFormat(getLocale()).format(new Date(pubdate));
   topDetails.append(pubDateSpan);
 
   const timeIcon = createElement('i', { classes: ['fa', 'fa-clock-o'] });

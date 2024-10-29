@@ -604,12 +604,7 @@ export const isDevHost = () => {
  * It defaults to 'en-us'
  * @returns {string} The locale string
 */
-export const getLocale = () => {
-  // const locale = 'en-ca';
-  // const locale = 'es-mx';
-  const locale = getMetadata('locale') || 'en-us';
-  return locale;
-};
+export const getLocale = () => getMetadata('locale') || 'en-us';
 
 /**
  * Function that recieves a timestamp in seconds and returns a date
@@ -619,6 +614,6 @@ export const getLocale = () => {
 */
 export const getDateFromTimestamp = (timestamp, options) => {
   const date = new Date((timestamp * 1000) + (new Date().getTimezoneOffset() * 60000));
-  const localeDate = Intl.DateTimeFormat(getLocale(), options).format(date).replaceAll('-', '/');
+  const localeDate = Intl.DateTimeFormat(getLocale(), options).format(date);
   return localeDate;
 };
