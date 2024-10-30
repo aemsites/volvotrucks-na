@@ -1,5 +1,4 @@
 import {
-  getLanguagePath,
   getOrigin,
   getTextLabel,
   createElement,
@@ -11,11 +10,14 @@ import {
   createOptimizedPicture,
   getMetadata,
 } from '../../scripts/aem.js';
-import { fetchData, magazineSearchQuery } from '../../scripts/search-api.js';
+import { fetchData, magazineSearchQuery, TENANT } from '../../scripts/search-api.js';
 
 const locale = getMetadata('locale');
+const language = locale ? locale.split('-')[0].toUpperCase() : 'EN';
 const defaultAuthor = getTextLabel('defaultAuthor');
 const defaultReadTime = getTextLabel('defaultReadTime');
+const filterLists = { category: null, topic: null, truck: null };
+let firstLoad = true;
 
 function buildMagazineArticle(entry) {
   const {
@@ -33,13 +35,13 @@ function buildMagazineArticle(entry) {
   const picture = createOptimizedPicture(image, title, false, [{ width: '380', height: '214' }]);
   const pictureTag = picture.outerHTML;
   const date = new Date((publishDate * 1000) + (new Date().getTimezoneOffset() * 60000));
-  const categoryItem = createElement('li');
+
   card.innerHTML = `<a href="${path}" class="imgcover">
     ${pictureTag}
     </a>
     <div class="content">
     <ul><li>${date.toLocaleDateString(locale)}</li>
-    ${(category ? categoryItem.textContent(category) : '')}</ul>
+    ${(category ? `<li>${category}</li>` : '')}</ul>
     <h3><a href="${path}">${title}</a></h3>
     <p>${description}</p>
     <ul>
@@ -74,25 +76,11 @@ function buildLatestMagazineArticle(entry) {
   return card;
 }
 
-async function getFilterOptions() {
-  const resp = await fetch(`${getLanguagePath()}news-and-stories/tags.plain.html`);
-  const markup = await resp.text();
-  const div = document.createElement('div');
-  div.innerHTML = markup;
-  const categoryList = Array.from(div.querySelectorAll('li:nth-child(2) ul:first-child li:first-child li'))
-    .map((li) => li.textContent);
-  const topicList = Array.from(div.querySelectorAll('li:nth-child(2) ul:first-child li:nth-child(2) li'))
-    .map((li) => li.textContent);
-  const truckSeriesList = Array.from(div.querySelectorAll('li:nth-child(2) ul:first-child li:last-child li'))
-    .map((li) => li.textContent);
-
-  return { categoryList, topicList, truckSeriesList };
-}
-
 async function filterArticles(articles, activeFilters) {
   const {
     category, topic, truck, search,
   } = activeFilters;
+  const filters = { category, topic, truck };
   const haveFilters = [category, topic, truck].some((filter) => !!filter);
   const hasSearch = !!search;
   if (!haveFilters && !hasSearch) {
@@ -101,9 +89,16 @@ async function filterArticles(articles, activeFilters) {
   }
 
   // otherwise do a query again with any of these filters
-  const tags = [category, topic, truck].filter(Boolean).map((tag) => tag.replaceAll('-', ' '));
+  const tags = {};
+  Object.entries(filters).forEach(([key, value]) => {
+    if (value) {
+      tags[key] = value.replaceAll('-', ' ');
+    } else {
+      delete tags[key];
+    }
+  });
   const filterOptions = {
-    ...(tags.length && { tags }),
+    ...(haveFilters && { tags }),
     ...(search && { q: search }),
   };
 
@@ -114,22 +109,17 @@ async function filterArticles(articles, activeFilters) {
 
 async function createFilter(articles, activeFilters, createDropdown, createInputSearch) {
   const searchText = getTextLabel('Search');
-  const [tagList, search] = await Promise.all([
-    getFilterOptions(),
-    createInputSearch(searchText.toLowerCase(), activeFilters.search, searchText),
-  ]);
+  const term = activeFilters.search || '';
+  const { category, topic, truck } = filterLists;
+  const search = await createInputSearch(searchText.toLowerCase(), term, searchText);
+  const categoryFilter = createDropdown(category, activeFilters.category, 'category', 'All Categories');
+  const topicFilter = createDropdown(topic, activeFilters.topic, 'topic', 'All Topics');
+  const truckFilter = createDropdown(truck, activeFilters.truck, 'truck', 'All Truck Series');
 
-  const categoryFilter = createDropdown(tagList.categoryList, activeFilters.category, 'category', 'All Categories');
-  const categorySelection = categoryFilter.querySelector('select');
-  categorySelection.addEventListener('change', (e) => e.target.form.submit());
-
-  const topicFilter = createDropdown(tagList.topicList, activeFilters.topic, 'topic', 'All Topics');
-  const topicSelection = topicFilter.querySelector('select');
-  topicSelection.addEventListener('change', (e) => e.target.form.submit());
-
-  const truckFilter = createDropdown(tagList.truckSeriesList, activeFilters.truck, 'truck', 'All Truck Series');
-  const truckSelection = truckFilter.querySelector('select');
-  truckSelection.addEventListener('change', (e) => e.target.form.submit());
+  [categoryFilter, topicFilter, truckFilter].forEach((filter) => {
+    const select = filter.querySelector('select');
+    select.addEventListener('change', (e) => e.target.form.submit());
+  });
 
   return [
     search,
@@ -157,27 +147,23 @@ async function createLatestMagazineArticles(mainEl, magazineArticles) {
 const tempData = [];
 
 async function getMagazineArticles({
-  limit, offset = 0, tags = null, q = 'truck',
+  limit, offset = 0, tags = null, q = 'truck', sort = 'BEST_MATCH',
 } = {}) {
   const hasLimit = limit !== undefined;
   const variables = {
-    tenant: 'franklin-vg-volvotrucks-us',
-    language: 'EN',
+    tenant: TENANT,
+    language,
     q,
-    facets: [
-      {
-        field: 'TAGS',
-      },
-    ],
-    filters: [{ field: 'CATEGORY', value: 'magazine' }],
+    category: 'magazine',
     limit: hasLimit ? limit : null,
     offset,
+    facets: ['ARTICLE', 'TOPIC', 'TRUCK'],
+    sort,
+    article: {},
   };
 
-  if (tags && tags.length) {
-    tags.forEach((tag) => {
-      variables.filters.push({ field: 'TAGS', value: tag });
-    });
+  if (tags) {
+    variables.article = tags;
   }
 
   try {
@@ -186,7 +172,7 @@ async function getMagazineArticles({
       variables,
     });
 
-    const querySuccess = rawData && rawData.data && rawData.data.volvosearch;
+    const querySuccess = rawData && rawData.data && rawData.data.edssearch;
 
     if (!querySuccess) {
       return tempData;
@@ -200,20 +186,44 @@ async function getMagazineArticles({
       return getOrigin() + logoImageURL;
     };
 
-    const { items, count } = rawData.data.volvosearch;
-    tempData.push(...items.map((item) => ({
-      ...item.metadata,
-      filterTag: item.metadata.tags,
-      author: item.metadata.articleAuthor ? item.metadata.articleAuthor.name : defaultAuthor,
-      image: isImageLink(item.metadata.articleImage)
-        ? getOrigin() + item.metadata.articleImage : getDefaultImage(),
-      path: item.uuid,
-      readingTime: /\d+/.test(item.metadata.readTime) ? item.metadata.readTime : defaultReadTime,
-      isDefaultImage: !isImageLink(item.metadata.articleImage),
-    })));
+    const { items, count, facets } = rawData.data.edssearch;
+    tempData.push(...items.map((item) => {
+      const filterTag = ['category', 'topic', 'truck']
+        .map((key) => item.metadata.article[key])
+        .filter(Boolean);
+      const { article, image } = item.metadata;
+      return {
+        ...item.metadata,
+        filterTag,
+        author: article.author || defaultAuthor,
+        image: isImageLink(image) ? getOrigin() + image : getDefaultImage(),
+        path: item.uuid,
+        readingTime: /\d+/.test(article.readTime) ? article.readTime : defaultReadTime,
+        isDefaultImage: !isImageLink(image),
+        category: article.category,
+      };
+    }));
 
     if (!hasLimit && tempData.length < count) {
-      return getMagazineArticles({ limit: count, offset: tempData.length });
+      const props = { limit: count, offset: tempData.length };
+      if (tags) {
+        props.tags = tags;
+      }
+      return getMagazineArticles(props);
+    }
+    if (firstLoad) {
+      firstLoad = false;
+      facets.forEach((facet) => {
+        const key = facet.field === 'ARTICLE' ? 'category' : facet.field.toLowerCase();
+        const uniqueItems = new Set(facet.items.map((item) => {
+          const value = item.value.trim();
+          if (key === 'truck') {
+            return value.toUpperCase();
+          }
+          return value.charAt(0).toUpperCase() + value.slice(1);
+        }));
+        filterLists[key] = [...uniqueItems];
+      });
     }
     const sortedByDate = [...tempData.sort(
       (a, b) => new Date(b.publishDate) - new Date(a.publishDate),

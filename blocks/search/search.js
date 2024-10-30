@@ -8,9 +8,12 @@ import {
   getShowingResultsTemplate,
 } from './templates.js';
 
-import { searchQuery, fetchData, sanitizeQueryTerm } from '../../scripts/search-api.js';
+import {
+  searchQuery, fetchData, sanitizeQueryTerm, TENANT,
+} from '../../scripts/search-api.js';
 
 import { fetchAutosuggest, handleArrowDown, handleArrowUp } from './autosuggest.js';
+import { getMetadata } from '../../scripts/aem.js';
 
 const PLACEHOLDERS = {
   searchFor: getTextLabel('Search For'),
@@ -27,24 +30,30 @@ const SEARCH_PARAMS = {
   _q: 'q',
   _start: 'start',
   _sort: 'sort',
-  _tags: 'tags',
+  _article: 'article',
+  _topic: 'topic',
+  _truck: 'truck',
   _category: 'category',
 };
 
 export default function decorate(block) {
   const fragmentRange = document.createRange();
+  const locale = getMetadata('locale');
+  const language = locale ? locale.split('-')[0].toUpperCase() : 'EN';
 
   // check if url has query params
   const {
     _q,
     _start,
     _sort,
-    _tags,
+    _article,
+    _topic,
+    _truck,
     _category,
   } = SEARCH_PARAMS;
   const urlParams = new URLSearchParams(window.location.search);
   const searchTerm = urlParams.get(_q);
-  const tenant = 'franklin-vg-volvotrucks-us';
+  const tenant = TENANT;
   let offset = urlParams.get(_start);
   offset = offset ? Number(offset) : 0;
   let resultCount = 0;
@@ -178,7 +187,6 @@ export default function decorate(block) {
   };
 
   const updateFilterCheckbox = () => {
-    // const facetsArr = facets.reduce((acc, curVal) => acc.concat(curVal.items), []);
     const form = block.querySelector('form');
     [...form].forEach((field) => {
       const isChecked = facetsFilters.find(({ value }) => value.includes(field.value));
@@ -214,7 +222,7 @@ export default function decorate(block) {
         });
       }
     });
-    const filterParams = [_tags, _category];
+    const filterParams = [_article, _topic, _truck, _category];
 
     filterParams.forEach((item) => {
       const filter = facetsFilters.find(({ field }) => field.toLowerCase() === item);
@@ -355,53 +363,58 @@ export default function decorate(block) {
     const offsetVal = Number(searchParams.get(_start));
     const sortVal = searchParams.get(_sort) || 'BEST_MATCH';
 
-    const tags = searchParams.get(_tags);
-    const category = searchParams.get(_category);
+    const filters = {
+      category: { field: 'CATEGORY', value: _category },
+      article: { field: 'ARTICLE', value: _article },
+      topic: { field: 'TOPIC', value: _topic },
+      truck: { field: 'TRUCK', value: _truck },
+    };
+    const objectFilters = Object.keys(filters);
 
-    if (tags) {
-      facetsFilters.push({
-        field: 'TAGS',
-        value: tags.split(','),
-      });
-    }
-
-    if (category) {
-      facetsFilters.push({
-        field: 'CATEGORY',
-        value: category.split(','),
-      });
-    }
-
-    const isFilters = facetsFilters.length;
     const variables = {
       q: queryTerm,
-      language: 'EN',
+      language,
       limit,
       offset: offsetVal,
-      facets: [{
-        field: 'TAGS',
-      }, {
-        field: 'CATEGORY',
-      }],
       sort: sortVal,
       tenant,
+      facets: [...objectFilters.map((key) => filters[key].field)],
+      article: {},
     };
 
-    if (isFilters) variables.filters = facetsFilters;
+    objectFilters.forEach((key) => {
+      // check for filters in the url ...
+      const value = searchParams.get(filters[key].value);
+      // updates the variables object ...
+      if (value) {
+        const splittedValue = value.split(',');
+        if (key === 'category') {
+          variables[key] = splittedValue;
+        } else {
+          const articleKey = key === 'article' ? 'category' : key;
+          variables.article[articleKey] = splittedValue;
+        }
+        // and updates the facetsFilters to be used to update the checkboxes
+        facetsFilters.push({
+          field: filters[key].field,
+          value: splittedValue,
+        });
+      }
+    });
 
     fetchData({
-      query: searchQuery(isFilters),
+      query: searchQuery(),
       variables,
     }).then(({ errors, data }) => {
       if (errors) {
         // eslint-disable-next-line no-console
         console.log('%cSomething went wrong', errors);
       } else {
-        const { volvosearch } = data;
+        const { edssearch } = data;
         nextOffset = offset + limit;
-        countSpan.innerText = volvosearch.count;
-        showResults(volvosearch);
-        updatePaginationDOM(volvosearch);
+        countSpan.innerText = edssearch.count;
+        showResults(edssearch);
+        updatePaginationDOM(edssearch);
       }
     });
   }
