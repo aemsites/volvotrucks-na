@@ -622,7 +622,7 @@ main input {
 
 div:where([role="dialog"]) input:hover,
 main input:hover {
-  border: 1px solid var(--text-color);
+  outline: 2px solid var(--border-hover);
 }
 
 div:where([role="dialog"]) pre,
