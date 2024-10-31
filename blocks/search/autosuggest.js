@@ -1,12 +1,11 @@
-import { getMetadata } from '../../scripts/aem.js';
-import { createElement } from '../../scripts/common.js';
+import { createElement, getLocale } from '../../scripts/common.js';
 import { autosuggestQuery, fetchData, TENANT } from '../../scripts/search-api.js';
 
 const autoSuggestClass = 'autosuggest-results-item-highlighted';
 
 export function fetchAutosuggest(term, autosuggestEle, rowEle, func) {
   const fragmentRange = document.createRange();
-  const language = getMetadata('locale');
+  const language = getLocale();
   const locale = language ? language.split('-')[0].toUpperCase() : 'EN';
 
   fetchData({

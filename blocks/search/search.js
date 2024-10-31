@@ -1,5 +1,5 @@
 /* eslint-disable no-use-before-define */
-import { debounce, getTextLabel } from '../../scripts/common.js';
+import { debounce, getLocale, getTextLabel } from '../../scripts/common.js';
 import {
   getFacetsTemplate,
   getNoResultsTemplate,
@@ -13,7 +13,6 @@ import {
 } from '../../scripts/search-api.js';
 
 import { fetchAutosuggest, handleArrowDown, handleArrowUp } from './autosuggest.js';
-import { getMetadata } from '../../scripts/aem.js';
 
 const PLACEHOLDERS = {
   searchFor: getTextLabel('Search For'),
@@ -38,7 +37,7 @@ const SEARCH_PARAMS = {
 
 export default function decorate(block) {
   const fragmentRange = document.createRange();
-  const locale = getMetadata('locale');
+  const locale = getLocale();
   const language = locale ? locale.split('-')[0].toUpperCase() : 'EN';
 
   // check if url has query params

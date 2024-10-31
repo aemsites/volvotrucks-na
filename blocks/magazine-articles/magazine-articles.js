@@ -3,6 +3,7 @@ import {
   getTextLabel,
   createElement,
   getDateFromTimestamp,
+  getLocale,
 } from '../../scripts/common.js';
 import {
   createList,
@@ -12,7 +13,7 @@ import {
 } from '../../scripts/aem.js';
 import { fetchData, magazineSearchQuery, TENANT } from '../../scripts/search-api.js';
 
-const locale = getMetadata('locale');
+const locale = getLocale();
 const language = locale ? locale.split('-')[0].toUpperCase() : 'EN';
 const defaultAuthor = getTextLabel('defaultAuthor');
 const defaultReadTime = getTextLabel('defaultReadTime');
@@ -36,7 +37,7 @@ function buildMagazineArticle(entry) {
   const picture = createOptimizedPicture(image, title, false, [{ width: '380', height: '214' }]);
   const pictureTag = picture.outerHTML;
   const formattedDate = getDateFromTimestamp(publishDate);
-  
+
   card.innerHTML = `
     <a href="${path}" class="imgcover">
       ${pictureTag}
