@@ -1,10 +1,6 @@
 import {
-  getLanguagePath,
-  getOrigin,
+  getDateFromTimestamp,
 } from '../../scripts/common.js';
-import {
-  ffetch,
-} from '../../scripts/lib-ffetch.js';
 import {
   splitTags,
 } from '../../scripts/magazine-press.js';
@@ -13,6 +9,10 @@ import {
   getMetadata,
   toClassName,
 } from '../../scripts/aem.js';
+import {
+  fetchMagazineArticles,
+  removeArticlesWithNoImage,
+} from '../../scripts/services/magazine.service.js';
 
 function buildRelatedMagazineArticle(entry) {
   const {
@@ -23,21 +23,22 @@ function buildRelatedMagazineArticle(entry) {
     readingTime,
     publishDate,
   } = entry;
+
   const card = document.createElement('article');
   const picture = createOptimizedPicture(image, title, false, [{ width: '380', height: '214' }]);
   const pictureTag = picture.outerHTML;
-  const date = new Date((publishDate * 1000) + (new Date().getTimezoneOffset() * 60000));
-  card.innerHTML = `<a href="${path}" class="imgcover">
-  ${pictureTag}
-  </a>
-  <div class="content">
-  <ul><li>${date.toLocaleDateString()}</li></ul>
-  <h3><a href="${path}">${title}</a></h3>
-  <ul>
-  <li>${author}</li>
-  <li>${readingTime}</li>
-  </ul>
-  </div>`;
+  const formattedDate = getDateFromTimestamp(publishDate);
+  card.innerHTML = `
+    <a href="${path}" class="imgcover">${pictureTag}</a>
+    <div class="content">
+      <ul><li>${formattedDate}</li></ul>
+      <h3><a href="${path}">${title}</a></h3>
+      <ul>
+        <li>${author}</li>
+        <li>${readingTime}</li>
+      </ul>
+    </div>
+  `;
   return card;
 }
 
@@ -65,13 +66,9 @@ async function createRelatedtMagazineArticles(mainEl, magazineArticles) {
   });
 }
 
-async function getRelatedMagazineArticles() {
-  const indexUrl = new URL(`${getLanguagePath()}magazine-articles.json`, getOrigin());
-  const articles = ffetch(indexUrl).all();
-  return articles;
-}
-
 export default async function decorate(block) {
-  const magazineArticles = await getRelatedMagazineArticles();
-  createRelatedtMagazineArticles(block, magazineArticles);
+  const allArticles = await fetchMagazineArticles();
+  const articles = removeArticlesWithNoImage(allArticles);
+
+  createRelatedtMagazineArticles(block, articles);
 }

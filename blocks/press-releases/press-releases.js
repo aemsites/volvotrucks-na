@@ -1,6 +1,7 @@
 import {
   getLanguagePath,
   getOrigin,
+  getDateFromTimestamp,
 } from '../../scripts/common.js';
 import {
   ffetch,
@@ -11,12 +12,10 @@ import {
 } from '../../scripts/magazine-press.js';
 import {
   createOptimizedPicture,
-  getMetadata,
   readBlockConfig,
   toClassName,
 } from '../../scripts/aem.js';
 
-const locale = getMetadata('locale');
 const stopWords = ['a', 'an', 'the', 'and', 'to', 'for', 'i', 'of', 'on', 'into'];
 
 function createPressReleaseFilterFunction(activeFilters) {
@@ -70,12 +69,12 @@ function buildPressReleaseArticle(entry) {
   const card = document.createElement('article');
   const picture = createOptimizedPicture(image, title, false, [{ width: '414' }]);
   const pictureTag = picture.outerHTML;
-  const date = new Date((publishDate * 1000) + (new Date().getTimezoneOffset() * 60000));
+  const formattedDate = getDateFromTimestamp(publishDate);
   card.innerHTML = `<a href="${path}">
     ${pictureTag}
   </a>
   <div>
-    <span class="date">${date.toLocaleDateString(locale)}</span>
+    <span class="date">${formattedDate}</span>
     <h3><a href="${path}">${title}</a></h3>
     <p>${description}</p>
   </div>`;

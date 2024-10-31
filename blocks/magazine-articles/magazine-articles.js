@@ -2,13 +2,13 @@ import {
   getOrigin,
   getTextLabel,
   createElement,
+  getDateFromTimestamp,
 } from '../../scripts/common.js';
 import {
   createList,
 } from '../../scripts/magazine-press.js';
 import {
   createOptimizedPicture,
-  getMetadata,
 } from '../../scripts/aem.js';
 import { fetchData, magazineSearchQuery, TENANT } from '../../scripts/search-api.js';
 
@@ -31,24 +31,29 @@ function buildMagazineArticle(entry) {
     publishDate,
     isDefaultImage,
   } = entry;
+
   const card = createElement('article');
   const picture = createOptimizedPicture(image, title, false, [{ width: '380', height: '214' }]);
   const pictureTag = picture.outerHTML;
-  const date = new Date((publishDate * 1000) + (new Date().getTimezoneOffset() * 60000));
-
-  card.innerHTML = `<a href="${path}" class="imgcover">
-    ${pictureTag}
+  const formattedDate = getDateFromTimestamp(publishDate);
+  
+  card.innerHTML = `
+    <a href="${path}" class="imgcover">
+      ${pictureTag}
     </a>
     <div class="content">
-    <ul><li>${date.toLocaleDateString(locale)}</li>
-    ${(category ? `<li>${category}</li>` : '')}</ul>
-    <h3><a href="${path}">${title}</a></h3>
-    <p>${description}</p>
-    <ul>
-    <li>${author}</li>
-    <li>${readingTime}</li>
-    </ul>
-    </div>`;
+      <ul>
+        <li>${formattedDate}</li>
+      ${(category ? `<li>${category}</li>` : '')}
+      </ul>
+      <h3><a href="${path}">${title}</a></h3>
+      <p>${description}</p>
+      <ul>
+        <li>${author}</li>
+        <li>${readingTime}</li>
+      </ul>
+    </div>
+  `;
   card.querySelector('picture').classList.toggle('default-image', isDefaultImage);
   return card;
 }
@@ -65,14 +70,16 @@ function buildLatestMagazineArticle(entry) {
   const picture = createOptimizedPicture(image, title, false, [{ width: '590', height: '410' }]);
   const pictureTag = picture.outerHTML;
   const readMore = (linkText || 'Read more...');
-  card.innerHTML = `<a href="${path}" class="imgcover">
-    ${pictureTag}
+  card.innerHTML = `
+    <a href="${path}" class="imgcover">
+      ${pictureTag}
     </a>
     <div class="content">
-    <h3>${title}</h3>
-    <p>${description}</p>
-    <a href="${path}" class="cta">${readMore}</a>
-    </div>`;
+      <h3>${title}</h3>
+      <p>${description}</p>
+      <a href="${path}" class="cta">${readMore}</a>
+    </div>
+  `;
   return card;
 }
 

@@ -1,4 +1,3 @@
-import { ffetch } from '../../scripts/lib-ffetch.js';
 import {
   createOptimizedPicture,
   getMetadata,
@@ -6,13 +5,20 @@ import {
 } from '../../scripts/aem.js';
 import {
   createElement,
-  getLanguagePath,
-  getOrigin,
+  getDateFromTimestamp,
+  MAGAZINE_CONFIGS,
+  extractObjectFromArray,
 } from '../../scripts/common.js';
+import {
+  clearCurrentArticle,
+  fetchMagazineArticles,
+  isMagazineTemplate,
+  removeArticlesWithNoImage,
+  sortArticlesByDateField,
+} from '../../scripts/services/magazine.service.js';
 import { smoothScrollHorizontal } from '../../scripts/motion-helper.js';
 
 const blockName = 'v2-stories-carousel';
-const locale = getMetadata('locale');
 const lowLimit = 3;
 const highLimit = 7;
 
@@ -125,16 +131,25 @@ const createArrowControls = (carousel) => {
 };
 
 const getMagazineArticles = async (limit = 5, tags = []) => {
-  const indexUrl = new URL(`${getLanguagePath()}magazine-articles.json`, getOrigin());
-  let articles = await ffetch(indexUrl).all();
+  const allArticles = await fetchMagazineArticles();
+  const artsWithImage = removeArticlesWithNoImage(allArticles);
+  let articles = clearCurrentArticle(artsWithImage);
 
+  if (isMagazineTemplate) {
+    articles = clearCurrentArticle(articles);
+  }
+
+  // If there are tags, filter the article list by that tag
   if (tags.length > 0) {
     articles = articles.filter((article) => tags.some((tag) => article.tags.includes(tag)));
   }
 
+  // If there are less articles than the limit complete the list with the rest of articles
   if (articles.length < limit) {
-    const recentArticles = await ffetch(indexUrl).limit(limit - articles.length).all();
-    articles = articles.concat(recentArticles);
+    const missingArts = artsWithImage.filter((art) => !tags.some((tag) => art.tags.includes(tag)));
+    const sortedArticles = sortArticlesByDateField(missingArts);
+    const missingArticles = sortedArticles.slice(0, limit - articles.length);
+    articles = articles.concat(missingArticles);
   }
 
   return articles.slice(0, limit);
@@ -150,12 +165,17 @@ const buildStoryCard = (entry) => {
     publishDate,
     readingTime,
   } = entry;
+
   const title = originalTitle.split('|')[0].trim();
   const li = createElement('article', { classes: `${blockName}-item` });
   const picture = createOptimizedPicture(image, title, false);
   const pictureTag = picture.outerHTML;
   const readMore = (linkText || 'Read full story');
-  const date = new Date((publishDate * 1000) + (new Date().getTimezoneOffset() * 60000));
+
+  const { DATE_OPTIONS } = MAGAZINE_CONFIGS;
+  const dateOptions = DATE_OPTIONS ? extractObjectFromArray(JSON.parse(DATE_OPTIONS)) : {};
+  const formattedDate = getDateFromTimestamp(publishDate, dateOptions);
+
   const svgArrowRight = createElement('span', { classes: ['icon', 'icon-arrow-right'] });
   const cardFragment = document.createRange().createContextualFragment(`
     <a href="${path}">
@@ -166,8 +186,8 @@ const buildStoryCard = (entry) => {
       <p>${description}</p>
       <ul class="${blockName}-meta">
         <li class="${blockName}-date">
-          <time datetime="${date}" pubdate="pubdate">
-            ${date.toLocaleDateString(locale, { year: 'numeric', month: 'short', day: 'numeric' })}
+          <time datetime="${formattedDate}" pubdate="pubdate">
+            ${formattedDate}
           </time>
         </li>
         <li class="${blockName}-timetoread">
