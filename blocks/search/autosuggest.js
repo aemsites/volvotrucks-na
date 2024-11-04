@@ -6,7 +6,7 @@ const autoSuggestClass = 'autosuggest-results-item-highlighted';
 export function fetchAutosuggest(term, autosuggestEle, rowEle, func) {
   const fragmentRange = document.createRange();
   const language = getLocale();
-  const locale = language ? language.split('-')[0].toUpperCase() : 'EN';
+  const locale = language.split('-')[0].toUpperCase();
 
   fetchData({
     query: autosuggestQuery(),

@@ -1,9 +1,9 @@
-import { SEARCH_URLS, isDevHost } from './common.js';
+import { SEARCH_URLS, isDevHost, TENANT as _TENANT } from './common.js';
 
-const { SEARCH_URL_DEV, SEARCH_URL_PROD, TENANT: _TENANT } = SEARCH_URLS;
+const { SEARCH_URL_DEV, SEARCH_URL_PROD } = SEARCH_URLS;
 const isProd = !isDevHost();
 const SEARCH_LINK = !isProd ? SEARCH_URL_DEV : SEARCH_URL_PROD;
-export const TENANT = _TENANT;
+export const { TENANT } = _TENANT;
 
 export async function fetchData(queryObj) {
   try {

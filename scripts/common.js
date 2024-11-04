@@ -617,3 +617,11 @@ export const getDateFromTimestamp = (timestamp, options) => {
   const localeDate = Intl.DateTimeFormat(getLocale(), options).format(date);
   return localeDate;
 };
+
+export const TENANT = await getJsonFromUrl('/search-config.json')
+  .then((config) => formatValues(config?.data))
+  .catch(() => {
+    // eslint-disable-next-line no-console
+    console.error('Error fetching search config');
+    return null;
+  });

@@ -14,7 +14,7 @@ import {
 import { fetchData, magazineSearchQuery, TENANT } from '../../scripts/search-api.js';
 
 const locale = getLocale();
-const language = locale ? locale.split('-')[0].toUpperCase() : 'EN';
+const language = locale.split('-')[0].toUpperCase();
 const defaultAuthor = getTextLabel('defaultAuthor');
 const defaultReadTime = getTextLabel('defaultReadTime');
 const filterLists = { category: null, topic: null, truck: null };

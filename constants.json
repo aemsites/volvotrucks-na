@@ -11,10 +11,6 @@
       {
         "name": "SEARCH_URL_DEV",
         "value": "https://search-api-qa-eds.aws.43636.vnonprod.com/search"
-      },
-      {
-        "name": "TENANT",
-        "value": "volvotrucks-us"
       }
     ]
   },

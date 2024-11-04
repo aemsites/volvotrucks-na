@@ -38,7 +38,7 @@ const SEARCH_PARAMS = {
 export default function decorate(block) {
   const fragmentRange = document.createRange();
   const locale = getLocale();
-  const language = locale ? locale.split('-')[0].toUpperCase() : 'EN';
+  const language = locale.split('-')[0].toUpperCase();
 
   // check if url has query params
   const {
