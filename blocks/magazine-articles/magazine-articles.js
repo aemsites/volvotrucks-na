@@ -112,8 +112,7 @@ async function filterArticles(articles, activeFilters) {
 
   // Return the promise from getMagazineArticles
   // eslint-disable-next-line no-use-before-define
-  const filteredArticles = await getMagazineArticles(filterOptions);
-  return filteredArticles;
+  return getMagazineArticles(filterOptions);
 }
 
 async function createFilter(articles, activeFilters, createDropdown, createInputSearch) {
