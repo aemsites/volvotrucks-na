@@ -18,7 +18,7 @@ const checkForRedirect = (list, country, url) => {
   // Check if country is included in the list that comes from the metadata
   if (!list.includes(country)) {
     // eslint-disable-next-line no-console
-    console.error('Truck configurator not avaliable for:', country);
+    console.error('Truck configurator not avaliable for: ', country);
     const completeUrl = window.location.origin + url;
     window.location.replace(completeUrl);
   }
@@ -37,7 +37,7 @@ export const validateCountries = async (countries, url) => {
   };
   const locationError = (error) => {
     // eslint-disable-next-line no-console
-    console.error('Error:', error);
+    console.error('Error: ', error);
   };
 
   navigator.geolocation.getCurrentPosition(locationSuccess, locationError);

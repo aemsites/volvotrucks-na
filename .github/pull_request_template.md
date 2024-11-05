@@ -1,10 +1,10 @@
 Fix #<gh-issue-id>
 
 URL for testing:
-- https://691-new-volvo--volvotrucks-na--aemsites.hlx.page/
+- https://main--volvotrucks-us--volvogroup.aem.page/
 
 Other test URLs:
-- Before: https://main--volvotrucks-us--volvogroup.aem.page/
+- Before: https://<branch>--volvotrucks-us--volvogroup.aem.page/
 
 Other markets:
 
