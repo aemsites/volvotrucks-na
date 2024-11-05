@@ -165,6 +165,7 @@ async function buildElements(pressReleases, filter, createFilters, buildPressRel
     };
     relatedPressReleases = true;
   }
+
   let filteredData = filter ? await filter(pressReleases, actFilter) : pressReleases;
 
   let page = parseInt(getSelectionFromUrl('page'), 10);
