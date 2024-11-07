@@ -14,7 +14,7 @@ import {
 } from './video-helper.js';
 
 // COOKIE ACCEPTANCE AND IDs default to false in case no ID is present
-const { 
+const {
   FACEBOOK_PIXEL_ID = false,
   HOTJAR_ID = false,
   GTM_ID = false,
@@ -155,7 +155,7 @@ async function loadAccountEngagementTracking() {
   const body = document.querySelector('body');
   const script = document.createElement('script');
   script.type = 'text/javascript';
-  
+
   script.text = `piAId = '${piAId}'; piCId = '${piCId}'; piHostname = '${piHostname}'; (function() { function async_load(){ var s = document.createElement('script'); s.type = 'text/javascript'; s.src = ('https:' == document.location.protocol ? 'https://pi' : 'http://cdn') + '.pardot.com/pd.js'; var c = document.getElementsByTagName('script')[0]; c.parentNode.insertBefore(s, c); } if(window.attachEvent) { window.attachEvent('onload', async_load); } else { window.addEventListener('load', async_load, false); } })();`;
 
   body.append(script);
@@ -219,7 +219,7 @@ async function loadTiktokPixel() {
       ttq.track('ClickButton', trackingObject);
 
       // Repeat similar structure for 'Download', 'CompletePayment', 'Contact', 'CompleteRegistration',
-      // 'ViewContent', 'AddToCart', 'PlaceAnOrder', 'AddPaymentInfo', 'InitiateCheckout', 'Search', 
+      // 'ViewContent', 'AddToCart', 'PlaceAnOrder', 'AddPaymentInfo', 'InitiateCheckout', 'Search',
       // 'AddToWishlist', 'Subscribe', and 'Pageview' events with appropriate parameters and comments.
    }(window, document, 'ttq');
 }
@@ -239,6 +239,7 @@ async function loadVideoJs() {
 }
 
 const hasVideo = document.querySelector('.video-js')
+  || document.querySelector('.link-with-video')
   || document.querySelector('.text-link-with-video')
   || document.querySelector('.v2-video__big-play-button')
   || document.querySelector('.v2-resource-gallery__video-list-item .icon-play-video')
