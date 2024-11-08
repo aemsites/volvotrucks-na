@@ -100,6 +100,8 @@ async function filterArticles(articles, activeFilters) {
   const tags = {};
   Object.entries(filters).forEach(([key, value]) => {
     if (value) {
+      // values stored as facets are separated by an space, so if the url filter has a dash
+      // it has to be replaced by a space
       tags[key] = value.replaceAll('-', ' ');
     } else {
       delete tags[key];
