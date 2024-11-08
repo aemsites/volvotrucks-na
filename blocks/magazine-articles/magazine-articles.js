@@ -221,13 +221,17 @@ async function getMagazineArticles({
     }
     if (firstLoad) {
       firstLoad = false;
+      // to fill the 3 filter dropdowns is needed to get the items from the facets
       facets.forEach((facet) => {
+        // article category comes as 'ARTICLE' so it has to be changed to 'category'
         const key = facet.field === 'ARTICLE' ? 'category' : facet.field.toLowerCase();
         const uniqueItems = new Set(facet.items.map((item) => {
           const value = item.value.trim();
+          // truck models are uppercase
           if (key === 'truck') {
             return value.toUpperCase();
           }
+          // Article categories and topics are capitalized
           return value.charAt(0).toUpperCase() + value.slice(1);
         }));
         filterLists[key] = [...uniqueItems];
