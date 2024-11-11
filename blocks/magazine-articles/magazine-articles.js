@@ -103,8 +103,6 @@ async function filterArticles(articles, activeFilters) {
       // values stored as facets are separated by an space, so if the url filter has a dash
       // it has to be replaced by a space
       tags[key] = value.replaceAll('-', ' ');
-    } else {
-      delete tags[key];
     }
   });
   const filterOptions = {
