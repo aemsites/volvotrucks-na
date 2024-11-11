@@ -1,7 +1,6 @@
-import { SEARCH_URLS, isDevHost, SEARCH_CONFIGS } from './common.js';
+import { isDevHost, SEARCH_CONFIGS } from './common.js';
 
-const { SEARCH_URL_DEV, SEARCH_URL_PROD } = SEARCH_URLS;
-export const { TENANT } = SEARCH_CONFIGS;
+export const { TENANT, SEARCH_URL_DEV, SEARCH_URL_PROD } = SEARCH_CONFIGS;
 const isProd = !isDevHost();
 const SEARCH_LINK = !isProd ? SEARCH_URL_DEV : SEARCH_URL_PROD;
 

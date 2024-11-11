@@ -471,7 +471,6 @@ const formatValues = (values) => {
 };
 
 const {
-  searchUrls,
   searchConfig,
   cookieValues,
   magazineConfig,
@@ -483,7 +482,6 @@ const {
 
 // This data comes from the sharepoint 'constants.xlsx' file
 export const TOOLS_CONFIGS = formatValues(tools?.data);
-export const SEARCH_URLS = formatValues(searchUrls?.data);
 export const SEARCH_CONFIGS = formatValues(searchConfig?.data);
 export const COOKIE_CONFIGS = formatValues(cookieValues?.data);
 export const MAGAZINE_CONFIGS = formatValues(magazineConfig?.data);

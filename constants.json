@@ -1,9 +1,13 @@
 {
-  "searchUrls": {
-    "total": 2,
+  "searchConfig": {
+    "total": 3,
     "offset": 0,
-    "limit": 2,
+    "limit": 3,
     "data": [
+      {
+        "name": "TENANT",
+        "value": "volvotrucks-us"
+      },
       {
         "name": "SEARCH_URL_PROD",
         "value": "https://kb3ko4nzt2.execute-api.eu-west-1.amazonaws.com/prod/search"
@@ -11,17 +15,6 @@
       {
         "name": "SEARCH_URL_DEV",
         "value": "https://search-api-qa-eds.aws.43636.vnonprod.com/search"
-      }
-    ]
-  },
-  "searchConfig": {
-    "total": 1,
-    "offset": 0,
-    "limit": 1,
-    "data": [
-      {
-        "name": "TENANT",
-        "value": "volvotrucks-us"
       }
     ]
   },
