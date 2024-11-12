@@ -104,7 +104,9 @@ const mobileActions = () => {
   const mobileActionsEl = createElement('div', { classes: [`${blockClass}__mobile-actions`] });
   const searchLabel = getTextLabel('Search');
   const openMenuLabel = getTextLabel('Open menu');
-  const searchEl = `<a href="/search-results" aria-label="${searchLabel}" class="${blockClass}__search-button ${blockClass}__action-link ${blockClass}__link">
+  const searchResults = `${getLanguagePath()}search-results`;
+
+  const searchEl = `<a href="${searchResults}" aria-label="${searchLabel}" class="${blockClass}__search-button ${blockClass}__action-link ${blockClass}__link">
     <span class="icon icon-search-icon" aria-hidden="true"></span>
   </a>`;
 
