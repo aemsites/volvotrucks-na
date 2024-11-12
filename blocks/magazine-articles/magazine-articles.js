@@ -205,7 +205,7 @@ async function getMagazineArticles({
         filterTag,
         author: article.author || defaultAuthor,
         image: isImageLink(image) ? getOrigin() + image : getDefaultImage(),
-        path: item.url,
+        path: item.metadata?.url,
         readingTime: /\d+/.test(article.readTime) ? article.readTime : defaultReadTime,
         isDefaultImage: !isImageLink(image),
         category: article.category,
