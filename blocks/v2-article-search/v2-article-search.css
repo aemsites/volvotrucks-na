@@ -1,14 +1,19 @@
+:root {
+  --icon-size: 24px;
+}
+
 .v2-article-search.block {
   width: var(--wrapper-width);
   margin: 0 auto;
 }
 
 .v2-article-search__fieldset {
-  padding: 1rem 2rem;
-  margin: 0 0 1rem;
+  padding: 10px 20px;
+  margin: 0 0 10px;
   border: none;
   display: flex;
   justify-content: space-between;
+  color: var(--c-grey-4);
 }
 
 .v2-article-search__filter-container {
@@ -28,7 +33,11 @@
 }
 
 .v2-article-search__filter-dropdown-icon {
-  font-size: var(--f-body-font-size);
+  font-size: var(--icon-size);
+}
+
+.v2-article-search__filter-dropdown--open {
+  visibility: hidden;
 }
 
 .v2-article-search__filter-dropdown--open .v2-article-search__filter-dropdown-icon {
@@ -43,7 +52,7 @@
 ul.v2-article-search__filter-list {
   display: flex;
   flex-wrap: wrap;
-  gap: .5rem;
+  gap: 16px 8px;
   position: absolute;
   background-color: var(--background-color);
   padding: 10px 20px;
@@ -80,4 +89,51 @@ a.v2-article-search__filter-link:hover {
   padding: 0;
   background-color: var(--background-color);
   border: none;
+  display: none;
+}
+
+.v2-article-search__filter-input .icon {
+  font-size: var(--icon-size);
+  cursor: pointer;
+}
+
+.v2-article-search__filter-input .icon-close {
+  display: none;
+}
+
+.v2-article-search__filter-dropdown--open ~ .v2-article-search__filter-input .icon-search-icon {
+  display: none;
+}
+
+.v2-article-search__filter-dropdown--open ~ .v2-article-search__filter-input .icon-close {
+  display: block;
+  max-height: var(--icon-size);
+}
+
+.v2-article-search__input-label {
+  display: none;
+}
+
+@media (min-width: 768px) {
+  .v2-article-search__filter-dropdown--open {
+    visibility: visible;
+  }
+
+  .v2-article-search__filter-input label.v2-article-search__input-label {
+    display: block;
+    font-family: var(--font-family-body);
+  }
+
+  .v2-article-search__filter-dropdown--open ~ .v2-article-search__filter-input label.v2-article-search__input-label {
+    display: none;
+  }
+
+  .v2-article-search__filter-list-wrapper--open {
+    height: auto;
+  }
+
+  .v2-article-search__filter-list-wrapper--open .v2-article-search__filter-list {
+    width: 100%;
+    padding: 10px 20px 20px;
+  }
 }

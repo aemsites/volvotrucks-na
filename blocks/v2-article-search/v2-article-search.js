@@ -13,6 +13,9 @@ await getPlaceholders();
 const filterDefault = getTextLabel('filterDefault');
 const searchPlaceholder = getTextLabel('searchPlaceholder');
 
+// const MQDesktop = window.matchMedia('(min-width: 1200px)');
+// const MQtablet = window.matchMedia('(min-width: 768px)');
+
 const buildFilterElement = () => document.createRange().createContextualFragment(`
   <div class="${blockName}__filter-container">
     <form class="${blockName}__filter">
@@ -24,7 +27,9 @@ const buildFilterElement = () => document.createRange().createContextualFragment
         </div>
         <div class="${blockName}__filter-input">
           <span class="icon icon-search-icon"></span>
-          <input type="text" placeholder="${searchPlaceholder}" />
+          <input type="text" id="search" name="search" placeholder="${searchPlaceholder}" />
+          <label for="search" class="${blockName}__input-label">${searchPlaceholder}</label>
+          <span class="icon icon-close"></span>
         </div>
       </fieldset>
     </form>
@@ -43,12 +48,30 @@ const buildFilterList = () => document.createRange().createContextualFragment(`
       <a href="#" class="${blockName}__filter-link">Filter very long text</a>
     </li>
     <li class="${blockName}__filter-item">
+      <a href="#" class="${blockName}__filter-link">Filter very long text</a>
+    </li>
+    <li class="${blockName}__filter-item">
+      <a href="#" class="${blockName}__filter-link">Filter very long text</a>
+    </li>
+    <li class="${blockName}__filter-item">
+      <a href="#" class="${blockName}__filter-link">Filter very long text</a>
+    </li>
+    <li class="${blockName}__filter-item">
+      <a href="#" class="${blockName}__filter-link">Filter very long text</a>
+    </li>
+    <li class="${blockName}__filter-item">
+      <a href="#" class="${blockName}__filter-link">Filter very long text</a>
+    </li>
+    <li class="${blockName}__filter-item">
+      <a href="#" class="${blockName}__filter-link">Filter very long text</a>
+    </li>
+    <li class="${blockName}__filter-item">
       <a href="#" class="${blockName}__filter-link">Filter short</a>
     </li>
   </ul>
 `);
 
-const addDropdownListener = (filter) => {
+const addDropdownHandler = (filter) => {
   filter.addEventListener('click', (e) => {
     const dropdown = e.target.tagName === 'svg'
       ? e.target.closest(`.${dropdownClass}`) : e.target;
@@ -59,7 +82,7 @@ const addDropdownListener = (filter) => {
   });
 };
 
-const addFilterListListener = (itemLink) => {
+const addFilterListHandler = (itemLink) => {
   itemLink.addEventListener('click', (e) => {
     if (e.target.tagName !== 'A') return;
     const filterList = e.target.closest(`.${blockName}__filter-list`);
@@ -79,6 +102,17 @@ const addFilterListListener = (itemLink) => {
   });
 };
 
+// TODO: check if the close button has to close the filter list or the search input
+const addCloseHandler = (closeIcon) => {
+  closeIcon.addEventListener('click', (e) => {
+    const filterContainer = e.target.closest(`.${filterContainerClass}`);
+    const filterList = filterContainer.querySelector(`.${blockName}__filter-list-wrapper`);
+    const dropdown = filterContainer.querySelector(`.${dropdownClass}`);
+    filterList.classList.remove(filterListOpen);
+    dropdown.classList.remove(dropdownOpen);
+  });
+};
+
 export default async function decorate(block) {
   const main = block.closest('main');
   const wrapper = block.closest(`.${wrapperClass}`);
@@ -93,8 +127,9 @@ export default async function decorate(block) {
         const filterList = buildFilterList();
         filter.querySelector(`.${blockName}__filter-list-wrapper`).append(filterList);
         block.prepend(filter);
-        addDropdownListener(block.querySelector(`.${blockName}__filter-dropdown`));
-        addFilterListListener(block.querySelector(`.${blockName}__filter-list`));
+        addDropdownHandler(block.querySelector(`.${blockName}__filter-dropdown`));
+        addFilterListHandler(block.querySelector(`.${blockName}__filter-list`));
+        addCloseHandler(block.querySelector('.icon-close'));
         decorateIcons(block);
         section.classList.remove(containerClass);
         main.prepend(wrapper);
