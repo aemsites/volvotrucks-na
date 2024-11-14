@@ -63,17 +63,21 @@ function createDropdown(options, selected, name, placeholder, label) {
     input.append(optionTag);
   }
 
-  options.forEach((option) => {
-    const optionTag = createElement('option', {
-      props: { value: toClassName(option) },
+  if (options) {
+    options.forEach((option) => {
+      const optionTag = createElement('option', {
+        props: { value: toClassName(option) },
+      });
+      optionTag.innerText = option;
+      if (optionTag.value === selected) {
+        optionTag.selected = true;
+      }
+      input.append(optionTag);
     });
-    optionTag.innerText = option;
-    if (optionTag.value === selected) {
-      optionTag.selected = true;
-    }
-    input.append(optionTag);
-  });
+  }
+
   container.append(input);
+
   return container;
 }
 
@@ -165,6 +169,7 @@ async function buildElements(pressReleases, filter, createFilters, buildPressRel
     };
     relatedPressReleases = true;
   }
+
   let filteredData = filter ? await filter(pressReleases, actFilter) : pressReleases;
 
   let page = parseInt(getSelectionFromUrl('page'), 10);
