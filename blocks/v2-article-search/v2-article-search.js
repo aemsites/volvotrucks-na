@@ -11,6 +11,7 @@ const dropdownClass = `${blockName}__filter-dropdown`;
 const dropdownOpen = `${blockName}__filter-dropdown--open`;
 const filterListOpen = `${blockName}__filter-list-wrapper--open`;
 const filterActive = `${blockName}__filter-link--active`;
+const searchInputExpanded = `${blockName}__search-input--expanded`;
 
 await getPlaceholders();
 const filterDefault = getTextLabel('filterDefault');
@@ -73,6 +74,7 @@ const buildFilterElement = () => document.createRange().createContextualFragment
           <span class="icon icon-search-icon"></span>
           <input type="text" id="search" name="search" placeholder="${searchPlaceholder}" />
           <label for="search" class="${blockName}__input-label">${searchPlaceholder}</label>
+          <button type="button" class="${blockName}__clear-button">clear</button>
           <span class="icon icon-close"></span>
         </div>
       </fieldset>
@@ -138,15 +140,83 @@ const addFilterListHandler = (itemLink) => {
   });
 };
 
-// TODO: check if the close button has to close the filter list or the search input
+/**
+ * Adds an event handler to the close icon to collapse the search container
+ * and filter list when clicked, hiding the clear button as well.
+ *
+ * @param {HTMLElement} closeIcon - The close icon element that triggers the collapse.
+ */
 const addCloseHandler = (closeIcon) => {
   closeIcon.addEventListener('click', (e) => {
+    e.stopPropagation();
     const filterContainer = e.target.closest(`.${filterContainerClass}`);
-    const filterList = filterContainer.querySelector(`.${blockName}__filter-list-wrapper`);
+    const filterListWrapper = filterContainer.querySelector(`.${blockName}__filter-list-wrapper`);
     const dropdown = filterContainer.querySelector(`.${dropdownClass}`);
-    filterList.classList.remove(filterListOpen);
-    dropdown.classList.remove(dropdownOpen);
+    const searchContainer = filterContainer.closest(`.${blockName}__filter-container`);
+    
+    if (filterListWrapper && filterListWrapper.classList.contains(filterListOpen)) {
+      filterListWrapper.classList.remove(filterListOpen);
+      dropdown.classList.remove(dropdownOpen);
+    }
+
+    if (searchContainer) {
+      const searchInput = searchContainer.querySelector('input[type="text"]');
+      const clearButton = searchContainer.querySelector(`.${blockName}__clear-button`);
+      searchContainer.classList.remove(searchInputExpanded);
+      searchInput.value = '';
+      clearButton.classList.remove('active');
+    }
   });
+};
+
+/**
+ * Initializes the search input handlers, including expand/collapse behavior,
+ * input clearing, and the clear button visibility toggle.
+ * @param {HTMLElement} searchContainer - The main container element that wraps the search input.
+ */
+const initializeSearchHandlers = (searchContainer) => {
+  const searchInputWrapper = searchContainer.querySelector(`.${blockName}__filter-input`);
+  const searchInput = searchContainer.querySelector('input[type="text"]');
+  const clearButton = searchContainer.querySelector(`.${blockName}__clear-button`);
+
+  const toggleClearButton = () => {
+    clearButton.classList.toggle('active', !!searchInput.value);
+  };
+
+  const clearInput = () => {
+    searchInput.value = '';
+    toggleClearButton();
+    searchInput.focus();
+  };
+
+  const expandSearchContainer = () => {
+    searchContainer.classList.add(searchInputExpanded);
+    searchInput.focus();
+    document.addEventListener('click', handleOutsideClick, { capture: true });
+  };
+
+  const handleOutsideClick = (event) => {
+    if (!searchContainer.contains(event.target)) {
+      collapseSearchContainer();
+    }
+  };
+
+  const collapseSearchContainer = () => {
+    searchContainer.classList.remove(searchInputExpanded);
+    searchInput.value = ''; // Clear the input value
+    clearButton.classList.remove('active'); // Hide the clear button
+    document.removeEventListener('click', handleOutsideClick, { capture: true });
+  };
+
+  if (searchInputWrapper && searchInput && clearButton) {
+    searchInputWrapper.addEventListener('click', expandSearchContainer);
+    searchInput.addEventListener('input', toggleClearButton);
+    clearButton.addEventListener('click', clearInput);
+
+    // Find the close icon and add its collapse functionality
+    const closeIcon = searchContainer.querySelector('.icon-close');
+    if (closeIcon) addCloseHandler(closeIcon);
+  }
 };
 
 export default async function decorate(block) {
@@ -166,6 +236,10 @@ export default async function decorate(block) {
         addDropdownHandler(block.querySelector(`.${blockName}__filter-dropdown`));
         addFilterListHandler(block.querySelector(`.${blockName}__filter-list`));
         addCloseHandler(block.querySelector('.icon-close'));
+        const filterContainer = block.querySelector(`.${blockName}__filter-container`);
+        if (filterContainer) {
+          initializeSearchHandlers(filterContainer);
+        }
         decorateIcons(block);
         section.classList.remove(containerClass);
         main.prepend(wrapper);
