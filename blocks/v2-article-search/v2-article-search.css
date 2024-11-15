@@ -134,6 +134,6 @@ a.v2-article-search__filter-link:hover {
 
   .v2-article-search__filter-list-wrapper--open .v2-article-search__filter-list {
     width: 100%;
-    padding: 10px 20px 20px;
+    padding: 10px 20px 100px;
   }
 }

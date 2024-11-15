@@ -1,4 +1,7 @@
-import { decorateIcons, getPlaceholders, getTextLabel } from '../../scripts/common.js';
+import {
+  decorateIcons, getPlaceholders, getTextLabel, getLocale,
+} from '../../scripts/common.js';
+import { topicSearchQuery, fetchData, TENANT } from '../../scripts/search-api.js';
 
 const blockName = 'v2-article-search';
 const wrapperClass = `${blockName}-wrapper`;
@@ -13,8 +16,49 @@ await getPlaceholders();
 const filterDefault = getTextLabel('filterDefault');
 const searchPlaceholder = getTextLabel('searchPlaceholder');
 
-// const MQDesktop = window.matchMedia('(min-width: 1200px)');
-// const MQtablet = window.matchMedia('(min-width: 768px)');
+const locale = getLocale();
+const language = locale.split('-')[0].toUpperCase();
+
+const getTopics = async (props = {}) => {
+  const { limit = 1, offset = 0, article = {} } = props;
+  const variables = {
+    tenant: TENANT,
+    language,
+    limit,
+    offset,
+    category: 'magazine',
+    article,
+    sort: 'BEST_MATCH',
+    facets: [
+      'ARTICLE',
+      'TOPIC',
+      'TRUCK',
+    ],
+  };
+
+  try {
+    const rawData = await fetchData({
+      query: topicSearchQuery(),
+      variables,
+    });
+
+    const querySuccess = rawData && rawData.data && rawData.data.edsrecommend;
+
+    if (!querySuccess) {
+      return [];
+    }
+
+    const [trucks, topics, articles] = querySuccess.facets;
+    return {
+      truck: [...new Set(trucks.items.map((item) => item.value.trim()))],
+      topic: [...new Set(topics.items.map((item) => item.value.trim()))],
+      category: [...new Set(articles.items.map((item) => item.value.trim()))],
+    };
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    throw error;
+  }
+};
 
 const buildFilterElement = () => document.createRange().createContextualFragment(`
   <div class="${blockName}__filter-container">
@@ -37,39 +81,33 @@ const buildFilterElement = () => document.createRange().createContextualFragment
   </div>
 `);
 
-// FIXME: added fake items to simulate the filter list
-// TODO: (remove the fake items to be added dynamically)
-const buildFilterList = () => document.createRange().createContextualFragment(`
-  <ul class="${blockName}__filter-list">
-    <li class="${blockName}__filter-item">
-      <a href="#" class="${blockName}__filter-link">Filter 1</a>
-    </li>
-    <li class="${blockName}__filter-item">
-      <a href="#" class="${blockName}__filter-link">Filter very long text</a>
-    </li>
-    <li class="${blockName}__filter-item">
-      <a href="#" class="${blockName}__filter-link">Filter very long text</a>
-    </li>
-    <li class="${blockName}__filter-item">
-      <a href="#" class="${blockName}__filter-link">Filter very long text</a>
-    </li>
-    <li class="${blockName}__filter-item">
-      <a href="#" class="${blockName}__filter-link">Filter very long text</a>
-    </li>
-    <li class="${blockName}__filter-item">
-      <a href="#" class="${blockName}__filter-link">Filter very long text</a>
-    </li>
-    <li class="${blockName}__filter-item">
-      <a href="#" class="${blockName}__filter-link">Filter very long text</a>
-    </li>
-    <li class="${blockName}__filter-item">
-      <a href="#" class="${blockName}__filter-link">Filter very long text</a>
-    </li>
-    <li class="${blockName}__filter-item">
-      <a href="#" class="${blockName}__filter-link">Filter short</a>
-    </li>
-  </ul>
-`);
+const buildBulletList = (allTopics) => {
+  const currentURL = new URL(window.location.href);
+  const magazinePath = '/news-and-stories/volvo-trucks-magazine/';
+  const magazineParam = '?search=&category=&topic=&truck=';
+  currentURL.pathname = magazinePath;
+  return Object.keys(allTopics).map((key) => {
+    const items = allTopics[key];
+    return items.map((item) => {
+      const param = item.toLowerCase().replace(/\s/g, '-');
+      currentURL.search = magazineParam;
+      currentURL.searchParams.set(key, param);
+      return `<li class="${blockName}__filter-item">
+        <a href="${currentURL.href.replace('#', '')}" target="_blank"
+          class="${blockName}__filter-link">${item}</a>
+      </li>`;
+    }).join('');
+  }).join('');
+};
+
+const buildFilterList = async () => {
+  const allTopics = await getTopics();
+  return document.createRange().createContextualFragment(`
+    <ul class="${blockName}__filter-list">
+      ${buildBulletList(allTopics)}
+    </ul>
+  `);
+};
 
 const addDropdownHandler = (filter) => {
   filter.addEventListener('click', (e) => {
@@ -90,8 +128,6 @@ const addFilterListHandler = (itemLink) => {
       .filter((item) => item !== e.target);
     otherItems.forEach((item) => item.classList.remove(filterActive));
     e.target.classList.toggle(filterActive);
-    // do the query to update based on the selected filters
-    // TODO: submit the form to update the article
 
     // close the dropdown
     const filterContainer = filterList.closest(`.${filterContainerClass}`);
@@ -118,13 +154,13 @@ export default async function decorate(block) {
   const wrapper = block.closest(`.${wrapperClass}`);
   const section = block.closest(`.${containerClass}`);
   const observer = new MutationObserver((mutations) => {
-    mutations.forEach((mutation) => {
+    mutations.forEach(async (mutation) => {
       if (mutation.type !== 'childList') return;
       const blockStatus = block.getAttribute('data-block-status');
       const sectionStatus = section.getAttribute('data-section-status');
       if ([blockStatus, sectionStatus].every((status) => status === 'loaded')) {
         const filter = buildFilterElement();
-        const filterList = buildFilterList();
+        const filterList = await buildFilterList();
         filter.querySelector(`.${blockName}__filter-list-wrapper`).append(filterList);
         block.prepend(filter);
         addDropdownHandler(block.querySelector(`.${blockName}__filter-dropdown`));
