@@ -1,7 +1,7 @@
 name: 'Report 🐛 bug or 🕳️ defect'
 description: Please fill out this form to report a bug or defect.
 labels: ["Bugfix, Triage"]
-projects: ["hlxsites/8"]
+projects: ["aemsites/6"]
 body:
   - type: dropdown
     id: issue-type
