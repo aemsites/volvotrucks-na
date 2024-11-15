@@ -20,6 +20,12 @@ const searchPlaceholder = getTextLabel('searchPlaceholder');
 const locale = getLocale();
 const language = locale.split('-')[0].toUpperCase();
 
+const currentURL = new URL(window.location.href);
+const magazinePath = '/news-and-stories/volvo-trucks-magazine/';
+const magazineParam = '?search=&category=&topic=&truck=';
+currentURL.pathname = magazinePath;
+currentURL.search = magazineParam;
+
 const getTopics = async (props = {}) => {
   const { limit = 1, offset = 0, article = {} } = props;
   const variables = {
@@ -83,24 +89,18 @@ const buildFilterElement = () => document.createRange().createContextualFragment
   </div>
 `);
 
-const buildBulletList = (allTopics) => {
-  const currentURL = new URL(window.location.href);
-  const magazinePath = '/news-and-stories/volvo-trucks-magazine/';
-  const magazineParam = '?search=&category=&topic=&truck=';
-  currentURL.pathname = magazinePath;
-  return Object.keys(allTopics).map((key) => {
-    const items = allTopics[key];
-    return items.map((item) => {
-      const param = item.toLowerCase().replace(/\s/g, '-');
-      currentURL.search = magazineParam;
-      currentURL.searchParams.set(key, param);
-      return `<li class="${blockName}__filter-item">
-        <a href="${currentURL.href.replace('#', '')}" target="_blank"
-          class="${blockName}__filter-link">${item}</a>
-      </li>`;
-    }).join('');
+const buildBulletList = (allTopics) => Object.keys(allTopics).map((key) => {
+  const items = allTopics[key];
+  return items.map((item) => {
+    const param = item.toLowerCase().replace(/\s/g, '-');
+    currentURL.search = magazineParam;
+    currentURL.searchParams.set(key, param);
+    return `<li class="${blockName}__filter-item">
+      <a href="${currentURL.href.replace('#', '')}" target="_blank"
+        class="${blockName}__filter-link">${item}</a>
+    </li>`;
   }).join('');
-};
+}).join('');
 
 const buildFilterList = async () => {
   const allTopics = await getTopics();
@@ -125,6 +125,7 @@ const addDropdownHandler = (filter) => {
 const addFilterListHandler = (itemLink) => {
   itemLink.addEventListener('click', (e) => {
     if (e.target.tagName !== 'A') return;
+    const isActive = e.target.classList.contains(filterActive);
     const filterList = e.target.closest(`.${blockName}__filter-list`);
     const otherItems = [...filterList.querySelectorAll(`.${blockName}__filter-link`)]
       .filter((item) => item !== e.target);
@@ -132,6 +133,10 @@ const addFilterListHandler = (itemLink) => {
     e.target.classList.toggle(filterActive);
 
     // close the dropdown
+    if (isActive) {
+      e.preventDefault();
+      return;
+    }
     const filterContainer = filterList.closest(`.${filterContainerClass}`);
     const dropdown = filterContainer.querySelector(`.${dropdownClass}`);
     const filterListWrapper = filterContainer.querySelector(`.${blockName}__filter-list-wrapper`);
@@ -153,7 +158,7 @@ const addCloseHandler = (closeIcon) => {
     const filterListWrapper = filterContainer.querySelector(`.${blockName}__filter-list-wrapper`);
     const dropdown = filterContainer.querySelector(`.${dropdownClass}`);
     const searchContainer = filterContainer.closest(`.${blockName}__filter-container`);
-    
+
     if (filterListWrapper && filterListWrapper.classList.contains(filterListOpen)) {
       filterListWrapper.classList.remove(filterListOpen);
       dropdown.classList.remove(dropdownOpen);
@@ -178,6 +183,7 @@ const initializeSearchHandlers = (searchContainer) => {
   const searchInputWrapper = searchContainer.querySelector(`.${blockName}__filter-input`);
   const searchInput = searchContainer.querySelector('input[type="text"]');
   const clearButton = searchContainer.querySelector(`.${blockName}__clear-button`);
+  const formElement = searchContainer.querySelector('form');
 
   const toggleClearButton = () => {
     clearButton.classList.toggle('active', !!searchInput.value);
@@ -189,14 +195,9 @@ const initializeSearchHandlers = (searchContainer) => {
     searchInput.focus();
   };
 
-  const expandSearchContainer = () => {
-    searchContainer.classList.add(searchInputExpanded);
-    searchInput.focus();
-    document.addEventListener('click', handleOutsideClick, { capture: true });
-  };
-
   const handleOutsideClick = (event) => {
     if (!searchContainer.contains(event.target)) {
+      // eslint-disable-next-line no-use-before-define
       collapseSearchContainer();
     }
   };
@@ -208,10 +209,28 @@ const initializeSearchHandlers = (searchContainer) => {
     document.removeEventListener('click', handleOutsideClick, { capture: true });
   };
 
-  if (searchInputWrapper && searchInput && clearButton) {
+  const expandSearchContainer = () => {
+    searchContainer.classList.add(searchInputExpanded);
+    searchInput.focus();
+    document.addEventListener('click', handleOutsideClick, { capture: true });
+  };
+
+  const submitSearchTerm = (event) => {
+    event.preventDefault();
+    const searchTerm = searchInput.value.trim();
+    if (searchTerm) {
+      currentURL.search = magazineParam;
+      currentURL.searchParams.set('search', searchTerm);
+      window.open(currentURL.href, '_blank');
+      collapseSearchContainer();
+    }
+  };
+
+  if (searchInputWrapper && searchInput && clearButton && formElement) {
     searchInputWrapper.addEventListener('click', expandSearchContainer);
     searchInput.addEventListener('input', toggleClearButton);
     clearButton.addEventListener('click', clearInput);
+    formElement.addEventListener('submit', submitSearchTerm);
 
     // Find the close icon and add its collapse functionality
     const closeIcon = searchContainer.querySelector('.icon-close');
