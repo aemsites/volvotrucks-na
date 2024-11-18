@@ -91,13 +91,20 @@ const buildFilterElement = () => document.createRange().createContextualFragment
   </div>
 `);
 
+// Capitalize the first letter of each word
+const formatValue = (item) => {
+  const { key, value } = item;
+  return key === 'truck'
+    ? value.toUpperCase() : value.replace(/\b\w/g, (char) => char.toUpperCase());
+};
+
 const buildBulletList = (allTopics) => allTopics.map((item) => {
   const param = item.value.toLowerCase().replace(/\s/g, '-');
   currentURL.search = magazineParam;
   currentURL.searchParams.set(item.key, param);
   return `<li class="${blockName}__filter-item">
     <a href="${currentURL.href.replace('#', '')}"
-      class="${blockName}__filter-link">${item.value}</a>
+      class="${blockName}__filter-link">${formatValue(item)}</a>
   </li>`;
 }).join('');
 
