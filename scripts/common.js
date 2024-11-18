@@ -595,7 +595,7 @@ export const deepMerge = (target, source) => {
 };
 
 export const isDevHost = () => {
-  const devHosts = ['localhost', 'hlx.page', 'hlx.live', 'aem.page', 'aem.live'];
+  const devHosts = ['localhost', '127.0.0.1', 'aem.page', 'aem.live'];
   return devHosts.some((url) => window.location.host.includes(url));
 };
 
@@ -615,5 +615,6 @@ export const getLocale = () => getMetadata('locale') || 'en-us';
 export const getDateFromTimestamp = (timestamp, options) => {
   const date = new Date((timestamp * 1000) + (new Date().getTimezoneOffset() * 60000));
   const localeDate = Intl.DateTimeFormat(getLocale(), options).format(date);
+
   return localeDate;
 };

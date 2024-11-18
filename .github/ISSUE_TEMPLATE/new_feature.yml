@@ -1,5 +1,6 @@
 name: 'New feature ✨'
 description: Functional or non-functional requirements
+projects: ["aemsites/6"]
 body:
   - type: markdown
     attributes:

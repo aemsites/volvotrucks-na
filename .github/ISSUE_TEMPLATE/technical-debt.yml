@@ -1,7 +1,7 @@
 name: 'File technical debt ⚓️'
 description: Please fill out this form to file technical debt.
 labels: ["Technical debt, Triage"]
-projects: ["hlxsites/8"]
+projects: ["aemsites/6"]
 body:
   - type: input
     id: summary

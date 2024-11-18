@@ -214,9 +214,9 @@ input.addEventListener('keyup', (event) => {
   }
 });
 
-// only run on .hlx.live
-if (window.location.hostname.endsWith('.hlx.page')) {
-  window.location.href = window.location.href.replace('.hlx.page', '.hlx.live');
+// only run on .aem.live
+if (window.location.hostname.endsWith('.aem.page')) {
+  window.location.href = window.location.href.replace('.aem.page', '.aem.live');
 }
 
 document.getElementById('export').addEventListener('click', exportResults);
