@@ -61,6 +61,7 @@ ul.v2-article-search__filter-list {
   position: absolute;
   background-color: var(--background-color);
   padding: 10px 20px;
+  box-shadow: 0 4px 8px #0003;
 }
 
 .v2-article-search__filter-list-wrapper--open {
