@@ -1,5 +1,6 @@
 import {
   decorateIcons, getPlaceholders, getTextLabel, getLocale,
+  variantsClassesToBEM,
 } from '../../scripts/common.js';
 import { topicSearchQuery, fetchData, TENANT } from '../../scripts/search-api.js';
 
@@ -12,6 +13,7 @@ const dropdownOpen = `${blockName}__filter-dropdown--open`;
 const filterListOpen = `${blockName}__filter-list-wrapper--open`;
 const filterActive = `${blockName}__filter-link--active`;
 const searchInputExpanded = `${blockName}__search-input--expanded`;
+const blockVariants = ['black', 'gray'];
 
 await getPlaceholders();
 const filterDefault = getTextLabel('filterDefault');
@@ -250,6 +252,7 @@ export default async function decorate(block) {
       if ([blockStatus, sectionStatus].every((status) => status === 'loaded')) {
         const filter = buildFilterElement();
         const filterList = await buildFilterList();
+        variantsClassesToBEM(block.classList, blockVariants, blockName);
         filter.querySelector(`.${blockName}__filter-list-wrapper`).append(filterList);
         block.prepend(filter);
         addDropdownHandler(block.querySelector(`.${blockName}__filter-dropdown`));

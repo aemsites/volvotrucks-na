@@ -14,6 +14,16 @@
   margin: 0 auto;
 }
 
+.block.v2-article-search--black {
+  background-color: var(--c-black);
+  color: var(--c-white);
+}
+
+.block.v2-article-search--gray {
+  background-color: var(--c-grey-1);
+  color: var(--c-grey-4);
+}
+
 .v2-article-search__fieldset {
   padding: 10px 20px;
   border: none;
@@ -68,6 +78,17 @@ ul.v2-article-search__filter-list {
   align-content: baseline;
 }
 
+.block.v2-article-search--black ul.v2-article-search__filter-list {
+  background-color: var(--c-black);
+  color: var(--c-white);
+  box-shadow: 0 4px 8px #fff7;
+}
+
+.block.v2-article-search--gray ul.v2-article-search__filter-list {
+  background-color: var(--c-grey-1);
+  color: var(--c-grey-4);
+}
+
 .v2-article-search__filter-list-wrapper--open {
   display: flex;
 }
@@ -88,9 +109,27 @@ a.v2-article-search__filter-link {
   color: var(--button-primary-bg);
 }
 
+.block.v2-article-search--gray a.v2-article-search__filter-link,
+.block.v2-article-search--black a.v2-article-search__filter-link {
+  color: inherit;
+  outline-color: inherit;
+}
+
 a.v2-article-search__filter-link--active,
 a.v2-article-search__filter-link:hover {
   background-color: var(--button-primary-bg);
+  color: var(--c-white);
+}
+
+.block.v2-article-search--black a.v2-article-search__filter-link--active,
+.block.v2-article-search--black a.v2-article-search__filter-link:hover {
+  background-color: var(--c-white);
+  color: var(--c-black);
+}
+
+.block.v2-article-search--gray a.v2-article-search__filter-link--active,
+.block.v2-article-search--gray a.v2-article-search__filter-link:hover {
+  background-color: var(--c-grey-4);
   color: var(--c-white);
 }
 
@@ -163,6 +202,12 @@ a.v2-article-search__filter-link:hover {
 
 .v2-article-search__search-input--expanded .v2-article-search__filter-dropdown {
   display: none;
+}
+
+.block.v2-article-search--black .v2-article-search__input-label,
+.block.v2-article-search--black .v2-article-search__fieldset,
+.block.v2-article-search--black .v2-article-search__filter-dropdown {
+  color: inherit;
 }
 
 .v2-article-search__clear-button {
