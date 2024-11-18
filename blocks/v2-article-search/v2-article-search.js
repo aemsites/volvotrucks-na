@@ -58,11 +58,11 @@ const getTopics = async (props = {}) => {
     }
 
     const [trucks, topics, articles] = querySuccess.facets;
-    return {
-      truck: [...new Set(trucks.items.map((item) => item.value.trim()))],
-      topic: [...new Set(topics.items.map((item) => item.value.trim()))],
-      category: [...new Set(articles.items.map((item) => item.value.trim()))],
-    };
+    return [
+      ...new Set(trucks.items.map((item) => ({ key: 'truck', value: item.value.trim() }))),
+      ...new Set(topics.items.map((item) => ({ key: 'topic', value: item.value.trim() }))),
+      ...new Set(articles.items.map((item) => ({ key: 'category', value: item.value.trim() }))),
+    ].sort((a, b) => a.value.localeCompare(b.value));
   } catch (error) {
     console.error('Error fetching data:', error);
     throw error;
@@ -91,17 +91,14 @@ const buildFilterElement = () => document.createRange().createContextualFragment
   </div>
 `);
 
-const buildBulletList = (allTopics) => Object.keys(allTopics).map((key) => {
-  const items = allTopics[key];
-  return items.map((item) => {
-    const param = item.toLowerCase().replace(/\s/g, '-');
-    currentURL.search = magazineParam;
-    currentURL.searchParams.set(key, param);
-    return `<li class="${blockName}__filter-item">
-      <a href="${currentURL.href.replace('#', '')}"
-        class="${blockName}__filter-link">${item}</a>
-    </li>`;
-  }).join('');
+const buildBulletList = (allTopics) => allTopics.map((item) => {
+  const param = item.value.toLowerCase().replace(/\s/g, '-');
+  currentURL.search = magazineParam;
+  currentURL.searchParams.set(item.key, param);
+  return `<li class="${blockName}__filter-item">
+    <a href="${currentURL.href.replace('#', '')}"
+      class="${blockName}__filter-link">${item.value}</a>
+  </li>`;
 }).join('');
 
 const buildFilterList = async () => {
