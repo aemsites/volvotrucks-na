@@ -96,7 +96,7 @@ const buildBulletList = (allTopics) => Object.keys(allTopics).map((key) => {
     currentURL.search = magazineParam;
     currentURL.searchParams.set(key, param);
     return `<li class="${blockName}__filter-item">
-      <a href="${currentURL.href.replace('#', '')}" target="_blank"
+      <a href="${currentURL.href.replace('#', '')}"
         class="${blockName}__filter-link">${item}</a>
     </li>`;
   }).join('');
