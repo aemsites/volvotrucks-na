@@ -5,6 +5,8 @@
 
 .v2-article-search-wrapper {
   background-color: var(--background-color);
+  position: sticky;
+  top: 0;
 }
 
 .v2-article-search.block {
