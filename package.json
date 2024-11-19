@@ -1,14 +1,16 @@
 {
   "name": "volvotrucks-na",
   "private": true,
-  "version": "24.0.0",
+  "version": "25.0.0",
   "description": "Volvo Trucks North America",
   "engines": {
     "node": ">=v20.15.1 <23",
     "npm": ">=10.7.0"
   },
   "scripts": {
-    "dev": "npx @adobe/helix-cli up",
+    "dev": "aem up",
+    "dev:ca": "AEM_PAGES_URL=https://main--volvotrucks-ca--volvogroup.aem.page/en-ca/ aem up",
+    "dev:mx": "AEM_PAGES_URL=https://main--volvotrucks-mx--volvogroup.aem.page aem up",
     "test": "wtr \"./test/**/*.test.js\" --node-resolve --port=2000 --coverage",
     "test:watch": "npm test -- --watch",
     "lint:js": "eslint .",

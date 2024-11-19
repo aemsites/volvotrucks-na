@@ -1,27 +1,28 @@
-import { createElement } from '../../scripts/common.js';
-import { autosuggestQuery, fetchData } from '../../scripts/search-api.js';
+import { createElement, getLocale } from '../../scripts/common.js';
+import { autosuggestQuery, fetchData, TENANT } from '../../scripts/search-api.js';
 
 const autoSuggestClass = 'autosuggest-results-item-highlighted';
-const tenant = 'franklin-vg-volvotrucks-us';
 
 export function fetchAutosuggest(term, autosuggestEle, rowEle, func) {
   const fragmentRange = document.createRange();
+  const language = getLocale();
+  const locale = language.split('-')[0].toUpperCase();
 
   fetchData({
     query: autosuggestQuery(),
     variables: {
-      tenant,
+      tenant: TENANT,
       term,
-      locale: 'EN',
+      locale,
       sizeSuggestions: 5,
     },
   }).then(({ errors, data }) => {
     if (errors) {
       // eslint-disable-next-line no-console
-      console.log('%cSomething went wrong', errors);
+      console.log('%cSomething went wrong', { errors });
     } else {
       const {
-        volvosuggest: {
+        edssuggest: {
           terms,
         } = {},
       } = data;

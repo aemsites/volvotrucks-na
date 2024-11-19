@@ -350,6 +350,14 @@
     {
       "Key": "paginationNextPageAriaLabel",
       "Text": "next page"
+    },
+    {
+      "Key": "filterDefault",
+      "Text": "All Topics"
+    },
+    {
+      "Key": "searchPlaceholder",
+      "Text": "Search magazine"
     }
   ],
   ":type": "sheet"

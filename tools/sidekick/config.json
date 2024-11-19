@@ -12,7 +12,7 @@
       "id": "library",
       "title": "Library",
       "environments": [ "edit" ],
-      "url": "/tools/sidekick/library.html",
+      "url": "https://main--volvotrucks-us--volvogroup.aem.page/tools/sidekick/library.html",
       "includePaths": [ "**.docx**" ]
     },
     {

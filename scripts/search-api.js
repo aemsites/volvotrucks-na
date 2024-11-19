@@ -1,6 +1,6 @@
-import { SEARCH_URLS, isDevHost } from './common.js';
+import { isDevHost, SEARCH_CONFIGS } from './common.js';
 
-const { SEARCH_URL_DEV, SEARCH_URL_PROD } = SEARCH_URLS;
+export const { TENANT, SEARCH_URL_DEV, SEARCH_URL_PROD } = SEARCH_CONFIGS;
 const isProd = !isDevHost();
 const SEARCH_LINK = !isProd ? SEARCH_URL_DEV : SEARCH_URL_PROD;
 
@@ -37,11 +37,11 @@ export function sanitizeQueryTerm(query) {
   });
 }
 
-export const searchQuery = (hasFilters) => `
-query Volvosearch($tenant: String!, $q: String, $offset: Int, $limit: Int, $language: VolvoLocaleEnum!,
-$facets: [VolvoFacet], $sort: [VolvoSortOptionsEnum]${hasFilters ? ', $filters: [VolvoFilterItem]' : ''}) {
-  volvosearch(tenant: $tenant, q: $q, offset: $offset, limit: $limit, language: $language,
-  facets: $facets, sort: $sort${hasFilters ? ', filters: $filters' : ''}) {
+export const searchQuery = () => `
+query Edssearch($tenant: String!, $language: EdsLocaleEnum!, $q: String, $limit: Int, $offset: Int,
+$facets: [EdsFieldEnum], $sort: EdsSortOptionsEnum, $article: ArticleFilter, $category: [String]) {
+  edssearch(tenant: $tenant, language: $language, q: $q, limit: $limit, offset: $offset,
+  facets: $facets, sort: $sort, article: $article, category: $category) {
     count
     items {
       uuid
@@ -51,6 +51,13 @@ $facets: [VolvoFacet], $sort: [VolvoSortOptionsEnum]${hasFilters ? ', $filters: 
         description
         url
         lastModified
+        language
+        category
+        article {
+          category
+          topic
+          truck
+        }
       }
     }
     facets {
@@ -65,16 +72,40 @@ $facets: [VolvoFacet], $sort: [VolvoSortOptionsEnum]${hasFilters ? ', $filters: 
 `;
 
 export const autosuggestQuery = () => `
-query Volvosuggest($term: String!, $tenant: String!, $locale: VolvoLocaleEnum!, $sizeSuggestions: Int) {
-  volvosuggest(term: $term, tenant: $tenant, locale: $locale, sizeSuggestions: $sizeSuggestions) {
+query Edssuggest($term: String!, $tenant: String!, $locale: EdsLocaleEnum!, $sizeSuggestions: Int) {
+  edssuggest(term: $term, tenant: $tenant, locale: $locale, sizeSuggestions: $sizeSuggestions) {
     terms
   }
-}`;
+}
+`;
 
 export const magazineSearchQuery = () => `
-query Volvosearch($tenant: String!, $language: VolvoLocaleEnum!, $q: String, $facets: [VolvoFacet], $filters: [VolvoFilterItem], $limit: Int, $offset: Int) {
-  volvosearch(tenant: $tenant, language: $language, q: $q, facets: $facets, filters: $filters, limit: $limit, offset: $offset) {
+query Edssearch($tenant: String!, $language: EdsLocaleEnum!, $q: String, $limit: Int, $offset: Int,
+$category: [String], $facets: [EdsFieldEnum], $article: ArticleFilter, $sort: EdsSortOptionsEnum) {
+  edssearch(tenant: $tenant, language: $language, q: $q, limit: $limit, offset: $offset,
+  category: $category, facets: $facets, article: $article, sort: $sort) {
     count
+    items {
+      uuid
+      score
+      metadata {
+        title
+        description
+        url
+        lastModified
+        language
+        category
+        publishDate
+        image
+        article {
+          author
+          category
+          topic
+          truck
+          readTime
+        }
+      }
+    }
     facets {
       field
       items {
@@ -82,31 +113,40 @@ query Volvosearch($tenant: String!, $language: VolvoLocaleEnum!, $q: String, $fa
         count
       }
     }
-    items {
-      uuid
-      metadata {
-        title
-        description
-        url
-        lastModified
-        language
-        articleAuthor {
-          name
-          profileImage
-        }
-        locale
-        readTime
-        location
-        media
-        contentPath
-        resourceType
-        displayDate
-        tags
-        publishDate
-        articleImage
-      }
-      score
-    }
   }
 }
+`;
+
+export const topicSearchQuery = () => `
+  query Edsrecommend($tenant: String!, $language: EdsLocaleEnum!, $limit: Int, $offset: Int, $category: String, $article: ArticleFilter, $sort: EdsSortOptionsEnum, $facets: [EdsFieldEnum]) {
+    edsrecommend(tenant: $tenant, language: $language, limit: $limit, offset: $offset, category: $category, article: $article, sort: $sort, facets: $facets) {
+      count
+      items {
+        uuid
+        score
+        metadata {
+          title
+          description
+          url
+          language
+          lastModified
+          publishDate
+          image
+          article {
+            author
+            topic
+            truck
+            readTime
+          }
+        }
+      }
+      facets {
+        field
+        items {
+          value
+          count
+        }
+      }
+    }
+  }
 `;
