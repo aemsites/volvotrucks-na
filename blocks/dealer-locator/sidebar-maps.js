@@ -2423,8 +2423,7 @@ $.fn.setAddress2 = function () {
   $geocoder = new google.maps.Geocoder;
   $geocoder = new google.maps.Geocoder;
   $geocoder.geocode({ 'address': address2 }, function (results, status) {
-    if (results.length == 0) {
-      setAddressNotFoundError();
+    if (!results || results.length == 0) {
       console.log("results not found");
     }
     else {
@@ -2534,8 +2533,7 @@ $.fn.setAddress = function () {
   $geocoder = new google.maps.Geocoder;
   $geocoder = new google.maps.Geocoder;
   $geocoder.geocode({ 'address': address }, function (results, status) {
-    if (results.length == 0) {
-      setAddressNotFoundError();
+    if (!results || results.length == 0) {
       console.log("results not found");
     }
     else {
