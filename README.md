@@ -33,10 +33,10 @@ npm tst
 ## Local development
 
 1. Create a new repository based on the `helix-project-boilerplate` template and add a mountpoint in the `fstab.yaml`
-1. Add the [helix-bot](https://github.com/apps/helix-bot) to the repository
+2. Add the [helix-bot](https://github.com/apps/helix-bot) to the repository
 3. Install the [Helix CLI](https://github.com/adobe/helix-cli): `npm install -g @adobe/aem-cli`
 4. Start AEM Proxy: `aem up` (opens your browser at http://localhost:3000)
-1. Open the `{repo}` directory in your favorite IDE and start coding :)
+5. Open the `{repo}` directory in your favorite IDE and start coding :)
 
 ## Best practices using fonts
 
