@@ -244,37 +244,47 @@ const initializeSearchHandlers = (searchContainer) => {
   }
 };
 
+const decorateArticleSearch = async (block, section, main) => {
+  const wrapper = block.closest(`.${wrapperClass}`);
+  const filter = buildFilterElement();
+  const filterList = await buildFilterList();
+  variantsClassesToBEM(block.classList, blockVariants, blockName);
+  filter.querySelector(`.${blockName}__filter-list-wrapper`).append(filterList);
+  block.prepend(filter);
+  addDropdownHandler(block.querySelector(`.${blockName}__filter-dropdown`));
+  addFilterListHandler(block.querySelector(`.${blockName}__filter-list`));
+  addCloseHandler(block.querySelector('.icon-close'));
+  const filterContainer = block.querySelector(`.${blockName}__filter-container`);
+  if (filterContainer) {
+    initializeSearchHandlers(filterContainer);
+  }
+  decorateIcons(block);
+  section.classList.remove(containerClass);
+  main.prepend(wrapper);
+};
+
 export default async function decorate(block) {
   const main = block.closest('main');
-  const wrapper = block.closest(`.${wrapperClass}`);
   const section = block.closest(`.${containerClass}`);
+  const articleHero = main.querySelector('.v2-magazine-article-hero__container');
+  const isMagazineTemplate = document.body.classList.contains('v2-magazine');
   const observer = new MutationObserver((mutations) => {
     mutations.forEach(async (mutation) => {
       if (mutation.type !== 'childList') return;
       const blockStatus = block.getAttribute('data-block-status');
       const sectionStatus = section.getAttribute('data-section-status');
       if ([blockStatus, sectionStatus].every((status) => status === 'loaded')) {
-        const filter = buildFilterElement();
-        const filterList = await buildFilterList();
-        variantsClassesToBEM(block.classList, blockVariants, blockName);
-        filter.querySelector(`.${blockName}__filter-list-wrapper`).append(filterList);
-        block.prepend(filter);
-        addDropdownHandler(block.querySelector(`.${blockName}__filter-dropdown`));
-        addFilterListHandler(block.querySelector(`.${blockName}__filter-list`));
-        addCloseHandler(block.querySelector('.icon-close'));
-        const filterContainer = block.querySelector(`.${blockName}__filter-container`);
-        if (filterContainer) {
-          initializeSearchHandlers(filterContainer);
-        }
-        decorateIcons(block);
-        section.classList.remove(containerClass);
-        main.prepend(wrapper);
+        decorateArticleSearch(block, section, main);
         observer.disconnect();
       }
     });
   });
 
-  observer.observe(main, {
-    childList: true,
-  });
+  if (articleHero || !isMagazineTemplate) {
+    decorateArticleSearch(block, section, main);
+  } else {
+    observer.observe(main, {
+      childList: true,
+    });
+  }
 }
