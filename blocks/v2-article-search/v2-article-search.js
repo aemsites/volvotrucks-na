@@ -5,8 +5,6 @@ import {
 import { topicSearchQuery, fetchData, TENANT } from '../../scripts/search-api.js';
 
 const blockName = 'v2-article-search';
-const wrapperClass = `${blockName}-wrapper`;
-const containerClass = `${blockName}-container`;
 const filterContainerClass = `${blockName}__filter-container`;
 const dropdownClass = `${blockName}__filter-dropdown`;
 const dropdownOpen = `${blockName}__filter-dropdown--open`;
@@ -244,8 +242,7 @@ const initializeSearchHandlers = (searchContainer) => {
   }
 };
 
-const decorateArticleSearch = async (block, section, main) => {
-  const wrapper = block.closest(`.${wrapperClass}`);
+const decorateArticleSearch = async (block) => {
   const filter = buildFilterElement();
   const filterList = await buildFilterList();
   variantsClassesToBEM(block.classList, blockVariants, blockName);
@@ -259,32 +256,8 @@ const decorateArticleSearch = async (block, section, main) => {
     initializeSearchHandlers(filterContainer);
   }
   decorateIcons(block);
-  section.classList.remove(containerClass);
-  main.prepend(wrapper);
 };
 
 export default async function decorate(block) {
-  const main = block.closest('main');
-  const section = block.closest(`.${containerClass}`);
-  const articleHero = main.querySelector('.v2-magazine-article-hero__container');
-  const isMagazineTemplate = document.body.classList.contains('v2-magazine');
-  const observer = new MutationObserver((mutations) => {
-    mutations.forEach(async (mutation) => {
-      if (mutation.type !== 'childList') return;
-      const blockStatus = block.getAttribute('data-block-status');
-      const sectionStatus = section.getAttribute('data-section-status');
-      if ([blockStatus, sectionStatus].every((status) => status === 'loaded')) {
-        decorateArticleSearch(block, section, main);
-        observer.disconnect();
-      }
-    });
-  });
-
-  if (articleHero || !isMagazineTemplate) {
-    decorateArticleSearch(block, section, main);
-  } else {
-    observer.observe(main, {
-      childList: true,
-    });
-  }
+  decorateArticleSearch(block);
 }

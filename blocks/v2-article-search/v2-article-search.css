@@ -1,4 +1,5 @@
 :root {
+  --f-size: 1.4rem;
   --icon-size: 24px;
   --bullets-gap: 16px 8px;
 }
@@ -42,10 +43,10 @@
   display: flex;
   gap: .3rem;
   align-items: center;
+  font-size: var(--f-size);
 }
 
 .v2-article-search__filter-dropdown{
-  font-size: var(--f-button-font-size);
   cursor: pointer;
 }
 
@@ -104,7 +105,7 @@ a.v2-article-search__filter-link {
   padding: 10px 20px;
   border-radius: 99px;
   outline: 1px solid var(--button-primary-bg);
-  font-size: var(--f-button-font-size);
+  font-size: var(--f-size);
   line-height: 1;
   color: var(--button-primary-bg);
 }
@@ -204,10 +205,27 @@ a.v2-article-search__filter-link:hover {
   display: none;
 }
 
+.v2-article-search__clear-button.active {
+  display: flex;
+  align-items: center;
+  flex-shrink: 0;
+}
+
+.block.v2-article-search--black .v2-article-search__clear-button.active,
 .block.v2-article-search--black .v2-article-search__input-label,
 .block.v2-article-search--black .v2-article-search__fieldset,
 .block.v2-article-search--black .v2-article-search__filter-dropdown {
   color: inherit;
+}
+
+.block.v2-article-search--black .v2-article-search__filter-input input {
+  color: var(--c-white);
+  background-color: var(--c-black);
+}
+
+.block.v2-article-search--gray .v2-article-search__filter-input input {
+  color: var(--c-grey-4);
+  background-color: var(--c-grey-1);
 }
 
 .v2-article-search__clear-button {
@@ -229,17 +247,15 @@ a.v2-article-search__filter-link:hover {
   margin-left: 16px;
 }
 
-.v2-article-search__clear-button.active {
-  display: flex;
-  align-items: center;
-  flex-shrink: 0;
-}
-
 .v2-article-search__clear-button.active + .icon-close {
   margin-left: 0;
 }
 
 @media (min-width: 768px) {
+  .v2-article-search-wrapper {
+    z-index: 1;
+  }
+
   .v2-article-search__filter-dropdown--open {
     visibility: visible;
   }
@@ -247,6 +263,7 @@ a.v2-article-search__filter-link:hover {
   .v2-article-search__filter-input label.v2-article-search__input-label {
     display: block;
     font-family: var(--font-family-body);
+    font-size: var(--f-size);
   }
 
   .v2-article-search__filter-dropdown--open ~ .v2-article-search__filter-input .v2-article-search__input-label,
