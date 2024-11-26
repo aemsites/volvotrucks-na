@@ -226,9 +226,11 @@ export async function loadTemplate(doc, templateName) {
   }
 }
 
-function loadArticleSearchBlock(main) {
+export function loadArticleSearchBlock(main) {
   const variantClasses = ['default', 'black', 'gray'];
-  const variant = getMetadata('article-search').toLowerCase();
+  // this is only for local testing because the metadata is not available
+  // const variant = getMetadata('article-search').toLowerCase();
+  const variant = 'black';
   const hasArticleSearch = variantClasses.includes(variant);
 
   if (hasArticleSearch) {
@@ -275,7 +277,7 @@ export async function loadLazy(doc) {
   }
 
   // to add the article search block by checking the metadata
-  loadArticleSearchBlock(main);
+  // loadArticleSearchBlock(main); // commented to be loaded elsewhere
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   addFavIcon(`${window.hlx.codeBasePath}/styles/favicon.svg`);

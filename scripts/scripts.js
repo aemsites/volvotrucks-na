@@ -27,6 +27,7 @@ import {
   formatStringToArray,
   TRUCK_CONFIGURATOR_URLS,
   getLocale,
+  loadArticleSearchBlock,
 } from './common.js';
 
 import {
@@ -732,6 +733,7 @@ async function loadEager(doc) {
     document.documentElement.lang = language;
     const templateName = getMetadata('template');
     if (templateName) await loadTemplate(doc, templateName);
+    loadArticleSearchBlock(main);
     await waitForLCP(LCP_BLOCKS);
   } else {
     document.documentElement.lang = 'en';
