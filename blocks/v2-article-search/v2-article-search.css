@@ -1,5 +1,5 @@
 :root {
-  --f-size: 1.4rem;
+  --f-size: var(--f-button-font-size);
   --icon-size: 24px;
   --bullets-gap: 16px 8px;
 }
