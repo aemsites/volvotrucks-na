@@ -226,6 +226,24 @@ export async function loadTemplate(doc, templateName) {
   }
 }
 
+function loadArticleSearchBlock(main) {
+  const variantClasses = ['default', 'black', 'gray'];
+  const variant = getMetadata('article-search').toLowerCase();
+  const hasArticleSearch = variantClasses.includes(variant);
+
+  if (hasArticleSearch) {
+    const blockName = 'v2-article-search';
+    const isVariant = variantClasses.slice(1).includes(variant);
+    const articleSearchWrapper = createElement('div');
+    const articleSearch = buildBlock(blockName, []);
+    articleSearch.classList.toggle(variant, isVariant);
+    articleSearchWrapper.append(articleSearch);
+    decorateBlock(articleSearch);
+    loadBlock(articleSearch);
+    main.prepend(articleSearchWrapper);
+  }
+}
+
 /**
  * loads everything that doesn't need to be delayed.
  */
@@ -257,21 +275,7 @@ export async function loadLazy(doc) {
   }
 
   // to add the article search block by checking the metadata
-  const variantClasses = ['default', 'black', 'gray'];
-  const variant = getMetadata('article-search').toLowerCase();
-  const hasArticleSearch = variantClasses.includes(variant);
-
-  if (hasArticleSearch) {
-    const blockName = 'v2-article-search';
-    const isVariant = variantClasses.slice(1).includes(variant);
-    const articleSearchWrapper = createElement('div');
-    const articleSearch = buildBlock(blockName, []);
-    articleSearch.classList.toggle(variant, isVariant);
-    articleSearchWrapper.append(articleSearch);
-    decorateBlock(articleSearch);
-    loadBlock(articleSearch);
-    main.prepend(articleSearchWrapper);
-  }
+  loadArticleSearchBlock(main);
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
   addFavIcon(`${window.hlx.codeBasePath}/styles/favicon.svg`);
