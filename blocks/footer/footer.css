@@ -309,7 +309,7 @@ a.scroll-to-top:focus {
   }
 
   .footer-bar li:nth-last-child(1) {
-    margin: 0 0 4px;
+    margin-bottom: 4px;
     flex: 1;
     text-align: inherit;
   }
