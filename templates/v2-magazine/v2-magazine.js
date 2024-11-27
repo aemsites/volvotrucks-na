@@ -1,4 +1,10 @@
-import { getMetadata, createOptimizedPicture, buildBlock, decorateBlock, loadBlock } from '../../scripts/aem.js';
+import {
+  getMetadata,
+  createOptimizedPicture,
+  buildBlock,
+  decorateBlock,
+  loadBlock,
+} from '../../scripts/aem.js';
 import {
   createElement,
   getTextLabel,
@@ -160,7 +166,7 @@ const loadArticleSearchBlock = (main) => {
     loadBlock(articleSearch);
     main.prepend(articleSearchWrapper);
   }
-}
+};
 
 export default async function decorate(doc) {
   await getPlaceholders();
