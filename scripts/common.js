@@ -226,26 +226,6 @@ export async function loadTemplate(doc, templateName) {
   }
 }
 
-export function loadArticleSearchBlock(main) {
-  const variantClasses = ['default', 'black', 'gray'];
-  // this is only for local testing because the metadata is not available
-  // const variant = getMetadata('article-search').toLowerCase();
-  const variant = 'default';
-  const hasArticleSearch = variantClasses.includes(variant);
-
-  if (hasArticleSearch) {
-    const blockName = 'v2-article-search';
-    const isVariant = variantClasses.slice(1).includes(variant);
-    const articleSearchWrapper = createElement('div');
-    const articleSearch = buildBlock(blockName, []);
-    articleSearch.classList.toggle(variant, isVariant);
-    articleSearchWrapper.append(articleSearch);
-    decorateBlock(articleSearch);
-    loadBlock(articleSearch);
-    main.prepend(articleSearchWrapper);
-  }
-}
-
 /**
  * loads everything that doesn't need to be delayed.
  */

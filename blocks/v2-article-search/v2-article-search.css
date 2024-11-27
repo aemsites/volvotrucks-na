@@ -11,6 +11,11 @@
   height: 54px;
 }
 
+.section.v2-article-search-container .v2-article-search-wrapper {
+  max-width: 100%;
+  padding: 0;
+}
+
 .v2-article-search.block {
   width: var(--wrapper-width);
   margin: 0 auto;

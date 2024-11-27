@@ -150,9 +150,7 @@ const buildArticleHero = (doc, articleSearchWrapper) => {
 
 const loadArticleSearchBlock = (main) => {
   const variantClasses = ['default', 'black', 'gray'];
-  // this is only for local testing because the metadata is not available
-  // const variant = getMetadata('article-search').toLowerCase();
-  const variant = 'default';
+  const variant = getMetadata('article-search').toLowerCase();
   const hasArticleSearch = variantClasses.includes(variant);
 
   if (hasArticleSearch) {
