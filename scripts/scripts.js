@@ -733,7 +733,7 @@ async function loadEager(doc) {
     document.documentElement.lang = language;
     const templateName = getMetadata('template');
     if (templateName) await loadTemplate(doc, templateName);
-    loadArticleSearchBlock(main);
+    // loadArticleSearchBlock(main);
     await waitForLCP(LCP_BLOCKS);
   } else {
     document.documentElement.lang = 'en';

@@ -8,6 +8,7 @@
   background-color: var(--background-color);
   position: sticky;
   top: 0;
+  height: 54px;
 }
 
 .v2-article-search.block {
