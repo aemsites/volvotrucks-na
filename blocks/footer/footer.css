@@ -267,6 +267,11 @@ a.scroll-to-top:focus {
     padding: 0;
   }
 
+  .footer-bar li {
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
   .footer-list-item li:last-child {
     margin-bottom: 0;
   }
@@ -304,7 +309,7 @@ a.scroll-to-top:focus {
   }
 
   .footer-bar li:nth-last-child(1) {
-    margin: 0;
+    margin-bottom: 4px;
     flex: 1;
     text-align: inherit;
   }
