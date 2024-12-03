@@ -1,4 +1,10 @@
-import { getMetadata, createOptimizedPicture } from '../../scripts/aem.js';
+import {
+  getMetadata,
+  createOptimizedPicture,
+  buildBlock,
+  decorateBlock,
+  loadBlock,
+} from '../../scripts/aem.js';
 import {
   createElement,
   getTextLabel,
@@ -110,7 +116,7 @@ const buildHeroTags = () => {
   return null;
 };
 
-const buildArticleHero = (doc) => {
+const buildArticleHero = (doc, articleSearchWrapper) => {
   const main = doc.querySelector('main');
   const heroContainer = createElement('div', { classes: `${articleHero}__container` });
   const heroTitle = buildHeroTitle();
@@ -123,7 +129,12 @@ const buildArticleHero = (doc) => {
 
   main.setAttribute('itemscope', '');
   main.setAttribute('itemtype', 'https://schema.org/Article');
-  main.prepend(heroContainer);
+
+  if (articleSearchWrapper) {
+    articleSearchWrapper.insertAdjacentElement('afterend', heroContainer);
+  } else {
+    main.prepend(heroContainer);
+  }
 
   const resizeObserver = new ResizeObserver((entries) => {
     const {
@@ -137,7 +148,28 @@ const buildArticleHero = (doc) => {
   resizeObserver.observe(main);
 };
 
+const loadArticleSearchBlock = (main) => {
+  const variantClasses = ['default', 'black', 'gray'];
+  const variant = getMetadata('article-search').toLowerCase();
+  const hasArticleSearch = variantClasses.includes(variant);
+
+  if (hasArticleSearch) {
+    const blockName = 'v2-article-search';
+    const isVariant = variantClasses.slice(1).includes(variant);
+    const articleSearchWrapper = createElement('div');
+    const articleSearch = buildBlock(blockName, []);
+    articleSearch.classList.toggle(variant, isVariant);
+    articleSearchWrapper.append(articleSearch);
+    decorateBlock(articleSearch);
+    loadBlock(articleSearch);
+    main.prepend(articleSearchWrapper);
+  }
+};
+
 export default async function decorate(doc) {
   await getPlaceholders();
-  buildArticleHero(doc);
+  const main = doc.querySelector('main');
+  loadArticleSearchBlock(main);
+  const articleSearchWrapper = document.querySelector('.v2-article-search-wrapper');
+  buildArticleHero(doc, articleSearchWrapper);
 }
