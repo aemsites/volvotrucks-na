@@ -172,7 +172,7 @@ async function filterArticles(articles, activeFilters) {
     return Promise.resolve(articles);
   }
 
-  // If no filters are applied, return articles asynchronously
+  // otherwise do a query again with any of these filters
   const tags = {};
   Object.entries(filters).forEach(([key, value]) => {
     if (value) {
@@ -184,7 +184,7 @@ async function filterArticles(articles, activeFilters) {
 
   const filterOptions = {
     ...(haveFilters && { tags }),
-    ...(hasSearch && { q: search }),
+    ...(search && { q: search }),
   };
 
   try {
