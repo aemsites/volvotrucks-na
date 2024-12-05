@@ -138,7 +138,7 @@ const createModal = () => {
         videoOrIframe.classList.add('modal-video');
         modalBackground.classList.add('modal--video');
         modalContent.append(videoOrIframe);
-      } else if (isAEMVideoUrl) {
+      } else if (isAEMVideoUrl(newContent)) {
         videoOrIframe = document.createElement('div');
         videoOrIframe.classList.add('modal-video');
 
