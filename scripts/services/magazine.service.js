@@ -2,7 +2,9 @@ import {
   getJsonFromUrl,
   getLanguagePath,
   getOrigin,
+  getLocale,
 } from '../common.js';
+import { fetchData, magazineSearchQuery, TENANT } from '../search-api.js';
 
 /**
  * Fetches magazine articles from a given URL.
@@ -97,3 +99,38 @@ export const sortArticlesByDateField = (articles, dateField) => articles
     timestamp: new Date(article[dateField]).getTime(),
   }))
   .sort((a, b) => b.timestamp - a.timestamp);
+
+export const fetchMagazineData = async ({
+  limit,
+  offset = 0,
+  tags = null,
+  q = 'truck',
+  sort = 'BEST_MATCH',
+  tenant = TENANT,
+  language = getLocale().split('-')[0].toUpperCase(),
+  category = 'magazine',
+  facets = ['ARTICLE', 'TOPIC', 'TRUCK'],
+} = {}) => {
+  const variables = {
+    tenant,
+    language,
+    q,
+    category,
+    limit: limit ?? null,
+    offset,
+    facets,
+    sort,
+    article: tags || {},
+  };
+
+  try {
+    const rawData = await fetchData({
+      query: magazineSearchQuery(),
+      variables,
+    });
+    return rawData?.data?.edssearch || null;
+  } catch (error) {
+    console.error('Error fetching magazine articles:', error);
+    return null;
+  }
+};
