@@ -62,6 +62,7 @@ const getTopics = async (props = {}) => {
       ...new Set(articles.items.map((item) => ({ key: 'category', value: item.value.trim() }))),
     ].sort((a, b) => a.value.localeCompare(b.value));
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error fetching data:', error);
     throw error;
   }

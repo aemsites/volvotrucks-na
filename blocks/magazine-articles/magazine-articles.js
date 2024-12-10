@@ -10,7 +10,7 @@ import {
 import {
   createOptimizedPicture,
 } from '../../scripts/aem.js';
-import { fetchMagazineData } from '../../scripts/services/magazine.service.js';
+import { fetchMagazineArticles } from '../../scripts/services/magazine.service.js';
 
 const defaultAuthor = getTextLabel('defaultAuthor');
 const defaultReadTime = getTextLabel('defaultReadTime');
@@ -58,16 +58,18 @@ const extractFilters = (facets) => {
 };
 
 const processMagazineArticles = async (params = {}) => {
-  const rawData = await fetchMagazineData(params);
+  const rawData = await fetchMagazineArticles(params);
 
   if (!rawData) {
-    console.error('No data returned from fetchMagazineData');
+    // eslint-disable-next-line no-console
+    console.error('No data returned from fetchMagazineArticles');
     return [];
   }
 
   const { items, count, facets: dataFacets } = rawData;
 
   if (!items || items.length === 0) {
+    // eslint-disable-next-line no-console
     console.error('No items returned in raw data:', rawData);
     return [];
   }
@@ -195,6 +197,7 @@ async function filterArticles(articles, activeFilters) {
     });
     return filteredArticles;
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error filtering articles:', error);
     return [];
   }

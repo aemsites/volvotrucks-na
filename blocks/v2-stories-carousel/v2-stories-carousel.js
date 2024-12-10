@@ -8,6 +8,7 @@ import {
   getDateFromTimestamp,
   MAGAZINE_CONFIGS,
   extractObjectFromArray,
+  getTextLabel,
 } from '../../scripts/common.js';
 import {
   clearCurrentArticle,
@@ -95,43 +96,44 @@ const navigate = (carousel, direction, arrowLeftButton, arrowRightButton) => {
 };
 
 const createArrowControls = (carousel) => {
-  const arrowControls = createElement('ul', { classes: [`${blockName}-arrowcontrols`] });
+  const arrowLeftButtonLabel = getTextLabel('Previous');
+  const arrowRightButtonLabel = getTextLabel('Next');
+  const arrowControlsContainer = document.createElement('ul');
+  arrowControlsContainer.className = `${blockName}-arrowcontrols`;
+  arrowControlsContainer.innerHTML = `
+    <li>
+      <button class="${blockName}-arrowbutton ${blockName}-arrowbutton--left" aria-label="${arrowLeftButtonLabel}">
+        <span class="icon icon-arrow-left"></span>
+      </button>
+    </li>
+    <li>
+      <button class="${blockName}-arrowbutton ${blockName}-arrowbutton--right" aria-label="${arrowRightButtonLabel}">
+        <span class="icon icon-arrow-right"></span>
+      </button>
+    </li>
+  `;
 
-  const arrowLeftButton = createElement('button', {
-    classes: [`${blockName}-arrowbutton`],
-    props: { 'aria-label': 'Previous' },
-  });
-  const leftIcon = createElement('span', { classes: ['icon', 'icon-arrow-left'] });
-  arrowLeftButton.append(leftIcon);
+  carousel.insertAdjacentElement('beforebegin', arrowControlsContainer);
+  decorateIcons(arrowControlsContainer);
 
-  const arrowRightButton = createElement('button', {
-    classes: [`${blockName}-arrowbutton`],
-    props: { 'aria-label': 'Next' },
-  });
-  const rightIcon = createElement('span', { classes: ['icon', 'icon-arrow-right'] });
-  arrowRightButton.append(rightIcon);
-
-  const leftArrowListItem = createElement('li');
-  leftArrowListItem.append(arrowLeftButton);
-
-  const rightArrowListItem = createElement('li');
-  rightArrowListItem.append(arrowRightButton);
-
-  arrowControls.append(leftArrowListItem, rightArrowListItem);
-  carousel.insertAdjacentElement('beforebegin', arrowControls);
-
-  decorateIcons(arrowControls);
-
+  const arrowLeftButton = arrowControlsContainer.querySelector(`.${blockName}-arrowbutton--left`);
+  const arrowRightButton = arrowControlsContainer.querySelector(`.${blockName}-arrowbutton--right`);
   arrowLeftButton.addEventListener('click', () => navigate(carousel, 'left', arrowLeftButton, arrowRightButton));
   arrowRightButton.addEventListener('click', () => navigate(carousel, 'right', arrowLeftButton, arrowRightButton));
 
   updateArrowButtonsState(carousel, arrowLeftButton, arrowRightButton, 0);
 
-  return arrowControls;
+  return arrowControlsContainer;
 };
 
+const getArticleTags = (metadata) => [
+  ...(metadata?.article?.category || []),
+  ...(metadata?.article?.topic || []),
+  ...(metadata?.article?.truck || []),
+];
+
 const getMagazineArticles = async (limit = 5, tags = []) => {
-  const allArticles = await fetchMagazineArticles();
+  const allArticles = await fetchMagazineArticles({ limit: 100 });
   const artsWithImage = removeArticlesWithNoImage(allArticles);
   let articles = clearCurrentArticle(artsWithImage);
 
@@ -139,17 +141,25 @@ const getMagazineArticles = async (limit = 5, tags = []) => {
     articles = clearCurrentArticle(articles);
   }
 
-  // If there are tags, filter the article list by that tag
+  // If tags are present, filter the article list using the specified tags.
   if (tags.length > 0) {
-    articles = articles.filter((article) => tags.some((tag) => article.tags.includes(tag)));
+    articles = articles.filter((article) => {
+      const articleTags = getArticleTags(article.metadata).map((tag) => tag.toLowerCase());
+      return articleTags.some((articleTag) => tags.includes(articleTag));
+    });
   }
 
-  // If there are less articles than the limit complete the list with the rest of articles
+  // If the number of articles is less than the limit, complete the list with additional articles.
   if (articles.length < limit) {
-    const missingArts = artsWithImage.filter((art) => !tags.some((tag) => art.tags.includes(tag)));
-    const sortedArticles = sortArticlesByDateField(missingArts);
-    const missingArticles = sortedArticles.slice(0, limit - articles.length);
-    articles = articles.concat(missingArticles);
+    const missingArticles = artsWithImage.filter((art) => {
+      const articleTags = getArticleTags(art.metadata).map((tag) => tag.toLowerCase());
+      return !tags.some((tag) => articleTags.includes(tag));
+    });
+    const sortedArticles = sortArticlesByDateField(missingArticles, 'publishDate');
+    const additionalArticles = sortedArticles.slice(0, limit - articles.length);
+    articles = [...articles, ...additionalArticles];
+  } else {
+    articles = sortArticlesByDateField(articles, 'publishDate');
   }
 
   return articles.slice(0, limit);
@@ -157,13 +167,17 @@ const getMagazineArticles = async (limit = 5, tags = []) => {
 
 const buildStoryCard = (entry) => {
   const {
-    path,
-    image,
-    title: originalTitle,
-    description,
-    linkText,
-    publishDate,
-    readingTime,
+    metadata: {
+      url,
+      image,
+      title: originalTitle,
+      description,
+      linkText,
+      publishDate,
+      article: {
+        readTime,
+      },
+    },
   } = entry;
 
   const title = originalTitle.split('|')[0].trim();
@@ -178,7 +192,7 @@ const buildStoryCard = (entry) => {
 
   const svgArrowRight = createElement('span', { classes: ['icon', 'icon-arrow-right'] });
   const cardFragment = document.createRange().createContextualFragment(`
-    <a href="${path}">
+    <a href="${url}">
       ${pictureTag}
     </a>
     <div class="${blockName}-text">
@@ -191,10 +205,10 @@ const buildStoryCard = (entry) => {
           </time>
         </li>
         <li class="${blockName}-timetoread">
-          <span>${readingTime} read</span>
+          <span>${readTime} read</span>
         </li>
       </ul>
-      <a href="${path}" class="${blockName}-cta button tertiary">
+      <a href="${url}" class="${blockName}-cta button tertiary">
         ${readMore}
         ${svgArrowRight.outerHTML}
       </a>
@@ -222,7 +236,14 @@ export default async function decorate(block) {
   block.innerHTML = '';
   let stories;
   if (isRelatedArticles) {
-    const tags = getMetadata('article:tag').split(',').map((tag) => tag.trim());
+    const metadataTags = ['article-category', 'topic', 'truck'];
+    const tags = metadataTags.reduce((acc, metaTag) => {
+      const metaContent = getMetadata(metaTag);
+      if (metaContent) {
+        acc.push(...metaContent.split(',').map((tag) => tag.trim().toLowerCase()));
+      }
+      return acc;
+    }, []);
     stories = await getMagazineArticles(limit, tags);
   } else {
     stories = await getMagazineArticles(limit);
@@ -232,8 +253,8 @@ export default async function decorate(block) {
   const carousel = block.querySelector(`.${blockName}-items`);
 
   const arrowControls = createArrowControls(carousel);
-  const arrowLeftButton = arrowControls.querySelector('button[aria-label="Previous"]');
-  const arrowRightButton = arrowControls.querySelector('button[aria-label="Next"]');
+  const arrowLeftButton = arrowControls.querySelector(`.${blockName}-arrowbutton--left`);
+  const arrowRightButton = arrowControls.querySelector(`.${blockName}-arrowbutton--right`);
 
   listenScroll(carousel);
   requestAnimationFrame(() => {

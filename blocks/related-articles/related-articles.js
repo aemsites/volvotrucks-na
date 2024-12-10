@@ -2,26 +2,27 @@ import {
   getDateFromTimestamp,
 } from '../../scripts/common.js';
 import {
-  splitTags,
-} from '../../scripts/magazine-press.js';
-import {
   createOptimizedPicture,
   getMetadata,
-  toClassName,
 } from '../../scripts/aem.js';
 import {
   fetchMagazineArticles,
   removeArticlesWithNoImage,
+  sortArticlesByDateField,
 } from '../../scripts/services/magazine.service.js';
 
-function buildRelatedMagazineArticle(entry) {
+const buildRelatedMagazineArticle = (entry) => {
   const {
-    path,
-    image,
-    title,
-    author,
-    readingTime,
-    publishDate,
+    metadata: {
+      url,
+      image,
+      title,
+      article: {
+        author,
+        readTime,
+      },
+      publishDate,
+    },
   } = entry;
 
   const card = document.createElement('article');
@@ -29,30 +30,52 @@ function buildRelatedMagazineArticle(entry) {
   const pictureTag = picture.outerHTML;
   const formattedDate = getDateFromTimestamp(publishDate);
   card.innerHTML = `
-    <a href="${path}" class="imgcover">${pictureTag}</a>
+    <a href="${url}" class="imgcover">${pictureTag}</a>
     <div class="content">
       <ul><li>${formattedDate}</li></ul>
-      <h3><a href="${path}">${title}</a></h3>
+      <h3><a href="${url}">${title}</a></h3>
       <ul>
         <li>${author}</li>
-        <li>${readingTime}</li>
+        <li>${readTime}</li>
       </ul>
     </div>
   `;
   return card;
-}
+};
 
-function filterArticles(articles, filterTags, thisArticleTitle) {
-  articles.forEach((n) => {
-    n.filterTag = splitTags(n.tags).map((m) => toClassName(m.trim()));
+const filterArticles = (articles, filterTags, thisArticleTitle) => {
+  const processTags = (article) => {
+    const tags = [
+      ...(article.metadata.article.category || []),
+      ...(article.metadata.article.topic || []),
+      ...(article.metadata.article.truck || []),
+    ];
+    return tags.map((tag) => tag.trim().toLowerCase());
+  };
+
+  articles.forEach((article) => {
+    article.filterTag = processTags(article);
   });
-  const filteredArticles = articles.filter((item) => item.title !== thisArticleTitle)
-    .filter((item) => item.filterTag.some((tag) => filterTags.includes(tag))).slice(0, 3);
-  return filteredArticles;
-}
 
-async function createRelatedtMagazineArticles(mainEl, magazineArticles) {
-  const articleTags = getMetadata('article:tag').split(',').map((m) => toClassName(m.trim()));
+  const sortedArticles = sortArticlesByDateField(articles, 'publishDate');
+
+  const filteredArticles = sortedArticles
+    .filter((article) => article.metadata.title !== thisArticleTitle)
+    .filter((article) => article.filterTag.some((tag) => filterTags.includes(tag)))
+    .slice(0, 3);
+
+  return filteredArticles;
+};
+
+const createRelatedMagazineArticles = async (mainEl, magazineArticles) => {
+  const metadataTags = ['article-category', 'topic', 'truck'];
+  const articleTags = metadataTags.reduce((acc, metaTag) => {
+    const metaContent = getMetadata(metaTag);
+    if (metaContent) {
+      acc.push(...metaContent.split(',').map((tag) => tag.trim().toLowerCase()));
+    }
+    return acc;
+  }, []);
   const articleTitle = getMetadata('og:title');
   const filteredData = filterArticles(magazineArticles, articleTags, articleTitle);
 
@@ -64,11 +87,11 @@ async function createRelatedtMagazineArticles(mainEl, magazineArticles) {
     const articleCard = buildRelatedMagazineArticle(entry);
     articleCards.appendChild(articleCard);
   });
-}
+};
 
 export default async function decorate(block) {
-  const allArticles = await fetchMagazineArticles();
+  const allArticles = await fetchMagazineArticles({ limit: 100 });
   const articles = removeArticlesWithNoImage(allArticles);
 
-  createRelatedtMagazineArticles(block, articles);
+  createRelatedMagazineArticles(block, articles);
 }
