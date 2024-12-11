@@ -52,6 +52,7 @@
 
 :root {
   /* fonts */
+  --ff-fallback-default: 'Noto Sans', sans-serif;
   --ff-volvo-novum-medium: 'VolvoNovum-Medium', 'VolvoNovum-Medium Fallback', sans-serif;
   --ff-volvo-novum: 'VolvoNovum', 'VolvoNovum Fallback', sans-serif;
   --ff-volvo-broadprodigital: 'VolvoBroadProDigital', 'VolvoBroadProDigital Fallback', sans-serif;

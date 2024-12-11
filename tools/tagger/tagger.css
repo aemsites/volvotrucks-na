@@ -4,7 +4,7 @@ helix-sidekick {
 }
 
 main {
-  font-family: system-ui, "Noto Sans", sans-serif;
+  font-family: system-ui, var(--ff-fallback-default);
   padding: 20px;
   font-size: 1.3rem;
   line-height: 1.2em;
