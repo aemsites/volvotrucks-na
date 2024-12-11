@@ -96,10 +96,10 @@ export const sortArticlesByDateField = (articles, dateField) => {
  * @param {number} [options.offset=0] - The starting point for fetching articles (pagination).
  * @param {Array<string>|null} [options.tags=null] - Tags to filter articles.
  * @param {string} [options.q='truck'] - The query term to search for articles.
- * @param {string} [options.sort='BEST_MATCH'] - The sorting criteria for articles.
- * @param {string} [options.tenant=TENANT] - The tenant identifier for the articles.
+ * @param {string} [options.sort] - The sorting criteria for articles.
+ * @param {string} [options.tenant=TENANT] - The tenant identifier.
  * @param {string} [options.language=getLocale().split('-')[0].toUpperCase()] -
- * The language code for the articles (e.g., 'EN').
+ * The language code for the articles.
  * @param {string} [options.category='magazine'] - The category of articles to fetch.
  * @param {Array<string>} [options.facets=['ARTICLE', 'TOPIC', 'TRUCK']] -
  * The facets to include in the search.
@@ -113,7 +113,7 @@ export const fetchMagazineArticles = async ({
   offset = 0,
   tags = null,
   q = 'truck',
-  sort = 'BEST_MATCH',
+  sort,
   tenant = TENANT,
   language = getLocale().split('-')[0].toUpperCase(),
   category = 'magazine',

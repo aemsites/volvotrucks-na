@@ -138,7 +138,7 @@ function buildMagazineArticle(entry) {
 
 function buildLatestMagazineArticle(entry) {
   const {
-    path,
+    url,
     image,
     title,
     description,
@@ -149,13 +149,13 @@ function buildLatestMagazineArticle(entry) {
   const pictureTag = picture.outerHTML;
   const readMore = (linkText || 'Read more...');
   card.innerHTML = `
-    <a href="${path}" class="imgcover">
+    <a href="${url}" class="imgcover">
       ${pictureTag}
     </a>
     <div class="content">
       <h3>${title}</h3>
       <p>${description}</p>
-      <a href="${path}" class="cta">${readMore}</a>
+      <a href="${url}" class="cta">${readMore}</a>
     </div>
   `;
   return card;
@@ -243,7 +243,7 @@ async function createLatestMagazineArticles(mainEl, magazineArticles) {
 export default async function decorate(block) {
   const latest = block.classList.contains('latest');
   const limit = latest ? 3 : undefined;
-  const magazineArticles = await processMagazineArticles({ limit });
+  const magazineArticles = await processMagazineArticles({ limit, sort: 'BEST_MATCH' });
   if (latest) {
     createLatestMagazineArticles(block, magazineArticles);
   } else {

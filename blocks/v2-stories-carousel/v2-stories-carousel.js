@@ -2,6 +2,7 @@ import {
   createOptimizedPicture,
   getMetadata,
   decorateIcons,
+  toClassName,
 } from '../../scripts/aem.js';
 import {
   createElement,
@@ -144,7 +145,7 @@ const getMagazineArticles = async (limit = 5, tags = []) => {
   // If tags are present, filter the article list using the specified tags.
   if (tags.length > 0) {
     articles = articles.filter((article) => {
-      const articleTags = getArticleTags(article.metadata).map((tag) => tag.toLowerCase());
+      const articleTags = getArticleTags(article.metadata).map((tag) => toClassName(tag.trim()));
       return articleTags.some((articleTag) => tags.includes(articleTag));
     });
   }
@@ -152,7 +153,7 @@ const getMagazineArticles = async (limit = 5, tags = []) => {
   // If the number of articles is less than the limit, complete the list with additional articles.
   if (articles.length < limit) {
     const missingArticles = artsWithImage.filter((art) => {
-      const articleTags = getArticleTags(art.metadata).map((tag) => tag.toLowerCase());
+      const articleTags = getArticleTags(art.metadata).map((tag) => toClassName(tag.trim()));
       return !tags.some((tag) => articleTags.includes(tag));
     });
     const sortedArticles = sortArticlesByDateField(missingArticles, 'publishDate');
@@ -240,7 +241,7 @@ export default async function decorate(block) {
     const tags = metadataTags.reduce((acc, metaTag) => {
       const metaContent = getMetadata(metaTag);
       if (metaContent) {
-        acc.push(...metaContent.split(',').map((tag) => tag.trim().toLowerCase()));
+        acc.push(...metaContent.split(',').map((tag) => toClassName(tag.trim())));
       }
       return acc;
     }, []);

@@ -4,6 +4,7 @@ import {
 import {
   createOptimizedPicture,
   getMetadata,
+  toClassName,
 } from '../../scripts/aem.js';
 import {
   fetchMagazineArticles,
@@ -50,7 +51,7 @@ const filterArticles = (articles, filterTags, thisArticleTitle) => {
       ...(article.metadata.article.topic || []),
       ...(article.metadata.article.truck || []),
     ];
-    return tags.map((tag) => tag.trim().toLowerCase());
+    return tags.map((tag) => toClassName(tag.trim()));
   };
 
   articles.forEach((article) => {
@@ -72,7 +73,7 @@ const createRelatedMagazineArticles = async (mainEl, magazineArticles) => {
   const articleTags = metadataTags.reduce((acc, metaTag) => {
     const metaContent = getMetadata(metaTag);
     if (metaContent) {
-      acc.push(...metaContent.split(',').map((tag) => tag.trim().toLowerCase()));
+      acc.push(...metaContent.split(',').map((tag) => toClassName(tag.trim())));
     }
     return acc;
   }, []);
