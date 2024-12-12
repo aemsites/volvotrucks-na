@@ -99,8 +99,7 @@ const navigate = (carousel, direction, arrowLeftButton, arrowRightButton) => {
 const createArrowControls = (carousel) => {
   const arrowLeftButtonLabel = getTextLabel('Previous');
   const arrowRightButtonLabel = getTextLabel('Next');
-  const arrowControlsContainer = document.createElement('ul');
-  arrowControlsContainer.className = `${blockName}-arrowcontrols`;
+  const arrowControlsContainer = createElement('ul', { classes: `${blockName}-arrowcontrols` });
   arrowControlsContainer.innerHTML = `
     <li>
       <button class="${blockName}-arrowbutton ${blockName}-arrowbutton--left" aria-label="${arrowLeftButtonLabel}">
