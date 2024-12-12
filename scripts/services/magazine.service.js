@@ -1,5 +1,5 @@
 import { getLocale } from '../common.js';
-import { fetchData, magazineSearchQuery, TENANT } from '../search-api.js';
+import { fetchSearchData, magazineSearchQuery, TENANT } from '../search-api.js';
 
 /**
  * Extracts the articles that dont have an image field
@@ -132,7 +132,7 @@ export const fetchMagazineArticles = async ({
   };
 
   try {
-    const rawData = await fetchData({
+    const rawData = await fetchSearchData({
       query: magazineSearchQuery(),
       variables,
     });

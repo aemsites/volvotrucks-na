@@ -9,7 +9,7 @@ import {
 } from './templates.js';
 
 import {
-  searchQuery, fetchData, sanitizeQueryTerm, TENANT,
+  searchQuery, fetchSearchData, sanitizeQueryTerm, TENANT,
 } from '../../scripts/search-api.js';
 
 import { fetchAutosuggest, handleArrowDown, handleArrowUp } from './autosuggest.js';
@@ -401,7 +401,7 @@ export default function decorate(block) {
       }
     });
 
-    fetchData({
+    fetchSearchData({
       query: searchQuery(),
       variables,
     }).then(({ errors, data }) => {
