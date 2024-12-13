@@ -237,7 +237,7 @@ main .section.dealer-locator-container > div {
 
 .dealer-locator .tooltip .tooltiptext {
     visibility: hidden;
-    font-family: Arial,sans-serif;
+    font-family: var(--fallback-ff-default);
     width: 120px;
     background-color: #000;
     font-size: 12px;
@@ -1984,7 +1984,7 @@ main .section.dealer-locator-container > div {
     line-height: 18px;
     padding-left: 4px;
     font-size: 15px;
-    font-family: Arial,sans-serif
+    font-family: var(--fallback-ff-default);
 }
 
 .dealer-locator .sidebar .panel-card .panel-container button .icon {

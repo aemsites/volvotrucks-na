@@ -7,7 +7,8 @@
 */
 @font-face {
   font-family: 'VolvoNovum Fallback';
-  src: local('arial');
+  src: local('Noto Sans'),
+  url('https://fonts.gstatic.com/s/notosans/v27/o-0IIpQlx3QUlC5A4PNr5TRA.woff2') format('woff2');
   size-adjust: 102%;
   ascent-override: 95%;
   descent-override: normal;
@@ -16,16 +17,19 @@
 
 @font-face {
   font-family: 'VolvoNovum-Medium Fallback';
-  src: local('arial');
+  src: local('Noto Sans'),
+  url('https://fonts.gstatic.com/s/notosans/v27/o-0IIpQlx3QUlC5A4PNr5TRA.woff2') format('woff2');
   size-adjust: 103%;
   ascent-override: 92%;
   descent-override: normal;
   line-gap-override: normal;
 }
 
+/* previous fallback font was Arial Narrow */
 @font-face {
   font-family: 'VolvoBroadProDigital Fallback';
-  src: local('Arial Narrow');
+  src: local('Noto Sans'),
+  url('https://fonts.gstatic.com/s/notosans/v27/o-0IIpQlx3QUlC5A4PNr5TRA.woff2') format('woff2');
   font-style: normal;
   font-weight: 400;
   ascent-override: 100%;
@@ -38,7 +42,8 @@
   font-family: 'fontawesome Fallback';
   font-style: normal;
   font-weight: 400;
-  src: local('Arial');
+  src: local('Noto Sans'),
+  url('https://fonts.gstatic.com/s/notosans/v27/o-0IIpQlx3QUlC5A4PNr5TRA.woff2') format('woff2');
   ascent-override: 93.75%;
   descent-override: 6.25%;
   line-gap-override: 0%;
@@ -47,6 +52,7 @@
 
 :root {
   /* fonts */
+  --ff-fallback-default: 'Noto Sans', sans-serif;
   --ff-volvo-novum-medium: 'VolvoNovum-Medium', 'VolvoNovum-Medium Fallback', sans-serif;
   --ff-volvo-novum: 'VolvoNovum', 'VolvoNovum Fallback', sans-serif;
   --ff-volvo-broadprodigital: 'VolvoBroadProDigital', 'VolvoBroadProDigital Fallback', sans-serif;
