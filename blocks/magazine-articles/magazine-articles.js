@@ -3,7 +3,6 @@ import {
   getTextLabel,
   createElement,
   getDateFromTimestamp,
-  getLocale,
 } from '../../scripts/common.js';
 import {
   createList,
@@ -11,14 +10,92 @@ import {
 import {
   createOptimizedPicture,
 } from '../../scripts/aem.js';
-import { fetchData, magazineSearchQuery, TENANT } from '../../scripts/search-api.js';
+import { fetchMagazineArticles } from '../../scripts/services/magazine.service.js';
 
-const locale = getLocale();
-const language = locale.split('-')[0].toUpperCase();
 const defaultAuthor = getTextLabel('defaultAuthor');
 const defaultReadTime = getTextLabel('defaultReadTime');
 const filterLists = { category: null, topic: null, truck: null };
 let firstLoad = true;
+
+const parseArticleData = (item) => {
+  const isImageLink = (link) => `${link}`.split('?')[0].match(/\.(jpeg|jpg|gif|png|svg|bmp|webp)$/) !== null;
+
+  const getDefaultImage = () => {
+    const logoImageURL = '/media/logo/media_10a115d2f3d50f3a22ecd2075307b4f4dcaedb366.jpeg';
+    return getOrigin() + logoImageURL;
+  };
+
+  const { article, image } = item.metadata;
+  const filterTag = ['category', 'topic', 'truck']
+    .map((key) => item.metadata.article[key])
+    .filter(Boolean);
+
+  return {
+    ...item.metadata,
+    filterTag,
+    author: article.author || defaultAuthor,
+    image: isImageLink(image) ? getOrigin() + image : getDefaultImage(),
+    path: item.metadata?.url,
+    readingTime: /\d+/.test(article.readTime) ? article.readTime : defaultReadTime,
+    isDefaultImage: !isImageLink(image),
+    category: article.category,
+  };
+};
+
+const extractFilters = (facets) => {
+  facets.forEach((facet) => {
+    const key = facet.field === 'ARTICLE' ? 'category' : facet.field.toLowerCase();
+    const uniqueItems = new Set(
+      facet.items.map((item) => {
+        const value = item.value.trim();
+        return key === 'truck'
+          ? value.toUpperCase()
+          : value.charAt(0).toUpperCase() + value.slice(1);
+      }),
+    );
+    filterLists[key] = [...uniqueItems];
+  });
+};
+
+const processMagazineArticles = async (params = {}) => {
+  const rawData = await fetchMagazineArticles(params);
+
+  if (!rawData) {
+    // eslint-disable-next-line no-console
+    console.error('No data returned from fetchMagazineArticles');
+    return [];
+  }
+
+  const { items, count, facets: dataFacets } = rawData;
+
+  if (!items || items.length === 0) {
+    // eslint-disable-next-line no-console
+    console.error('No items returned in raw data:', rawData);
+    return [];
+  }
+
+  const articles = items.map((item) => parseArticleData(item));
+
+  if (!params.limit && articles.length < count) {
+    const moreArticles = await processMagazineArticles({
+      ...params,
+      limit: count,
+      offset: articles.length,
+    });
+    return articles.concat(moreArticles);
+  }
+
+  if (firstLoad) {
+    firstLoad = false;
+    extractFilters(dataFacets);
+  }
+
+  const sortedArticles = articles.sort(
+    (a, b) => new Date(b.publishDate) - new Date(a.publishDate),
+  );
+
+  return sortedArticles;
+};
 
 function buildMagazineArticle(entry) {
   const {
@@ -61,7 +138,7 @@ function buildMagazineArticle(entry) {
 
 function buildLatestMagazineArticle(entry) {
   const {
-    path,
+    url,
     image,
     title,
     description,
@@ -72,13 +149,13 @@ function buildLatestMagazineArticle(entry) {
   const pictureTag = picture.outerHTML;
   const readMore = (linkText || 'Read more...');
   card.innerHTML = `
-    <a href="${path}" class="imgcover">
+    <a href="${url}" class="imgcover">
       ${pictureTag}
     </a>
     <div class="content">
       <h3>${title}</h3>
       <p>${description}</p>
-      <a href="${path}" class="cta">${readMore}</a>
+      <a href="${url}" class="cta">${readMore}</a>
     </div>
   `;
   return card;
@@ -91,6 +168,7 @@ async function filterArticles(articles, activeFilters) {
   const filters = { category, topic, truck };
   const haveFilters = [category, topic, truck].some((filter) => !!filter);
   const hasSearch = !!search;
+
   if (!haveFilters && !hasSearch) {
     // If no filters are applied, return articles asynchronously
     return Promise.resolve(articles);
@@ -105,14 +183,24 @@ async function filterArticles(articles, activeFilters) {
       tags[key] = value.replaceAll('-', ' ');
     }
   });
+
   const filterOptions = {
     ...(haveFilters && { tags }),
     ...(search && { q: search }),
   };
 
-  // Return the promise from getMagazineArticles
-  // eslint-disable-next-line no-use-before-define
-  return getMagazineArticles(filterOptions);
+  try {
+    const filteredArticles = await processMagazineArticles({
+      ...filterOptions,
+      limit: articles.length,
+      offset: 0,
+    });
+    return filteredArticles;
+  } catch (error) {
+    // eslint-disable-next-line no-console
+    console.error('Error filtering articles:', error);
+    return [];
+  }
 }
 
 async function createFilter(articles, activeFilters, createDropdown, createInputSearch) {
@@ -152,111 +240,14 @@ async function createLatestMagazineArticles(mainEl, magazineArticles) {
   });
 }
 
-const tempData = [];
-
-async function getMagazineArticles({
-  limit, offset = 0, tags = null, q = 'truck', sort = 'BEST_MATCH',
-} = {}) {
-  const hasLimit = limit !== undefined;
-  const variables = {
-    tenant: TENANT,
-    language,
-    q,
-    category: 'magazine',
-    limit: hasLimit ? limit : null,
-    offset,
-    facets: ['ARTICLE', 'TOPIC', 'TRUCK'],
-    sort,
-    article: {},
-  };
-
-  if (tags) {
-    variables.article = tags;
-  }
-
-  try {
-    const rawData = await fetchData({
-      query: magazineSearchQuery(),
-      variables,
-    });
-
-    const querySuccess = rawData && rawData.data && rawData.data.edssearch;
-
-    if (!querySuccess) {
-      return tempData;
-    }
-
-    const isImageLink = (link) => `${link}`
-      .split('?')[0].match(/\.(jpeg|jpg|gif|png|svg|bmp|webp)$/) !== null;
-
-    const getDefaultImage = () => {
-      const logoImageURL = '/media/logo/media_10a115d2f3d50f3a22ecd2075307b4f4dcaedb366.jpeg';
-      return getOrigin() + logoImageURL;
-    };
-
-    const { items, count, facets } = rawData.data.edssearch;
-    tempData.push(...items.map((item) => {
-      const filterTag = ['category', 'topic', 'truck']
-        .map((key) => item.metadata.article[key])
-        .filter(Boolean);
-      const { article, image } = item.metadata;
-      return {
-        ...item.metadata,
-        filterTag,
-        author: article.author || defaultAuthor,
-        image: isImageLink(image) ? getOrigin() + image : getDefaultImage(),
-        path: item.metadata?.url,
-        readingTime: /\d+/.test(article.readTime) ? article.readTime : defaultReadTime,
-        isDefaultImage: !isImageLink(image),
-        category: article.category,
-      };
-    }));
-
-    if (!hasLimit && tempData.length < count) {
-      const props = { limit: count, offset: tempData.length };
-      if (tags) {
-        props.tags = tags;
-      }
-      return getMagazineArticles(props);
-    }
-    if (firstLoad) {
-      firstLoad = false;
-      // to fill the 3 filter dropdowns is needed to get the items from the facets
-      facets.forEach((facet) => {
-        // article category comes as 'ARTICLE' so it has to be changed to 'category'
-        const key = facet.field === 'ARTICLE' ? 'category' : facet.field.toLowerCase();
-        const uniqueItems = new Set(facet.items.map((item) => {
-          const value = item.value.trim();
-          // truck models are uppercase
-          if (key === 'truck') {
-            return value.toUpperCase();
-          }
-          // Article categories and topics are capitalized
-          return value.charAt(0).toUpperCase() + value.slice(1);
-        }));
-        filterLists[key] = [...uniqueItems];
-      });
-    }
-    const sortedByDate = [...tempData.sort(
-      (a, b) => new Date(b.publishDate) - new Date(a.publishDate),
-    )];
-    tempData.length = 0;
-    return sortedByDate;
-  } catch (error) {
-    // eslint-disable-next-line no-console
-    console.error('Error fetching magazine articles:', error);
-    return tempData;
-  }
-}
-
 export default async function decorate(block) {
   const latest = block.classList.contains('latest');
   const limit = latest ? 3 : undefined;
-  const limitPerPage = 8;
-  const magazineArticles = await getMagazineArticles({ limit });
+  const magazineArticles = await processMagazineArticles({ limit, sort: 'BEST_MATCH' });
   if (latest) {
     createLatestMagazineArticles(block, magazineArticles);
   } else {
+    const limitPerPage = 8;
     createArticleList(block, magazineArticles, limitPerPage);
   }
 }
