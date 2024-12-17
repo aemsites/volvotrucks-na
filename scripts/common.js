@@ -530,6 +530,7 @@ export function isSocialAllowed() {
  *                     original input.
  */
 export const formatStringToArray = (inputString) => {
+  if (!inputString) return [];
   // eslint-disable-next-line no-useless-escape
   const cleanedString = inputString.replace(/[\[\]\\'"]+/g, '');
   return cleanedString.split(',')

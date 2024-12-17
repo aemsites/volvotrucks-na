@@ -1,12 +1,13 @@
 import { TOOLS_CONFIGS, getJsonFromUrl } from './common.js';
 
-const { GOOGLE_API_KEY } = TOOLS_CONFIGS;
+const { GOOGLE_API_KEY = false } = TOOLS_CONFIGS;
 const languageCode = 'en';
+const API_KEY = GOOGLE_API_KEY || '';
 
 export const splitString = (str) => str.split(',').map((item) => item.trim());
 
 export const getUserCountryName = async (lat, lng) => {
-  const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&language=${languageCode}&key=${GOOGLE_API_KEY}`;
+  const apiUrl = `https://maps.googleapis.com/maps/api/geocode/json?latlng=${lat},${lng}&language=${languageCode}&key=${API_KEY || ''}`;
 
   const response = await getJsonFromUrl(apiUrl);
   const locationString = response?.plus_code.compound_code;
