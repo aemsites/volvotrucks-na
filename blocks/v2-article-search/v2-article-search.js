@@ -2,7 +2,7 @@ import {
   decorateIcons, getPlaceholders, getTextLabel, getLocale,
   variantsClassesToBEM,
 } from '../../scripts/common.js';
-import { topicSearchQuery, fetchData, TENANT } from '../../scripts/search-api.js';
+import { topicSearchQuery, fetchSearchData, TENANT } from '../../scripts/search-api.js';
 
 const blockName = 'v2-article-search';
 const filterContainerClass = `${blockName}__filter-container`;
@@ -44,7 +44,7 @@ const getTopics = async (props = {}) => {
   };
 
   try {
-    const rawData = await fetchData({
+    const rawData = await fetchSearchData({
       query: topicSearchQuery(),
       variables,
     });
@@ -62,6 +62,7 @@ const getTopics = async (props = {}) => {
       ...new Set(articles.items.map((item) => ({ key: 'category', value: item.value.trim() }))),
     ].sort((a, b) => a.value.localeCompare(b.value));
   } catch (error) {
+    // eslint-disable-next-line no-console
     console.error('Error fetching data:', error);
     throw error;
   }

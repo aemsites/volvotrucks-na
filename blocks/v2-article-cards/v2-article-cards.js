@@ -19,29 +19,31 @@ const blockName = 'v2-article-cards';
 
 const createCard = (article) => {
   const {
-    path,
-    image,
-    title,
-    publishDate,
+    metadata: {
+      url,
+      image,
+      title,
+      publishDate,
+    },
     button = false,
   } = article;
 
   const shortTitle = title.split('|')[0];
-  const card = createElement('a', { classes: `${blockName}__article-card`, props: { href: path } });
+  const card = createElement('a', { classes: `${blockName}__article-card`, props: { href: url } });
   const picture = createOptimizedPicture(image, shortTitle, false, [{ width: '380', height: '214' }]);
   const pictureTag = picture.outerHTML;
   const formattedDate = getDateFromTimestamp(publishDate);
   const cardContent = document.createRange().createContextualFragment(`
     <div class="${blockName}__image-wrapper">
-        ${pictureTag}
+      ${pictureTag}
     </div>
     <div class="${blockName}__texts-wrapper">
-        <p class="${blockName}__card-date">
-            ${formattedDate}
-        </p>
-        <h4 class="${blockName}__card-heading">
-            ${shortTitle}
-        </h4>
+      <p class="${blockName}__card-date">
+        ${formattedDate}
+      </p>
+      <h4 class="${blockName}__card-heading">
+        ${shortTitle}
+      </h4>
     </div>
   `);
   const textWrapper = cardContent.querySelector(`.${blockName}__texts-wrapper`);
@@ -53,7 +55,7 @@ const createCard = (article) => {
     const newButton = document.createRange().createContextualFragment(`
       <div class="button-container ${blockName}__card-button">
         <a class="button tertiary">
-            ${getTextLabel('readMoreBtn')}
+          ${getTextLabel('readMoreBtn')}
         </a>
       </div>
     `);
@@ -82,14 +84,14 @@ const removeArtsInPage = (articles) => {
   const existingArticles = document.querySelectorAll(`h4.${blockName}__card-heading`);
   const articleTitles = Array.from(existingArticles).map((article) => article.textContent.trim());
   const clearedArticles = articles.filter((art) => {
-    const title = art.title.split('|')[0].trim();
+    const title = art.metadata.title.split('|')[0].trim();
     return !articleTitles.includes(title);
   });
   return clearedArticles;
 };
 
 export default async function decorate(block) {
-  const allArticles = await fetchMagazineArticles();
+  const allArticles = await fetchMagazineArticles({ limit: 100 });
   const articles = removeArticlesWithNoImage(allArticles);
 
   if (!articles) return;
@@ -110,12 +112,14 @@ export default async function decorate(block) {
 
   if (amountOfLinks !== 0) {
     const buttons = block.querySelectorAll('.button-container');
-    buttons.forEach((a) => {
-      const link = a.querySelector('a')?.href;
-      articles.forEach((el) => {
-        if (link?.includes(el.path)) {
-          el.button = a;
-          selectedArticles.push(el);
+    buttons.forEach((button) => {
+      const buttonHref = button.querySelector('a')?.href;
+      const buttonPath = buttonHref ? new URL(buttonHref).pathname : null;
+      articles.forEach((article) => {
+        const articlePath = article?.metadata?.url ? new URL(article.metadata.url).pathname : null;
+        if (buttonPath === articlePath) {
+          article.button = button;
+          selectedArticles.push(article);
         }
       });
     });
@@ -125,7 +129,7 @@ export default async function decorate(block) {
     createArticleCards(block, selectedArticles, amountOfLinks);
   } else {
     const uniqueArticles = removeArtsInPage(articles);
-    const sortedArticles = sortArticlesByDateField(uniqueArticles);
+    const sortedArticles = sortArticlesByDateField(uniqueArticles, 'publishDate');
     // After sorting articles by date, set the chunks of the array for future pagination
     const chunkedArticles = sortedArticles?.reduce((resultArray, item, index) => {
       limitAmount = limitAmount || 9;

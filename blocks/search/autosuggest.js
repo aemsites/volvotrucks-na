@@ -1,5 +1,5 @@
 import { createElement, getLocale } from '../../scripts/common.js';
-import { autosuggestQuery, fetchData, TENANT } from '../../scripts/search-api.js';
+import { autosuggestQuery, fetchSearchData, TENANT } from '../../scripts/search-api.js';
 
 const autoSuggestClass = 'autosuggest-results-item-highlighted';
 
@@ -8,7 +8,7 @@ export function fetchAutosuggest(term, autosuggestEle, rowEle, func) {
   const language = getLocale();
   const locale = language.split('-')[0].toUpperCase();
 
-  fetchData({
+  fetchSearchData({
     query: autosuggestQuery(),
     variables: {
       tenant: TENANT,

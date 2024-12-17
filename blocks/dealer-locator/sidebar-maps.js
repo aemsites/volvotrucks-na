@@ -739,7 +739,7 @@ $.fn.getOpenHours = function (pin) {
 $.fn.isOpen = async function (dealer, time) {
   var hours = $.fn.getOpenHours(dealer);
   var compareDate = '1/1/2000 '
-  
+
   if (!dealer.timeZoneId) {
     dealer.timeZoneId = await $.fn.getTimeZoneId(dealer);
   }
@@ -820,7 +820,7 @@ $.fn.renderPinDirections = function (markerId) {
     $('.from-directions input').val($origin);
   }
 
-  let { 
+  let {
     MAIN_ADDRESS_LINE_1_TXT: address1,
     MAIN_ADDRESS_LINE_2_TXT: address2,
     MAIN_CITY_NM: mainCity,
@@ -946,9 +946,9 @@ $.fn.renderPinDetails = async function (markerId) {
   templateClone.find('#phone div').html('<a href="tel:' + markerDetails.REG_PHONE_NUMBER + '">' + $.fn.formatPhoneNumber(markerDetails.REG_PHONE_NUMBER) + '</a>');
   templateClone.find('#directions').attr('data-id', markerDetails.IDENTIFIER_VALUE);
   templateClone.find('#clipboard-address').attr('data-clipboard', markerDetails.MAIN_ADDRESS_LINE_1_TXT + ' ' + markerDetails.MAIN_ADDRESS_LINE_2_TXT + ' ' + markerDetails.MAIN_CITY_NM + ', ' + markerDetails.MAIN_STATE_PROV_CD + ' ' + markerDetails.MAIN_POSTAL_CD);
-  
+
   templateClone.find('#open-website').attr('onclick', "window.open('" + $.fn.formatWebAddress(markerDetails.WEB_ADDRESS) + "', '_blank')");
-  
+
   templateClone.find('#share-link').val(window.location.href.split('?')[0] + '?view=' + markerDetails.IDENTIFIER_VALUE);
 
   if (markerDetails.REG_PHONE_NUMBER) {
@@ -1719,7 +1719,7 @@ $.fn.tmpPins = function (tmpPinList) {
     } else {
       templateClone.find('.address').text(pin.MAIN_ADDRESS_LINE_1_TXT + ', ' + pin.MAIN_ADDRESS_LINE_2_TXT);
     }
- 
+
     if (pin.WEB_ADDRESS) {
       templateClone.find('.website a').attr("href", $.fn.formatWebAddress(pin.WEB_ADDRESS));
     } else {
@@ -1727,14 +1727,14 @@ $.fn.tmpPins = function (tmpPinList) {
     }
 
     if (pin.REG_PHONE_NUMBER) {
-      templateClone.find('.call').html('<a href="tel:' + pin.REG_PHONE_NUMBER + '">' + "Call" + '</a>');      
+      templateClone.find('.call').html('<a href="tel:' + pin.REG_PHONE_NUMBER + '">' + "Call" + '</a>');
       templateClone.find('.call a').attr("href", $.fn.formatPhoneNumber(pin.REG_PHONE_NUMBER));
       // templateClone.find('.detail-call').html('<a href="tel:' + pin.REG_PHONE_NUMBER + '">' + '<img src="/blocks/dealer-locator/images/Phone-2.png" />' + "Call" + '</a>');
     } else {
       templateClone.find('.call').text('Call');
       templateClone.find('.call').css({'pointer-events':'none','cursor':'default','opacity':'0.7'});
     }
-        
+
     var marker;
     for (i = 0; i < $markers.length; i++) {
 
@@ -2892,7 +2892,7 @@ $.fn.drawPin = function (text, width, height, color) {
     color = '85754d';
   }
 
-  return 'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22' + width + '%22%20height%3D%22' + height + '%22%20viewBox%3D%220%200%2038%2038%22%3E%3Cpath%20fill%3D%22%23' + color + '%22%20stroke%3D%22%23ccc%22%20stroke-width%3D%22.5%22%20d%3D%22M34.305%2016.234c0%208.83-15.148%2019.158-15.148%2019.158S3.507%2025.065%203.507%2016.1c0-8.505%206.894-14.304%2015.4-14.304%208.504%200%2015.398%205.933%2015.398%2014.438z%22%2F%3E%3Ctext%20transform%3D%22translate%2819%2018.5%29%22%20fill%3D%22%23fff%22%20style%3D%22font-family%3A%20Arial%2C%20sans-serif%3Bfont-weight%3Abold%3Btext-align%3Acenter%3B%22%20font-size%3D%2212%22%20text-anchor%3D%22middle%22%3E' + text + '%3C%2Ftext%3E%3C%2Fsvg%3E';
+  return 'data:image/svg+xml,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22' + width + '%22%20height%3D%22' + height + '%22%20viewBox%3D%220%200%2038%2038%22%3E%3Cpath%20fill%3D%22%23' + color + '%22%20stroke%3D%22%23ccc%22%20stroke-width%3D%22.5%22%20d%3D%22M34.305%2016.234c0%208.83-15.148%2019.158-15.148%2019.158S3.507%2025.065%203.507%2016.1c0-8.505%206.894-14.304%2015.4-14.304%208.504%200%2015.398%205.933%2015.398%2014.438z%22%2F%3E%3Ctext%20transform%3D%22translate%2819%2018.5%29%22%20fill%3D%22%23fff%22%20style%3D%22font-family%3A%20%27Noto%20Sans%27%2C%20sans-serif%3Bfont-weight%3Abold%3Btext-align%3Acenter%3B%22%20font-size%3D%2212%22%20text-anchor%3D%22middle%22%3E' + text + '%3C%2Ftext%3E%3C%2Fsvg%3E';
 };
 
 $.fn.handleLocationError = function (browserHasGeolocation, infoWindow, pos) {
