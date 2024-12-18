@@ -1,3 +1,4 @@
+/* global fbq */
 import { loadScript, loadCSS, sampleRUM } from './aem.js';
 import { isPerformanceAllowed, isTargetingAllowed, isSocialAllowed, isDevHost, extractObjectFromArray, COOKIE_CONFIGS } from './common.js';
 import { VIDEO_JS_SCRIPT, VIDEO_JS_CSS } from './video-helper.js';
@@ -87,7 +88,7 @@ if (isDevHost()) {
 // Google Analytics
 async function loadGoogleTagManager() {
   // google tag manager
-  (function (w, d, s, l, i) {
+  (function loadGoogleTagManagerInit(w, d, s, l, i) {
     w[l] = w[l] || [];
     w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
     const f = d.getElementsByTagName(s)[0];
@@ -101,11 +102,11 @@ async function loadGoogleTagManager() {
 
 async function loadFacebookPixel() {
   // FaceBook Pixel
-  (function (f, b, e, v, n, t, s) {
+  (function loadFacebookPixelInit(f, b, e, v, n, t, s) {
     if (f.fbq) {
       return;
     }
-    n = f.fbq = function () {
+    n = f.fbq = function loadFacebookPixelInitInner() {
       n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
     };
     if (!f._fbq) {
@@ -127,10 +128,10 @@ async function loadFacebookPixel() {
 
 // Hotjar Tracking Code for volvotrucks.us
 async function loadHotjar() {
-  (function (h, o, t, j, a, r) {
+  (function loadHotjarInit(h, o, t, j, a, r) {
     h.hj =
       h.hj ||
-      function () {
+      function loadHotjarInitInner() {
         (h.hj.q = h.hj.q || []).push(arguments);
       };
     h._hjSettings = { hjid: HOTJAR_ID, hjsv: 6 };
@@ -166,7 +167,7 @@ async function loadAccountEngagementTracking() {
 
 // TikTok Code
 async function loadTiktokPixel() {
-  !(function (w, d, t) {
+  !(function loadTiktokPixelInit(w, d, t) {
     w.TiktokAnalyticsObject = t;
     const ttq = (w[t] = w[t] || []);
     (ttq.methods = [
@@ -184,21 +185,23 @@ async function loadTiktokPixel() {
       'enableCookie',
       'disableCookie',
     ]),
-      (ttq.setAndDefer = function (t, e) {
-        t[e] = function () {
+      (ttq.setAndDefer = function loadTiktokPixelInitSetAndDefer(t, e) {
+        t[e] = function loadTiktokPixelInitSetAndDeferPush() {
           t.push([e].concat(Array.prototype.slice.call(arguments, 0)));
         };
       });
     for (let i = 0; i < ttq.methods.length; i++) {
       ttq.setAndDefer(ttq, ttq.methods[i]);
     }
-    (ttq.instance = function (t) {
-      for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++) {
+    (ttq.instance = function loadTiktokPixelInitI(t) {
+      let e;
+      let n;
+      for (e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++) {
         ttq.setAndDefer(e, ttq.methods[n]);
       }
       return e;
     }),
-      (ttq.load = function (e, n) {
+      (ttq.load = function loadTiktokPixelInitSetAndDeferLoad(e, n) {
         const i = 'https://analytics.tiktok.com/i18n/pixel/events.js';
         (ttq._i = ttq._i || {}),
           (ttq._i[e] = []),

@@ -111,7 +111,7 @@ function openExternalLinksInNewTab(footer) {
         anchor.setAttribute('target', '_blank');
       }
     } catch (e) {
-      console.warn(`Invalid link ${anchor.href}`);
+      console.warn(`Invalid link ${anchor.href}: ${e}`);
     }
   });
 }

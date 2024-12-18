@@ -520,7 +520,7 @@ export function isSocialAllowed() {
  *                     original input.
  */
 export const formatStringToArray = (inputString) => {
-  const cleanedString = inputString.replace(/[\[\]\\'"]+/g, '');
+  const cleanedString = inputString.replace(/[[\]\\'"]+/g, '');
   return cleanedString
     .split(',')
     .map((item) => item.trim())

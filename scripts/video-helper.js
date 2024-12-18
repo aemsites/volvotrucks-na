@@ -1,3 +1,4 @@
+/* global videojs */
 import { isSocialAllowed, createElement, deepMerge, getTextLabel } from './common.js';
 import { getMetadata } from './aem.js';
 
@@ -102,6 +103,10 @@ export async function setupPlayer(url, videoContainer, config, video) {
   videojsConfig.muted = !videoHasSound;
 
   await waitForVideoJs();
+
+  if (!videojs) {
+    throw new Error('Video.js is not loaded');
+  }
 
   const player = videojs(videoElement, videojsConfig);
   player.src(url);

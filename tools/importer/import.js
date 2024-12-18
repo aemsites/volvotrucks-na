@@ -1204,7 +1204,7 @@ function makeEmbedVideoFromYoutubeLink(main, document) {
 // e.g.https://www.volvotrucks.us/news-and-stories/press-releases/2015/december/advantage-truck-center-opens-in-greensboro-expanding-volvo-trucks-sales-and-service/
 function removeOldNewsCarousel(main, document) {
   main.querySelectorAll('.newsArticle ').forEach((article) => {
-    if (article.previousElementSibling?.querySelector("[onclick='getNextArticle()']")) {
+    if (article.previousElementSibling?.querySelector('[onclick="getNextArticle()"]')) {
       article.previousElementSibling.remove();
     }
   });

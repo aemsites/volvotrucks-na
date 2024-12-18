@@ -1,3 +1,4 @@
+/* global YT */
 import { loadScript } from '../../scripts/aem.js';
 import { createElement, getTextLabel, isSocialAllowed } from '../../scripts/common.js';
 import { hideModal } from '../../common/modal/modal.js';
@@ -50,8 +51,11 @@ export default function decorate(block) {
     return;
   }
 
-  window.onYouTubeIframeAPIReady = function () {
+  window.onYouTubeIframeAPIReady = function onYouTubeIframeAPIReadyInit() {
     setTimeout(() => {
+      if (!YT) {
+        throw new Error('YouTube API not loaded');
+      }
       player = new YT.Player('livestream', {
         events: {
           onReady: onPlayerReady,

@@ -1,3 +1,5 @@
+/* global process */
+
 import path from 'path';
 import { existsSync, promises as fs } from 'fs';
 
@@ -21,7 +23,7 @@ async function moveIndexDocxFiles(dir, moves, isRoot = false) {
   }
 }
 
-async function performMoves(moves) {
+/* async function performMoves(moves) {
   for (const move of moves) {
     try {
       await fs.rename(move.source, move.destination);
@@ -30,7 +32,7 @@ async function performMoves(moves) {
       console.error(`Error moving ${move.source}:`, error);
     }
   }
-}
+} */
 
 const directoryPath = process.argv[2];
 if (!directoryPath) {
