@@ -7,7 +7,6 @@ import { adjustPretitle } from '../../scripts/common.js';
 /** @type {import('./types').Scripts} */
 let commonScript;
 /** @type {import('./types').LibFranklin} */
-// eslint-disable-next-line no-unused-vars
 let lib;
 
 document.body.innerHTML = await readFile({ path: './dummy.html' });

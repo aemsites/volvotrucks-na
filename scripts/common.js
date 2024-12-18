@@ -1,5 +1,4 @@
 import { sampleRUM, loadCSS, loadBlock, loadBlocks, loadHeader, buildBlock, decorateBlock, getMetadata } from './aem.js';
-// eslint-disable-next-line import/no-cycle
 import { createVideo, isVideoLink } from './video-helper.js';
 
 let placeholders = null;
@@ -273,7 +272,6 @@ export async function loadLazy(doc) {
  */
 export function loadDelayed() {
   window.setTimeout(() => {
-    // eslint-disable-next-line import/no-cycle
     import('./delayed.js');
   }, 3000);
   // load anything that can be postponed to the latest here
@@ -468,8 +466,9 @@ export const extractObjectFromArray = (data) => {
 
 const formatValues = (values) => {
   const obj = {};
-  /* eslint-disable-next-line */
-  if (values) values.forEach(({ name, value }) => obj[name] = value);
+  if (values) {
+    values.forEach(({ name, value }) => (obj[name] = value));
+  }
   return obj;
 };
 
@@ -521,7 +520,6 @@ export function isSocialAllowed() {
  *                     original input.
  */
 export const formatStringToArray = (inputString) => {
-  // eslint-disable-next-line no-useless-escape
   const cleanedString = inputString.replace(/[\[\]\\'"]+/g, '');
   return cleanedString
     .split(',')

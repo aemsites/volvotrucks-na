@@ -87,8 +87,7 @@ export default function decorate(block) {
 
   configureVideo(block, videoId);
 
-  // eslint-disable-next-line no-unused-vars
-  const embedVideoComponent = new VideoComponent(block.videoId);
+  new VideoComponent(block.videoId);
   const videoElement = createVideo(link, `${blockName}__frame`, videoProps, false, videoId);
 
   block.innerHTML = '';

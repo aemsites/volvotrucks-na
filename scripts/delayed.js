@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-cycle
 import { loadScript, loadCSS, sampleRUM } from './aem.js';
 import { isPerformanceAllowed, isTargetingAllowed, isSocialAllowed, isDevHost, extractObjectFromArray, COOKIE_CONFIGS } from './common.js';
 import { VIDEO_JS_SCRIPT, VIDEO_JS_CSS } from './video-helper.js';
@@ -88,7 +87,6 @@ if (isDevHost()) {
 // Google Analytics
 async function loadGoogleTagManager() {
   // google tag manager
-  // eslint-disable-next-line func-names
   (function (w, d, s, l, i) {
     w[l] = w[l] || [];
     w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
@@ -103,35 +101,45 @@ async function loadGoogleTagManager() {
 
 async function loadFacebookPixel() {
   // FaceBook Pixel
-  /* eslint-disable */
   (function (f, b, e, v, n, t, s) {
-    if (f.fbq) return; n = f.fbq = function () {
-      n.callMethod
-        ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
+    if (f.fbq) {
+      return;
+    }
+    n = f.fbq = function () {
+      n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
     };
-    if (!f._fbq)f._fbq = n; n.push = n; n.loaded = !0; n.version = '2.0';
-    n.queue = []; t = b.createElement(e); t.async = !0;
-    t.src = v; s = b.getElementsByTagName(e)[0];
+    if (!f._fbq) {
+      f._fbq = n;
+    }
+    n.push = n;
+    n.loaded = !0;
+    n.version = '2.0';
+    n.queue = [];
+    t = b.createElement(e);
+    t.async = !0;
+    t.src = v;
+    s = b.getElementsByTagName(e)[0];
     s.parentNode.insertBefore(t, s);
-  }(
-    window,
-    document,
-    'script',
-    'https://connect.facebook.net/en_US/fbevents.js',
-  ));
+  })(window, document, 'script', 'https://connect.facebook.net/en_US/fbevents.js');
   fbq('init', FACEBOOK_PIXEL_ID);
   fbq('track', 'PageView');
-  /* eslint-disable */
 }
 
 // Hotjar Tracking Code for volvotrucks.us
 async function loadHotjar() {
-  (function(h,o,t,j,a,r){
-    h.hj=h.hj||function(){(h.hj.q=h.hj.q||[]).push(arguments)};
-    h._hjSettings={hjid:HOTJAR_ID,hjsv:6}; a=o.getElementsByTagName('head')[0];
-    r=o.createElement('script');r.async=1; r.src=t+h._hjSettings.hjid+j+h._hjSettings.hjsv;
+  (function (h, o, t, j, a, r) {
+    h.hj =
+      h.hj ||
+      function () {
+        (h.hj.q = h.hj.q || []).push(arguments);
+      };
+    h._hjSettings = { hjid: HOTJAR_ID, hjsv: 6 };
+    a = o.getElementsByTagName('head')[0];
+    r = o.createElement('script');
+    r.async = 1;
+    r.src = t + h._hjSettings.hjid + j + h._hjSettings.hjsv;
     a.appendChild(r);
-  })(window,document,'https://static.hotjar.com/c/hotjar-','.js?sv=');
+  })(window, document, 'https://static.hotjar.com/c/hotjar-', '.js?sv=');
 }
 
 // Initiate searchWidget ,  check for search div loaded
@@ -154,76 +162,90 @@ async function loadAccountEngagementTracking() {
   script.text = `piAId = '${piAId}'; piCId = '${piCId}'; piHostname = '${piHostname}'; (function() { function async_load(){ var s = document.createElement('script'); s.type = 'text/javascript'; s.src = ('https:' == document.location.protocol ? 'https://pi' : 'http://cdn') + '.pardot.com/pd.js'; var c = document.getElementsByTagName('script')[0]; c.parentNode.insertBefore(s, c); } if(window.attachEvent) { window.attachEvent('onload', async_load); } else { window.addEventListener('load', async_load, false); } })();`;
 
   body.append(script);
-};
+}
 
 // TikTok Code
 async function loadTiktokPixel() {
-  !function (w, d, t) {
-    w.TiktokAnalyticsObject=t;
-    var ttq=w[t]=w[t]||[];
-    ttq.methods=[
-    "page",
-    "track",
-    "identify",
-    "instances",
-    "debug",
-    "on",
-    "off",
-    "once",
-    "ready",
-    "alias",
-    "group",
-    "enableCookie",
-    "disableCookie",
-    ],ttq.setAndDefer=function(t,e){t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}};
-    for(var i=0; i<ttq.methods.length; i++) ttq.setAndDefer(ttq,ttq.methods[i]);
-    ttq.instance = function(t) {
-      for(var e=ttq._i[t]||[],n=0; n<ttq.methods.length; n++) ttq.setAndDefer(e,ttq.methods[n]);
-      return e
-    }, ttq.load = function(e,n) {
-      var i="https://analytics.tiktok.com/i18n/pixel/events.js";
-      ttq._i = ttq._i || {}, ttq._i[e] = [], ttq._i[e]._u = i, ttq._t = ttq._t || {}, ttq._t[e] = +new Date, ttq._o = ttq._o || {}, ttq._o[e] = n || {};
-      var o = document.createElement("script");
-      o.type="text/javascript", o.async = !0, o.src = i+"?sdkid="+e+"&lib="+t;
-      var a = document.getElementsByTagName("script")[0];
-      a.parentNode.insertBefore(o,a)};
-      ttq.load(TIKTOK_PIXEL_ID);
-      ttq.page();
-
-      // Identifying the user with hashed details
-      ttq.identify({
-        "email": "<hashed_email_address>", // string. The email of the customer if available. It must be hashed with SHA-256 on the client side.
-        "phone_number": "<hashed_phone_number>", // string. The phone number of the customer if available. It must be hashed with SHA-256 on the client side.
-        "external_id": "<hashed_external_id>" // string. A unique ID from the advertiser such as user or external cookie IDs. It must be hashed with SHA256 on the client side.
+  !(function (w, d, t) {
+    w.TiktokAnalyticsObject = t;
+    const ttq = (w[t] = w[t] || []);
+    (ttq.methods = [
+      'page',
+      'track',
+      'identify',
+      'instances',
+      'debug',
+      'on',
+      'off',
+      'once',
+      'ready',
+      'alias',
+      'group',
+      'enableCookie',
+      'disableCookie',
+    ]),
+      (ttq.setAndDefer = function (t, e) {
+        t[e] = function () {
+          t.push([e].concat(Array.prototype.slice.call(arguments, 0)));
+        };
       });
+    for (let i = 0; i < ttq.methods.length; i++) {
+      ttq.setAndDefer(ttq, ttq.methods[i]);
+    }
+    (ttq.instance = function (t) {
+      for (var e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++) {
+        ttq.setAndDefer(e, ttq.methods[n]);
+      }
+      return e;
+    }),
+      (ttq.load = function (e, n) {
+        const i = 'https://analytics.tiktok.com/i18n/pixel/events.js';
+        (ttq._i = ttq._i || {}),
+          (ttq._i[e] = []),
+          (ttq._i[e]._u = i),
+          (ttq._t = ttq._t || {}),
+          (ttq._t[e] = +new Date()),
+          (ttq._o = ttq._o || {}),
+          (ttq._o[e] = n || {});
+        const o = document.createElement('script');
+        (o.type = 'text/javascript'), (o.async = !0), (o.src = `${i}?sdkid=${e}&lib=${t}`);
+        const a = document.getElementsByTagName('script')[0];
+        a.parentNode.insertBefore(o, a);
+      });
+    ttq.load(TIKTOK_PIXEL_ID);
+    ttq.page();
 
-      const trackingObject = {
-        "value": "<content_value>", // number. Value of the order or items sold. Example: 100.
-        "currency": "<content_currency>", // string. The 4217 currency code. Example: "USD".
-        "contents": [
-            {
-                "content_id": "<content_identifier>", // string. ID of the product. Example: "1077218".
-                "content_type": "<content_type>", // string. Either product or product_group.
-                "content_name": "<content_name>" // string. The name of the page or product. Example: "shirt".
-            }
-        ]
-      };
+    // Identifying the user with hashed details
+    ttq.identify({
+      email: '<hashed_email_address>', // string. The email of the customer if available. It must be hashed with SHA-256 on the client side.
+      phone_number: '<hashed_phone_number>', // string. The phone number of the customer if available. It must be hashed with SHA-256 on the client side.
+      external_id: '<hashed_external_id>', // string. A unique ID from the advertiser such as user or external cookie IDs. It must be hashed with SHA256 on the client side.
+    });
 
-      // Tracking various user interactions
-      ttq.track('SubmitForm', trackingObject);
-      ttq.track('ClickButton', trackingObject);
+    const trackingObject = {
+      value: '<content_value>', // number. Value of the order or items sold. Example: 100.
+      currency: '<content_currency>', // string. The 4217 currency code. Example: "USD".
+      contents: [
+        {
+          content_id: '<content_identifier>', // string. ID of the product. Example: "1077218".
+          content_type: '<content_type>', // string. Either product or product_group.
+          content_name: '<content_name>', // string. The name of the page or product. Example: "shirt".
+        },
+      ],
+    };
 
-      // Repeat similar structure for 'Download', 'CompletePayment', 'Contact', 'CompleteRegistration',
-      // 'ViewContent', 'AddToCart', 'PlaceAnOrder', 'AddPaymentInfo', 'InitiateCheckout', 'Search',
-      // 'AddToWishlist', 'Subscribe', and 'Pageview' events with appropriate parameters and comments.
-   }(window, document, 'ttq');
+    // Tracking various user interactions
+    ttq.track('SubmitForm', trackingObject);
+    ttq.track('ClickButton', trackingObject);
+
+    // Repeat similar structure for 'Download', 'CompletePayment', 'Contact', 'CompleteRegistration',
+    // 'ViewContent', 'AddToCart', 'PlaceAnOrder', 'AddPaymentInfo', 'InitiateCheckout', 'Search',
+    // 'AddToWishlist', 'Subscribe', and 'Pageview' events with appropriate parameters and comments.
+  })(window, document, 'ttq');
 }
 
 async function loadVideoJs() {
-  await Promise.all([
-    loadCSS(VIDEO_JS_CSS),
-    loadScript(VIDEO_JS_SCRIPT),
-  ]);
+  await Promise.all([loadCSS(VIDEO_JS_CSS), loadScript(VIDEO_JS_SCRIPT)]);
 
   const jsScript = document.querySelector(`head > script[src="${VIDEO_JS_SCRIPT}"]`);
   const cssScript = document.querySelector(`head > link[href="${VIDEO_JS_CSS}"]`);
@@ -233,11 +255,12 @@ async function loadVideoJs() {
   document.dispatchEvent(new Event('videojs-loaded'));
 }
 
-const hasVideo = document.querySelector('.video-js')
-  || document.querySelector('.link-with-video')
-  || document.querySelector('.text-link-with-video')
-  || document.querySelector('.v2-video__big-play-button')
-  || document.querySelector('.v2-resource-gallery__video-list-item .icon-play-video')
+const hasVideo =
+  document.querySelector('.video-js') ||
+  document.querySelector('.link-with-video') ||
+  document.querySelector('.text-link-with-video') ||
+  document.querySelector('.v2-video__big-play-button') ||
+  document.querySelector('.v2-resource-gallery__video-list-item .icon-play-video');
 if (hasVideo) {
   loadVideoJs();
 }

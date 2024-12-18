@@ -50,10 +50,8 @@ export default function decorate(block) {
     return;
   }
 
-  // eslint-disable-next-line func-names
   window.onYouTubeIframeAPIReady = function () {
     setTimeout(() => {
-      // eslint-disable-next-line no-undef
       player = new YT.Player('livestream', {
         events: {
           onReady: onPlayerReady,

@@ -440,7 +440,6 @@ async function loadModalScript() {
 }
 
 document.addEventListener('open-modal', (event) => {
-  // eslint-disable-next-line import/no-cycle
   loadModalScript().then((modal) => {
     const variantClasses = ['black', 'gray', 'reveal'];
     const modalClasses = [...event.detail.target.closest('.section').classList].filter((el) => el.startsWith('modal-'));
@@ -718,7 +717,6 @@ const decorateButtons = (element) => {
  * @param {Element} main The main element
  * @param {Element} head The header element
  */
-// eslint-disable-next-line import/prefer-default-export
 export function decorateMain(main, head) {
   const pageStyle = head.querySelector('[name="style"]')?.content;
   if (pageStyle) {

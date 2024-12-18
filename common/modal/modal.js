@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-cycle
 import { createElement, decorateIcons, getTextLabel } from '../../scripts/common.js';
 import { loadCSS, updateSectionsStatus } from '../../scripts/aem.js';
 import { createIframe, isAEMVideoUrl, isLowResolutionVideoUrl, setupPlayer, getDeviceSpecificVideoUrl } from '../../scripts/video-helper.js';

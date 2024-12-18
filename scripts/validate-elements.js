@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-cycle
 import { formatStringToArray, TOOLS_CONFIGS } from './common.js';
 import { loadCSS } from './aem.js';
 import showSnackbar from '../common/snackbar/snackbar.js';

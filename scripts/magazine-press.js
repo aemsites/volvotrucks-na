@@ -126,7 +126,6 @@ export function splitTags(tags) {
 function getActiveFilters() {
   const result = {};
   [...new URLSearchParams(window.location.search).entries()]
-    // eslint-disable-next-line no-unused-vars
     .filter(([_, value]) => value !== '')
     .forEach(([key, value]) => {
       result[key] = value;

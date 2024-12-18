@@ -177,7 +177,6 @@ async function fgrepFiles(sitemap, pattern, connections) {
   }
 }
 
-// eslint-disable-next-line import/prefer-default-export
 export async function run() {
   sitemapURLs = [];
   totalSize = 0;

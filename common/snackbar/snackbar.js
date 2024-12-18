@@ -1,4 +1,3 @@
-// eslint-disable-next-line import/no-cycle
 import { createElement, decorateIcons, getTextLabel } from '../../scripts/common.js';
 
 const componentName = 'snackbar';
