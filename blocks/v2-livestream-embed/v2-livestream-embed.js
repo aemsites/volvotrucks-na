@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-vars */
 import { loadScript } from '../../scripts/aem.js';
 import { createElement, getTextLabel, isSocialAllowed } from '../../scripts/common.js';
 import { hideModal } from '../../common/modal/modal.js';
@@ -10,12 +9,10 @@ function onPlayerReady(event) {
 }
 
 function onPlayerError(event) {
-  /* eslint-disable-next-line no-console */
   console.warn(event.data);
 }
 
 function onPlayerAutoplayBlocked(event) {
-  /* eslint-disable-next-line no-console */
   console.warn(event.data);
 }
 
@@ -48,7 +45,7 @@ export default function decorate(block) {
 
   if (!videoId) {
     block.innerHTML = '';
-    /* eslint-disable-next-line no-console */
+
     console.warn('V2 Livestream Embed block: There is no video link. Please check the provided URL.');
     return;
   }

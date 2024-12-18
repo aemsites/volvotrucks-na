@@ -1,16 +1,6 @@
-import {
-  getDateFromTimestamp,
-} from '../../scripts/common.js';
-import {
-  createOptimizedPicture,
-  getMetadata,
-  toClassName,
-} from '../../scripts/aem.js';
-import {
-  fetchMagazineArticles,
-  removeArticlesWithNoImage,
-  sortArticlesByDateField,
-} from '../../scripts/services/magazine.service.js';
+import { getDateFromTimestamp } from '../../scripts/common.js';
+import { createOptimizedPicture, getMetadata, toClassName } from '../../scripts/aem.js';
+import { fetchMagazineArticles, removeArticlesWithNoImage, sortArticlesByDateField } from '../../scripts/services/magazine.service.js';
 
 const buildRelatedMagazineArticle = (entry) => {
   const {
@@ -18,10 +8,7 @@ const buildRelatedMagazineArticle = (entry) => {
       url,
       image,
       title,
-      article: {
-        author,
-        readTime,
-      },
+      article: { author, readTime },
       publishDate,
     },
   } = entry;
@@ -46,11 +33,7 @@ const buildRelatedMagazineArticle = (entry) => {
 
 const filterArticles = (articles, filterTags, thisArticleTitle) => {
   const processTags = (article) => {
-    const tags = [
-      ...(article.metadata.article.category || []),
-      ...(article.metadata.article.topic || []),
-      ...(article.metadata.article.truck || []),
-    ];
+    const tags = [...(article.metadata.article.category || []), ...(article.metadata.article.topic || []), ...(article.metadata.article.truck || [])];
     return tags.map((tag) => toClassName(tag.trim()));
   };
 

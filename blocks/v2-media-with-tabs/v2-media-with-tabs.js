@@ -1,10 +1,4 @@
-import {
-  addClassIfChildHasClass,
-  createElement,
-  removeEmptyTags,
-  unwrapDivs,
-  variantsClassesToBEM,
-} from '../../scripts/common.js';
+import { addClassIfChildHasClass, createElement, removeEmptyTags, unwrapDivs, variantsClassesToBEM } from '../../scripts/common.js';
 
 const variantClasses = ['media-right', 'expanded-width'];
 const blockName = 'v2-media-with-tabs';
@@ -12,11 +6,15 @@ const blockName = 'v2-media-with-tabs';
 const handleChangeTab = (e) => {
   const parentBlock = e.target.closest(`.${blockName}`);
   const activeClassList = e.target.classList;
-  if (activeClassList.contains('active')) return;
+  if (activeClassList.contains('active')) {
+    return;
+  }
 
   let activeNumber;
   activeClassList.forEach((cl) => {
-    if (cl.substring(0, 4) === 'tab-') activeNumber = Number(cl.split('-').pop());
+    if (cl.substring(0, 4) === 'tab-') {
+      activeNumber = Number(cl.split('-').pop());
+    }
   });
 
   parentBlock.querySelector(`.${blockName}__tab.active`).classList.remove('active');

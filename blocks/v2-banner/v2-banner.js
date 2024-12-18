@@ -1,12 +1,5 @@
-import {
-  isVideoLink,
-  createVideo,
-} from '../../scripts/video-helper.js';
-import {
-  createElement,
-  variantsClassesToBEM,
-  removeEmptyTags,
-} from '../../scripts/common.js';
+import { isVideoLink, createVideo } from '../../scripts/video-helper.js';
+import { createElement, variantsClassesToBEM, removeEmptyTags } from '../../scripts/common.js';
 
 const checkVideoTime = (event) => {
   const video = event.target;

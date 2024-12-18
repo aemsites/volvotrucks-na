@@ -1,10 +1,5 @@
 // eslint-disable-next-line import/no-cycle
-import {
-  isSocialAllowed,
-  createElement,
-  deepMerge,
-  getTextLabel,
-} from './common.js';
+import { isSocialAllowed, createElement, deepMerge, getTextLabel } from './common.js';
 import { getMetadata } from './aem.js';
 
 export const VIDEO_JS_SCRIPT = '/scripts/videojs/video.min.js';
@@ -59,17 +54,20 @@ async function waitForVideoJs() {
 }
 
 function setupAutopause(videoElement, player) {
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        player.play();
-      } else {
-        player.pause();
-      }
-    });
-  }, {
-    threshold: [0.5],
-  });
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          player.play();
+        } else {
+          player.pause();
+        }
+      });
+    },
+    {
+      threshold: [0.5],
+    },
+  );
 
   observer.observe(videoElement);
 }
@@ -101,7 +99,7 @@ export async function setupPlayer(url, videoContainer, config, video) {
     videojsConfig.autoplay = true;
   }
 
-  const videoHasSound = (getMetadata('video-sound')).toLowerCase() === 'on';
+  const videoHasSound = getMetadata('video-sound').toLowerCase() === 'on';
   videojsConfig.muted = !videoHasSound;
 
   await waitForVideoJs();
@@ -122,9 +120,10 @@ export async function setupPlayer(url, videoContainer, config, video) {
 export function getDeviceSpecificVideoUrl(videoUrl) {
   const { userAgent } = navigator;
   const isIOS = /iPad|iPhone|iPod/.test(userAgent);
-  const isSafari = (/Safari/i).test(userAgent) && !(/Chrome/i).test(userAgent) && !(/CriOs/i).test(userAgent) && !(/Android/i).test(userAgent) && !(/Edg/i).test(userAgent);
+  const isSafari =
+    /Safari/i.test(userAgent) && !/Chrome/i.test(userAgent) && !/CriOs/i.test(userAgent) && !/Android/i.test(userAgent) && !/Edg/i.test(userAgent);
 
-  const manifest = (isIOS || isSafari) ? 'manifest.m3u8' : 'manifest.mpd';
+  const manifest = isIOS || isSafari ? 'manifest.m3u8' : 'manifest.mpd';
   return videoUrl.replace(/manifest\.mpd|manifest\.m3u8|play/, manifest);
 }
 
@@ -138,7 +137,7 @@ export const addVideoConfig = (videoId, props = {}) => {
 export const getVideoConfig = (videoId) => videoConfigs[videoId];
 
 export function isLowResolutionVideoUrl(url) {
-  return (typeof url === 'string') && url.split('?')[0].endsWith('.mp4');
+  return typeof url === 'string' && url.split('?')[0].endsWith('.mp4');
 }
 
 export function isAEMVideoUrl(url) {
@@ -147,18 +146,17 @@ export function isAEMVideoUrl(url) {
 
 export function isVideoLink(link) {
   const linkString = link.getAttribute('href');
-  return (linkString.includes('youtube.com/embed/')
-    || videoURLRegex.test(linkString)
-    || isLowResolutionVideoUrl(linkString))
-    && link.closest('.block.embed') === null;
+  return (
+    (linkString.includes('youtube.com/embed/') || videoURLRegex.test(linkString) || isLowResolutionVideoUrl(linkString)) &&
+    link.closest('.block.embed') === null
+  );
 }
 
 export function selectVideoLink(links, preferredType, videoType = videoTypes.both) {
   const linksArray = Array.isArray(links) ? links : [...links];
   const hasConsentForSocialVideos = isSocialAllowed();
   const isTypeBoth = videoType === videoTypes.both;
-  const prefersYouTube = (hasConsentForSocialVideos && preferredType !== 'local')
-                      || (!isTypeBoth && videoType === videoTypes.youtube);
+  const prefersYouTube = (hasConsentForSocialVideos && preferredType !== 'local') || (!isTypeBoth && videoType === videoTypes.youtube);
 
   const findLinkByCondition = (conditionFn) => linksArray.find((link) => conditionFn(link.getAttribute('href')));
 
@@ -166,8 +164,12 @@ export function selectVideoLink(links, preferredType, videoType = videoTypes.bot
   const youTubeLink = findLinkByCondition((href) => href.includes('youtube.com/embed/'));
   const localMediaLink = findLinkByCondition((href) => href.split('?')[0].endsWith('.mp4'));
 
-  if (aemVideoLink) return aemVideoLink;
-  if (prefersYouTube && youTubeLink) return youTubeLink;
+  if (aemVideoLink) {
+    return aemVideoLink;
+  }
+  if (prefersYouTube && youTubeLink) {
+    return youTubeLink;
+  }
   return localMediaLink;
 }
 
@@ -342,7 +344,9 @@ export function createIframe(url, { parentEl, classes = [] }) {
   const iframe = createElement('iframe', {
     classes: Array.isArray(classes) ? classes : [classes],
     props: {
-      frameborder: '0', allowfullscreen: 'allowfullscreen', src: url,
+      frameborder: '0',
+      allowfullscreen: 'allowfullscreen',
+      src: url,
     },
   });
 
@@ -444,15 +448,18 @@ function createProgressivePlaybackVideo(src, className = '', props = {}) {
 
   // If the video is not playing, we’ll try to play again
   if (props.autoplay) {
-    video.addEventListener('loadedmetadata', () => {
-      setTimeout(() => {
-        if (video.paused) {
-          // eslint-disable-next-line no-console
-          console.warn('Failed to autoplay video, fallback code executed');
-          video.play();
-        }
-      }, 500);
-    }, { once: true });
+    video.addEventListener(
+      'loadedmetadata',
+      () => {
+        setTimeout(() => {
+          if (video.paused) {
+            console.warn('Failed to autoplay video, fallback code executed');
+            video.play();
+          }
+        }, 500);
+      },
+      { once: true },
+    );
   }
 
   // set playback controls after video container is attached to dom
@@ -481,7 +488,6 @@ export function getDynamicVideoHeight(video) {
 
   // Get the element's height on resize
   const getVideoHeight = (entries) => {
-    // eslint-disable-next-line no-restricted-syntax
     for (const entry of entries) {
       const height = entry.target.offsetHeight - 60;
       const playbackControls = video.parentElement?.querySelector('.v2-video__playback-button');
@@ -685,7 +691,9 @@ export const addMuteControls = (section) => {
 
   controls.setAttribute('aria-label', unmuteIconLabel);
 
-  if (!video) return;
+  if (!video) {
+    return;
+  }
 
   const showHideMuteIcon = (isMuted) => {
     if (isMuted) {
@@ -719,7 +727,6 @@ export function loadYouTubeIframeAPI() {
 }
 
 const logVideoEvent = (eventName, videoId, timeStamp, blockName = 'video') => {
-  // eslint-disable-next-line no-console
   console.info(`[${blockName}] ${eventName} for ${videoId} at ${timeStamp}`);
 };
 
@@ -737,14 +744,15 @@ const formatDebugTime = (date) => {
 };
 
 export const handleVideoMessage = (event, videoId, blockName = 'video') => {
-  if (!event.origin.endsWith(aemCloudDomain)) return;
+  if (!event.origin.endsWith(aemCloudDomain)) {
+    return;
+  }
   if (event.data.type === 'embedded-video-player-event') {
     const timeStamp = formatDebugTime(new Date());
 
     logVideoEvent(event.data.name, event.data.videoId, timeStamp, blockName);
 
     if (event.data.name === 'video-config' && event.data.videoId === videoId) {
-      // eslint-disable-next-line no-console
       console.info('Sending video config:', getVideoConfig(videoId), timeStamp);
       event.source.postMessage(JSON.stringify(getVideoConfig(videoId)), '*');
     }
@@ -774,9 +782,7 @@ class VideoEventManager {
   }
 
   unregister(videoId, blockName) {
-    this.registrations = this.registrations.filter(
-      (reg) => reg.videoId !== videoId || reg.blockName !== blockName,
-    );
+    this.registrations = this.registrations.filter((reg) => reg.videoId !== videoId || reg.blockName !== blockName);
   }
 
   handleMessage(event) {

@@ -1,17 +1,7 @@
 // eslint-disable-next-line import/no-cycle
 import { loadScript, loadCSS, sampleRUM } from './aem.js';
-import {
-  isPerformanceAllowed,
-  isTargetingAllowed,
-  isSocialAllowed,
-  isDevHost,
-  extractObjectFromArray,
-  COOKIE_CONFIGS,
-} from './common.js';
-import {
-  VIDEO_JS_SCRIPT,
-  VIDEO_JS_CSS,
-} from './video-helper.js';
+import { isPerformanceAllowed, isTargetingAllowed, isSocialAllowed, isDevHost, extractObjectFromArray, COOKIE_CONFIGS } from './common.js';
+import { VIDEO_JS_SCRIPT, VIDEO_JS_CSS } from './video-helper.js';
 
 // COOKIE ACCEPTANCE AND IDs default to false in case no ID is present
 const {
@@ -58,8 +48,7 @@ document.addEventListener('click', (e) => {
 });
 
 // OneTrust Cookies Consent Notice start for volvotrucks.us
-if (!window.location.pathname.includes('srcdoc')
-  && !isDevHost()) {
+if (!window.location.pathname.includes('srcdoc') && !isDevHost()) {
   // when running on localhost in the block library host is empty but the path is srcdoc
   // on localhost/hlx.page/hlx.live the consent notice is displayed every time the page opens,
   // because the cookie is not persistent. To avoid this annoyance, disable unless on the
@@ -101,9 +90,15 @@ async function loadGoogleTagManager() {
   // google tag manager
   // eslint-disable-next-line func-names
   (function (w, d, s, l, i) {
-    w[l] = w[l] || []; w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' }); const f = d.getElementsByTagName(s)[0]; const j = d.createElement(s); const
-      dl = l !== 'dataLayer' ? `&l=${l}` : ''; j.async = true; j.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`; f.parentNode.insertBefore(j, f);
-  }(window, document, 'script', 'dataLayer', GTM_ID));
+    w[l] = w[l] || [];
+    w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+    const f = d.getElementsByTagName(s)[0];
+    const j = d.createElement(s);
+    const dl = l !== 'dataLayer' ? `&l=${l}` : '';
+    j.async = true;
+    j.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
+    f.parentNode.insertBefore(j, f);
+  })(window, document, 'script', 'dataLayer', GTM_ID);
 }
 
 async function loadFacebookPixel() {

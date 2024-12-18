@@ -1,17 +1,11 @@
-/* eslint-disable no-shadow,max-len */
-import {
-  readBlockConfig,
-  toClassName,
-} from './aem.js';
+import { readBlockConfig, toClassName } from './aem.js';
 import { createElement } from './common.js';
 
 /*
-* Common functions for searching the press releases and magazines
-*/
+ * Common functions for searching the press releases and magazines
+ */
 function getSelectionFromUrl(field) {
-  return (
-    toClassName(new URLSearchParams(window.location.search).get(field)) || ''
-  );
+  return toClassName(new URLSearchParams(window.location.search).get(field)) || '';
 }
 
 function createInputSearch(name, searchTerm, placeholder) {
@@ -147,9 +141,7 @@ async function renderFilters(data, createFilters) {
   const formFieldSet = createElement('fieldset');
 
   const filters = await createFilters(data, getActiveFilters(), createDropdown, createInputSearch);
-  formFieldSet.append(
-    ...filters,
-  );
+  formFieldSet.append(...filters);
   if (filters.length > 0) {
     form.append(formFieldSet);
     filter.append(form);
@@ -200,7 +192,6 @@ async function buildElements(pressReleases, filter, createFilters, buildPressRel
 }
 
 export async function createList(pressReleases, filter, createFilters, buildPressReleaseArticle, limitPerPage, mainEl) {
-  /* eslint-disable no-use-before-define */
   const cfg = readBlockConfig(mainEl);
 
   async function reloadList(params) {
@@ -214,7 +205,9 @@ export async function createList(pressReleases, filter, createFilters, buildPres
   }
 
   function reloadFilteredList(event) {
-    if (event) event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
     const params = new URLSearchParams(new FormData(this));
     const urlParams = new URL(window.location).searchParams;
     const page = urlParams.get('page');
@@ -245,10 +238,16 @@ export async function createList(pressReleases, filter, createFilters, buildPres
 
   function renderList(el, { filter, pagination, list }) {
     const children = [];
-    if (filter) children.push(attachSubmitListeners(filter));
-    if (pagination) children.push(attachClickListeners(pagination));
+    if (filter) {
+      children.push(attachSubmitListeners(filter));
+    }
+    if (pagination) {
+      children.push(attachClickListeners(pagination));
+    }
     children.push(list);
-    if (pagination) children.push(attachClickListeners(pagination.cloneNode(true)));
+    if (pagination) {
+      children.push(attachClickListeners(pagination.cloneNode(true)));
+    }
     el.replaceChildren(...children);
   }
 

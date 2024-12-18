@@ -1,12 +1,4 @@
-import {
-  results,
-  resetForm,
-  updatedData,
-  addAnimations,
-  resetData,
-  getNumberFormat,
-  reverseFormatNumber,
-} from './results.js';
+import { results, resetForm, updatedData, addAnimations, resetData, getNumberFormat, reverseFormatNumber } from './results.js';
 import { getTextLabel } from '../../scripts/common.js';
 
 const calculatorPath = './calculator.json';
@@ -33,26 +25,17 @@ const formatData = (data) => {
   const disclaimer = dataEntries.length === 10 ? dataEntries.pop().value : '';
   const divider = 7;
 
-  const [
-    ,
-    priceFuel,
-    currentMPG,
-    milesTruckYear,
-    priceIncrease,
-    defPrice,
-    defUsage,,
-    trucksNum,
-  ] = dataEntries;
+  const [, priceFuel, currentMPG, milesTruckYear, priceIncrease, defPrice, defUsage, , trucksNum] = dataEntries;
   const formData = {
-    '1_baseline_powertrain': (0),
-    '2_price_of_fuel': (priceFuel.value),
-    '3_current_MPG': (currentMPG.value),
-    '4_miles/Truck/Year': (milesTruckYear.value),
-    '5_annual_fuel_price_increase': (priceIncrease.value),
-    '6_price_of_DEF': (defPrice.value),
-    '7_DEF%_usage': (defUsage.value),
-    '8_next-gen_D13TC_powertrain': (0),
-    '9_number_of_new_trucks': (trucksNum.value),
+    '1_baseline_powertrain': 0,
+    '2_price_of_fuel': priceFuel.value,
+    '3_current_MPG': currentMPG.value,
+    '4_miles/Truck/Year': milesTruckYear.value,
+    '5_annual_fuel_price_increase': priceIncrease.value,
+    '6_price_of_DEF': defPrice.value,
+    '7_DEF%_usage': defUsage.value,
+    '8_next-gen_D13TC_powertrain': 0,
+    '9_number_of_new_trucks': trucksNum.value,
   };
 
   // divides into 2 sections, 'current' and 'new'
@@ -98,8 +81,10 @@ const getInputType = (e) => {
     return `
       <label for="input-${e.idx}" class="label-input-${e.idx}">${inputLabel}</label>
       <select name="input-${e.idx}" class="form-control" id="input-${e.idx}">
-        ${e.value.map((value, idx) => `
-        <option data-value="${idx + 1}" value="${value}">${value}</option>`)}
+        ${e.value.map(
+          (value, idx) => `
+        <option data-value="${idx + 1}" value="${value}">${value}</option>`,
+        )}
       </select>`;
   }
   return `
@@ -153,10 +138,12 @@ const focusNextField = (e, form) => {
 };
 
 const formatDataField = (e) => {
-  if (['select', 'button'].some((field) => field === e.target.localName)) return;
+  if (['select', 'button'].some((field) => field === e.target.localName)) {
+    return;
+  }
   const { target } = e;
   const { value } = target;
-  const idx = +(target.id.split('-')[1]);
+  const idx = +target.id.split('-')[1];
   const fn = {
     focus: reverseFormatNumber(value, 'en-US'),
     blur: getNumberFormat(value, idx),
@@ -166,17 +153,19 @@ const formatDataField = (e) => {
     target.classList.toggle('error', !reverseFormatNumber(value));
     hasError = target.classList.contains('error');
   }
-  if (!hasError) target.value = fn[e.type] ? fn[e.type] : value;
+  if (!hasError) {
+    target.value = fn[e.type] ? fn[e.type] : value;
+  }
 };
 
 export default async function decorate(block) {
   // the final disclaimer comes from the index.doc file in order to make it editable
-  const finalDisclaimer = (block.innerText);
+  const finalDisclaimer = block.innerText;
 
   // this data acts a placeholder and is also the one used to make the first calculations
   const rawData = await getInitialData();
   const initialData = formatData(rawData);
-  const [,, formData, dataText] = initialData;
+  const [, , formData, dataText] = initialData;
   const rawPercentages = await getInitialData(percentagesPath);
   const percentages = buildPercentages(rawPercentages);
   resetData.push(formData);

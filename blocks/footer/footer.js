@@ -1,14 +1,5 @@
-import {
-  readBlockConfig,
-  getMetadata,
-} from '../../scripts/aem.js';
-import {
-  createElement,
-  decorateIcons,
-  getLanguagePath,
-  getTextLabel,
-} from '../../scripts/common.js';
-/* eslint-disable no-use-before-define */
+import { readBlockConfig, getMetadata } from '../../scripts/aem.js';
+import { createElement, decorateIcons, getLanguagePath, getTextLabel } from '../../scripts/common.js';
 
 function addScrollToTopButton(mainEl) {
   const scrollToTopButton = document.createRange().createContextualFragment(`
@@ -120,7 +111,6 @@ function openExternalLinksInNewTab(footer) {
         anchor.setAttribute('target', '_blank');
       }
     } catch (e) {
-      // eslint-disable-next-line no-console
       console.warn(`Invalid link ${anchor.href}`);
     }
   });

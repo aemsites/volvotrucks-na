@@ -16,11 +16,7 @@ const buildChartFuelUsage = (data) => {
 
   const yAxisStart = 300;
 
-  const {
-    valueToPoints,
-    chartValueRange,
-    bottomEdgeValue,
-  } = calcValuesToPoints(chartValues, yAxisStart);
+  const { valueToPoints, chartValueRange, bottomEdgeValue } = calcValuesToPoints(chartValues, yAxisStart);
   // BARS
   const barHeight1 = valueToPoints(chartValues[0]);
   const barHeight2 = valueToPoints(chartValues[1]);
@@ -70,7 +66,7 @@ const buildChartFuelUsage = (data) => {
     <!-- COLOR BARS AND VALUES-->
     <g data-z-index="1" aria-hidden="false" role="region" class="chart-bars">
       <rect
-        x="${(totalWidthChart * 0.3) - (barWidth / 2)}"
+        x="${totalWidthChart * 0.3 - barWidth / 2}"
         y="${yAxisStart - barHeight1}"
         width="${barWidth}"
         height="${barHeight1}"
@@ -78,7 +74,7 @@ const buildChartFuelUsage = (data) => {
         class="bars" >
       </rect>
       <rect
-        x="${(totalWidthChart * 0.7) - (barWidth / 2)}"
+        x="${totalWidthChart * 0.7 - barWidth / 2}"
         y="${yAxisStart - barHeight2}"
         width="${barWidth}"
         height="${barHeight2}"
@@ -89,7 +85,7 @@ const buildChartFuelUsage = (data) => {
       <text
         x="${totalWidthChart * 0.3}"
         text-anchor="middle"
-        y="${(yAxisStart - (barHeight1 * 0.5) + 5)}"
+        y="${yAxisStart - barHeight1 * 0.5 + 5}"
         opacity="1"
         class="text"
       >
@@ -98,7 +94,7 @@ const buildChartFuelUsage = (data) => {
       <text
         x="${totalWidthChart * 0.7}"
         text-anchor="middle"
-        y="${(yAxisStart - (barHeight2 * 0.5) + 5)}"
+        y="${yAxisStart - barHeight2 * 0.5 + 5}"
         opacity="1"
         class="text"
       >
@@ -109,11 +105,11 @@ const buildChartFuelUsage = (data) => {
     <!-- LEFT VALUES AND LINES -->
     <g data-z-index="1" aria-hidden="true" class="side-labels">
       ${labelValues.map((e) => {
-    const roundedNumber = (Math.round(e / 100)) * 100;
-    const yValue = roundedNumber.toFixed(0);
-    const yPosition = yAxisStart - valueToPoints(e);
+        const roundedNumber = Math.round(e / 100) * 100;
+        const yValue = roundedNumber.toFixed(0);
+        const yPosition = yAxisStart - valueToPoints(e);
 
-    const lineAndValue = `
+        const lineAndValue = `
       <text
         x="${80}"
         text-anchor="end"
@@ -131,8 +127,8 @@ const buildChartFuelUsage = (data) => {
         d="M ${85} ${yPosition} L ${totalWidthChart - 50} ${yPosition}"
         class="line">
       </path>`;
-    return lineAndValue;
-  })}
+        return lineAndValue;
+      })}
     </g>
 
     <!-- SUBTITLE -->

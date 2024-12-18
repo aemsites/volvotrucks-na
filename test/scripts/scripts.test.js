@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-expressions */
 /* global describe before it */
 
 import { readFile } from '@web/test-runner-commands';

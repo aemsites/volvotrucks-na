@@ -30,9 +30,7 @@ function humanFileSize(bytes, si = false, dp = 1) {
     return `${bytes} B`;
   }
 
-  const units = si
-    ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB']
-    : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
+  const units = si ? ['kB', 'MB', 'GB', 'TB', 'PB', 'EB', 'ZB', 'YB'] : ['KiB', 'MiB', 'GiB', 'TiB', 'PiB', 'EiB', 'ZiB', 'YiB'];
   let u = -1;
   const r = 10 ** dp;
 
@@ -52,7 +50,7 @@ async function loadSitemap(sitemapURL) {
   for (let i = 0; i < subSitemaps.length; i += 1) {
     const loc = subSitemaps[i];
     const subSitemapURL = new URL(loc.textContent.trim());
-    // eslint-disable-next-line no-await-in-loop
+
     await loadSitemap(subSitemapURL.pathname);
   }
   const urlLocs = sitemap.querySelectorAll('url loc');
@@ -92,13 +90,13 @@ async function fgrep(pathname, pattern) {
 
   const { status } = resp;
   const size = +resp.headers.get('content-length');
-  return ({
+  return {
     found,
     size,
     status,
     pathname,
     occurences,
-  });
+  };
 }
 
 async function edit(path, y) {
@@ -116,9 +114,8 @@ async function edit(path, y) {
       throw new Error('admin did not return an edit url');
     }
   } catch (e) {
-    // eslint-disable-next-line no-console
     console.log(`failed to get edit url for ${path}`, e);
-    // eslint-disable-next-line no-alert
+
     alert(`failed to get edit url for ${path}`);
   }
 }
@@ -135,19 +132,20 @@ function displayResult(result) {
     editLink.href = `#${result.pathname}`;
     editLink.onclick = () => edit(result.pathname, window.scrollY);
     p.append(' ', editLink);
-    if (result.occurences.forEach((e) => {
-      const occurence = document.createElement('p');
-      occurence.textContent = e;
-      p.append(occurence);
-    }));
+    if (
+      result.occurences.forEach((e) => {
+        const occurence = document.createElement('p');
+        occurence.textContent = e;
+        p.append(occurence);
+      })
+    ) {
+    }
     resultDisplay.appendChild(p);
   }
 }
 
 function exportResults() {
-  const exp = [...document.querySelectorAll('#results > p')]
-    .map((res) => res.querySelector('a:first-of-type').getAttribute('href'))
-    .join('\n');
+  const exp = [...document.querySelectorAll('#results > p')].map((res) => res.querySelector('a:first-of-type').getAttribute('href')).join('\n');
   const blob = new Blob([exp], { type: 'text/plain' });
   const url = window.URL.createObjectURL(blob);
   const a = document.getElementById('exportLink');
@@ -163,7 +161,9 @@ async function fgrepNextFile(queue, pattern) {
     totalFiles += 1;
     fgrep(path, pattern).then((result) => {
       displayResult(result);
-      if (queue[0]) fgrepNextFile(queue, pattern);
+      if (queue[0]) {
+        fgrepNextFile(queue, pattern);
+      }
       endTime = new Date();
       updateStatus();
     });

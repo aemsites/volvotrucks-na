@@ -1,9 +1,5 @@
 // eslint-disable-next-line import/no-cycle
-import {
-  createElement,
-  decorateIcons,
-  getTextLabel,
-} from '../../scripts/common.js';
+import { createElement, decorateIcons, getTextLabel } from '../../scripts/common.js';
 
 const componentName = 'snackbar';
 
@@ -37,7 +33,6 @@ const initSnackbarContainer = (positionX, positionY) => {
 const handleCloseButtonClick = (event) => {
   const snackbar = event.target.closest(`.${componentName}`);
   if (snackbar) {
-    // eslint-disable-next-line no-use-before-define
     removeSnackbar(snackbar);
   }
 };
@@ -84,13 +79,17 @@ const createSnackbar = (text, type, buttonsBelow, closeButton) => {
     <output role="status" class="${componentName} ${type ? `${componentName}--${type}` : ''} ${buttonsBelow ? `${componentName}--buttons-below` : ''}">
       ${type && icon ? `<span class="icon ${icon}"></span>` : ''}
       <p>${text}</p>
-      ${closeButton ? `<button
+      ${
+        closeButton
+          ? `<button
                           aria-label="${getTextLabel('Dismiss message')}"
                           class="${componentName}__close-button"
                           aria-controls="${componentName}"
                         >
                           <span class="icon icon-close" />
-                        </button>` : ''}
+                        </button>`
+          : ''
+      }
     </output>
   `);
 
