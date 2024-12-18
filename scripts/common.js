@@ -446,6 +446,7 @@ async function getConstantValues() {
  * @throws {TypeError} - If an item in the array is not in the format 'key: value'.
 */
 export const extractObjectFromArray = (data) => {
+  if (!Array.isArray(data)) return {};
   const obj = {};
   // eslint-disable-next-line no-restricted-syntax
   for (const item of data) {
@@ -494,6 +495,7 @@ export const TRUCK_CONFIGURATOR_URLS = formatValues(truckConfiguratorUrls?.data)
  * @param {String} groupName the one trust croup like: C0002
  */
 export function checkOneTrustGroup(groupName) {
+  if (typeof groupName !== 'string') return false;
   const oneTrustCookie = decodeURIComponent(document.cookie.split(';').find((cookie) => cookie.trim().startsWith('OptanonConsent=')));
   return oneTrustCookie.includes(`${groupName}:1`);
 }
@@ -530,7 +532,7 @@ export function isSocialAllowed() {
  *                     original input.
  */
 export const formatStringToArray = (inputString) => {
-  if (!inputString) return [];
+  if (typeof inputString !== 'string') return [];
   // eslint-disable-next-line no-useless-escape
   const cleanedString = inputString.replace(/[\[\]\\'"]+/g, '');
   return cleanedString.split(',')
