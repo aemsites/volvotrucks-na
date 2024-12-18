@@ -20,11 +20,7 @@ const buildChartCumulativeSavings = (data) => {
 
   // this value is because the svg counts from the top so the initial "0" is actually position 300
   const yAxisStart = 300;
-  const {
-    valueToPoints,
-    chartValueRange,
-    bottomEdgeValue,
-  } = calcValuesToPoints(chartValues, yAxisStart, { bottomPadding: 0 });
+  const { valueToPoints, chartValueRange, bottomEdgeValue } = calcValuesToPoints(chartValues, yAxisStart, { bottomPadding: 0 });
 
   // SIDE LABELS
   const chartHeight = Number(chartValueRange).toFixed(0);
@@ -74,15 +70,15 @@ const buildChartCumulativeSavings = (data) => {
     <!-- COLOR BARS AND VALUES-->
     <g data-z-index="4" aria-hidden="false" role="region" opacity="1">
     ${chartValues.map((e, idx) => {
-    // the values get converted to be able to display them in the colored bars
-    const barHeight = valueToPoints(e);
+      // the values get converted to be able to display them in the colored bars
+      const barHeight = valueToPoints(e);
 
-    const barWidth = totalWidthChart / 10;
-    const section = (totalWidthChart - 100) / 5;
+      const barWidth = totalWidthChart / 10;
+      const section = (totalWidthChart - 100) / 5;
 
-    return `
+      return `
     <rect
-      x="${95 + (section * idx)}"
+      x="${95 + section * idx}"
       y="${yAxisStart - barHeight}"
       width="${barWidth}"
       height="${barHeight}"
@@ -91,7 +87,7 @@ const buildChartCumulativeSavings = (data) => {
     </rect>
 
     <text
-      x="${95 + (section * idx) + (barWidth / 2)}"
+      x="${95 + section * idx + barWidth / 2}"
       y="${330}"
       text-anchor="middle"
       data-z-index="4"
@@ -100,19 +96,18 @@ const buildChartCumulativeSavings = (data) => {
       >
         Year ${1 + idx}
       </text>`;
-  })
-}
+    })}
   </g>
 
     <!-- LEFT VALUES AND LINES -->
     <g data-z-index="3" aria-hidden="true" class="side-labels">
       ${labelValues.map((e) => {
-    // side labels and the lines are constructed with the same factor to position them
-    const roundedNumber = (Math.round(e / 100)) * 100;
-    const yValue = roundedNumber.toFixed(0);
-    const yPosition = yAxisStart - valueToPoints(e);
+        // side labels and the lines are constructed with the same factor to position them
+        const roundedNumber = Math.round(e / 100) * 100;
+        const yValue = roundedNumber.toFixed(0);
+        const yPosition = yAxisStart - valueToPoints(e);
 
-    const lineAndValue = `
+        const lineAndValue = `
       <text
         x="${80}"
         text-anchor="end"
@@ -132,9 +127,8 @@ const buildChartCumulativeSavings = (data) => {
         class="line"
         >
       </path>`;
-    return lineAndValue;
-  })
-}
+        return lineAndValue;
+      })}
     </g>
   </svg>`;
 

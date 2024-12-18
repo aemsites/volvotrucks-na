@@ -1,4 +1,3 @@
-/* stylelint-disable string-quotes */
 /* stylelint-disable number-max-precision */
 
 /*
@@ -1896,5 +1895,3 @@ main.blue-contract .section.section-with-title p {
 .truck-configurator svg #BLOCK_RECORD {
   color: rgb(20 20 20);
 }
-
-/* truck configurator style overrides end */

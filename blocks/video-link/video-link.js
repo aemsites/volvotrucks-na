@@ -11,7 +11,7 @@ export default function decorate(block) {
     block.appendChild(selectedLink);
   } else {
     block.remove();
-    /* eslint-disable-next-line no-console */
+
     console.warn('local video link missing', block);
   }
 }

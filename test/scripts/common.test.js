@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-expressions */
 /* global describe before it afterEach */
 
 import { readFile } from '@web/test-runner-commands';
@@ -8,8 +7,6 @@ import { adjustPretitle } from '../../scripts/common.js';
 /** @type {import('./types').Scripts} */
 let commonScript;
 /** @type {import('./types').LibFranklin} */
-// eslint-disable-next-line no-unused-vars
-let lib;
 
 document.body.innerHTML = await readFile({ path: './dummy.html' });
 document.head.innerHTML = await readFile({ path: './head.html' });
@@ -17,7 +14,7 @@ document.head.innerHTML = await readFile({ path: './head.html' });
 describe('createElement', () => {
   before(async () => {
     commonScript = await import('../../scripts/common.js');
-    lib = await import('../../scripts/aem.js');
+    await import('../../scripts/aem.js');
 
     document.body.innerHTML = await readFile({ path: './body.html' });
   });

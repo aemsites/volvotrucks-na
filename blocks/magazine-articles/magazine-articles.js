@@ -1,15 +1,6 @@
-import {
-  getOrigin,
-  getTextLabel,
-  createElement,
-  getDateFromTimestamp,
-} from '../../scripts/common.js';
-import {
-  createList,
-} from '../../scripts/magazine-press.js';
-import {
-  createOptimizedPicture,
-} from '../../scripts/aem.js';
+import { getOrigin, getTextLabel, createElement, getDateFromTimestamp } from '../../scripts/common.js';
+import { createList } from '../../scripts/magazine-press.js';
+import { createOptimizedPicture } from '../../scripts/aem.js';
 import { fetchMagazineArticles } from '../../scripts/services/magazine.service.js';
 
 const defaultAuthor = getTextLabel('defaultAuthor');
@@ -26,9 +17,7 @@ const parseArticleData = (item) => {
   };
 
   const { article, image } = item.metadata;
-  const filterTag = ['category', 'topic', 'truck']
-    .map((key) => item.metadata.article[key])
-    .filter(Boolean);
+  const filterTag = ['category', 'topic', 'truck'].map((key) => item.metadata.article[key]).filter(Boolean);
 
   return {
     ...item.metadata,
@@ -48,9 +37,7 @@ const extractFilters = (facets) => {
     const uniqueItems = new Set(
       facet.items.map((item) => {
         const value = item.value.trim();
-        return key === 'truck'
-          ? value.toUpperCase()
-          : value.charAt(0).toUpperCase() + value.slice(1);
+        return key === 'truck' ? value.toUpperCase() : value.charAt(0).toUpperCase() + value.slice(1);
       }),
     );
     filterLists[key] = [...uniqueItems];
@@ -61,7 +48,6 @@ const processMagazineArticles = async (params = {}) => {
   const rawData = await fetchMagazineArticles(params);
 
   if (!rawData) {
-    // eslint-disable-next-line no-console
     console.error('No data returned from fetchMagazineArticles');
     return [];
   }
@@ -69,7 +55,6 @@ const processMagazineArticles = async (params = {}) => {
   const { items, count, facets: dataFacets } = rawData;
 
   if (!items || items.length === 0) {
-    // eslint-disable-next-line no-console
     console.error('No items returned in raw data:', rawData);
     return [];
   }
@@ -90,25 +75,13 @@ const processMagazineArticles = async (params = {}) => {
     extractFilters(dataFacets);
   }
 
-  const sortedArticles = articles.sort(
-    (a, b) => new Date(b.publishDate) - new Date(a.publishDate),
-  );
+  const sortedArticles = articles.sort((a, b) => new Date(b.publishDate) - new Date(a.publishDate));
 
   return sortedArticles;
 };
 
 function buildMagazineArticle(entry) {
-  const {
-    path,
-    image,
-    title,
-    description,
-    author,
-    category,
-    readingTime,
-    publishDate,
-    isDefaultImage,
-  } = entry;
+  const { path, image, title, description, author, category, readingTime, publishDate, isDefaultImage } = entry;
 
   const card = createElement('article');
   const picture = createOptimizedPicture(image, title, false, [{ width: '380', height: '214' }]);
@@ -122,7 +95,7 @@ function buildMagazineArticle(entry) {
     <div class="content">
       <ul>
         <li>${formattedDate}</li>
-      ${(category ? `<li>${category}</li>` : '')}
+      ${category ? `<li>${category}</li>` : ''}
       </ul>
       <h3><a href="${path}">${title}</a></h3>
       <p>${description}</p>
@@ -137,17 +110,11 @@ function buildMagazineArticle(entry) {
 }
 
 function buildLatestMagazineArticle(entry) {
-  const {
-    url,
-    image,
-    title,
-    description,
-    linkText,
-  } = entry;
+  const { url, image, title, description, linkText } = entry;
   const card = createElement('article');
   const picture = createOptimizedPicture(image, title, false, [{ width: '590', height: '410' }]);
   const pictureTag = picture.outerHTML;
-  const readMore = (linkText || 'Read more...');
+  const readMore = linkText || 'Read more...';
   card.innerHTML = `
     <a href="${url}" class="imgcover">
       ${pictureTag}
@@ -162,9 +129,7 @@ function buildLatestMagazineArticle(entry) {
 }
 
 async function filterArticles(articles, activeFilters) {
-  const {
-    category, topic, truck, search,
-  } = activeFilters;
+  const { category, topic, truck, search } = activeFilters;
   const filters = { category, topic, truck };
   const haveFilters = [category, topic, truck].some((filter) => !!filter);
   const hasSearch = !!search;
@@ -197,7 +162,6 @@ async function filterArticles(articles, activeFilters) {
     });
     return filteredArticles;
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error('Error filtering articles:', error);
     return [];
   }
@@ -217,12 +181,7 @@ async function createFilter(articles, activeFilters, createDropdown, createInput
     select.addEventListener('change', (e) => e.target.form.submit());
   });
 
-  return [
-    search,
-    categoryFilter,
-    topicFilter,
-    truckFilter,
-  ];
+  return [search, categoryFilter, topicFilter, truckFilter];
 }
 
 function createArticleList(block, articles, limit) {

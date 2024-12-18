@@ -3,9 +3,7 @@ function newId() {
 }
 
 function calcScrollHeight(rowgroup) {
-  return [...rowgroup.children]
-    .map((child) => child.clientHeight)
-    .reduce((l, r) => l + r, 0);
+  return [...rowgroup.children].map((child) => child.clientHeight).reduce((l, r) => l + r, 0);
 }
 
 function expand(event) {
@@ -26,25 +24,36 @@ function normalizeCells(cells, rowheaderRole = 'rowheader', cellRole = 'cell') {
   [...cells].forEach((cell, j) => {
     cell.normalize();
     // remove any blank text nodes
-    if (cell.firstChild && cell.firstChild.nodeType === 3 && cell.firstChild.nodeValue.trim() === '') cell.firstChild.remove();
-    if (cell.lastChild && cell.lastChild.nodeType === 3 && cell.lastChild.nodeValue.trim() === '') cell.lastChild.remove();
+    if (cell.firstChild && cell.firstChild.nodeType === 3 && cell.firstChild.nodeValue.trim() === '') {
+      cell.firstChild.remove();
+    }
+    if (cell.lastChild && cell.lastChild.nodeType === 3 && cell.lastChild.nodeValue.trim() === '') {
+      cell.lastChild.remove();
+    }
     // remove leading or trailing breaks
-    if (cell.firstChild && cell.firstChild.tagName === 'BR') cell.firstChild.remove();
-    if (cell.lastChild && cell.lastChild.tagName === 'BR') cell.lastChild.remove();
+    if (cell.firstChild && cell.firstChild.tagName === 'BR') {
+      cell.firstChild.remove();
+    }
+    if (cell.lastChild && cell.lastChild.tagName === 'BR') {
+      cell.lastChild.remove();
+    }
     // wrap text-only cells with a <p>
     if (!cell.querySelector('p') && cell.textContent !== '') {
       cell.innerHTML = `<p>${cell.innerHTML}</p>`;
     }
-    if (j === 0 && cells.length > 1) cell.role = rowheaderRole;
-    else cell.role = cellRole;
+    if (j === 0 && cells.length > 1) {
+      cell.role = rowheaderRole;
+    } else {
+      cell.role = cellRole;
+    }
     cell.className = 'cell';
   });
 }
 
 function activateMobileColumn(block, index) {
-  block.querySelectorAll('.cell.expand')
-    .forEach((cell) => cell.classList.remove('expand'));
-  block.querySelectorAll(`.image-header .cell:nth-child(${index}),.row .cell:nth-child(${index + 1})`)
+  block.querySelectorAll('.cell.expand').forEach((cell) => cell.classList.remove('expand'));
+  block
+    .querySelectorAll(`.image-header .cell:nth-child(${index}),.row .cell:nth-child(${index + 1})`)
     .forEach((cell) => cell.classList.add('expand'));
   // adjust the height of all expanded rowgroups
   block.querySelectorAll('[role="rowgroup"][aria-hidden="false"]').forEach((rowgroup) => {
@@ -87,8 +96,8 @@ export default async function decorate(block) {
     mobileColumnHeader.className = 'column-header-mobile';
     mobileColumnHeader.innerHTML = `<select>
       ${[...header.querySelectorAll('[role="columnheader"]')]
-    .map((columnHeader, i) => `<option value="${i + 1}">${columnHeader.textContent}</option>`)
-    .join('')}
+        .map((columnHeader, i) => `<option value="${i + 1}">${columnHeader.textContent}</option>`)
+        .join('')}
       </select>`;
     mobileColumnHeader.firstElementChild.addEventListener('change', changeMobileColumn);
     header.insertAdjacentElement('afterend', mobileColumnHeader);
@@ -107,10 +116,9 @@ export default async function decorate(block) {
   for (let i = firstRowIndex, rowgroup = null; i < rows.length; i += 1) {
     const row = rows[i];
     const cells = row.children;
-    const firstChild = (cells[0].firstElementChild && cells[0].firstElementChild.firstElementChild)
-      || cells[0].firstElementChild;
-    const isWrappedByStrong = (cells[0].children.length === 1 && firstChild && firstChild.tagName === 'STRONG');
-    const isHeader = (cells.length === 1 && (!singleColumn || isWrappedByStrong));
+    const firstChild = (cells[0].firstElementChild && cells[0].firstElementChild.firstElementChild) || cells[0].firstElementChild;
+    const isWrappedByStrong = cells[0].children.length === 1 && firstChild && firstChild.tagName === 'STRONG';
+    const isHeader = cells.length === 1 && (!singleColumn || isWrappedByStrong);
 
     if (isHeader) {
       const button = document.createElement('button');

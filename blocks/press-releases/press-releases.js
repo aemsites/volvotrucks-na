@@ -1,32 +1,27 @@
-import {
-  getLanguagePath,
-  getOrigin,
-  getDateFromTimestamp,
-} from '../../scripts/common.js';
-import {
-  ffetch,
-} from '../../scripts/lib-ffetch.js';
-import {
-  createList,
-  splitTags,
-} from '../../scripts/magazine-press.js';
-import {
-  createOptimizedPicture,
-  readBlockConfig,
-  toClassName,
-} from '../../scripts/aem.js';
+import { getLanguagePath, getOrigin, getDateFromTimestamp } from '../../scripts/common.js';
+import { ffetch } from '../../scripts/lib-ffetch.js';
+import { createList, splitTags } from '../../scripts/magazine-press.js';
+import { createOptimizedPicture, readBlockConfig, toClassName } from '../../scripts/aem.js';
 
 const stopWords = ['a', 'an', 'the', 'and', 'to', 'for', 'i', 'of', 'on', 'into'];
 
 function createPressReleaseFilterFunction(activeFilters) {
   return (pr) => {
     if (activeFilters.tags) {
-      if (!toClassName(pr.tags).includes(activeFilters.tags)) return false;
+      if (!toClassName(pr.tags).includes(activeFilters.tags)) {
+        return false;
+      }
     }
     if (activeFilters.search) {
-      const terms = activeFilters.search.toLowerCase().split(' ').map((e) => e.trim()).filter((e) => !!e);
+      const terms = activeFilters.search
+        .toLowerCase()
+        .split(' ')
+        .map((e) => e.trim())
+        .filter((e) => !!e);
       const text = pr.content.toLowerCase();
-      if (!terms.every((term) => !stopWords.includes(term) && text.includes(term))) return false;
+      if (!terms.every((term) => !stopWords.includes(term) && text.includes(term))) {
+        return false;
+      }
     }
     return true;
   };
@@ -44,28 +39,23 @@ function createFilter(pressReleases, activeFilters, createDropdown, createFullTe
   tagSelection.addEventListener('change', (e) => {
     e.target.form.submit();
   });
-  return [
-    fullText,
-    tagFilter,
-  ];
+  return [fullText, tagFilter];
 }
 
 function getPressReleases(limit, filter) {
   const indexUrl = new URL(`${getLanguagePath()}press-releases.json`, getOrigin());
   let pressReleases = ffetch(indexUrl);
-  if (filter) pressReleases = pressReleases.filter(filter);
-  if (limit) pressReleases = pressReleases.limit(limit);
+  if (filter) {
+    pressReleases = pressReleases.filter(filter);
+  }
+  if (limit) {
+    pressReleases = pressReleases.limit(limit);
+  }
   return pressReleases.all();
 }
 
 function buildPressReleaseArticle(entry) {
-  const {
-    path,
-    image,
-    title,
-    description,
-    publishDate,
-  } = entry;
+  const { path, image, title, description, publishDate } = entry;
   const card = document.createElement('article');
   const picture = createOptimizedPicture(image, title, false, [{ width: '414' }]);
   const pictureTag = picture.outerHTML;
@@ -81,13 +71,11 @@ function buildPressReleaseArticle(entry) {
   return card;
 }
 
-function createPressReleaseList(block, pressReleases, {
-  filter = filterPressReleases,
-  filterFactory = createFilter,
-  articleFactory = buildPressReleaseArticle,
-  limit,
-}) {
-  // eslint-disable-next-line no-param-reassign
+function createPressReleaseList(
+  block,
+  pressReleases,
+  { filter = filterPressReleases, filterFactory = createFilter, articleFactory = buildPressReleaseArticle, limit },
+) {
   pressReleases = pressReleases.map((pr) => ({ ...pr, filterTag: splitTags(pr.tags) }));
   createList(pressReleases, filter, filterFactory, articleFactory, limit, block);
 }
@@ -108,10 +96,7 @@ export default async function decorate(block) {
     const links = [...block.firstElementChild.querySelectorAll('a')]
       .map(({ href }) => (href ? new URL(href).pathname : null))
       .filter((pathname) => !!pathname);
-    const pressReleases = await getPressReleases(
-      links.length,
-      ({ path }) => links.indexOf(path) >= 0,
-    );
+    const pressReleases = await getPressReleases(links.length, ({ path }) => links.indexOf(path) >= 0);
     createFeaturedPressReleaseList(block, pressReleases);
     return;
   }

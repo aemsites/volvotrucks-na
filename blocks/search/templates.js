@@ -86,9 +86,7 @@ export const getNoResultsTemplate = ({ noResults, refine }) => `
 
 const addEmTag = (text, value) => {
   const words = text.split(' ');
-  const result = words.map((word) => (word.toLowerCase() === value.toLowerCase()
-    ? `<em>${word}</em>`
-    : word));
+  const result = words.map((word) => (word.toLowerCase() === value.toLowerCase() ? `<em>${word}</em>` : word));
   return result.join(' ');
 };
 
@@ -150,16 +148,19 @@ export const getShowingResultsTemplate = (text) => `
 
 const sanitizeString = (string) => string.replaceAll(' ', '-');
 
-const getItemsList = (items, filter) => items.map((item, i) => {
-  const sanitizedValue = sanitizeString(item.value);
-  return `
+const getItemsList = (items, filter) =>
+  items
+    .map((item, i) => {
+      const sanitizedValue = sanitizeString(item.value);
+      return `
     <li ${i > 2 ? 'class="d-none"' : ''}>
       <input type="checkbox" id="${sanitizedValue}" data-filter="${filter}" value="${item.value}" />
       <label for="${sanitizedValue}" class="ml-1">
       <span class="facet-name" title="${sanitizedValue}"> ${item.value} </span> (${item.count}) </label>
     </li>
   `;
-}).join('');
+    })
+    .join('');
 
 export const getFacetsTemplate = (facets) => {
   const [truck, topic, article, category] = facets;
@@ -188,7 +189,9 @@ export const getFacetsTemplate = (facets) => {
                   <div id="ss-search-results">
                     <div class="filters">
                       <form id="facetsFilters">
-                        ${category.items.length > 0 ? `
+                        ${
+                          category.items.length > 0
+                            ? `
                         <div class="facet-list mb-4">
                           <h4 class="sidebar-heading">
                             <a href="#" class="text-uppercase active">Page Categories </a>
@@ -197,13 +200,21 @@ export const getFacetsTemplate = (facets) => {
                             <ul class="list-unstyled pl-3">
                               ${categoryItemsText}
                             </ul>
-                            ${category.items.length > 3 ? `
+                            ${
+                              category.items.length > 3
+                                ? `
                             <div class="more-less">
                               <a href="#">More</a>
-                            </div>` : ''}
+                            </div>`
+                                : ''
+                            }
                           </div>
-                        </div>` : ''}
-                        ${article.items.length > 0 ? `
+                        </div>`
+                            : ''
+                        }
+                        ${
+                          article.items.length > 0
+                            ? `
                         <div class="facet-list mb-4">
                           <h4 class="sidebar-heading">
                             <a href="#" class="text-uppercase active">Article Categories </a>
@@ -212,13 +223,21 @@ export const getFacetsTemplate = (facets) => {
                             <ul class="list-unstyled pl-3">
                               ${articleItemsText}
                             </ul>
-                            ${article.items.length > 3 ? `
+                            ${
+                              article.items.length > 3
+                                ? `
                             <div class="more-less">
                               <a href="#">More</a>
-                            </div>` : ''}
+                            </div>`
+                                : ''
+                            }
                           </div>
-                        </div>` : ''}
-                        ${topic.items.length > 0 ? `
+                        </div>`
+                            : ''
+                        }
+                        ${
+                          topic.items.length > 0
+                            ? `
                         <div class="facet-list mb-4">
                           <h4 class="sidebar-heading">
                             <a href="#" class="text-uppercase active">Topics </a>
@@ -227,13 +246,21 @@ export const getFacetsTemplate = (facets) => {
                             <ul class="list-unstyled pl-3">
                               ${topicItemsText}
                             </ul>
-                            ${topic.items.length > 3 ? `
+                            ${
+                              topic.items.length > 3
+                                ? `
                             <div class="more-less">
                               <a href="#">More</a>
-                            </div>` : ''}
+                            </div>`
+                                : ''
+                            }
                           </div>
-                        </div>` : ''}
-                        ${truck.items.length > 0 ? `
+                        </div>`
+                            : ''
+                        }
+                        ${
+                          truck.items.length > 0
+                            ? `
                         <div class="facet-list mb-4">
                           <h4 class="sidebar-heading">
                             <a href="#" class="text-uppercase active">Trucks </a>
@@ -242,12 +269,18 @@ export const getFacetsTemplate = (facets) => {
                             <ul class="list-unstyled pl-3">
                               ${truckItemsText}
                             </ul>
-                            ${truck.items.length > 3 ? `
+                            ${
+                              truck.items.length > 3
+                                ? `
                             <div class="more-less">
                               <a href="#">More</a>
-                            </div>` : ''}
+                            </div>`
+                                : ''
+                            }
                           </div>
-                        </div>` : ''}
+                        </div>`
+                            : ''
+                        }
                       </form>
                     </div>
                   </div>

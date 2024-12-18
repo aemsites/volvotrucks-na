@@ -1,16 +1,5 @@
-import {
-  createOptimizedPicture,
-  getMetadata,
-  decorateIcons,
-  toClassName,
-} from '../../scripts/aem.js';
-import {
-  createElement,
-  getDateFromTimestamp,
-  MAGAZINE_CONFIGS,
-  extractObjectFromArray,
-  getTextLabel,
-} from '../../scripts/common.js';
+import { createOptimizedPicture, getMetadata, decorateIcons, toClassName } from '../../scripts/aem.js';
+import { createElement, getDateFromTimestamp, MAGAZINE_CONFIGS, extractObjectFromArray, getTextLabel } from '../../scripts/common.js';
 import {
   clearCurrentArticle,
   fetchMagazineArticles,
@@ -37,16 +26,19 @@ const updateActiveClass = (elements, targetElement) => {
 const listenScroll = (carousel) => {
   const elements = carousel.querySelectorAll(':scope > *');
 
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        updateActiveClass(elements, entry.target);
-      }
-    });
-  }, {
-    root: carousel,
-    threshold: 1,
-  });
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          updateActiveClass(elements, entry.target);
+        }
+      });
+    },
+    {
+      root: carousel,
+      threshold: 1,
+    },
+  );
 
   elements.forEach((el) => io.observe(el));
 };
@@ -76,7 +68,9 @@ const setCarouselPosition = (carousel, index, arrowLeftButton, arrowRightButton)
 };
 
 const navigate = (carousel, direction, arrowLeftButton, arrowRightButton) => {
-  if (carousel.classList.contains('is-animating')) return;
+  if (carousel.classList.contains('is-animating')) {
+    return;
+  }
 
   const activeItem = carousel.querySelector(`.${blockName}-item.active`);
   let index = [...activeItem.parentNode.children].indexOf(activeItem);
@@ -174,9 +168,7 @@ const buildStoryCard = (entry) => {
       description,
       linkText,
       publishDate,
-      article: {
-        readTime,
-      },
+      article: { readTime },
     },
   } = entry;
 
@@ -184,7 +176,7 @@ const buildStoryCard = (entry) => {
   const li = createElement('article', { classes: `${blockName}-item` });
   const picture = createOptimizedPicture(image, title, false);
   const pictureTag = picture.outerHTML;
-  const readMore = (linkText || 'Read full story');
+  const readMore = linkText || 'Read full story';
 
   const { DATE_OPTIONS } = MAGAZINE_CONFIGS;
   const dateOptions = DATE_OPTIONS ? extractObjectFromArray(JSON.parse(DATE_OPTIONS)) : {};

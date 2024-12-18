@@ -1,20 +1,7 @@
-import {
-  isVideoLink,
-  createVideo,
-} from '../../scripts/video-helper.js';
-import {
-  createElement, getTextLabel, removeEmptyTags, variantsClassesToBEM,
-} from '../../scripts/common.js';
+import { isVideoLink, createVideo } from '../../scripts/video-helper.js';
+import { createElement, getTextLabel, removeEmptyTags, variantsClassesToBEM } from '../../scripts/common.js';
 
-const variantClasses = [
-  'centered',
-  'left-center',
-  'center-bottom',
-  'dark',
-  'background-right',
-  'compact',
-  'background-transparent',
-];
+const variantClasses = ['centered', 'left-center', 'center-bottom', 'dark', 'background-right', 'compact', 'background-transparent'];
 let intervalId = null;
 const blockName = 'v2-hero';
 

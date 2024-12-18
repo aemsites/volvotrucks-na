@@ -1,13 +1,5 @@
-/* eslint-disable import/prefer-default-export */
-import {
-  decorateSections,
-  decorateBlocks,
-  loadBlocks,
-  loadCSS,
-} from '../../scripts/aem.js';
-import {
-  decorateIcons,
-} from '../../scripts/common.js';
+import { decorateSections, decorateBlocks, loadBlocks, loadCSS } from '../../scripts/aem.js';
+import { decorateIcons } from '../../scripts/common.js';
 import decorateButtons from '../../scripts/scripts.js';
 
 export async function showOffer(a) {

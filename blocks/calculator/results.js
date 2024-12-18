@@ -34,10 +34,11 @@ export const getNumberFormat = (num, idx) => {
   const isNumeric = idx === 4;
   const isPercentage = [5, 7].some((n) => n === idx);
   const isCurrency = [2, 6].some((n) => n === idx);
-  if (isNumeric) tempValue = formatNum(num);
-  else if (isPercentage) {
+  if (isNumeric) {
+    tempValue = formatNum(num);
+  } else if (isPercentage) {
     const options = { style: 'percent', maximumFractionDigits: 2 };
-    tempValue = formatNum((+num / 100), options);
+    tempValue = formatNum(+num / 100, options);
   } else if (isCurrency) {
     const options = { currency: 'USD', style: 'currency' };
     tempValue = formatNum(num, options);
@@ -99,12 +100,14 @@ const getPercentageAndTable = (data) => {
       <th>Per truck</th>
       <th>Total savings</th>
     </tr>
-    ${data.savings.map((e, idx) => `
+    ${data.savings.map(
+      (e, idx) => `
         <tr>
           <td>${idx + 1}${nth(idx + 1)} Year</td>
           <td>$${formatNum(e[0])}</td>
           <td>$${formatNum(e[1])}</td>
-        </tr>`)}`;
+        </tr>`,
+    )}`;
   table = table.replaceAll('</tr>,', '</tr>');
 
   const savingsTable = document.createElement('table');
@@ -119,12 +122,7 @@ const getPercentageAndTable = (data) => {
 };
 
 const calculateChartData = (data) => {
-  const {
-    currentMPG,
-    milesTruckYear,
-    percentage,
-    savings,
-  } = data;
+  const { currentMPG, milesTruckYear, percentage, savings } = data;
   const mpgNew = +currentMPG + +currentMPG * (percentage / 100);
   const fuelUsageCurrent = Math.round(+milesTruckYear / currentMPG);
   const fuelUsageNew = Math.round(+milesTruckYear / mpgNew);
@@ -137,17 +135,20 @@ const calculateChartData = (data) => {
         'Cumulative MPG': +currentMPG,
         '2021 D13TC I-Torque': mpgNew.toFixed(2),
       },
-    }, {
+    },
+    {
       'Savings Each Year': {
         'Per 2021 D13TC I-Torque Truck': perTruckTable,
         'Cumulative 2021 D13TC I-Torque': totalSavings,
       },
-    }, {
+    },
+    {
       'Fuel Usage': {
         'Current Truck': fuelUsageCurrent,
         '2021 D13TC I-Torque': fuelUsageNew,
       },
-    }, {
+    },
+    {
       'Cumulative Savings': {
         'Cumulative 2021 D13TC I-Torque': totalSavings,
       },
@@ -175,8 +176,8 @@ const calculateSavings = (data) => {
   for (; power < years; power += 1) {
     const percentageIncrease = (1 + pi / 100) ** power; // ("1"+5)^n
     const yearIncrease = f * percentageIncrease; // (2*("1"+5)^n)
-    const yearPercentage = ((c * p) / 100) + c; // ((3*%/100)+3)
-    const formulaPart1 = ((m / c) * yearIncrease) + (m / c) * dp * (du / 100);
+    const yearPercentage = (c * p) / 100 + c; // ((3*%/100)+3)
+    const formulaPart1 = (m / c) * yearIncrease + (m / c) * dp * (du / 100);
     const formulaPart2 = (m / yearPercentage) * yearIncrease;
     const formulaPart3 = (m / yearPercentage) * dp * (du / 100);
     const result = formulaPart1 - (formulaPart2 + formulaPart3);
@@ -214,17 +215,7 @@ const getDataForCharts = (data, table) => ({
 });
 
 const formatDataObject = (data) => {
-  const [
-    baseline,
-    fuelPrice,
-    currentMPG,
-    milesTruckYear,
-    priceIncrease,
-    defPrice,
-    defUsage,
-    nextGen,
-    trucksNum,
-  ] = data;
+  const [baseline, fuelPrice, currentMPG, milesTruckYear, priceIncrease, defPrice, defUsage, nextGen, trucksNum] = data;
   return {
     '1_baseline_powertrain': baseline.selectedIndex,
     '2_price_of_fuel': reverseFormatNumber(fuelPrice.value),
@@ -240,26 +231,33 @@ const formatDataObject = (data) => {
 
 const resetForm = (e) => {
   e.preventDefault();
-  if (e.pointerType === '' && e.type === 'click') return;
-  if (!e.srcElement.form) return;
+  if (e.pointerType === '' && e.type === 'click') {
+    return;
+  }
+  if (!e.srcElement.form) {
+    return;
+  }
   const { form } = e.srcElement;
   const isButton = e.target.id === 'calculator-reset-button';
   const isSelect = e.target.localName === 'select';
   const validValue = isButton || isSelect || reverseFormatNumber(e.target.value);
   const hasErrors = [...form].some((field) => field.classList.contains('error'));
   const data = isButton ? resetData[0] : formatDataObject(form);
-  const [,, dataContainer] = updatedData; // [charts, results, dataContainer]
+  const [, , dataContainer] = updatedData; // [charts, results, dataContainer]
   // if isButton then reset inputs of the form
   if (isButton) {
     Object.values(data).forEach((value, i) => {
-      if ([0, 7].includes(i)) form[i].selectedIndex = value;
-      else {
+      if ([0, 7].includes(i)) {
+        form[i].selectedIndex = value;
+      } else {
         form[i].value = getNumberFormat(value, i + 1);
         form[i].classList.remove('error');
       }
     });
   }
-  if (!validValue || hasErrors) return;
+  if (!validValue || hasErrors) {
+    return;
+  }
   const tableData = calculateTableData(data);
   const chartData = calculateChartData(getDataForCharts(data, tableData));
 

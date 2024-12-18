@@ -16,7 +16,7 @@ async function isWebpSupported() {
   [lossyImg, lossLessImg].forEach((img, index) => {
     const promise = new Promise((resolve) => {
       img.onload = () => {
-        const result = (img.width > 0) && (img.height > 0);
+        const result = img.width > 0 && img.height > 0;
         resolve(result);
       };
       img.onerror = () => {
@@ -49,7 +49,10 @@ async function renderBlock(block) {
   }
 
   const [address, params] = imageLink.split('?');
-  const paramsWithoutWidth = params.split('&').filter((param) => !param.startsWith('width=')).join('&');
+  const paramsWithoutWidth = params
+    .split('&')
+    .filter((param) => !param.startsWith('width='))
+    .join('&');
   const finalImageLink = `${address}?${paramsWithoutWidth}`;
 
   block.innerHTML = '';
@@ -121,9 +124,8 @@ async function renderBlock(block) {
   });
 
   // adding photosphere scripts
-  // eslint-disable-next-line no-restricted-syntax
+
   for (const script of scripts) {
-    // eslint-disable-next-line no-await-in-loop
     await loadScript(script, { type: 'text/javascript', charset: 'UTF-8' });
   }
 
@@ -131,13 +133,16 @@ async function renderBlock(block) {
 }
 
 export default async function decorate(block) {
-  const observer = new IntersectionObserver((entries) => {
-    if (entries.some((e) => e.isIntersecting)) {
-      observer.disconnect();
-      renderBlock(block);
-    }
-  }, {
-    rootMargin: '300px',
-  });
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        observer.disconnect();
+        renderBlock(block);
+      }
+    },
+    {
+      rootMargin: '300px',
+    },
+  );
   observer.observe(block);
 }

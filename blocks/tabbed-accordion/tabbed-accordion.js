@@ -2,7 +2,9 @@ function buildTabNavigation(tabItems, clickHandler) {
   const tabNavigation = document.createElement('ul');
   [...tabItems].forEach((tabItem, i) => {
     const listItem = document.createElement('li');
-    if (!i) listItem.classList.add('active');
+    if (!i) {
+      listItem.classList.add('active');
+    }
     const button = document.createElement('button');
     const tabContent = tabItem.querySelector(':scope > div');
     button.addEventListener('click', () => clickHandler.call(this, tabContent, tabNavigation, listItem));
@@ -37,7 +39,9 @@ export default function decorate(block) {
     accordionContent.classList.add('accordion-collapse');
     const accordionHeader = document.createElement('div');
     accordionHeader.classList.add('accordion-header');
-    if (!i) tabItem.classList.add('is-active');
+    if (!i) {
+      tabItem.classList.add('is-active');
+    }
     const button = document.createElement('button');
     button.innerHTML = accordionContent.dataset.accordion;
     accordionHeader.append(button);

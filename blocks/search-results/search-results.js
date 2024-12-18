@@ -43,7 +43,7 @@ export default async function decorate(block) {
     let result = '';
     const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
     const charactersLength = characters.length;
-    // eslint-disable-next-line no-plusplus
+
     for (let i = 0; i < length; i++) {
       result += characters.charAt(Math.floor(Math.random() * charactersLength));
     }
@@ -113,8 +113,9 @@ export default async function decorate(block) {
   };
 
   // these functions required for searchstax
-  const scripts = [{
-    inline: `
+  const scripts = [
+    {
+      inline: `
       var _msq = _msq || []; //declare object
       var analyticsBaseUrl = 'https://analytics-us.searchstax.com';
       (function () {
@@ -125,9 +126,9 @@ export default async function decorate(block) {
         s.parentNode.insertBefore(ms, s);
       })();
     `,
-  },
-  {
-    inline: `
+    },
+    {
+      inline: `
       (function (w, d, s, o, f) {
         w['sf-widget'] = o;
         w[o] =
@@ -143,7 +144,8 @@ export default async function decorate(block) {
       })(window, document, 'script', '_sf', 'https://static.searchstax.com/studio-js/v3.20/js/studio-feedback.js');
       _sf('4kKviXTq4zCnoB4SuKAFhZHVRZTAokybcN6uMcS1HQ4');
     `,
-  }];
+    },
+  ];
 
   // adding templates
   const temps = document.createElement('div');
@@ -151,7 +153,7 @@ export default async function decorate(block) {
   document.body.appendChild(temps);
 
   // loading scripts one by one to prevent inappropriate script execution order.
-  // eslint-disable-next-line no-restricted-syntax
+
   for (const script of scripts) {
     const newScript = document.createElement('script');
 

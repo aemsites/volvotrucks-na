@@ -1,11 +1,5 @@
-import {
-  createOptimizedPicture,
-  readBlockConfig,
-} from '../../scripts/aem.js';
-import {
-  getOrigin,
-  getDateFromTimestamp,
-} from '../../scripts/common.js';
+import { createOptimizedPicture, readBlockConfig } from '../../scripts/aem.js';
+import { getOrigin, getDateFromTimestamp } from '../../scripts/common.js';
 import { ffetch } from '../../scripts/lib-ffetch.js';
 
 async function getArticles(path, limit) {

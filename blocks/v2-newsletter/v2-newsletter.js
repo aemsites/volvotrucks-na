@@ -1,6 +1,4 @@
-import {
-  loadBlock, sampleRUM,
-} from '../../scripts/aem.js';
+import { loadBlock, sampleRUM } from '../../scripts/aem.js';
 import { getTextLabel, createElement } from '../../scripts/common.js';
 
 const blockName = 'v2-newsletter';

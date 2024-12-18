@@ -10,7 +10,7 @@
  * governing permissions and limitations under the License.
  */
 /* global WebImporter */
-/* eslint-disable no-console, class-methods-use-this, no-unused-vars */
+/* eslint-disable no-unused-vars */
 
 const createMetadata = (main, document) => {
   const meta = {};
@@ -36,7 +36,6 @@ function createSubNav(main, document) {
 
 const linkToHlxPage = (main, document, url) => {
   main.querySelectorAll('a').forEach((link) => {
-    // eslint-disable-next-line prefer-regex-literals
     if (new RegExp('^(https?:)?//').test(link.href)) {
       // leave links with domains as is
     } else if (link.href.startsWith('/')) {
@@ -48,18 +47,15 @@ const linkToHlxPage = (main, document, url) => {
 
 export default {
   /**
-     * Apply DOM operations to the provided document and return
-     * the root element to be then transformed to Markdown.
-     * @param {HTMLDocument} document The document
-     * @param {string} url The url of the page imported
-     * @param {string} html The raw html (the document is cleaned up during preprocessing)
-     * @param {object} params Object containing some parameters given by the import process.
-     * @returns {HTMLElement} The root element to be transformed
-     */
-  transformDOM: ({
-    // eslint-disable-next-line no-unused-vars
-    document, url, html, params,
-  }) => {
+   * Apply DOM operations to the provided document and return
+   * the root element to be then transformed to Markdown.
+   * @param {HTMLDocument} document The document
+   * @param {string} url The url of the page imported
+   * @param {string} html The raw html (the document is cleaned up during preprocessing)
+   * @param {object} params Object containing some parameters given by the import process.
+   * @returns {HTMLElement} The root element to be transformed
+   */
+  transformDOM: ({ document, url, html, params }) => {
     // define the main element: the one that will be transformed to Markdown
     const main = document.body;
 
@@ -92,17 +88,15 @@ export default {
   },
 
   /**
-     * Return a path that describes the document being transformed (file name, nesting...).
-     * The path is then used to create the corresponding Word document.
-     * @param {HTMLDocument} document The document
-     * @param {URL} url The url of the page imported
-     * @param {string} html The raw html (the document is cleaned up during preprocessing)
-     * @param {object} params Object containing some parameters given by the import process.
-     * @return {string} The path
-     */
-  generateDocumentPath: ({
-    document, url, html, params,
-  }) => {
+   * Return a path that describes the document being transformed (file name, nesting...).
+   * The path is then used to create the corresponding Word document.
+   * @param {HTMLDocument} document The document
+   * @param {URL} url The url of the page imported
+   * @param {string} html The raw html (the document is cleaned up during preprocessing)
+   * @param {object} params Object containing some parameters given by the import process.
+   * @return {string} The path
+   */
+  generateDocumentPath: ({ document, url, html, params }) => {
     const subNavUrl = new URL('sub-nav', url);
     return WebImporter.FileUtils.sanitizePath(subNavUrl.pathname.replace(/\.html$/, '').replace(/\/$/, ''));
   },

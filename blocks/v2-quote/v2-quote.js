@@ -1,9 +1,4 @@
-import {
-  createElement,
-  removeEmptyTags,
-  variantsClassesToBEM,
-  unwrapDivs,
-} from '../../scripts/common.js';
+import { createElement, removeEmptyTags, variantsClassesToBEM, unwrapDivs } from '../../scripts/common.js';
 
 const blockName = 'v2-quote';
 const variantClasses = ['with-background'];

@@ -10,8 +10,7 @@
  * governing permissions and limitations under the License.
  */
 /* global WebImporter */
-/* eslint-disable no-console, class-methods-use-this, no-unused-vars, no-restricted-syntax */
-/* eslint-disable no-plusplus, no-use-before-define */
+/* eslint-disable no-unused-vars */
 
 const hr = (doc) => doc.createElement('hr');
 const span = (doc, text) => {
@@ -70,7 +69,6 @@ function setArticleTags(url) {
 
 const linkToHlxPage = (main, document, url) => {
   main.querySelectorAll('a').forEach((link) => {
-    // eslint-disable-next-line prefer-regex-literals
     if (new RegExp('^(https?:)?//').test(link.href)) {
       // leave links with domains as is
     } else if (link.href.startsWith('/')) {
@@ -111,11 +109,13 @@ const createMetadata = (main, document, url) => {
 
   const { pathname } = new URL(url);
   const languages = ['fr-ca', 'en-ca'];
-  if (['/trucks/', '/our-difference/']
-    .flatMap((path) => [path, ...languages.map((lang) => `/${lang}${path}`)])
-    .find((path) => pathname.startsWith(path))) {
+  if (
+    ['/trucks/', '/our-difference/']
+      .flatMap((path) => [path, ...languages.map((lang) => `/${lang}${path}`)])
+      .find((path) => pathname.startsWith(path))
+  ) {
     const styles = meta.Style ? meta.Style.split(', ') : [];
-    if (!(styles.includes('center'))) {
+    if (!styles.includes('center')) {
       styles.push('center');
     }
     meta.Style = styles.join(', ');
@@ -137,14 +137,13 @@ function makeIndexPage(url) {
  * Subtitles are marked with italics and then rendered in gray.
  */
 const styleSubtitleHeaders = (main, document, url) => {
-  document.querySelectorAll(':is(h1, h2, h3, h4, h5, h6):is(.subtitle, .product-grid-subtitle)')
-    .forEach((header) => {
-      const em = document.createElement('em');
-      em.innerHTML = header.innerHTML;
+  document.querySelectorAll(':is(h1, h2, h3, h4, h5, h6):is(.subtitle, .product-grid-subtitle)').forEach((header) => {
+    const em = document.createElement('em');
+    em.innerHTML = header.innerHTML;
 
-      header.textContent = '';
-      header.appendChild(em);
-    });
+    header.textContent = '';
+    header.appendChild(em);
+  });
 };
 
 const createMagazineArticles = (main, document, url) => {
@@ -236,46 +235,47 @@ function swapHero(main, document) {
 }
 
 function convertTopTenListItem(main, document) {
-  [...document.querySelectorAll('#Form1 > div.container.main-content.allow-full-width > div[data-layout="top-ten"]')]
-    .forEach((topTen) => {
-      const elements = topTen.querySelectorAll('li.top-ten-item');
-      if (elements) {
-        let currentRow = [];
-        let startNewTable = false;
+  [...document.querySelectorAll('#Form1 > div.container.main-content.allow-full-width > div[data-layout="top-ten"]')].forEach((topTen) => {
+    const elements = topTen.querySelectorAll('li.top-ten-item');
+    if (elements) {
+      let currentRow = [];
+      let startNewTable = false;
 
-        elements.forEach((li) => {
-          const fullRow = li.classList.contains('full');
-          if (fullRow) startNewTable = true;
+      elements.forEach((li) => {
+        const fullRow = li.classList.contains('full');
+        if (fullRow) {
+          startNewTable = true;
+        }
 
-          if (startNewTable && currentRow.length) {
-            // flush the current row, start a new table
-            const cells = [['Teaser Grid']];
-            cells.push([...currentRow]);
-            const table = WebImporter.DOMUtils.createTable(cells, document);
-            topTen.append(table);
-
-            currentRow = [];
-          }
-
-          const div = document.createElement('div');
-          const heroImg = li.querySelector('figure');
-          div.append(WebImporter.DOMUtils.replaceBackgroundByImg(heroImg, document));
-
-          div.append(...li.childNodes);
-          currentRow.push(div);
-
-          li.remove();
-          startNewTable = !!fullRow;
-        });
-
-        if (currentRow.length) {
+        if (startNewTable && currentRow.length) {
+          // flush the current row, start a new table
           const cells = [['Teaser Grid']];
           cells.push([...currentRow]);
           const table = WebImporter.DOMUtils.createTable(cells, document);
           topTen.append(table);
+
+          currentRow = [];
         }
+
+        const div = document.createElement('div');
+        const heroImg = li.querySelector('figure');
+        div.append(WebImporter.DOMUtils.replaceBackgroundByImg(heroImg, document));
+
+        div.append(...li.childNodes);
+        currentRow.push(div);
+
+        li.remove();
+        startNewTable = !!fullRow;
+      });
+
+      if (currentRow.length) {
+        const cells = [['Teaser Grid']];
+        cells.push([...currentRow]);
+        const table = WebImporter.DOMUtils.createTable(cells, document);
+        topTen.append(table);
       }
-    });
+    }
+  });
 }
 
 function makeTruckHero(main, document) {
@@ -313,9 +313,15 @@ function makeGridItem(teaser) {
   const txtH4 = teaser.querySelector('div.text > h4');
   const gi = document.createElement('div');
   const giInnerItems = [`<img src='${img.src}'>`];
-  if (newA) giInnerItems.push(`<a href='${newA}'>${newA}</a>`);
-  if (txtH3) giInnerItems.push(txtH3.innerHTML);
-  if (txtH4) giInnerItems.push(txtH4.innerHTML);
+  if (newA) {
+    giInnerItems.push(`<a href='${newA}'>${newA}</a>`);
+  }
+  if (txtH3) {
+    giInnerItems.push(txtH3.innerHTML);
+  }
+  if (txtH4) {
+    giInnerItems.push(txtH4.innerHTML);
+  }
   gi.innerHTML = giInnerItems.join('<br/>');
 
   if (newA === '') {
@@ -330,9 +336,7 @@ function makeGridItem(teaser) {
  * @return e.g. 8
  */
 function getColumnWidth(div) {
-  const columns = [...div.classList]
-    .filter((name) => name.startsWith('col-'))
-    .map((name) => name.match(/\d+/)[0]);
+  const columns = [...div.classList].filter((name) => name.startsWith('col-')).map((name) => name.match(/\d+/)[0]);
 
   if (columns) {
     return columns[0];
@@ -383,14 +387,15 @@ function makeGenericGrid(main, document) {
     const columnLayout = [];
     gridColumns.forEach((gridColumn, columnIndex) => {
       const columnWidth = getColumnWidth(gridColumn);
-      if (columnWidth) columnLayout.push(columnWidth);
+      if (columnWidth) {
+        columnLayout.push(columnWidth);
+      }
     });
     if (columnLayout.length >= 2) {
       variation = ` (layout ${columnLayout.join('-')})`;
     }
 
-    const cells = [[`Teaser Grid${variation}`],
-      ...dataCells];
+    const cells = [[`Teaser Grid${variation}`], ...dataCells];
     const teaserGrid = WebImporter.DOMUtils.createTable(cells, document);
     grid.replaceWith(teaserGrid);
   });
@@ -435,11 +440,7 @@ function makeProductCarousel(main, document) {
       const wrap = car.querySelector('div.carousel-wrapper');
       wrap.querySelectorAll('div.product').forEach((it) => {
         const item = document.createElement('div');
-        item.append(
-          it.querySelector('img'),
-          document.createElement('br'),
-          it.querySelector('.product-title'),
-        );
+        item.append(it.querySelector('img'), document.createElement('br'), it.querySelector('.product-title'));
         items.push(item);
       });
       cells.push(...distributeItemsInColumns(items, 3));
@@ -460,11 +461,7 @@ function makeProductGrid(main, document) {
       const wrap = car.querySelector('div.carousel-wrapper');
       car.querySelectorAll('.hidden-xs div.product').forEach((it) => {
         const item = document.createElement('div');
-        item.append(
-          it.querySelector('img'),
-          document.createElement('br'),
-          it.querySelector('.wrapper'),
-        );
+        item.append(it.querySelector('img'), document.createElement('br'), it.querySelector('.wrapper'));
         items.push(item);
       });
       cells.push(...distributeItemsInColumns(items, 3));
@@ -479,18 +476,13 @@ function makeProductGrid(main, document) {
 }
 
 function makeVideo(main, document) {
-  document.querySelectorAll('#Form1 > div.container.main-content.allow-full-width > div.embeddedVideo iframe[src]')
-    .forEach((video) => {
-      const link = document.createElement('a');
-      link.href = video.src;
-      link.textContent = video.src;
-      const embed = WebImporter.DOMUtils.createTable([['Embed'], [
-        link,
-      ], [
-        span(document, 'PLEASE FIX LINK TO FALLBACK VIDEO'),
-      ]], document);
-      video.replaceWith(embed);
-    });
+  document.querySelectorAll('#Form1 > div.container.main-content.allow-full-width > div.embeddedVideo iframe[src]').forEach((video) => {
+    const link = document.createElement('a');
+    link.href = video.src;
+    link.textContent = video.src;
+    const embed = WebImporter.DOMUtils.createTable([['Embed'], [link], [span(document, 'PLEASE FIX LINK TO FALLBACK VIDEO')]], document);
+    video.replaceWith(embed);
+  });
 }
 
 function convertArialCapsTitle(main, document) {
@@ -505,7 +497,9 @@ function convertArialCapsTitle(main, document) {
 }
 
 function makeImageText(main, document) {
-  const it = document.querySelectorAll('#Form1 > div.container.main-content.allow-full-width > div.imageText > div:not(.imageText-fullsize-outsideText,.imageText-only-text)');
+  const it = document.querySelectorAll(
+    '#Form1 > div.container.main-content.allow-full-width > div.imageText > div:not(.imageText-fullsize-outsideText,.imageText-only-text)',
+  );
   if (it) {
     console.log(`image text(s) found: ${it.length}`);
     it.forEach((its) => {
@@ -531,15 +525,22 @@ function mergeEqualConsecutiveBlocks(main, document) {
   main.querySelectorAll('table').forEach((table) => {
     const blockTitle = table.querySelector('th')?.textContent;
     const blockTypeWithoutVariant = blockTitle?.replaceAll(/\(.*$/g, '').trim();
-    if (!blocksToAutomerge.includes(blockTypeWithoutVariant)) return;
+    if (!blocksToAutomerge.includes(blockTypeWithoutVariant)) {
+      return;
+    }
 
     // merge if previous element is of the same kind and exact same variation
     const previousTable = table.previousElementSibling;
-    if (previousTable && previousTable.tagName === 'TABLE'
-            && previousTable.querySelector('th').textContent === table.querySelector('th').textContent) {
+    if (
+      previousTable &&
+      previousTable.tagName === 'TABLE' &&
+      previousTable.querySelector('th').textContent === table.querySelector('th').textContent
+    ) {
       console.log(`merging ${blockTypeWithoutVariant} block`);
       table.childNodes.forEach((row, index) => {
-        if (index === 0) return;
+        if (index === 0) {
+          return;
+        }
         previousTable.appendChild(row);
       });
       table.remove();
@@ -561,7 +562,9 @@ function makeTabbedFeatures(main, document) {
       if (contents.length === labels.length) {
         const elements = [hr(document)];
         const titleWrapper = panel.querySelector('.title-wrapper');
-        if (titleWrapper) elements.unshift(titleWrapper);
+        if (titleWrapper) {
+          elements.unshift(titleWrapper);
+        }
         for (let i = 0; i < contents.length; i++) {
           elements.push(contents[i]);
           const metadata = [['Section Metadata'], ['Tabs', labels[i]]];
@@ -597,16 +600,14 @@ function makeTabbedCarousel(main, document) {
           const fallbackLink = document.createElement('a');
           fallbackLink.textContent = 'Fallback Vide Link Missing';
           fallbackLink.href = 'https://main--vg-volvotrucks-us-rd--netcentric.hlx.page/media_188a071943b60070cb995240235c66862e9ca5e95.mp4';
-          const cells = [
-            ['Embed (autoplay, loop, full width)'],
-            [fallbackLink],
-            [ytLink],
-          ];
+          const cells = [['Embed (autoplay, loop, full width)'], [fallbackLink], [ytLink]];
           a.replaceWith(WebImporter.DOMUtils.createTable(cells, document));
         });
 
         const metadata = [['Section Metadata']];
-        if (fullWidth) metadata.push(['Style', 'Full Width']);
+        if (fullWidth) {
+          metadata.push(['Style', 'Full Width']);
+        }
         metadata.push(['Carousel', slide.getAttribute('tab-title')]);
         section.appendChild(WebImporter.DOMUtils.createTable(metadata, document));
         section.appendChild(hr(document));
@@ -614,8 +615,12 @@ function makeTabbedCarousel(main, document) {
       });
       if (sections.length) {
         const h2 = c.querySelector('h2');
-        if (h2) c.insertAdjacentElement('beforebegin', h2);
-        if (c.previousElementSibling?.tagName !== 'HR') c.insertAdjacentElement('beforebegin', hr(document));
+        if (h2) {
+          c.insertAdjacentElement('beforebegin', h2);
+        }
+        if (c.previousElementSibling?.tagName !== 'HR') {
+          c.insertAdjacentElement('beforebegin', hr(document));
+        }
         c.replaceWith(...sections);
       }
     });
@@ -647,10 +652,7 @@ function makeHubTextBlock(main, document) {
       }
       const form = WebImporter.DOMUtils.createTable(cells, document);
       elements.push(form);
-      elements.push(WebImporter.DOMUtils.createTable([
-        ['Section Metadata'],
-        ['Background', img],
-      ], document));
+      elements.push(WebImporter.DOMUtils.createTable([['Section Metadata'], ['Background', img]], document));
       elements.push(hr(document));
       block.replaceWith(...elements);
     });
@@ -683,10 +685,15 @@ function makeNewsFeaturesPanelAndImageTextGrid(main, document) {
     console.log(`news features panel found: ${nfp.length}`);
     nfp.forEach((panel) => {
       let columns = -1;
-      if (panel.firstElementChild.matches('.newsFeatures-column-3, .imageTextGrid-3')) columns = 3;
-      else if (panel.firstElementChild.matches('.newsFeatures-column-2, .imageTextGrid-2')) columns = 2;
-      else if (panel.firstElementChild.matches('.imageTextGrid-4')) columns = 4;
-      else if (panel.querySelector('.row .col-sm-6')) columns = 2;
+      if (panel.firstElementChild.matches('.newsFeatures-column-3, .imageTextGrid-3')) {
+        columns = 3;
+      } else if (panel.firstElementChild.matches('.newsFeatures-column-2, .imageTextGrid-2')) {
+        columns = 2;
+      } else if (panel.firstElementChild.matches('.imageTextGrid-4')) {
+        columns = 4;
+      } else if (panel.querySelector('.row .col-sm-6')) {
+        columns = 2;
+      }
 
       // this should handle the body builder news block - which isn't a Teaser Card
       if (panel.previousElementSibling && panel.previousElementSibling.querySelector('.volvo-bodybuilder-header')) {
@@ -726,8 +733,9 @@ function makeNewsFeaturesPanelAndImageTextGrid(main, document) {
           }
 
           const links = item.querySelector('.news-item-links'); // display: none
-          if (links && !links.classList.contains('hasLinks')) links.remove();
-          else if (links) {
+          if (links && !links.classList.contains('hasLinks')) {
+            links.remove();
+          } else if (links) {
             const ul = document.createElement('ul');
             links.querySelectorAll('a').forEach((a) => {
               const li = document.createElement('li');
@@ -739,7 +747,9 @@ function makeNewsFeaturesPanelAndImageTextGrid(main, document) {
 
           item.querySelectorAll('h3,h4').forEach((heading) => {
             // remove empty headings
-            if (heading.textContent.trim() === '') heading.remove();
+            if (heading.textContent.trim() === '') {
+              heading.remove();
+            }
           });
 
           item.querySelectorAll('a > img').forEach((img) => {
@@ -761,7 +771,9 @@ function makeNewsFeaturesPanelAndImageTextGrid(main, document) {
         if (cells.length > 1) {
           const cols = WebImporter.DOMUtils.createTable(cells, document);
           const headings = panel.querySelectorAll('h3,h2');
-          if (headings && headings.length) headings.forEach((heading) => panel.insertAdjacentElement('beforebegin', heading));
+          if (headings && headings.length) {
+            headings.forEach((heading) => panel.insertAdjacentElement('beforebegin', heading));
+          }
           panel.replaceWith(cols);
         }
       } else {
@@ -814,8 +826,11 @@ function makeImageTextGrid(main, document) {
         const cells = [['Columns']];
         const imageContainer = panel.querySelector('.image-container');
         const contentContainer = panel.querySelector('.wrapper');
-        if (imageLeft) cells.push([imageContainer, contentContainer]);
-        else cells.push([contentContainer, imageContainer]);
+        if (imageLeft) {
+          cells.push([imageContainer, contentContainer]);
+        } else {
+          cells.push([contentContainer, imageContainer]);
+        }
 
         const links = contentContainer.querySelectorAll('a');
         links.forEach((a) => {
@@ -875,7 +890,9 @@ function makeNewsArticle(main, document) {
 
     newsArticle.forEach((article) => {
       // ignore empty divs to prevent duplicate fragments
-      if (!article.textContent.trim()) return;
+      if (!article.textContent.trim()) {
+        return;
+      }
 
       const cells = [['Fragment']];
       cells.push(['https://main--vg-volvotrucks-us-rd--netcentric.hlx.page/fragments/press-release-boilerplate']);
@@ -898,7 +915,9 @@ function makeSpecificationTable(main, document) {
       });
 
       // remove mobile versions mobileSpecsContainer
-      if (st.nextElementSibling?.matches('.mobileSpecsContainer')) st.nextElementSibling.remove();
+      if (st.nextElementSibling?.matches('.mobileSpecsContainer')) {
+        st.nextElementSibling.remove();
+      }
 
       const cells = [['Specifications']];
       let headerTable = st.firstElementChild;
@@ -913,7 +932,9 @@ function makeSpecificationTable(main, document) {
         const headerRow = [name.textContent.trim()];
         titles.forEach((title, i) => {
           const div = document.createElement('div');
-          if (images[i]) div.append(images[i], document.createElement('br'));
+          if (images[i]) {
+            div.append(images[i], document.createElement('br'));
+          }
           div.append(...title.childNodes);
           headerRow.push(div);
         });
@@ -922,11 +943,13 @@ function makeSpecificationTable(main, document) {
 
       function mapRows(content) {
         content.querySelectorAll('tr').forEach((tr, row) => {
-          cells.push([...tr.querySelectorAll('td')].map((td) => {
-            const div = document.createElement('div');
-            div.innerHTML = td.innerHTML;
-            return div;
-          }));
+          cells.push(
+            [...tr.querySelectorAll('td')].map((td) => {
+              const div = document.createElement('div');
+              div.innerHTML = td.innerHTML;
+              return div;
+            }),
+          );
         });
       }
 
@@ -1024,11 +1047,7 @@ function makeKeyFacts(main, document) {
 
     const cells = [
       ['Key Facts (wide columns, trailing line)'],
-      [
-        convertColumnContent(first),
-        convertColumnContent(second),
-        convertColumnContent(thrid),
-      ],
+      [convertColumnContent(first), convertColumnContent(second), convertColumnContent(thrid)],
     ];
     source.replaceWith(WebImporter.DOMUtils.createTable(cells, document));
   });
@@ -1057,14 +1076,7 @@ function makeKeyFactsFromStats(main, document) {
       return div;
     }
 
-    const cells = [
-      ['Key Facts (wide columns)'],
-      [
-        convertColumnContent(first),
-        convertColumnContent(second),
-        convertColumnContent(thrid),
-      ],
-    ];
+    const cells = [['Key Facts (wide columns)'], [convertColumnContent(first), convertColumnContent(second), convertColumnContent(thrid)]];
     row.replaceWith(WebImporter.DOMUtils.createTable(cells, document));
   });
 }
@@ -1099,23 +1111,29 @@ function makeModelIntroduction(main, document) {
   document.querySelectorAll('.modelIntroduction').forEach((mi) => {
     const elements = [];
     const heading = mi.querySelector('h2');
-    if (heading) elements.push(heading);
+    if (heading) {
+      elements.push(heading);
+    }
     const description = mi.querySelector('h2 ~ p.description');
-    if (description) elements.push(description);
+    if (description) {
+      elements.push(description);
+    }
     const specs = mi.querySelectorAll('.model-spec');
     if (specs.length === 0) {
       mi.remove();
       return;
     }
     const cells = [['Columns (center)']];
-    cells.push([...mi].map((ms) => {
-      const icon = ms.querySelector('.fa');
-      if (icon) {
-        const [, iconName] = [...icon.classList];
-        icon.innerHTML = `:${iconName}:`;
-      }
-      return ms;
-    }));
+    cells.push(
+      [...mi].map((ms) => {
+        const icon = ms.querySelector('.fa');
+        if (icon) {
+          const [, iconName] = [...icon.classList];
+          icon.innerHTML = `:${iconName}:`;
+        }
+        return ms;
+      }),
+    );
     elements.push(WebImporter.DOMUtils.createTable(cells, document));
     mi.replaceWith(...elements);
   });
@@ -1175,11 +1193,7 @@ function makeEmbedVideoFromYoutubeLink(main, document) {
       const link = document.createElement('a');
       link.href = yt.nextElementSibling.src;
       link.textContent = yt.nextElementSibling.src;
-      const embed = WebImporter.DOMUtils.createTable([['Embed'], [
-        link,
-      ], [
-        span(document, 'PLEASE FIX LINK TO FALLBACK VIDEO'),
-      ]], document);
+      const embed = WebImporter.DOMUtils.createTable([['Embed'], [link], [span(document, 'PLEASE FIX LINK TO FALLBACK VIDEO')]], document);
       yt.closest('div').querySelector('.yt_thumbnail')?.remove();
       yt.closest('div').querySelector('a.yt_play')?.remove();
       yt.closest('p').replaceWith(embed);
@@ -1190,17 +1204,14 @@ function makeEmbedVideoFromYoutubeLink(main, document) {
 // e.g.https://www.volvotrucks.us/news-and-stories/press-releases/2015/december/advantage-truck-center-opens-in-greensboro-expanding-volvo-trucks-sales-and-service/
 function removeOldNewsCarousel(main, document) {
   main.querySelectorAll('.newsArticle ').forEach((article) => {
-    if (article.previousElementSibling?.querySelector("[onclick='getNextArticle()']")) {
+    if (article.previousElementSibling?.querySelector('[onclick="getNextArticle()"]')) {
       article.previousElementSibling.remove();
     }
   });
 }
 
 export default {
-  transform: async ({
-    // eslint-disable-next-line no-unused-vars
-    document, url, html, params,
-  }) => {
+  transform: async ({ document, url, html, params }) => {
     // define the main element: the one that will be transformed to Markdown
     const main = document.body;
     const results = [];

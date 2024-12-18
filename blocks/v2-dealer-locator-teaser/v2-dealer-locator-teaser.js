@@ -11,7 +11,7 @@ function initBackgroundPosition(classList, breakpoint) {
   let backgroundPositionValue = 'unset';
 
   if (backgroudPositionClass) {
-    let [,, xPosition, yPosition] = backgroudPositionClass.split('-');
+    let [, , xPosition, yPosition] = backgroudPositionClass.split('-');
 
     // workaround, '-' character classes are not supported
     // so for '-45px' we need to put 'm45px'

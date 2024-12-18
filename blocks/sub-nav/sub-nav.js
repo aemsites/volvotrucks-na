@@ -44,8 +44,9 @@ async function createSubNav(block, ref) {
       return linkPathname === currentPathname;
     });
 
-    if (activeLink) activeLink.closest('li').classList.add('active');
-    else {
+    if (activeLink) {
+      activeLink.closest('li').classList.add('active');
+    } else {
       // if there is no active link, create one for the current page for mobile
       const [title] = document.title.split('|');
       ul.firstElementChild.insertAdjacentHTML('afterend', `<li class="active synthetic"><a href="#">${title}</a></li>`);

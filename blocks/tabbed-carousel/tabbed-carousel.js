@@ -11,7 +11,7 @@ function stripEmptyTags(main, child) {
 function setActive(tabNavigation, tabContainer, index) {
   if (!tabNavigation.children[index].classList.contains('active')) {
     [tabNavigation, tabContainer].forEach((c) => c.querySelectorAll('.active').forEach((i) => i.classList.remove('active')));
-    // eslint-disable-next-line no-use-before-define
+
     handlingVideo(tabContainer, index);
     tabNavigation.children[index].classList.add('active');
     tabContainer.children[index].classList.add('active');
@@ -86,7 +86,9 @@ export default function decorate(block) {
   // update the button indicator on scroll
   let scrollTimeout;
   tabContainer.addEventListener('scroll', () => {
-    if (scrollTimeout) clearTimeout(scrollTimeout);
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout);
+    }
     scrollTimeout = setTimeout(() => {
       const { scrollLeft } = tabContainer;
       const { clientWidth } = tabContainer.firstElementChild;

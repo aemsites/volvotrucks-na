@@ -1,9 +1,5 @@
-import {
-  loadBlock, sampleRUM,
-} from '../../scripts/aem.js';
-import {
-  createElement,
-} from '../../scripts/common.js';
+import { loadBlock, sampleRUM } from '../../scripts/aem.js';
+import { createElement } from '../../scripts/common.js';
 
 const blockName = 'v2-event-notify';
 
@@ -12,7 +8,10 @@ let errorText;
 
 // Convert date to ICS format (e.g., 20231210T120000Z)
 function formatDateToICS(date) {
-  return date.toISOString().replace(/[-:]/g, '').replace(/\.\d{3}/, '');
+  return date
+    .toISOString()
+    .replace(/[-:]/g, '')
+    .replace(/\.\d{3}/, '');
 }
 
 // Generate UID (e.g., 20231210T120000Z-sdfijk@exmaple.com)
@@ -73,7 +72,6 @@ const onSuccess = async (calendarEventData) => {
 };
 
 const onError = (error) => {
-  // eslint-disable-next-line no-console
   console.error(error);
 
   const block = document.querySelector(`.${blockName}__container`);

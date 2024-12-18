@@ -1,4 +1,3 @@
-/* eslint-disable import/prefer-default-export */
 /*
  * Copyright 2023 Adobe. All rights reserved.
  * This file is licensed to you under the Apache License, Version 2.0 (the "License");
@@ -10,18 +9,21 @@
  * OF ANY KIND, either express or implied. See the License for the specific language
  * governing permissions and limitations under the License.
  */
-/* eslint-disable no-shadow,no-await-in-loop,no-restricted-syntax,max-len */
 
 async function* request(url, context) {
   const { chunks, sheet, fetch } = context;
   for (let offset = 0, total = Infinity; offset < total; offset += chunks) {
     const params = new URLSearchParams(`offset=${offset}&limit=${chunks}`);
-    if (sheet) params.append('sheet', sheet);
+    if (sheet) {
+      params.append('sheet', sheet);
+    }
     const resp = await fetch(`${url}?${params.toString()}`);
     if (resp.ok) {
       const json = await resp.json();
       total = json.total;
-      for (const entry of json.data) yield entry;
+      for (const entry of json.data) {
+        yield entry;
+      }
     } else {
       return;
     }
@@ -79,14 +81,18 @@ async function* map(upstream, context, fn, maxInFlight = 5) {
     if (promises.length === maxInFlight) {
       for (entry of promises) {
         entry = await entry;
-        if (entry) yield entry;
+        if (entry) {
+          yield entry;
+        }
       }
       promises.splice(0, promises.length);
     }
   }
   for (let entry of promises) {
     entry = await entry;
-    if (entry) yield entry;
+    if (entry) {
+      yield entry;
+    }
   }
 }
 
@@ -104,14 +110,19 @@ function slice(upstream, context, from, to) {
 
 function follow(upstream, context, name, maxInFlight = 5) {
   const { fetch, parseHtml } = context;
-  return map(upstream, context, async (entry) => {
-    const value = entry[name];
-    if (value) {
-      const resp = await fetch(value);
-      return { ...entry, [name]: resp.ok ? parseHtml(await resp.text()) : null };
-    }
-    return entry;
-  }, maxInFlight);
+  return map(
+    upstream,
+    context,
+    async (entry) => {
+      const value = entry[name];
+      if (value) {
+        const resp = await fetch(value);
+        return { ...entry, [name]: resp.ok ? parseHtml(await resp.text()) : null };
+      }
+      return entry;
+    },
+    maxInFlight,
+  );
 }
 
 async function all(upstream) {
@@ -123,7 +134,6 @@ async function all(upstream) {
 }
 
 async function first(upstream) {
-  /* eslint-disable-next-line no-unreachable-loop */
   for await (const entry of upstream) {
     return entry;
   }
@@ -169,7 +179,9 @@ export function ffetch(url) {
       // request smaller chunks in save data mode
       chunks = 64;
     }
-  } catch (e) { /* ignore */ }
+  } catch (e) {
+    /* ignore */
+  }
 
   const context = { chunks, fetch, parseHtml };
   const generator = request(url, context);

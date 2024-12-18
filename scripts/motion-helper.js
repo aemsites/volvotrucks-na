@@ -23,20 +23,14 @@ export const smoothScrollHorizontal = (element, targetX, duration) => {
     // Find the t value for the given x in Bezier curve
     let t = x;
     for (let i = 0; i < 5; i += 1) {
-      const xT = ((1 - t) ** 3) * p0.x
-                 + 3 * ((1 - t) ** 2) * t * p1.x
-                 + 3 * (1 - t) * (t ** 2) * p2.x
-                 + (t ** 3) * p3.x;
+      const xT = (1 - t) ** 3 * p0.x + 3 * (1 - t) ** 2 * t * p1.x + 3 * (1 - t) * t ** 2 * p2.x + t ** 3 * p3.x;
 
       const difference = xT - x;
       t -= difference / 2;
     }
 
     // Return the y value for the computed t
-    return ((1 - t) ** 3) * p0.y
-         + 3 * ((1 - t) ** 2) * t * p1.y
-         + 3 * (1 - t) * (t ** 2) * p2.y
-         + (t ** 3) * p3.y;
+    return (1 - t) ** 3 * p0.y + 3 * (1 - t) ** 2 * t * p1.y + 3 * (1 - t) * t ** 2 * p2.y + t ** 3 * p3.y;
   }
 
   const ease = (time, startValue, changeInValue, easeDuration) => {

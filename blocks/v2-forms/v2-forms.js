@@ -16,9 +16,13 @@ function constructPayload(form) {
   [...form.elements].forEach((fe) => {
     if (fe.name) {
       if (fe.type === 'radio') {
-        if (fe.checked) payload[fe.name] = fe.value;
+        if (fe.checked) {
+          payload[fe.name] = fe.value;
+        }
       } else if (fe.type === 'checkbox') {
-        if (fe.checked) payload[fe.name] = payload[fe.name] ? `${payload[fe.name]},${fe.value}` : fe.value;
+        if (fe.checked) {
+          payload[fe.name] = payload[fe.name] ? `${payload[fe.name]},${fe.value}` : fe.value;
+        }
       } else if (fe.type !== 'file') {
         payload[fe.name] = fe.value;
       }
@@ -86,7 +90,7 @@ const addForm = async (block) => {
   block.style.display = displayValue;
 
   const formObj = document.querySelector('form');
-  // eslint-disable-next-line prefer-destructuring
+
   formObj.addEventListener('submit', (e) => {
     if (formContent.onSubmit) {
       e.preventDefault();
@@ -111,13 +115,16 @@ const addForm = async (block) => {
 };
 
 export default async function decorate(block) {
-  const observer = new IntersectionObserver((entries) => {
-    if (entries.some((e) => e.isIntersecting)) {
-      observer.disconnect();
-      addForm(block);
-    }
-  }, {
-    rootMargin: '300px',
-  });
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        observer.disconnect();
+        addForm(block);
+      }
+    },
+    {
+      rootMargin: '300px',
+    },
+  );
   observer.observe(block);
 }

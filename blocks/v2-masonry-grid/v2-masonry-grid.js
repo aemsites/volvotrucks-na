@@ -1,12 +1,6 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
-import {
-  isVideoLink,
-  createVideo,
-} from '../../scripts/video-helper.js';
-import {
-  createElement,
-  removeEmptyTags,
-} from '../../scripts/common.js';
+import { isVideoLink, createVideo } from '../../scripts/video-helper.js';
+import { createElement, removeEmptyTags } from '../../scripts/common.js';
 
 const blockName = 'v2-masonry-grid';
 

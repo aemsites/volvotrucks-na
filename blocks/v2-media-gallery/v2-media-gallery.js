@@ -3,7 +3,9 @@ import { createElement, adjustPretitle } from '../../scripts/common.js';
 export default function decorate(block) {
   const blockName = 'v2-media-gallery';
   const rows = [...block.querySelectorAll(':scope > div')];
-  rows.forEach((row) => { row.classList.add(`${blockName}__row`); });
+  rows.forEach((row) => {
+    row.classList.add(`${blockName}__row`);
+  });
 
   const cols = [...block.querySelectorAll(':scope > div > div')];
   cols.forEach((col) => {
@@ -28,7 +30,9 @@ export default function decorate(block) {
       figure.append(figCaption);
     }
   });
-  [...pictureCol.querySelectorAll('ul > li img')].forEach((el) => { el.classList.add(`${blockName}__image`); });
+  [...pictureCol.querySelectorAll('ul > li img')].forEach((el) => {
+    el.classList.add(`${blockName}__image`);
+  });
 
   block.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((el) => el.classList.add(`${blockName}__heading`));
   block.querySelectorAll('.pretitle').forEach((el) => {

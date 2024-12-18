@@ -18,11 +18,7 @@ const buildChartMPG = (data) => {
   const chartValues = [].concat(...perTrucks.map((v, i) => [v, totalSavings[i]]));
 
   const yAxisStart = 300;
-  const {
-    valueToPoints,
-    chartValueRange,
-    bottomEdgeValue,
-  } = calcValuesToPoints(chartValues, yAxisStart, { bottomPadding: 0 });
+  const { valueToPoints, chartValueRange, bottomEdgeValue } = calcValuesToPoints(chartValues, yAxisStart, { bottomPadding: 0 });
 
   const chartHeight = Number(chartValueRange).toFixed(0);
   const divisions = 6;
@@ -74,24 +70,28 @@ const buildChartMPG = (data) => {
 
     return `
     <rect
-      x="${idx % 2 ? (75 + (section * idx)) : (95 + (section * idx))}"
+      x="${idx % 2 ? 75 + section * idx : 95 + section * idx}"
       y="${yAxisStart - barHeight}"
       width="${barWidth}"
       height="${barHeight}"
       fill="${idx % 2 ? colorArray[1] : colorArray[0]}"
       data-z-index="4">
     </rect>
-    ${idx % 2 ? `
+    ${
+      idx % 2
+        ? `
       <text
-        x="${60 + (section * idx)}"
+        x="${60 + section * idx}"
         y="${330}"
         text-anchor="middle"
         data-z-index="4"
         aria-hidden="true"
         class="year-label"
       >
-        Year ${0.5 + (idx / 2)}
-      </text>` : ''}
+        Year ${0.5 + idx / 2}
+      </text>`
+        : ''
+    }
     `;
   })}
   </g>
@@ -99,7 +99,7 @@ const buildChartMPG = (data) => {
     <!-- LEFT VALUES AND LINES -->
     <g data-z-index="3" aria-hidden="true" class="side-labels">
   ${labelValues.map((e) => {
-    const roundedNumber = (Math.round(e / 100)) * 100;
+    const roundedNumber = Math.round(e / 100) * 100;
     const yValue = roundedNumber.toFixed(0);
     const yPosition = yAxisStart - valueToPoints(e);
 

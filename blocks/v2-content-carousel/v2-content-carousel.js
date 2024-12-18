@@ -30,16 +30,19 @@ const updateActiveClass = (elements, targetElement, carousel) => {
 
 const listenScroll = (carousel) => {
   const elements = carousel.querySelectorAll(`.${blockName}__images-list-item`);
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        updateActiveClass(elements, entry.target, carousel);
-      }
-    });
-  }, {
-    root: carousel,
-    threshold: 1,
-  });
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          updateActiveClass(elements, entry.target, carousel);
+        }
+      });
+    },
+    {
+      root: carousel,
+      threshold: 1,
+    },
+  );
 
   elements.forEach((el) => {
     io.observe(el);
@@ -62,14 +65,17 @@ const setCarouselPosition = (carousel, index) => {
 };
 
 const navigate = (carousel, direction) => {
-  if (carousel.classList.contains('is-animating')) return;
+  if (carousel.classList.contains('is-animating')) {
+    return;
+  }
 
   const activeItem = carousel.querySelector(`.${blockName}__images-list-item.active`);
   let index = [...activeItem.parentNode.children].indexOf(activeItem);
 
   if (direction === 'left') {
     index -= 1;
-    if (index === -1) { // Go to the last item if at the start
+    if (index === -1) {
+      // Go to the last item if at the start
       index = carousel.childElementCount - 1;
     }
   } else {
@@ -109,7 +115,9 @@ const createArrowControls = (carousel) => {
 
 export default function decorate(block) {
   const rows = [...block.querySelectorAll(':scope > div')];
-  rows.forEach((row) => { row.classList.add(`${blockName}__row`); });
+  rows.forEach((row) => {
+    row.classList.add(`${blockName}__row`);
+  });
 
   const cols = [...block.querySelectorAll(':scope > div > div')];
   cols.forEach((col) => {
@@ -136,7 +144,9 @@ export default function decorate(block) {
     }
   });
 
-  [...pictureCol.querySelectorAll('ul > li img')].forEach((el) => { el.classList.add(`${blockName}__image`); });
+  [...pictureCol.querySelectorAll('ul > li img')].forEach((el) => {
+    el.classList.add(`${blockName}__image`);
+  });
 
   block.querySelectorAll('h1, h2, h3, h4, h5, h6').forEach((el) => el.classList.add(`${blockName}__heading`));
 

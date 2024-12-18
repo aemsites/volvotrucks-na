@@ -11,7 +11,6 @@ const addForm = async (block) => {
   const thankYou = block.firstElementChild.nextElementSibling;
   const data = await fetch(`${window.hlx.codeBasePath}/blocks/eloqua-form/forms/${formName}.html`);
   if (!data.ok) {
-    /* eslint-disable-next-line no-console */
     console.error(`failed to load form: ${formName}`);
     block.innerHTML = '';
     return;
@@ -28,8 +27,9 @@ const addForm = async (block) => {
         const body = new FormData(this);
         const { action, method } = this;
         fetch(action, { method, body, redirect: 'manual' }).then((resp) => {
-          /* eslint-disable-next-line no-console */
-          if (!resp.ok) console.error(`form submission failed: ${resp.status} / ${resp.statusText}`);
+          if (!resp.ok) {
+            console.error(`form submission failed: ${resp.status} / ${resp.statusText}`);
+          }
           const firstContent = thankYou.firstElementChild;
           if (firstContent.tagName === 'A') {
             // redirect to thank you page
@@ -62,7 +62,7 @@ const addForm = async (block) => {
   });
 
   // loading scripts one by one to prevent inappropriate script execution order.
-  // eslint-disable-next-line no-restricted-syntax
+
   for (const script of [...block.querySelectorAll('script')]) {
     let waitForLoad = Promise.resolve();
     // the script element added by innerHTML is NOT executed
@@ -85,7 +85,6 @@ const addForm = async (block) => {
     script.remove();
     document.body.append(newScript);
 
-    // eslint-disable-next-line no-await-in-loop
     await waitForLoad;
   }
 
@@ -138,15 +137,22 @@ export default async function decorate(block) {
   }
 
   const isMagazineTemplate = document.querySelector('meta[content="magazine"]');
-  const observer = new IntersectionObserver((entries) => {
-    if (entries.some((e) => e.isIntersecting)) {
-      observer.disconnect();
-      if (isMagazineTemplate) block.removeAttribute('id');
-      addForm(block);
-    }
-  }, {
-    rootMargin: '300px',
-  });
+  const observer = new IntersectionObserver(
+    (entries) => {
+      if (entries.some((e) => e.isIntersecting)) {
+        observer.disconnect();
+        if (isMagazineTemplate) {
+          block.removeAttribute('id');
+        }
+        addForm(block);
+      }
+    },
+    {
+      rootMargin: '300px',
+    },
+  );
   observer.observe(block);
-  if (isMagazineTemplate) block.id = 'form59';
+  if (isMagazineTemplate) {
+    block.id = 'form59';
+  }
 }

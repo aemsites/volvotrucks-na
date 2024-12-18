@@ -1,12 +1,5 @@
-import {
-  getMetadata,
-  createOptimizedPicture,
-} from '../../scripts/aem.js';
-import {
-  createElement,
-  decorateIcons,
-  getLocale,
-} from '../../scripts/common.js';
+import { getMetadata, createOptimizedPicture } from '../../scripts/aem.js';
+import { createElement, decorateIcons, getLocale } from '../../scripts/common.js';
 
 async function buildArticleHero(container) {
   const title = getMetadata('og:title');

@@ -116,16 +116,16 @@ a.v2-article-search__filter-link {
   color: var(--button-primary-bg);
 }
 
-.block.v2-article-search--gray a.v2-article-search__filter-link,
-.block.v2-article-search--black a.v2-article-search__filter-link {
-  color: inherit;
-  outline-color: inherit;
-}
-
 a.v2-article-search__filter-link--active,
 a.v2-article-search__filter-link:hover {
   background-color: var(--button-primary-bg);
   color: var(--c-white);
+}
+
+.block.v2-article-search--gray a.v2-article-search__filter-link,
+.block.v2-article-search--black a.v2-article-search__filter-link {
+  color: inherit;
+  outline-color: inherit;
 }
 
 .block.v2-article-search--black a.v2-article-search__filter-link--active,

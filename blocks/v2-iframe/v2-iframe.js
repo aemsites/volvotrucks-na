@@ -23,7 +23,10 @@ export default async function decorate(block) {
   const title = block.querySelector('h1, h2, h3, h4, h5, h6').textContent;
   const iframe = createElement('iframe', {
     props: {
-      src: link, frameborder: 0, title, allow: 'clipboard-write',
+      src: link,
+      frameborder: 0,
+      title,
+      allow: 'clipboard-write',
     },
   });
   const fixedHeightClass = [...block.classList].find((el) => /[0-9]+px/.test(el));

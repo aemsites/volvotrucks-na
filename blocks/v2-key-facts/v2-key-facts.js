@@ -33,7 +33,7 @@ export default function decorate(block) {
       const videoLinks = [...col.querySelectorAll('a')].filter(isVideoLink);
       const isVideoCell = videoLinks.length;
       const isImageCell = !!col.querySelector('picture');
-      row.classList.add((isVideoCell || isImageCell) ? CLASSES.row_media : CLASSES.row_text);
+      row.classList.add(isVideoCell || isImageCell ? CLASSES.row_media : CLASSES.row_text);
 
       if (isVideoCell) {
         const video = createVideo(videoLinks[0].getAttribute('href'), CLASSES.video, {

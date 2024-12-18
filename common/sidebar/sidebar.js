@@ -8,10 +8,14 @@ let sidebar;
 let focusElement;
 
 export function hideSidebar() {
-  if (!sidebar) return;
+  if (!sidebar) {
+    return;
+  }
   sidebar.ariaExpanded = false;
   document.body.classList.remove('disable-scroll');
-  if (focusElement) focusElement.focus();
+  if (focusElement) {
+    focusElement.focus();
+  }
 }
 
 export async function showSidebar(content, decorateContent) {
@@ -37,7 +41,9 @@ export async function showSidebar(content, decorateContent) {
   const container = sidebar.querySelector('div');
   container.replaceChildren(...content);
 
-  if (decorateContent) await decorateContent(container);
+  if (decorateContent) {
+    await decorateContent(container);
+  }
 
   // expand slightly delayed for the animations to work
   setTimeout(() => {

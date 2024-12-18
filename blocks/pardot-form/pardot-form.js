@@ -55,9 +55,13 @@ function constructPayload(form) {
   [...form.elements].forEach((fe) => {
     if (fe.name) {
       if (fe.type === 'radio') {
-        if (fe.checked) payload[fe.name] = fe.value;
+        if (fe.checked) {
+          payload[fe.name] = fe.value;
+        }
       } else if (fe.type === 'checkbox') {
-        if (fe.checked) payload[fe.name] = payload[fe.name] ? `${payload[fe.name]},${fe.value}` : fe.value;
+        if (fe.checked) {
+          payload[fe.name] = payload[fe.name] ? `${payload[fe.name]},${fe.value}` : fe.value;
+        }
       } else if (fe.type !== 'file') {
         payload[fe.name] = fe.value;
       }
@@ -89,12 +93,14 @@ function setPlaceholder(element, fd) {
 }
 
 const constraintsDef = Object.entries({
-  'email|text': [['Max', 'maxlength'], ['Min', 'minlength']],
+  'email|text': [
+    ['Max', 'maxlength'],
+    ['Min', 'minlength'],
+  ],
   'number|range|date': ['Max', 'Min', 'Step'],
   file: ['Accept', 'Multiple'],
   fieldset: ['Max', 'Min'],
-}).flatMap(([types, constraintDef]) => types.split('|')
-  .map((type) => [type, constraintDef.map((cd) => (Array.isArray(cd) ? cd : [cd, cd]))]));
+}).flatMap(([types, constraintDef]) => types.split('|').map((type) => [type, constraintDef.map((cd) => (Array.isArray(cd) ? cd : [cd, cd]))]));
 
 const constraintsObject = Object.fromEntries(constraintsDef);
 
@@ -268,7 +274,7 @@ const getId = (function getId() {
     ids[name] += 1;
     return `${name}${idSuffix}`;
   };
-}());
+})();
 
 const fieldRenderers = {
   radio: createRadio,
@@ -325,7 +331,7 @@ function showError(evnt) {
     fieldWrapper.append(errorSpan);
   }
   errorSpan.innerText = field.validationMessage;
-  // eslint-disable-next-line no-use-before-define
+
   field.addEventListener('blur', hideError);
 }
 
@@ -368,7 +374,7 @@ async function createForm(formURL) {
     form.append(el);
   });
   groupFieldsByFieldSet(form);
-  // eslint-disable-next-line prefer-destructuring
+
   form.addEventListener('submit', (e) => {
     let isValid = true;
     if (form.hasAttribute('novalidate')) {

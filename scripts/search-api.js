@@ -6,22 +6,18 @@ const SEARCH_LINK = !isProd ? SEARCH_URL_DEV : SEARCH_URL_PROD;
 
 export async function fetchSearchData(queryObj) {
   try {
-    const response = await fetch(
-      SEARCH_LINK,
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'Content-Length': queryObj.length,
-        },
-        body: JSON.stringify(queryObj),
+    const response = await fetch(SEARCH_LINK, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Content-Length': queryObj.length,
       },
-    );
+      body: JSON.stringify(queryObj),
+    });
 
     return response.json();
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error('Error fetching data:', error);
     throw error;
   }
