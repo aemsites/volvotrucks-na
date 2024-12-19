@@ -530,6 +530,7 @@ export function isSocialAllowed() {
  * @returns {string[]} An array of strings derived from the cleaned input string. Each element
  *                     is a trimmed, non-empty string that was separated by a comma in the
  *                     original input.
+ * @returns {Array} An empty array if the input is not a string
  */
 export const formatStringToArray = (inputString) => {
   if (typeof inputString !== 'string') return [];
