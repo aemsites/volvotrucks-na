@@ -23,11 +23,6 @@ const {
   TIKTOK_PIXEL_ID = false,
 } = COOKIE_CONFIGS;
 
-const parsedData = JSON.parse(ACC_ENG_TRACKING);
-const splitData = extractObjectFromArray(parsedData);
-
-const { piAId, piCId, piHostname } = splitData;
-
 // Core Web Vitals RUM collection
 sampleRUM('cwv');
 
@@ -58,7 +53,8 @@ document.addEventListener('click', (e) => {
 });
 
 // OneTrust Cookies Consent Notice start for volvotrucks.us
-if (!window.location.pathname.includes('srcdoc')
+if (DATA_DOMAIN_SCRIPT
+  && !window.location.pathname.includes('srcdoc')
   && !isDevHost()) {
   // when running on localhost in the block library host is empty but the path is srcdoc
   // on localhost/hlx.page/hlx.live the consent notice is displayed every time the page opens,
@@ -152,6 +148,10 @@ if (document.querySelector('.studio-widget-autosuggest-results')) {
 
 // Account Engagement Tracking Code
 async function loadAccountEngagementTracking() {
+  const {
+    piAId = null, piCId = null, piHostname = null
+  } = extractObjectFromArray(JSON.parse(ACC_ENG_TRACKING));
+  if (!piAId || !piCId || !piHostname) return;
   const body = document.querySelector('body');
   const script = document.createElement('script');
   script.type = 'text/javascript';

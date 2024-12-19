@@ -44,6 +44,10 @@ const getTopics = async (props = {}) => {
   };
 
   try {
+    if (!TENANT) {
+      throw new Error('TENANT not defined');
+    }
+
     const rawData = await fetchSearchData({
       query: topicSearchQuery(),
       variables,
