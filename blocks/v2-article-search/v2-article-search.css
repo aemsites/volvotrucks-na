@@ -9,6 +9,7 @@
   position: sticky;
   top: 0;
   height: 54px;
+  z-index: 1;
 }
 
 .section.v2-article-search-container .v2-article-search-wrapper {
@@ -258,10 +259,6 @@ a.v2-article-search__filter-link:hover {
 }
 
 @media (min-width: 768px) {
-  .v2-article-search-wrapper {
-    z-index: 1;
-  }
-
   .v2-article-search__filter-dropdown--open {
     visibility: visible;
   }
