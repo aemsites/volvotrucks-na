@@ -682,16 +682,3 @@ export function createResponsivePicture(images, eager, alt, imageClass) {
 
   return picture;
 }
-
-/**
- * Converts a given HTML string into a DOM element.
- *
- * @param {string} htmlString - The HTML string to convert into a DOM element.
- * @returns {Element|null} - The first DOM element generated from the HTML string,
- * or null if no elements are present.
- */
-export const stringToElement = (htmlString) => {
-  const template = document.createElement('template');
-  template.innerHTML = htmlString.trim();
-  return template.content.firstChild;
-};

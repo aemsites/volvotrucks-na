@@ -1,16 +1,16 @@
-import { createElement, createResponsivePicture, stringToElement, unwrapDivs } from '../../scripts/common.js';
+import { createElement, createResponsivePicture, unwrapDivs } from '../../scripts/common.js';
 
 const blockName = 'v2-applications-carousel';
 
 /**
- * Creates a card element for carousel navigation.
+ * Creates a card element for carousel navigation and appends it to a parent.
+ * @param {HTMLElement} parentElement - The parent element where the card will be appended.
  * @param {string} cardTitle - The title of the navigation card.
  * @param {number} cardIndex - The index of the card.
  * @param {boolean} isActive - Whether the card is selected.
  * @param {string} [cardIconMarkup] - Optional markup for the icon.
- * @returns {HTMLElement} - The navigation card element.
  */
-const createCarouselCard = (cardTitle, cardIndex, isActive, cardIconMarkup) => {
+const createCarouselCard = (parentElement, cardTitle, cardIndex, isActive, cardIconMarkup) => {
   const cardHTML = `
     <li class="${blockName}__card"
         role="tab"
@@ -22,7 +22,7 @@ const createCarouselCard = (cardTitle, cardIndex, isActive, cardIconMarkup) => {
       <span class="${blockName}__card-title">${cardTitle}</span>
     </li>
   `;
-  return stringToElement(cardHTML);
+  parentElement.insertAdjacentHTML('beforeend', cardHTML);
 };
 
 /**
@@ -135,14 +135,11 @@ const createCarouselCardsContainer = (carouselCardsData) => {
   const cardList = createElement('ul', {
     classes: `${blockName}__cards-list`,
   });
-  const fragment = document.createDocumentFragment();
 
   carouselCardsData.forEach(({ title, index, isActive, iconMarkup }) => {
-    const cardItem = createCarouselCard(title, index, isActive, iconMarkup);
-    fragment.appendChild(cardItem);
+    createCarouselCard(cardList, title, index, isActive, iconMarkup);
   });
 
-  cardList.appendChild(fragment);
   navigation.appendChild(cardList);
   return navigation;
 };
