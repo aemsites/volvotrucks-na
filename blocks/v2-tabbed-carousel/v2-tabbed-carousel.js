@@ -1,14 +1,5 @@
-import {
-  createElement,
-  removeEmptyTags,
-  unwrapDivs,
-  variantsClassesToBEM,
-} from '../../scripts/common.js';
-import {
-  listenScroll,
-  moveNavigationLine,
-  setCarouselPosition,
-} from '../../scripts/carousel-helper.js';
+import { createElement, removeEmptyTags, unwrapDivs, variantsClassesToBEM } from '../../scripts/common.js';
+import { listenScroll, moveNavigationLine, setCarouselPosition } from '../../scripts/carousel-helper.js';
 
 const blockName = 'v2-tabbed-carousel';
 const variantClasses = ['fade-in', 'columns', 'media-right'];
@@ -45,7 +36,9 @@ export default function decorate(block) {
     const listItem = createElement('li', { classes: `${blockName}__navigation-item` });
     const button = createElement('button');
     const moveCarousel = () => {
-      if (carouselItems.classList.contains('is-animating')) return;
+      if (carouselItems.classList.contains('is-animating')) {
+        return;
+      }
       setCarouselPosition(carouselItems, index, smoothScroll);
     };
     button.addEventListener('click', moveCarousel);
@@ -118,7 +111,7 @@ export default function decorate(block) {
     const activeItem = carouselItems.querySelector('.active');
     const index = [...activeItem.parentNode.children].indexOf(activeItem);
 
-    setCarouselPosition(carouselItems, (index), smoothScroll);
+    setCarouselPosition(carouselItems, index, smoothScroll);
     moveNavigationLine(tabNavigation.children[index], tabNavigation);
   });
 

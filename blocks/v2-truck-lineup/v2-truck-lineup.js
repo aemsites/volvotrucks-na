@@ -58,13 +58,15 @@ const updateActiveItem = (index) => {
   const navigation = document.querySelector(`.${blockName}__navigation`);
   const navigationLine = document.querySelector(`.${blockName}__navigation-line`);
 
-  [images, descriptions, navigation].forEach((c) => c.querySelectorAll('.active').forEach((i) => {
-    i.classList.remove('active');
+  [images, descriptions, navigation].forEach((c) =>
+    c.querySelectorAll('.active').forEach((i) => {
+      i.classList.remove('active');
 
-    // Remove aria-hidden and tabindex from previously active items
-    i.setAttribute('aria-hidden', 'true');
-    i.querySelectorAll('a').forEach((link) => link.setAttribute('tabindex', '-1'));
-  }));
+      // Remove aria-hidden and tabindex from previously active items
+      i.setAttribute('aria-hidden', 'true');
+      i.querySelectorAll('a').forEach((link) => link.setAttribute('tabindex', '-1'));
+    }),
+  );
 
   images.children[index].classList.add('active');
   descriptions.children[index].classList.add('active');
@@ -104,25 +106,31 @@ const updateActiveItem = (index) => {
 const listenScroll = (carousel) => {
   const imageLoadPromises = Array.from(carousel.querySelectorAll('picture > img'))
     .filter((img) => !img.complete)
-    .map((img) => new Promise((resolve) => {
-      img.addEventListener('load', resolve);
-    }));
+    .map(
+      (img) =>
+        new Promise((resolve) => {
+          img.addEventListener('load', resolve);
+        }),
+    );
 
   Promise.all(imageLoadPromises).then(() => {
     const elements = carousel.querySelectorAll(':scope > *');
 
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.9) {
-          const activeItem = entry.target;
-          const currentIndex = Array.from(activeItem.parentNode.children).indexOf(activeItem);
-          updateActiveItem(currentIndex);
-        }
-      });
-    }, {
-      root: carousel,
-      threshold: 0.9,
-    });
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.9) {
+            const activeItem = entry.target;
+            const currentIndex = Array.from(activeItem.parentNode.children).indexOf(activeItem);
+            updateActiveItem(currentIndex);
+          }
+        });
+      },
+      {
+        root: carousel,
+        threshold: 0.9,
+      },
+    );
 
     elements.forEach((el) => io.observe(el));
 
@@ -142,7 +150,9 @@ const setCarouselPosition = (carousel, index) => {
 };
 
 const navigate = (carousel, direction) => {
-  if (carousel.classList.contains('is-animating')) return;
+  if (carousel.classList.contains('is-animating')) {
+    return;
+  }
 
   const activeItem = carousel.querySelector(`.${blockName}__image-item.active`);
   let index = [...activeItem.parentNode.children].indexOf(activeItem);

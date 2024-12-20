@@ -10,7 +10,7 @@ export default function decorate(block) {
     .filter((e) => e.tagName === 'DIV')
     .filter((e) => e.attributes.length === 0)
     .forEach((node) => {
-    // Move all children nodes to the parent
+      // Move all children nodes to the parent
       while (node.firstChild) {
         block.insertBefore(node.firstChild, node);
       }

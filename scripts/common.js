@@ -1,14 +1,4 @@
-import {
-  sampleRUM,
-  loadCSS,
-  loadBlock,
-  loadBlocks,
-  loadHeader,
-  buildBlock,
-  decorateBlock,
-  getMetadata,
-} from './aem.js';
-// eslint-disable-next-line import/no-cycle
+import { sampleRUM, loadCSS, loadBlock, loadBlocks, loadHeader, buildBlock, decorateBlock, getMetadata } from './aem.js';
 import { createVideo, isVideoLink } from './video-helper.js';
 
 let placeholders = null;
@@ -35,7 +25,9 @@ export function getOrigin() {
 }
 
 export function getHref() {
-  if (window.location.href !== 'about:srcdoc') return window.location.href;
+  if (window.location.href !== 'about:srcdoc') {
+    return window.location.href;
+  }
 
   const urlParams = new URLSearchParams(window.parent.location.search);
   return `${window.parent.location.origin}${urlParams.get('path')}`;
@@ -72,7 +64,9 @@ export function createElement(tagName, options = {}) {
     const classesArr = isString ? [classes] : classes;
     elem.classList.add(...classesArr);
   }
-  if (!isString && classes.length === 0) elem.removeAttribute('class');
+  if (!isString && classes.length === 0) {
+    elem.removeAttribute('class');
+  }
 
   if (props) {
     Object.keys(props).forEach((propName) => {
@@ -113,7 +107,10 @@ export function addVideoToSection(blockName, section, link) {
   const isVideo = link ? isVideoLink(link) : false;
   if (isVideo) {
     const video = createVideo(link.getAttribute('href'), `${blockName}__video`, {
-      muted: true, autoplay: true, loop: true, playsinline: true,
+      muted: true,
+      autoplay: true,
+      loop: true,
+      playsinline: true,
     });
     link.remove();
     section.append(video);
@@ -151,39 +148,43 @@ export async function decorateIcons(element) {
 
   // Download all new icons
   const icons = [...element.querySelectorAll('span.icon')];
-  await Promise.all(icons.map(async (span) => {
-    const iconName = Array.from(span.classList).find((c) => c.startsWith('icon-')).substring(5);
-    if (!ICONS_CACHE[iconName]) {
-      ICONS_CACHE[iconName] = true;
-      try {
-        const response = await fetch(`${window.hlx.codeBasePath}/icons/${iconName}.svg`);
-        if (!response.ok) {
+  await Promise.all(
+    icons.map(async (span) => {
+      const iconName = Array.from(span.classList)
+        .find((c) => c.startsWith('icon-'))
+        .substring(5);
+      if (!ICONS_CACHE[iconName]) {
+        ICONS_CACHE[iconName] = true;
+        try {
+          const response = await fetch(`${window.hlx.codeBasePath}/icons/${iconName}.svg`);
+          if (!response.ok) {
+            ICONS_CACHE[iconName] = false;
+            return;
+          }
+          // Styled icons don't play nice with the sprite approach because of shadow dom isolation
+          const svg = await response.text();
+          if (svg.match(/(<style | class=)/)) {
+            ICONS_CACHE[iconName] = { styled: true, html: svg };
+          } else {
+            ICONS_CACHE[iconName] = {
+              html: svg
+                .replace('<svg', `<symbol id="icons-sprite-${iconName}"`)
+                .replace(/ width=".*?"/, '')
+                .replace(/ height=".*?"/, '')
+                .replace('</svg>', '</symbol>'),
+            };
+          }
+        } catch (error) {
           ICONS_CACHE[iconName] = false;
-          return;
-        }
-        // Styled icons don't play nice with the sprite approach because of shadow dom isolation
-        const svg = await response.text();
-        if (svg.match(/(<style | class=)/)) {
-          ICONS_CACHE[iconName] = { styled: true, html: svg };
-        } else {
-          ICONS_CACHE[iconName] = {
-            html: svg
-              .replace('<svg', `<symbol id="icons-sprite-${iconName}"`)
-              .replace(/ width=".*?"/, '')
-              .replace(/ height=".*?"/, '')
-              .replace('</svg>', '</symbol>'),
-          };
-        }
-      } catch (error) {
-        ICONS_CACHE[iconName] = false;
-        // eslint-disable-next-line no-console
-        console.error(error);
-      }
-    }
-  }));
 
-  const symbols = Object
-    .keys(ICONS_CACHE).filter((k) => !svgSprite.querySelector(`#icons-sprite-${k}`))
+          console.error(error);
+        }
+      }
+    }),
+  );
+
+  const symbols = Object.keys(ICONS_CACHE)
+    .filter((k) => !svgSprite.querySelector(`#icons-sprite-${k}`))
     .map((k) => ICONS_CACHE[k])
     .filter((v) => !v.styled)
     .map((v) => v.html)
@@ -191,7 +192,9 @@ export async function decorateIcons(element) {
   svgSprite.innerHTML += symbols;
 
   icons.forEach((span) => {
-    const iconName = Array.from(span.classList).find((c) => c.startsWith('icon-')).substring(5);
+    const iconName = Array.from(span.classList)
+      .find((c) => c.startsWith('icon-'))
+      .substring(5);
     const parent = span.firstElementChild?.tagName === 'A' ? span.firstElementChild : span;
     // Styled icons need to be inlined as-is, while unstyled ones can leverage the sprite
     if (ICONS_CACHE[iconName].styled) {
@@ -213,7 +216,6 @@ export async function loadTemplate(doc, templateName) {
             await mod.default(doc);
           }
         } catch (error) {
-          // eslint-disable-next-line no-console
           console.log(`failed to load module for ${templateName}`, error);
         }
         resolve();
@@ -221,7 +223,6 @@ export async function loadTemplate(doc, templateName) {
     });
     await decorationComplete;
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.log(`failed to load block ${templateName}`, error);
   }
 }
@@ -236,7 +237,9 @@ export async function loadLazy(doc) {
 
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
-  if (hash && element) element.scrollIntoView();
+  if (hash && element) {
+    element.scrollIntoView();
+  }
   const header = doc.querySelector('header');
 
   const disableHeader = getMetadata('disable-header').toLowerCase() === 'true';
@@ -269,7 +272,6 @@ export async function loadLazy(doc) {
  */
 export function loadDelayed() {
   window.setTimeout(() => {
-    // eslint-disable-next-line import/no-cycle
     import('./delayed.js');
   }, 3000);
   // load anything that can be postponed to the latest here
@@ -285,8 +287,7 @@ export const removeEmptyTags = (block, isRecursive) => {
     }
     // checking that the tag is not autoclosed to make sure we don't remove <meta />
     // checking the innerHTML and trim it to make sure the content inside the tag is 0
-    return node.outerHTML.slice(tagName.length * -1).toUpperCase() === tagName
-      && node.innerHTML.trim().length === 0;
+    return node.outerHTML.slice(tagName.length * -1).toUpperCase() === tagName && node.innerHTML.trim().length === 0;
   };
 
   if (isRecursive) {
@@ -405,8 +406,11 @@ export const adjustPretitle = (element) => {
   });
 };
 
-export const slugify = (text) => (
-  text.toString().toLowerCase().trim()
+export const slugify = (text) =>
+  text
+    .toString()
+    .toLowerCase()
+    .trim()
     // separate accent from letter
     .normalize('NFD')
     // remove all separated accents
@@ -418,8 +422,7 @@ export const slugify = (text) => (
     // remove all non-word chars
     .replace(/[^\w-]+/g, '')
     // replace multiple '-' with single '-'
-    .replace(/--+/g, '-')
-);
+    .replace(/--+/g, '-');
 
 /**
  * loads the constants file where configuration values are stored
@@ -433,7 +436,6 @@ async function getConstantValues() {
       constants = response;
     }
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error('Error with constants file', error);
   }
   return constants;
@@ -444,10 +446,10 @@ async function getConstantValues() {
  * @param {string[]} data - Array of strings in the format 'key: value'.
  * @returns {Object} - Object with keys and values.
  * @throws {TypeError} - If an item in the array is not in the format 'key: value'.
-*/
+ */
 export const extractObjectFromArray = (data) => {
   const obj = {};
-  // eslint-disable-next-line no-restricted-syntax
+
   for (const item of data) {
     try {
       if (typeof item !== 'string' || !item.includes(':')) {
@@ -456,7 +458,6 @@ export const extractObjectFromArray = (data) => {
       const [key, value] = item.split(':', 2);
       obj[key.trim()] = value.trim();
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.warn(`Error with item: "${item}"`, error);
     }
   }
@@ -465,20 +466,13 @@ export const extractObjectFromArray = (data) => {
 
 const formatValues = (values) => {
   const obj = {};
-  /* eslint-disable-next-line */
-  if (values) values.forEach(({ name, value }) => obj[name] = value);
+  if (values) {
+    values.forEach(({ name, value }) => (obj[name] = value));
+  }
   return obj;
 };
 
-const {
-  searchConfig,
-  cookieValues,
-  magazineConfig,
-  tools,
-  headerConfig,
-  newsFeedConfig,
-  truckConfiguratorUrls,
-} = await getConstantValues();
+const { searchConfig, cookieValues, magazineConfig, tools, headerConfig, newsFeedConfig, truckConfiguratorUrls } = await getConstantValues();
 
 // This data comes from the sharepoint 'constants.xlsx' file
 export const TOOLS_CONFIGS = formatValues(tools?.data);
@@ -498,11 +492,7 @@ export function checkOneTrustGroup(groupName) {
   return oneTrustCookie.includes(`${groupName}:1`);
 }
 
-const {
-  PERFORMANCE_COOKIE = false,
-  TARGETING_COOKIE = false,
-  SOCIAL_COOKIE = false,
-} = COOKIE_CONFIGS;
+const { PERFORMANCE_COOKIE = false, TARGETING_COOKIE = false, SOCIAL_COOKIE = false } = COOKIE_CONFIGS;
 
 export function isPerformanceAllowed() {
   return checkOneTrustGroup(PERFORMANCE_COOKIE);
@@ -530,9 +520,9 @@ export function isSocialAllowed() {
  *                     original input.
  */
 export const formatStringToArray = (inputString) => {
-  // eslint-disable-next-line no-useless-escape
-  const cleanedString = inputString.replace(/[\[\]\\'"]+/g, '');
-  return cleanedString.split(',')
+  const cleanedString = inputString.replace(/[[\]\\'"]+/g, '');
+  return cleanedString
+    .split(',')
     .map((item) => item.trim())
     .filter((item) => item);
 };
@@ -552,13 +542,15 @@ export const generateId = (prefix = 'id') => {
  * Helper for delaying a function
  * @param {function} func callback function
  * @param {number} timeout time to debouce in ms, default 200
-*/
+ */
 export function debounce(func, timeout = 200) {
   let timer;
   return (...args) => {
     clearTimeout(timer);
 
-    timer = setTimeout(() => { func.apply(this, args); }, timeout);
+    timer = setTimeout(() => {
+      func.apply(this, args);
+    }, timeout);
   };
 }
 
@@ -566,15 +558,16 @@ export function debounce(func, timeout = 200) {
  * Returns a list of properties listed in the block
  * @param {string} route get the Json data from the route
  * @returns {Object} the json data object
-*/
+ */
 export const getJsonFromUrl = async (route) => {
   try {
     const response = await fetch(route);
-    if (!response.ok) return null;
+    if (!response.ok) {
+      return null;
+    }
     const json = await response.json();
     return json;
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error('getJsonFromUrl:', { error });
   }
   return null;
@@ -603,7 +596,7 @@ export const isDevHost = () => {
  * Function that checks for the locale field in metadata an returns it.
  * It defaults to 'en-us'
  * @returns {string} The locale string
-*/
+ */
 export const getLocale = () => getMetadata('locale') || 'en-us';
 
 /**
@@ -611,9 +604,9 @@ export const getLocale = () => getMetadata('locale') || 'en-us';
  * in its locale's format. Defaults to US format date (MM/DD/YYYY)
  * @param {string} timestamp The date in seconds as a string
  * @param {object} options The date options obj for a specific format
-*/
+ */
 export const getDateFromTimestamp = (timestamp, options) => {
-  const date = new Date((timestamp * 1000) + (new Date().getTimezoneOffset() * 60000));
+  const date = new Date(timestamp * 1000 + new Date().getTimezoneOffset() * 60000);
   const localeDate = Intl.DateTimeFormat(getLocale(), options).format(date);
 
   return localeDate;

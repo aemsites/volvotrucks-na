@@ -29,13 +29,7 @@ import {
   getLocale,
 } from './common.js';
 
-import {
-  isVideoLink,
-  isSoundcloudLink,
-  isLowResolutionVideoUrl,
-  addVideoShowHandler,
-  addSoundcloudShowHandler,
-} from './video-helper.js';
+import { isVideoLink, isSoundcloudLink, isLowResolutionVideoUrl, addVideoShowHandler, addSoundcloudShowHandler } from './video-helper.js';
 
 import { validateCountries } from './validate-countries.js';
 
@@ -43,14 +37,14 @@ const LCP_BLOCKS = ['teaser-grid']; // add your LCP blocks to the list
 window.hlx.RUM_GENERATION = 'project-1'; // add your RUM generation information here
 
 function getCTAContainer(ctaLink) {
-  return ['strong', 'em'].includes(ctaLink.parentElement.localName)
-    ? ctaLink.parentElement.parentElement
-    : ctaLink.parentElement;
+  return ['strong', 'em'].includes(ctaLink.parentElement.localName) ? ctaLink.parentElement.parentElement : ctaLink.parentElement;
 }
 
 function isCTALinkCheck(ctaLink) {
   const btnContainer = getCTAContainer(ctaLink);
-  if (!btnContainer.classList.contains('button-container')) return false;
+  if (!btnContainer.classList.contains('button-container')) {
+    return false;
+  }
   const nextSibling = btnContainer?.nextElementSibling;
   const previousSibling = btnContainer?.previousElementSibling;
   const twoPreviousSibling = previousSibling?.previousElementSibling;
@@ -64,7 +58,12 @@ function isCTALinkCheck(ctaLink) {
  * @param {boolean} eager load image eager
  * @param {Array} breakpoints breakpoints and corresponding params (eg. src, width, media)
  */
-export function createCustomOptimizedPicture(src, alt = '', eager = false, breakpoints = [{ media: '(min-width: 400px)', width: '2000' }, { width: '750' }]) {
+export function createCustomOptimizedPicture(
+  src,
+  alt = '',
+  eager = false,
+  breakpoints = [{ media: '(min-width: 400px)', width: '2000' }, { width: '750' }],
+) {
   const url = new URL(src, getHref());
   const picture = document.createElement('picture');
   let { pathname } = url;
@@ -78,7 +77,9 @@ export function createCustomOptimizedPicture(src, alt = '', eager = false, break
     }
 
     const source = document.createElement('source');
-    if (br.media) source.setAttribute('media', br.media);
+    if (br.media) {
+      source.setAttribute('media', br.media);
+    }
     source.setAttribute('type', 'image/webp');
     source.setAttribute('srcset', `${pathname}?width=${br.width}&format=webply&optimize=medium`);
     picture.appendChild(source);
@@ -88,7 +89,9 @@ export function createCustomOptimizedPicture(src, alt = '', eager = false, break
   breakpoints.forEach((br, i) => {
     if (i < breakpoints.length - 1) {
       const source = document.createElement('source');
-      if (br.media) source.setAttribute('media', br.media);
+      if (br.media) {
+        source.setAttribute('media', br.media);
+      }
       source.setAttribute('srcset', `${pathname}?width=${br.width}&format=${ext}&optimize=medium`);
       picture.appendChild(source);
     } else {
@@ -113,16 +116,19 @@ function buildHeroBlock(main) {
 
   // don't create a hero if the first item is a block, except hero block
   const firstSection = main.querySelector('div');
-  if (!firstSection) return;
+  if (!firstSection) {
+    return;
+  }
   const firstElement = firstSection.firstElementChild;
-  if (firstElement.tagName === 'DIV' && firstElement.classList.length && !firstElement.classList.contains('hero')) return;
+  if (firstElement.tagName === 'DIV' && firstElement.classList.length && !firstElement.classList.contains('hero')) {
+    return;
+  }
 
   const h1 = firstSection.querySelector('h1');
   const picture = firstSection.querySelector('picture');
   let ctaLink = firstSection.querySelector('a');
   let video = null;
 
-  // eslint-disable-next-line no-use-before-define
   if (ctaLink && isLowResolutionVideoUrl(ctaLink.getAttribute('href'))) {
     const videoTemp = `
       <video muted loop class="hero-video">
@@ -145,21 +151,28 @@ function buildHeroBlock(main) {
 
   // check if the previous element or the previous of that is an h1
   const isCTALink = ctaLink && isCTALinkCheck(ctaLink);
-  if (isCTALink) ctaLink.classList.add('cta');
-  // eslint-disable-next-line no-bitwise
-  if (h1 && picture && (h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING)) {
+  if (isCTALink) {
+    ctaLink.classList.add('cta');
+  }
+
+  if (h1 && picture && h1.compareDocumentPosition(picture) & Node.DOCUMENT_POSITION_PRECEDING) {
     const headings = createElement('div', { classes: 'hero-headings' });
     const elems = [picture, headings];
-    if (h1.nextElementSibling && (h1.nextElementSibling.matches('h2,h3,h4')
-      // also consider a <p> without any children as sub heading except BR
-      || (h1.nextElementSibling.matches('p') && ![...h1.nextElementSibling.children].filter((el) => el.tagName !== 'BR').length))) {
+    if (
+      h1.nextElementSibling &&
+      (h1.nextElementSibling.matches('h2,h3,h4') ||
+        // also consider a <p> without any children as sub heading except BR
+        (h1.nextElementSibling.matches('p') && ![...h1.nextElementSibling.children].filter((el) => el.tagName !== 'BR').length))
+    ) {
       const h4 = document.createElement('h4');
       h4.innerHTML = h1.nextElementSibling.innerHTML;
       h1.nextElementSibling.remove();
       headings.appendChild(h4);
     }
     headings.appendChild(h1);
-    if (isCTALink) headings.appendChild(getCTAContainer(ctaLink));
+    if (isCTALink) {
+      headings.appendChild(getCTAContainer(ctaLink));
+    }
     const section = document.createElement('div');
     const newHeroBlock = buildBlock('hero', { elems });
     newHeroBlock.classList.add(...firstElement.classList);
@@ -167,8 +180,11 @@ function buildHeroBlock(main) {
     // remove the empty pre-section to avoid decorate it as empty section
     const containerChildren = firstSection.children;
     const wrapperChildren = containerChildren[0].children;
-    if (containerChildren.length <= 1 && wrapperChildren.length === 0) firstSection.remove();
-    else if (wrapperChildren.length === 0) containerChildren[0].remove();
+    if (containerChildren.length <= 1 && wrapperChildren.length === 0) {
+      firstSection.remove();
+    } else if (wrapperChildren.length === 0) {
+      containerChildren[0].remove();
+    }
 
     if (video) {
       section.querySelector('.hero')?.classList.add('hero-with-video');
@@ -198,14 +214,15 @@ function buildAutoBlocks(main, head) {
     buildHeroBlock(main);
     buildSubNavigation(main, head);
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error('Auto Blocking failed', error);
   }
 }
 
 function createTabbedSection(tabItems, tabType, { fullWidth }) {
   const tabSection = createElement('div', { classes: ['section', 'tabbed-container'] });
-  if (fullWidth) tabSection.classList.add('tabbed-container-full-width');
+  if (fullWidth) {
+    tabSection.classList.add('tabbed-container-full-width');
+  }
   tabSection.dataset.sectionStatus = 'initialized';
   const wrapper = document.createElement('div');
   tabSection.append(wrapper);
@@ -218,10 +235,16 @@ function buildCtaList(main) {
   [...main.querySelectorAll('ul')].forEach((list) => {
     const lis = [...list.querySelectorAll('li')];
     const isCtaList = lis.every((li) => {
-      if (li.children.length !== 1) return false;
+      if (li.children.length !== 1) {
+        return false;
+      }
       const firstChild = li.firstElementChild;
-      if (firstChild.tagName === 'A') return true;
-      if (firstChild.children.length !== 1) return false;
+      if (firstChild.tagName === 'A') {
+        return true;
+      }
+      if (firstChild.children.length !== 1) {
+        return false;
+      }
       const firstGrandChild = firstChild.firstElementChild;
       return (firstChild.tagName === 'STRONG' || firstChild.tagName === 'EM') && firstGrandChild.tagName === 'A';
     });
@@ -229,7 +252,9 @@ function buildCtaList(main) {
     if (isCtaList) {
       list.classList.add('cta-list');
       const primaryLink = lis[0].querySelector('a.primary');
-      if (primaryLink) primaryLink.classList.add('dark');
+      if (primaryLink) {
+        primaryLink.classList.add('dark');
+      }
     }
   });
 }
@@ -296,7 +321,9 @@ function buildTruckLineupBlock(main) {
   const mainChildren = [...main.querySelectorAll(':scope > div')];
   mainChildren.forEach((section, i) => {
     const isTruckCarousel = section.dataset.truckCarousel;
-    if (!isTruckCarousel) return;
+    if (!isTruckCarousel) {
+      return;
+    }
 
     // save carousel position
     nextElement = mainChildren[i + 1];
@@ -326,12 +353,7 @@ function buildTruckLineupBlock(main) {
       pic.parentNode.remove();
     });
     imageBreakpoints.reverse(); // order first big and then small version
-    const newPicture = createCustomOptimizedPicture(
-      baseImageObj.src,
-      baseImageObj.alt,
-      false,
-      imageBreakpoints,
-    );
+    const newPicture = createCustomOptimizedPicture(baseImageObj.src, baseImageObj.alt, false, imageBreakpoints);
 
     tabContent.prepend(newPicture);
 
@@ -341,7 +363,8 @@ function buildTruckLineupBlock(main) {
 
   if (tabItems.length > 0) {
     const truckLineupSection = createTruckLineupSection(tabItems);
-    if (nextElement) { // if we saved a position push the carousel in that position if not
+    if (nextElement) {
+      // if we saved a position push the carousel in that position if not
       main.insertBefore(truckLineupSection, nextElement);
     } else {
       main.append(truckLineupSection);
@@ -376,7 +399,9 @@ function decorateHyperlinkImages(container) {
     .forEach((a) => {
       const br = a.previousElementSibling;
       let picture = br.previousElementSibling;
-      if (br.tagName === 'PICTURE') picture = br;
+      if (br.tagName === 'PICTURE') {
+        picture = br;
+      }
       picture.remove();
       br.remove();
       a.innerHTML = picture.outerHTML;
@@ -415,7 +440,6 @@ async function loadModalScript() {
 }
 
 document.addEventListener('open-modal', (event) => {
-  // eslint-disable-next-line import/no-cycle, no-shadow
   loadModalScript().then((modal) => {
     const variantClasses = ['black', 'gray', 'reveal'];
     const modalClasses = [...event.detail.target.closest('.section').classList].filter((el) => el.startsWith('modal-'));
@@ -470,7 +494,7 @@ const handleModalLinks = (link) => {
 
     if (resp.ok) {
       main.innerHTML = await resp.text();
-      // eslint-disable-next-line no-use-before-define
+
       decorateMain(main, main);
       await loadBlocks(main);
       const modalEvent = new CustomEvent('open-modal', {
@@ -490,7 +514,6 @@ export function decorateLinks(block) {
   [...block.querySelectorAll('a')]
     .filter(({ href }) => !!href)
     .forEach((link) => {
-      // eslint-disable-next-line no-use-before-define
       if (isVideoLink(link)) {
         addVideoShowHandler(link);
         return;
@@ -508,7 +531,8 @@ export function decorateLinks(block) {
       }
 
       const url = new URL(link.href);
-      const external = !url.host.match('volvotrucks.(us|ca|mx)') && !url.host.match(/\.hlx\.(page|live)|\.aem\.(page|live)/) && !url.host.match('localhost');
+      const external =
+        !url.host.match('volvotrucks.(us|ca|mx)') && !url.host.match(/\.hlx\.(page|live)|\.aem\.(page|live)/) && !url.host.match('localhost');
       if (url.host.match('build.volvotrucks.(us)') || url.pathname.endsWith('.pdf') || url.pathname.endsWith('.jpeg') || external) {
         link.target = '_blank';
       }
@@ -533,7 +557,9 @@ function decorateOfferLinks(main) {
         list.append(li);
         li.append(a);
         parent.after(list);
-        if (parent.textContent === '' && parent.children.length === 0) parent.remove();
+        if (parent.textContent === '' && parent.children.length === 0) {
+          parent.remove();
+        }
       }
       list.classList.add('inline');
       const li = document.createElement('li');
@@ -558,7 +584,7 @@ const createInpageNavigation = (main) => {
     if (title) {
       const countDuplicated = tabItemsObj.filter((item) => item.title === title)?.length || 0;
       const order = parseFloat(section.dataset.inpageOrder);
-      const anchorID = (countDuplicated > 0) ? slugify(`${section.dataset.inpage}-${countDuplicated}`) : slugify(section.dataset.inpage);
+      const anchorID = countDuplicated > 0 ? slugify(`${section.dataset.inpage}-${countDuplicated}`) : slugify(section.dataset.inpage);
       const obj = {
         title,
         id: anchorID,
@@ -691,11 +717,11 @@ const decorateButtons = (element) => {
  * @param {Element} main The main element
  * @param {Element} head The header element
  */
-// eslint-disable-next-line import/prefer-default-export
 export function decorateMain(main, head) {
   const pageStyle = head.querySelector('[name="style"]')?.content;
   if (pageStyle) {
-    pageStyle.split(',')
+    pageStyle
+      .split(',')
       .map((style) => toClassName(style.trim()))
       .forEach((style) => main.classList.add(style));
   }
@@ -731,7 +757,9 @@ async function loadEager(doc) {
     const language = getLocale();
     document.documentElement.lang = language;
     const templateName = getMetadata('template');
-    if (templateName) await loadTemplate(doc, templateName);
+    if (templateName) {
+      await loadTemplate(doc, templateName);
+    }
     await waitForLCP(LCP_BLOCKS);
   } else {
     document.documentElement.lang = 'en';
@@ -754,7 +782,7 @@ export const MEDIA_BREAKPOINTS = {
   DESKTOP: 'DESKTOP',
 };
 
-export function getImageForBreakpoint(imagesList, onChange = () => { }) {
+export function getImageForBreakpoint(imagesList, onChange = () => {}) {
   const mobileMQ = window.matchMedia('(max-width: 743px)');
   const tabletMQ = window.matchMedia('(min-width: 744px) and (max-width: 1199px)');
   const desktopMQ = window.matchMedia('(min-width: 1200px)');
@@ -800,13 +828,14 @@ moveClassToHtmlEl('redesign-v2');
 moveClassToHtmlEl('truck-configurator');
 
 const currentUrl = window.location.href;
-const isConfiguratorPage = document.documentElement.classList.contains('truck-configurator')
-  || currentUrl.includes('/summary?config=');
+const isConfiguratorPage = document.documentElement.classList.contains('truck-configurator') || currentUrl.includes('/summary?config=');
 
 if (isConfiguratorPage) {
   const allowedCountries = getMetadata('allowed-countries');
   const errorPageUrl = getMetadata('redirect-url');
-  if (allowedCountries && errorPageUrl) validateCountries(allowedCountries, errorPageUrl);
+  if (allowedCountries && errorPageUrl) {
+    validateCountries(allowedCountries, errorPageUrl);
+  }
 
   const container = createElement('div', { props: { id: 'configurator' } });
   const main = document.querySelector('main');

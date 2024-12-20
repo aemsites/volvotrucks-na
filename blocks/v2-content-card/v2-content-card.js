@@ -1,15 +1,6 @@
 import { createOptimizedPicture } from '../../scripts/aem.js';
-import {
-  adjustPretitle,
-  createElement,
-  removeEmptyTags,
-  variantsClassesToBEM,
-} from '../../scripts/common.js';
-import {
-  createVideo,
-  getDynamicVideoHeight,
-  isVideoLink,
-} from '../../scripts/video-helper.js';
+import { adjustPretitle, createElement, removeEmptyTags, variantsClassesToBEM } from '../../scripts/common.js';
+import { createVideo, getDynamicVideoHeight, isVideoLink } from '../../scripts/video-helper.js';
 
 const variantClasses = ['images-grid', 'images-grid-masonry', 'editorial'];
 

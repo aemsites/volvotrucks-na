@@ -8,16 +8,19 @@ const onHoverOrScroll = (element, handler) => {
     handler(isInViewport || isMouseOver);
   };
 
-  const observer = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        isInViewport = entry.intersectionRatio >= 0.5;
-        onChange();
-      }
-    });
-  }, {
-    threshold: [0.4, 0.5, 0.6],
-  });
+  const observer = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          isInViewport = entry.intersectionRatio >= 0.5;
+          onChange();
+        }
+      });
+    },
+    {
+      threshold: [0.4, 0.5, 0.6],
+    },
+  );
   observer.observe(element);
 
   element.addEventListener('mouseover', () => {
@@ -33,15 +36,16 @@ const onHoverOrScroll = (element, handler) => {
 
 const extractAspectRatio = (block) => {
   const aspectRatioRegex = /aspect-ratio-(\d+)-(\d+)/;
-  const aspectRatioClass = Array.from(block.classList)
-    .find((className) => aspectRatioRegex.test(className));
+  const aspectRatioClass = Array.from(block.classList).find((className) => aspectRatioRegex.test(className));
 
   const match = aspectRatioClass?.match(aspectRatioRegex);
 
-  return match ? {
-    width: parseInt(match[1], 10),
-    height: parseInt(match[2], 10),
-  } : null;
+  return match
+    ? {
+        width: parseInt(match[1], 10),
+        height: parseInt(match[2], 10),
+      }
+    : null;
 };
 
 const retrieveVideoConfig = (block, aspectRatio) => {
@@ -70,7 +74,6 @@ export default async function decorate(block) {
   variantsClassesToBEM(block.classList, variantClasses, blockName);
 
   if (!videoLink) {
-    // eslint-disable-next-line no-console
     console.warn('Video for v2-video block is required and not provided. The block will not render!');
     block.innerHTML = '';
     return;
