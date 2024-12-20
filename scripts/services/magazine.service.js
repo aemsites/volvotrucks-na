@@ -19,7 +19,9 @@ export const removeArticlesWithNoImage = (articles) => {
  * @returns {Array} An array of values
  */
 export function getValuesFromObjectsArray(array = []) {
-  if (!Array.isArray(array) || array.length === 0) return [];
+  if (!Array.isArray(array) || array.length === 0) {
+    return [];
+  }
   return array.map((item) => Object.values(item)[0]);
 }
 
@@ -44,12 +46,18 @@ export const extractLimitFromBlock = (block) => {
  * @param {Array<Object>} articles - The list of articles to filter.
  * @returns {Array<Object>} - The filtered list of articles excluding the current article.
  */
-export const clearCurrentArticle = (articles) => articles.filter((article) => {
-  const currentArticlePath = window.location.href.split('/').pop();
-  const lastElementInUrl = article.metadata.url.split('/').filter((item) => item.trim() !== '').pop();
-  if (lastElementInUrl !== currentArticlePath) return article;
-  return null;
-});
+export const clearCurrentArticle = (articles) =>
+  articles.filter((article) => {
+    const currentArticlePath = window.location.href.split('/').pop();
+    const lastElementInUrl = article.metadata.url
+      .split('/')
+      .filter((item) => item.trim() !== '')
+      .pop();
+    if (lastElementInUrl !== currentArticlePath) {
+      return article;
+    }
+    return null;
+  });
 
 /**
  * Checks whether the current page is a magazine template.
@@ -71,7 +79,6 @@ export const sortArticlesByDateField = (articles, dateField) => {
     const timestamp = rawTimestamp ? new Date(rawTimestamp * 1000).getTime() : null;
 
     if (timestamp === null) {
-      // eslint-disable-next-line no-console
       console.warn(`Date field "${dateField}" not found or invalid in metadata for article`, article);
     }
 
@@ -81,9 +88,7 @@ export const sortArticlesByDateField = (articles, dateField) => {
     };
   });
 
-  const sortedArticles = articlesWithTimestamps
-    .filter((article) => article.timestamp !== null)
-    .sort((a, b) => b.timestamp - a.timestamp);
+  const sortedArticles = articlesWithTimestamps.filter((article) => article.timestamp !== null).sort((a, b) => b.timestamp - a.timestamp);
 
   return sortedArticles;
 };
@@ -142,7 +147,6 @@ export const fetchMagazineArticles = async ({
     });
     return rawData?.data?.edssearch || null;
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error('Error fetching magazine articles:', error);
     return null;
   }

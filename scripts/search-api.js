@@ -9,22 +9,18 @@ export async function fetchSearchData(queryObj) {
     if (!SEARCH_LINK) {
       throw new Error('Search link not found');
     }
-    const response = await fetch(
-      SEARCH_LINK,
-      {
-        method: 'POST',
-        headers: {
-          Accept: 'application/json',
-          'Content-Type': 'application/json',
-          'Content-Length': queryObj.length,
-        },
-        body: JSON.stringify(queryObj),
+    const response = await fetch(SEARCH_LINK, {
+      method: 'POST',
+      headers: {
+        Accept: 'application/json',
+        'Content-Type': 'application/json',
+        'Content-Length': queryObj.length,
       },
-    );
+      body: JSON.stringify(queryObj),
+    });
 
     return response.json();
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error('Error fetching data:', error);
     throw error;
   }

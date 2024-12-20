@@ -70,7 +70,7 @@ function filter() {
 
 function toggleTag(target) {
   target.classList.toggle('selected');
-  // eslint-disable-next-line no-use-before-define
+
   displaySelected();
 }
 

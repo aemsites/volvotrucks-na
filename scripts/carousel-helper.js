@@ -11,16 +11,19 @@ import { smoothScrollHorizontal } from './motion-helper.js';
  * @param {number} [threshold=1] - The threshold at which to trigger the update function.
  */
 export const listenScroll = (carousel, elements, navigation, updateFn, threshold = 1) => {
-  const io = new IntersectionObserver((entries) => {
-    entries.forEach((entry) => {
-      if (entry.isIntersecting) {
-        updateFn(elements, entry, navigation);
-      }
-    });
-  }, {
-    root: carousel,
-    threshold,
-  });
+  const io = new IntersectionObserver(
+    (entries) => {
+      entries.forEach((entry) => {
+        if (entry.isIntersecting) {
+          updateFn(elements, entry, navigation);
+        }
+      });
+    },
+    {
+      root: carousel,
+      threshold,
+    },
+  );
 
   elements.forEach((el) => {
     io.observe(el);
@@ -35,12 +38,7 @@ export const listenScroll = (carousel, elements, navigation, updateFn, threshold
  * @param {boolean} [smoothScroll=true] - Whether to use smooth scrolling or not. Default is true.
  * @param {number} [scrollDuration=960] - The duration of the scroll animation. Default is 960ms.
  */
-export const setCarouselPosition = (
-  carousel,
-  index,
-  smoothScroll = true,
-  scrollDuration = 960,
-) => {
+export const setCarouselPosition = (carousel, index, smoothScroll = true, scrollDuration = 960) => {
   const carouselStyle = window.getComputedStyle(carousel);
   const gap = parseFloat(carouselStyle.columnGap || 0);
   const firstEl = carousel.firstElementChild;
@@ -93,7 +91,8 @@ export const createArrowControls = (carousel, scrollSelector, controlClasses, ar
     let index = [...activeItem.parentNode.children].indexOf(activeItem);
     if (direction === 'left') {
       index -= 1;
-      if (index === -1) { // Go to the last item if at the start
+      if (index === -1) {
+        // Go to the last item if at the start
         index = carousel.childElementCount;
       }
     } else {

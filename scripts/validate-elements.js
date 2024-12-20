@@ -1,19 +1,10 @@
-// eslint-disable-next-line import/no-cycle
-import {
-  formatStringToArray,
-  TOOLS_CONFIGS,
-} from './common.js';
+import { formatStringToArray, TOOLS_CONFIGS } from './common.js';
 import { loadCSS } from './aem.js';
 import showSnackbar from '../common/snackbar/snackbar.js';
 
 loadCSS(`${window.hlx.codeBasePath}/common/snackbar/snackbar.css`);
 
-const {
-  v1SectionClasses = false,
-  v2SectionClasses = false,
-  v1AllowedBlocks = false,
-  v2AllowedBlocks = false,
-} = TOOLS_CONFIGS;
+const { v1SectionClasses = false, v2SectionClasses = false, v1AllowedBlocks = false, v2AllowedBlocks = false } = TOOLS_CONFIGS;
 
 const formattedV1SectionClasses = formatStringToArray(v1SectionClasses);
 const formattedV2SectionClasses = formatStringToArray(v2SectionClasses);

@@ -1,4 +1,3 @@
-/* stylelint-disable string-quotes */
 /* stylelint-disable number-max-precision */
 
 /*
@@ -7,8 +6,7 @@
 */
 @font-face {
   font-family: 'VolvoNovum Fallback';
-  src: local('Noto Sans'),
-  url('https://fonts.gstatic.com/s/notosans/v27/o-0IIpQlx3QUlC5A4PNr5TRA.woff2') format('woff2');
+  src: local('Noto Sans');
   size-adjust: 102%;
   ascent-override: 95%;
   descent-override: normal;
@@ -17,8 +15,7 @@
 
 @font-face {
   font-family: 'VolvoNovum-Medium Fallback';
-  src: local('Noto Sans'),
-  url('https://fonts.gstatic.com/s/notosans/v27/o-0IIpQlx3QUlC5A4PNr5TRA.woff2') format('woff2');
+  src: local('Noto Sans');
   size-adjust: 103%;
   ascent-override: 92%;
   descent-override: normal;
@@ -28,8 +25,7 @@
 /* previous fallback font was Arial Narrow */
 @font-face {
   font-family: 'VolvoBroadProDigital Fallback';
-  src: local('Noto Sans'),
-  url('https://fonts.gstatic.com/s/notosans/v27/o-0IIpQlx3QUlC5A4PNr5TRA.woff2') format('woff2');
+  src: local('Noto Sans');
   font-style: normal;
   font-weight: 400;
   ascent-override: 100%;
@@ -42,8 +38,7 @@
   font-family: 'fontawesome Fallback';
   font-style: normal;
   font-weight: 400;
-  src: local('Noto Sans'),
-  url('https://fonts.gstatic.com/s/notosans/v27/o-0IIpQlx3QUlC5A4PNr5TRA.woff2') format('woff2');
+  src: local('Noto Sans');
   ascent-override: 93.75%;
   descent-override: 6.25%;
   line-gap-override: 0%;
@@ -53,9 +48,9 @@
 :root {
   /* fonts */
   --ff-fallback-default: 'Noto Sans', sans-serif;
-  --ff-volvo-novum-medium: 'VolvoNovum-Medium', 'VolvoNovum-Medium Fallback', sans-serif;
-  --ff-volvo-novum: 'VolvoNovum', 'VolvoNovum Fallback', sans-serif;
-  --ff-volvo-broadprodigital: 'VolvoBroadProDigital', 'VolvoBroadProDigital Fallback', sans-serif;
+  --ff-volvo-novum-medium: 'VolvoNovum-Medium', 'VolvoNovum-Medium Fallback', var(--ff-fallback-default);
+  --ff-volvo-novum: 'VolvoNovum', 'VolvoNovum Fallback', var(--ff-fallback-default);
+  --ff-volvo-broadprodigital: 'VolvoBroadProDigital', 'VolvoBroadProDigital Fallback', var(--ff-fallback-default);
   --ff-fontawesome: 'fontawesome', 'fontawesome Fallback';
   --font-family-body: var(--ff-volvo-novum);
   --font-family-heading: var(--ff-volvo-novum-medium);
@@ -1896,5 +1891,3 @@ main.blue-contract .section.section-with-title p {
 .truck-configurator svg #BLOCK_RECORD {
   color: rgb(20 20 20);
 }
-
-/* truck configurator style overrides end */

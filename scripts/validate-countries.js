@@ -18,7 +18,6 @@ export const getUserCountryName = async (lat, lng) => {
 const checkForRedirect = (list, country, url) => {
   // Check if country is included in the list that comes from the metadata
   if (!list.includes(country)) {
-    // eslint-disable-next-line no-console
     console.error('Truck configurator not avaliable for: ', country);
     const completeUrl = window.location.origin + url;
     window.location.replace(completeUrl);
@@ -31,13 +30,16 @@ export const validateCountries = async (countries, url) => {
   const locationSuccess = async (position) => {
     const { latitude, longitude } = position.coords;
     const response = await getUserCountryName(latitude, longitude);
-    if (!response) return;
+    if (!response) {
+      return;
+    }
 
-    const country = (splitString(response).reverse())[0];
-    if (country) checkForRedirect(allowedCountries, country, url);
+    const country = splitString(response).reverse()[0];
+    if (country) {
+      checkForRedirect(allowedCountries, country, url);
+    }
   };
   const locationError = (error) => {
-    // eslint-disable-next-line no-console
     console.error('Error: ', error);
   };
 

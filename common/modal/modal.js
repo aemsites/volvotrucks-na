@@ -1,17 +1,6 @@
-// eslint-disable-next-line import/no-cycle
-import {
-  createElement,
-  decorateIcons,
-  getTextLabel,
-} from '../../scripts/common.js';
+import { createElement, decorateIcons, getTextLabel } from '../../scripts/common.js';
 import { loadCSS, updateSectionsStatus } from '../../scripts/aem.js';
-import {
-  createIframe,
-  isAEMVideoUrl,
-  isLowResolutionVideoUrl,
-  setupPlayer,
-  getDeviceSpecificVideoUrl,
-} from '../../scripts/video-helper.js';
+import { createIframe, isAEMVideoUrl, isLowResolutionVideoUrl, setupPlayer, getDeviceSpecificVideoUrl } from '../../scripts/video-helper.js';
 
 const HIDE_MODAL_CLASS = 'modal-hidden';
 let currentModalClasses = null;
@@ -31,7 +20,7 @@ const createModalTopBar = (parentEl) => {
 
   decorateIcons(topBar);
   parentEl.prepend(...topBar.children);
-  // eslint-disable-next-line no-use-before-define
+
   parentEl.querySelector('.modal-close-button').addEventListener('click', () => hideModal());
   parentEl.querySelector('.modal-top-bar').addEventListener('click', (event) => event.stopPropagation());
 };
@@ -43,14 +32,12 @@ const createModal = () => {
 
   modalBackground.addEventListener('click', () => {
     if (!document.documentElement.classList.contains('redesign-v2')) {
-      // eslint-disable-next-line no-use-before-define
       hideModal();
     }
   });
 
   const keyDownAction = (event) => {
     if (event.key === 'Escape') {
-      // eslint-disable-next-line no-use-before-define
       hideModal();
     }
   };
@@ -74,9 +61,13 @@ const createModal = () => {
   };
 
   const handleVideoLoad = (videoElement) => {
-    videoElement.addEventListener('loadeddata', () => {
-      updateSectionsStatus(modalContent);
-    }, { once: true });
+    videoElement.addEventListener(
+      'loadeddata',
+      () => {
+        updateSectionsStatus(modalContent);
+      },
+      { once: true },
+    );
   };
 
   const handleNewContent = (newContent) => {
@@ -87,9 +78,9 @@ const createModal = () => {
 
     // checking if the first section contains one heading only
     if (
-      firstSection.children.length === 1
-      && firstSection.children[0].children.length === 1
-      && /^H[1-6]$/.test(newContent[0].children[0].children[0].tagName)
+      firstSection.children.length === 1 &&
+      firstSection.children[0].children.length === 1 &&
+      /^H[1-6]$/.test(newContent[0].children[0].children[0].tagName)
     ) {
       const headingContent = firstSection.children[0].children[0].textContent;
 
@@ -107,9 +98,7 @@ const createModal = () => {
     videoElements.forEach(handleVideoLoad);
   };
 
-  async function showModal(newContent, {
-    beforeBanner, beforeIframe, modalClasses = [], invokeContext,
-  }) {
+  async function showModal(newContent, { beforeBanner, beforeIframe, modalClasses = [], invokeContext }) {
     document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`);
     currentInvokeContext = invokeContext;
     // disabling focus for header, footer and main elements when modal is open
@@ -122,7 +111,7 @@ const createModal = () => {
     currentModalClasses = modalClasses;
     window.addEventListener('keydown', keyDownAction);
 
-    if (newContent && (typeof newContent !== 'string')) {
+    if (newContent && typeof newContent !== 'string') {
       handleNewContent(newContent);
     } else if (newContent) {
       clearModalContent();
@@ -138,7 +127,7 @@ const createModal = () => {
         videoOrIframe.classList.add('modal-video');
         modalBackground.classList.add('modal--video');
         modalContent.append(videoOrIframe);
-      } else if (isAEMVideoUrl) {
+      } else if (isAEMVideoUrl(newContent)) {
         videoOrIframe = document.createElement('div');
         videoOrIframe.classList.add('modal-video');
 
@@ -230,7 +219,4 @@ const createModal = () => {
 
 const { showModal, hideModal } = createModal();
 
-export {
-  showModal,
-  hideModal,
-};
+export { showModal, hideModal };

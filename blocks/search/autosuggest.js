@@ -25,19 +25,14 @@ export function fetchAutosuggest(term, autosuggestEle, rowEle, func) {
     if (errors) {
       console.log('%cSomething went wrong', { errors });
     } else {
-      const {
-        edssuggest: {
-          terms,
-        } = {},
-      } = data;
+      const { edssuggest: { terms } = {} } = data;
       autosuggestEle.textContent = '';
       autosuggestEle.classList.remove('show');
 
       if (terms.length) {
         terms.forEach((val) => {
           const row = createElement(rowEle.tag, { classes: rowEle.class, props: rowEle.props });
-          const suggestFragment = fragmentRange
-            .createContextualFragment(`<b>
+          const suggestFragment = fragmentRange.createContextualFragment(`<b>
             ${val}
           </b>`);
           row.appendChild(suggestFragment);

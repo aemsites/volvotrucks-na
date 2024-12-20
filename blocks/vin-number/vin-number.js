@@ -1,9 +1,4 @@
-import {
-  getTextLabel,
-  createElement,
-  getJsonFromUrl,
-  getPlaceholders,
-} from '../../scripts/common.js';
+import { getTextLabel, createElement, getJsonFromUrl, getPlaceholders } from '../../scripts/common.js';
 
 const docRange = document.createRange();
 const isFrench = window.location.href.indexOf('fr') > -1;
@@ -25,39 +20,43 @@ const apiConfig = {
 };
 
 // list of things to be display for each recall
-const valueDisplayList = [{
-  key: 'recall_date',
-},
-{
-  key: 'mfr_recall_number',
-},
-{
-  key: 'nhtsa_recall_number',
-},
-{
-  key: 'tc_recall_nbr',
-},
-{
-  key: 'mfr_recall_status',
-},
-{
-  key: 'recall_description',
-  frenchKey: 'recall_description_french',
-  class: `${blockName}__detail-item--column`,
-},
-{
-  key: 'safety_risk_description',
-  frenchKey: 'safety_risk_description_french',
-  class: `${blockName}__detail-item--column`,
-}, {
-  key: 'remedy_description',
-  frenchKey: 'remedy_description_french',
-  class: `${blockName}__detail-item--column`,
-}, {
-  key: 'mfr_notes',
-  frenchKey: 'mfr_notes_french',
-  class: `${blockName}__detail-item--column`,
-}];
+const valueDisplayList = [
+  {
+    key: 'recall_date',
+  },
+  {
+    key: 'mfr_recall_number',
+  },
+  {
+    key: 'nhtsa_recall_number',
+  },
+  {
+    key: 'tc_recall_nbr',
+  },
+  {
+    key: 'mfr_recall_status',
+  },
+  {
+    key: 'recall_description',
+    frenchKey: 'recall_description_french',
+    class: `${blockName}__detail-item--column`,
+  },
+  {
+    key: 'safety_risk_description',
+    frenchKey: 'safety_risk_description_french',
+    class: `${blockName}__detail-item--column`,
+  },
+  {
+    key: 'remedy_description',
+    frenchKey: 'remedy_description_french',
+    class: `${blockName}__detail-item--column`,
+  },
+  {
+    key: 'mfr_notes',
+    frenchKey: 'mfr_notes_french',
+    class: `${blockName}__detail-item--column`,
+  },
+];
 
 // use this to map values from API
 const recallStatus = {
@@ -68,10 +67,14 @@ const recallStatus = {
 
 function renderRecalls(recallsData) {
   const resultTextEle = document.querySelector(`.${blockName}__results-text`);
-  let resultContent = getTextLabel('result text').replace(/\${count}/, recallsData.number_of_recalls).replace(/\${vin}/, recallsData.vin);
+  let resultContent = getTextLabel('result text')
+    .replace(/\${count}/, recallsData.number_of_recalls)
+    .replace(/\${vin}/, recallsData.vin);
   let noFrenchInfo = false;
 
-  const recallsOldestDate = isFrench ? new Date(recallsData.recalls_since).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' }) : recallsData.recalls_since;
+  const recallsOldestDate = isFrench
+    ? new Date(recallsData.recalls_since).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' })
+    : recallsData.recalls_since;
   const blockEl = document.querySelector(`.${blockName}__recalls-wrapper`);
 
   const recallsMake = createElement('div', { classes: `${blockName}__recalls-make-wrapper` });
@@ -188,7 +191,7 @@ function setStorageItem(key, value) {
   // store the value as object along with expiry date
   const result = {
     data: value,
-    expireTime: Date.now() + (60 * 60 * 1000), // set the expiry from the current date for a day
+    expireTime: Date.now() + 60 * 60 * 1000, // set the expiry from the current date for a day
   };
 
   // stringify the result and the data in original storage
@@ -204,7 +207,6 @@ async function fetchRefreshDate() {
       setStorageItem('refreshDate', response.refresh_date);
       return response.refresh_date;
     } catch (error) {
-      // eslint-disable-next-line no-console
       console.error('Error fetching refresh date:', error);
     }
   }
@@ -233,20 +235,18 @@ function fetchRecalls(e) {
     if (vin) {
       const { url, key } = getAPIConfig();
       try {
-        getJsonFromUrl(`${url}vin/${vin}?api_key=${key}&mode=company`)
-          .then((response) => {
-            if (response.error_code) {
-              resultText.innerHTML = `${getTextLabel('no recalls')} ${vin}`;
-            } else {
-              renderRecalls(response);
-            }
+        getJsonFromUrl(`${url}vin/${vin}?api_key=${key}&mode=company`).then((response) => {
+          if (response.error_code) {
+            resultText.innerHTML = `${getTextLabel('no recalls')} ${vin}`;
+          } else {
+            renderRecalls(response);
+          }
 
-            const vinInput = document.querySelector(`.${blockName}__input`);
-            vinInput.value = '';
-            submitBtn.disabled = false;
-          });
+          const vinInput = document.querySelector(`.${blockName}__input`);
+          vinInput.value = '';
+          submitBtn.disabled = false;
+        });
       } catch (error) {
-        // eslint-disable-next-line no-console
         console.error('Error fetching Recalls:', error);
       }
       return null;

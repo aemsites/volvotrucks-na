@@ -15,11 +15,7 @@ const buildChartMPG = (data) => {
   const chartValues = Object.values(valuesSets[0]);
 
   const yAxisStart = 300;
-  const {
-    valueToPoints,
-    chartValueRange,
-    bottomEdgeValue,
-  } = calcValuesToPoints(chartValues, yAxisStart);
+  const { valueToPoints, chartValueRange, bottomEdgeValue } = calcValuesToPoints(chartValues, yAxisStart);
   const barHeight1InPoints = valueToPoints(chartValues[0]);
   const barHeight2InPoints = valueToPoints(chartValues[1]);
   const barWidth = totalWidthChart / 4;
@@ -69,7 +65,7 @@ const buildChartMPG = (data) => {
     <!-- COLOR BARS AND VALUES-->
     <g data-z-index="7" aria-hidden="false" role="region" tabindex="-1" class="chart-bars">
       <rect
-        x="${(totalWidthChart * 0.3) - (barWidth / 2)}"
+        x="${totalWidthChart * 0.3 - barWidth / 2}"
         y="${yAxisStart - barHeight1InPoints}"
         width="${barWidth}"
         height="${barHeight1InPoints}"
@@ -77,7 +73,7 @@ const buildChartMPG = (data) => {
         class="bar">
       </rect>
       <rect
-        x="${(totalWidthChart * 0.7) - (barWidth / 2)}"
+        x="${totalWidthChart * 0.7 - barWidth / 2}"
         y="${yAxisStart - barHeight2InPoints}"
         width="${barWidth}"
         height="${barHeight2InPoints}"
@@ -87,7 +83,7 @@ const buildChartMPG = (data) => {
       <text
         x="${totalWidthChart * 0.3}"
         text-anchor="middle"
-        y="${(yAxisStart - (barHeight1InPoints * 0.5) + 5)}"
+        y="${yAxisStart - barHeight1InPoints * 0.5 + 5}"
         opacity="1"
         class="text"
       >
@@ -96,7 +92,7 @@ const buildChartMPG = (data) => {
       <text
         x="${totalWidthChart * 0.7}"
         text-anchor="middle"
-        y="${(yAxisStart - (barHeight2InPoints * 0.5) + 5)}"
+        y="${yAxisStart - barHeight2InPoints * 0.5 + 5}"
         opacity="1"
         class="text"
       >

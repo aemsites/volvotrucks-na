@@ -1,7 +1,7 @@
 {
   "name": "volvotrucks-na",
   "private": true,
-  "version": "26.0.0",
+  "version": "27.0.0",
   "description": "Volvo Trucks North America",
   "engines": {
     "node": ">=v20.15.1 <23",
@@ -16,7 +16,10 @@
     "lint:js": "eslint .",
     "lint:css": "stylelint 'blocks/**/*.css' 'styles/*.css' 'templates/**/*.css'",
     "lint": "npm run lint:js && npm run lint:css",
-    "prepare": "husky install",
+    "lint:js:fix": "eslint . --fix",
+    "lint:css:fix": "stylelint 'blocks/**/*.css' 'styles/*.css' 'templates/**/*.css' --fix",
+    "lint:fix": "npm run lint:js:fix && npm run lint:css:fix",
+    "prepare": "husky",
     "postupdate": "copyfiles -u 3 'node_modules/video.js/dist/video.min.js' 'node_modules/video.js/dist/video-js.min.css' scripts/videojs"
   },
   "lint-staged": {
@@ -31,20 +34,21 @@
   "license": "UNLICENSED",
   "homepage": "https://github.com/adobe/helix-project-boilerplate#readme",
   "devDependencies": {
-    "@babel/core": "7.25.2",
-    "@babel/eslint-parser": "7.25.1",
+    "@babel/core": "7.26.0",
+    "@babel/eslint-parser": "7.25.9",
     "@esm-bundle/chai": "4.3.4-fix.0",
     "@web/test-runner": "0.18.2",
     "@web/test-runner-commands": "0.9.0",
     "chai": "5.1.1",
     "copyfiles": "^2.4.1",
-    "eslint": "^8.57.0",
-    "eslint-config-airbnb-base": "15.0.0",
-    "eslint-plugin-import": "2.29.1",
-    "husky": "^8.0.3",
+    "eslint": "^9.17.0",
+    "eslint-config-prettier": "^9.1.0",
+    "eslint-plugin-prettier": "^5.2.1",
+    "globals": "^15.13.0",
+    "husky": "^9.1.7",
     "lint-staged": "^15.2.7",
     "sinon": "17.0.1",
-    "stylelint": "16.8.1",
+    "stylelint": "16.12.0",
     "stylelint-config-standard": "36.0.1",
     "video.js": "8.17.3"
   }

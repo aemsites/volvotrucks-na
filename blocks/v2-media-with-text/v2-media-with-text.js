@@ -7,12 +7,21 @@ import {
   unwrapDivs,
   variantsClassesToBEM,
 } from '../../scripts/common.js';
-import {
-  addMuteControls, createVideoWithPoster, isVideoLink, selectVideoLink,
-} from '../../scripts/video-helper.js';
+import { addMuteControls, createVideoWithPoster, isVideoLink, selectVideoLink } from '../../scripts/video-helper.js';
 
 const blockName = 'v2-media-with-text';
-const variantClasses = ['text-centered', 'expanded-width', 'full-width', 'media-left', 'media-left', 'media-right', 'media-vertical', 'media-gallery', 'media-autoplay', 'mute-controls'];
+const variantClasses = [
+  'text-centered',
+  'expanded-width',
+  'full-width',
+  'media-left',
+  'media-left',
+  'media-right',
+  'media-vertical',
+  'media-gallery',
+  'media-autoplay',
+  'mute-controls',
+];
 export default async function decorate(block) {
   variantsClassesToBEM(block.classList, variantClasses, blockName);
   addClassIfChildHasClass(block, 'full-width');
@@ -30,7 +39,9 @@ export default async function decorate(block) {
     const isCellNumberEven = index % 2 === 0;
     const isTotalCellsEven = cells.length % 2 === 0;
 
-    if (isLastCell) subTextSection = createNewSection(blockName, 'sub-text', cell); else if (isCellNumberEven) {
+    if (isLastCell) {
+      subTextSection = createNewSection(blockName, 'sub-text', cell);
+    } else if (isCellNumberEven) {
       contentSection = createNewSection(blockName, 'content', cell);
       const headings = [...cell.querySelectorAll(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])];
       headings.forEach((heading) => heading.classList.add(`${blockName}__heading`));
@@ -49,7 +60,9 @@ export default async function decorate(block) {
             mediaSection.append(videoWithPoster);
           } else {
             mediaSection = addVideoToSection(blockName, mediaSection, linkEl);
-            if (block.classList.contains(`${blockName}--mute-controls`)) addMuteControls(mediaSection);
+            if (block.classList.contains(`${blockName}--mute-controls`)) {
+              addMuteControls(mediaSection);
+            }
           }
         }
       }
@@ -69,7 +82,9 @@ export default async function decorate(block) {
     }
     // For an odd number of cells, append the remaining subTextSection.
     if (!isTotalCellsEven) {
-      if (subTextSection) block.append(subTextSection);
+      if (subTextSection) {
+        block.append(subTextSection);
+      }
     }
   });
 
