@@ -842,14 +842,20 @@ if (isConfiguratorPage) {
   main.innerHTML = '';
   main.append(container);
 
-  const jsUrls = formatStringToArray(TRUCK_CONFIGURATOR_URLS.JS);
-  if (currentUrl.includes('/summary?config=')) {
+  const { JS = false, CSS = false } = TRUCK_CONFIGURATOR_URLS;
+  const cssUrls = formatStringToArray(CSS);
+  const jsUrls = formatStringToArray(JS);
+  if (jsUrls.length > 0 && currentUrl.includes('/summary?config=')) {
     document.documentElement.classList.add('external-app');
     const truckConfiguratorBaseUrl = new URL(jsUrls[0]).origin;
     const currentUrlHash = new URL(currentUrl).hash;
     jsUrls.unshift(`${truckConfiguratorBaseUrl}/${currentUrlHash}`);
   }
-  const cssUrls = formatStringToArray(TRUCK_CONFIGURATOR_URLS.CSS);
+
+  // if there are no css files, remove js files as well to avoid a weird animation
+  if (cssUrls.length === 0) {
+    jsUrls.length = 0;
+  }
 
   jsUrls.forEach((url) => {
     loadScript(url, { type: 'text/javascript', charset: 'UTF-8', defer: 'defer' });

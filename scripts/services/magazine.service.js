@@ -137,6 +137,10 @@ export const fetchMagazineArticles = async ({
   };
 
   try {
+    if (!tenant) {
+      throw new Error('TENANT not defined');
+    }
+
     const rawData = await fetchSearchData({
       query: magazineSearchQuery(),
       variables,
