@@ -1,9 +1,4 @@
-import {
-  createElement,
-  createResponsivePicture,
-  stringToElement,
-  unwrapDivs,
-} from '../../scripts/common.js';
+import { createElement, createResponsivePicture, stringToElement, unwrapDivs } from '../../scripts/common.js';
 
 const blockName = 'v2-applications-carousel';
 
@@ -80,20 +75,9 @@ const createImageCarousel = (carouselCardsData) => {
   });
   const fragment = document.createDocumentFragment();
 
-  carouselCardsData.forEach(({
-    mobileImageUrl = '',
-    desktopImageUrl = '',
-    title = '',
-    index,
-    isActive = false,
-  }) => {
+  carouselCardsData.forEach(({ mobileImageUrl = '', desktopImageUrl = '', title = '', index, isActive = false }) => {
     const imageConfig = createResponsiveImageConfig(mobileImageUrl, desktopImageUrl);
-    const responsivePicture = createResponsivePicture(
-      imageConfig,
-      true,
-      title,
-      `${blockName}__image-display`,
-    );
+    const responsivePicture = createResponsivePicture(imageConfig, true, title, `${blockName}__image-display`);
 
     const imageWrapper = createElement('div', {
       classes: `${blockName}__image`,
@@ -119,18 +103,21 @@ const createImageCarousel = (carouselCardsData) => {
  * @param {NodeListOf<HTMLElement> | HTMLElement[]} cardElements - The card elements.
  * @returns {Array<Object>} - The parsed card data.
  */
-const extractCarouselCardData = (cardElements) => cardElements.map((card, index) => {
-  if (!card) return null;
+const extractCarouselCardData = (cardElements) =>
+  cardElements.map((card, index) => {
+    if (!card) {
+      return null;
+    }
 
-  return {
-    index,
-    title: card.querySelector('div > p')?.textContent?.trim() || '',
-    iconMarkup: card.querySelector('.icon')?.outerHTML || '',
-    mobileImageUrl: card.querySelector('div > div > p:first-of-type picture img')?.src?.split('?')[0] || '',
-    desktopImageUrl: card.querySelector('div > div > p:last-of-type picture img')?.src?.split('?')[0] || '',
-    isActive: index === 0,
-  };
-});
+    return {
+      index,
+      title: card.querySelector('div > p')?.textContent?.trim() || '',
+      iconMarkup: card.querySelector('.icon')?.outerHTML || '',
+      mobileImageUrl: card.querySelector('div > div > p:first-of-type picture img')?.src?.split('?')[0] || '',
+      desktopImageUrl: card.querySelector('div > div > p:last-of-type picture img')?.src?.split('?')[0] || '',
+      isActive: index === 0,
+    };
+  });
 
 /**
  * Creates the navigation container for the carousel.
@@ -150,12 +137,7 @@ const createCarouselCardsContainer = (carouselCardsData) => {
   });
   const fragment = document.createDocumentFragment();
 
-  carouselCardsData.forEach(({
-    title,
-    index,
-    isActive,
-    iconMarkup,
-  }) => {
+  carouselCardsData.forEach(({ title, index, isActive, iconMarkup }) => {
     const cardItem = createCarouselCard(title, index, isActive, iconMarkup);
     fragment.appendChild(cardItem);
   });
