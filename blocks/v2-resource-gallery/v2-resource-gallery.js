@@ -1,16 +1,5 @@
-import {
-  wrapImageWithVideoLink,
-  selectVideoLink,
-  isVideoLink,
-  addVideoShowHandler,
-} from '../../scripts/video-helper.js';
-import {
-  createElement,
-  decorateIcons,
-  getTextLabel,
-  unwrapDivs,
-  variantsClassesToBEM,
-} from '../../scripts/common.js';
+import { wrapImageWithVideoLink, selectVideoLink, isVideoLink, addVideoShowHandler } from '../../scripts/video-helper.js';
+import { createElement, decorateIcons, getTextLabel, unwrapDivs, variantsClassesToBEM } from '../../scripts/common.js';
 
 const blockName = 'v2-resource-gallery';
 const variantClasses = ['no-expand'];

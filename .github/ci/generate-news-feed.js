@@ -10,18 +10,13 @@ async function main() {
     } catch (error) {
       console.error('Error importing or processing object:', error);
     }
-    return newsFeedConfigurations
+    return newsFeedConfigurations;
   }
-  
-  const {
-    ENDPOINT,
-    FEED_INFO_ENDPOINT,
-    TARGET_DIRECTORY,
-    LIMIT,
-  } = await getConfigs();
-  
+
+  const { ENDPOINT, FEED_INFO_ENDPOINT, TARGET_DIRECTORY, LIMIT } = await getConfigs();
+
   const TARGET_FILE = `${TARGET_DIRECTORY}/feed.xml`;
-  const PARSED_LIMIT = Number(LIMIT)
+  const PARSED_LIMIT = Number(LIMIT);
 
   const allPosts = await fetchBlogPosts(ENDPOINT, PARSED_LIMIT);
   console.log(`found ${allPosts.length} posts`);
@@ -41,7 +36,7 @@ async function main() {
     language: feedMetadata.lang,
   });
   allPosts.forEach((post) => {
-    const link = feedMetadata["site-root"] + post.path;
+    const link = feedMetadata['site-root'] + post.path;
     feed.addItem({
       title: post.title,
       id: link,
@@ -88,5 +83,4 @@ async function fetchBlogMetadata(infoEndpoint) {
   return feedInfoResult.data[0];
 }
 
-main()
-  .catch((e) => console.error(e));
+main().catch((e) => console.error(e));

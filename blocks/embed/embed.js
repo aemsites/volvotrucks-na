@@ -1,7 +1,10 @@
 import {
-  selectVideoLink, addPlayIcon,
-  showVideoModal, isLowResolutionVideoUrl,
-  createLowResolutionBanner, createIframe,
+  selectVideoLink,
+  addPlayIcon,
+  showVideoModal,
+  isLowResolutionVideoUrl,
+  createLowResolutionBanner,
+  createIframe,
 } from '../../scripts/video-helper.js';
 
 export default function decorate(block) {
@@ -15,7 +18,9 @@ export default function decorate(block) {
   videoWrapper.classList.add('embed-video');
 
   const preferredType = (() => {
-    if (isFullWidth) return 'local';
+    if (isFullWidth) {
+      return 'local';
+    }
     return 'auto';
   })();
 
@@ -26,7 +31,7 @@ export default function decorate(block) {
 
   if (!selectedLink) {
     block.innerHTML = '';
-    /* eslint-disable-next-line no-console */
+
     console.warn('Embed block: There is no video link. Please check if the fallback video link is provided.');
     return;
   }

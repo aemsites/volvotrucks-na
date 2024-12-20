@@ -1,18 +1,5 @@
-import {
-  getMetadata,
-  createOptimizedPicture,
-  buildBlock,
-  decorateBlock,
-  loadBlock,
-} from '../../scripts/aem.js';
-import {
-  createElement,
-  getTextLabel,
-  getPlaceholders,
-  extractObjectFromArray,
-  MAGAZINE_CONFIGS,
-  getLocale,
-} from '../../scripts/common.js';
+import { getMetadata, createOptimizedPicture, buildBlock, decorateBlock, loadBlock } from '../../scripts/aem.js';
+import { createElement, getTextLabel, getPlaceholders, extractObjectFromArray, MAGAZINE_CONFIGS, getLocale } from '../../scripts/common.js';
 
 const templateName = 'v2-magazine';
 const articleHero = `${templateName}-article-hero`;
@@ -25,12 +12,13 @@ const dateValues = {
   pubDateEl: null,
 };
 
-const dateFormatter = (date, locale, options) => new Intl.DateTimeFormat(locale, options)
-  .format(new Date(date));
+const dateFormatter = (date, locale, options) => new Intl.DateTimeFormat(locale, options).format(new Date(date));
 
 const buildHeroTitle = () => {
   let title = getMetadata('og:title');
-  if (title.includes('|')) [title] = title.split(' |');
+  if (title.includes('|')) {
+    [title] = title.split(' |');
+  }
   const heroTitle = createElement('h1', { classes: `${articleHero}__title` });
   heroTitle.innerText = title;
   return heroTitle;
@@ -60,12 +48,8 @@ const buildMetaPubDate = () => {
   const { DATE_OPTIONS, DATE_OPTIONS_MOBILE } = MAGAZINE_CONFIGS;
   let pubDate = getMetadata('publish-date');
   const locale = getLocale();
-  const mobileDateOptions = DATE_OPTIONS_MOBILE
-    ? extractObjectFromArray(JSON.parse(DATE_OPTIONS_MOBILE))
-    : {};
-  const desktopDateOptions = DATE_OPTIONS
-    ? extractObjectFromArray(JSON.parse(DATE_OPTIONS))
-    : {};
+  const mobileDateOptions = DATE_OPTIONS_MOBILE ? extractObjectFromArray(JSON.parse(DATE_OPTIONS_MOBILE)) : {};
+  const desktopDateOptions = DATE_OPTIONS ? extractObjectFromArray(JSON.parse(DATE_OPTIONS)) : {};
   const formatDateOptions = MQ.matches ? mobileDateOptions : desktopDateOptions;
   const pubDateEl = createElement('date', {
     classes: `${articleHero}__pubdate`,
@@ -125,7 +109,9 @@ const buildArticleHero = (doc, articleSearchWrapper) => {
   const tagList = buildHeroTags();
 
   heroContainer.append(heroTitle, headImg, textContainer);
-  if (tagList) heroContainer.append(tagList);
+  if (tagList) {
+    heroContainer.append(tagList);
+  }
 
   main.setAttribute('itemscope', '');
   main.setAttribute('itemtype', 'https://schema.org/Article');
@@ -137,9 +123,7 @@ const buildArticleHero = (doc, articleSearchWrapper) => {
   }
 
   const resizeObserver = new ResizeObserver((entries) => {
-    const {
-      mobileDateOptions, desktopDateOptions, pubDate, locale, pubDateEl,
-    } = dateValues;
+    const { mobileDateOptions, desktopDateOptions, pubDate, locale, pubDateEl } = dateValues;
     entries.forEach(() => {
       const dateOptions = MQ.matches ? mobileDateOptions : desktopDateOptions;
       pubDateEl.innerText = dateFormatter(pubDate, locale, dateOptions);

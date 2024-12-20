@@ -40,9 +40,15 @@ const createFakeValues = (type, values) => {
     end: [20, 30, 40, 50],
   };
 
-  if (type === 'rpm') modifier = rpm;
-  if (type === 'horsepower') modifier = horsepower;
-  if (type === 'torque') modifier = torque;
+  if (type === 'rpm') {
+    modifier = rpm;
+  }
+  if (type === 'horsepower') {
+    modifier = horsepower;
+  }
+  if (type === 'torque') {
+    modifier = torque;
+  }
 
   const startingValues = [
     firstValue - modifier.start[0],
@@ -50,12 +56,7 @@ const createFakeValues = (type, values) => {
     firstValue - modifier.start[2],
     firstValue - modifier.start[3],
   ];
-  const endingValues = [
-    lastValue - modifier.end[0],
-    lastValue - modifier.end[1],
-    lastValue - modifier.end[2],
-    lastValue - modifier.end[3],
-  ];
+  const endingValues = [lastValue - modifier.end[0], lastValue - modifier.end[1], lastValue - modifier.end[2], lastValue - modifier.end[3]];
 
   const completedValues = [...startingValues, ...values, ...endingValues];
   return completedValues;
@@ -75,20 +76,22 @@ const plotLine = (valuesOnX, typeOfLine, conversionFactor, totalWidth, sectionWi
     const decimalCount = 2;
 
     const pureValueX = e;
-    const pureValueY = Number(400 - (typeOfLine[idx] * conversionFactor));
-    const nextValueY = Number(400 - (typeOfLine[idx + 1] * conversionFactor));
+    const pureValueY = Number(400 - typeOfLine[idx] * conversionFactor);
+    const nextValueY = Number(400 - typeOfLine[idx + 1] * conversionFactor);
     const difference = nextValueY - pureValueY;
 
-    const bezierPointX1 = (pureValueX + (sectionWidth * 0.3)).toFixed(decimalCount);
-    const bezierPointX2 = (pureValueX + (sectionWidth * 0.6)).toFixed(decimalCount);
+    const bezierPointX1 = (pureValueX + sectionWidth * 0.3).toFixed(decimalCount);
+    const bezierPointX2 = (pureValueX + sectionWidth * 0.6).toFixed(decimalCount);
 
-    const bezierPointY1 = (pureValueY + (difference * bezierFactor1)).toFixed(decimalCount);
-    const bezierPointY2 = (pureValueY + (difference * bezierFactor2)).toFixed(decimalCount);
+    const bezierPointY1 = (pureValueY + difference * bezierFactor1).toFixed(decimalCount);
+    const bezierPointY2 = (pureValueY + difference * bezierFactor2).toFixed(decimalCount);
 
     const valueX = pureValueX.toFixed(decimalCount);
     const valueY = pureValueY.toFixed(decimalCount);
 
-    return (Number.isNaN(nextValueY)) ? `C ${valueX} ${valueY} ${valueX} ${valueY} ${valueX} ${valueY}` : `C ${valueX} ${valueY} ${bezierPointX1} ${bezierPointY1} ${bezierPointX2} ${bezierPointY2}`;
+    return Number.isNaN(nextValueY)
+      ? `C ${valueX} ${valueY} ${valueX} ${valueY} ${valueX} ${valueY}`
+      : `C ${valueX} ${valueY} ${bezierPointX1} ${bezierPointY1} ${bezierPointX2} ${bezierPointY2}`;
   });
 
   const point = plottedLine.pop();
@@ -151,14 +154,14 @@ const getPeakValue = (values, valuesX, conversionFactor, category, device) => {
   const indexPosition = values.indexOf(peakValue);
 
   const positionX = valuesX[indexPosition];
-  const positionY = Number(400 - (peakValue * conversionFactor));
+  const positionY = Number(400 - peakValue * conversionFactor);
 
   const peakLabel = category === 'HP' ? ['HP', 'Power', colorLineHP] : ['lb-ft', 'Torque', colorLineTQ];
 
   return `
     <rect
-      x=${Math.round((positionX - (128 / 2)))}
-      y=${Math.round((positionY - 76 - 18))}
+      x=${Math.round(positionX - 128 / 2)}
+      y=${Math.round(positionY - 76 - 18)}
       width="${Math.round(128 * device.scale)}px"
       height="${Math.round(76 * device.scale)}px"
       rx="8"
@@ -225,7 +228,7 @@ const getDisplayableLabels = (valuesX, rpm) => {
       >
         ${rpm[idx]}
       </text>`;
-    return (isDisplayable && withinLimits) ? label : null;
+    return isDisplayable && withinLimits ? label : null;
   });
   return labels.join(' ');
 };
@@ -280,7 +283,7 @@ const getPerformanceChart = (data) => {
         <path
           fill="url(#gradientHP)"
           d="
-            M ${valuesOnAxisX[0]} ${400 - (valuesHP[0] * conversionFactorHP)}
+            M ${valuesOnAxisX[0]} ${400 - valuesHP[0] * conversionFactorHP}
             ${plotLine(valuesOnAxisX, valuesHP, conversionFactorHP, totalWidthChart, sectionWidth)}
             L ${totalWidthChart} 400
             L 0 400
@@ -294,7 +297,7 @@ const getPerformanceChart = (data) => {
         <!-- STROKE -->
         <path fill="none"
           d="
-            M ${valuesOnAxisX[0]} ${400 - (valuesHP[0] * conversionFactorHP)} 
+            M ${valuesOnAxisX[0]} ${400 - valuesHP[0] * conversionFactorHP} 
             ${plotLine(valuesOnAxisX, valuesHP, conversionFactorHP, totalWidthChart, sectionWidth)}
           "
           data-z-index="1"
@@ -315,7 +318,7 @@ const getPerformanceChart = (data) => {
         <path
           fill="url(#gradientTQ)"
           d="
-            M ${valuesOnAxisX[0]} ${400 - (valuesTQ[0] * conversionFactorTQ)}
+            M ${valuesOnAxisX[0]} ${400 - valuesTQ[0] * conversionFactorTQ}
             ${plotLine(valuesOnAxisX, valuesTQ, conversionFactorTQ, totalWidthChart, sectionWidth)}
             L ${totalWidthChart} 400
             L 0 400
@@ -329,7 +332,7 @@ const getPerformanceChart = (data) => {
         <!-- STROKE -->
         <path fill="none"
           d="
-            M ${valuesOnAxisX[0]} ${400 - (valuesTQ[0] * conversionFactorTQ)}
+            M ${valuesOnAxisX[0]} ${400 - valuesTQ[0] * conversionFactorTQ}
             ${plotLine(valuesOnAxisX, valuesTQ, conversionFactorTQ, totalWidthChart, sectionWidth)}
           "
           data-z-index="1" stroke="${colorLineTQ}" stroke-width="${strokeWidth}" stroke-linejoin="round" stroke-linecap="round" opacity="1">

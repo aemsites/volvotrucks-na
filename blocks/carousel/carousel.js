@@ -16,7 +16,11 @@ function adjustWidthAndControls(block, carousel, ...controls) {
     }
     const showControls = itemsWidth > containerWidth;
     controls.forEach((ul) => (showControls ? ul.classList.remove('hidden') : ul.classList.add('hidden')));
-    if (showControls) carousel.classList.remove('centered'); else carousel.classList.add('centered');
+    if (showControls) {
+      carousel.classList.remove('centered');
+    } else {
+      carousel.classList.add('centered');
+    }
     if (isDesktop) {
       // set the width only on desktop
       const maxItems = Math.floor((containerWidth - 100) / (itemsWidth / carousel.children.length));
@@ -30,7 +34,9 @@ function adjustWidthAndControls(block, carousel, ...controls) {
 
   let resizeTimeout;
   window.addEventListener('resize', () => {
-    if (resizeTimeout) clearTimeout(resizeTimeout);
+    if (resizeTimeout) {
+      clearTimeout(resizeTimeout);
+    }
     resizeTimeout = setTimeout(toggle, debounceDelay);
   });
 
@@ -69,14 +75,15 @@ function createMobileControls(ul) {
   mobileControls.className = 'mobile-controls';
   [...ul.children].forEach((item, j) => {
     const control = document.createElement('li');
-    if (!j) control.className = 'active';
+    if (!j) {
+      control.className = 'active';
+    }
     control.innerHTML = `<button type="button">${j + 1}</button>`;
     control.firstElementChild.addEventListener('click', () => {
       mobileControls.querySelector('li.active').classList.remove('active');
       control.classList.add('active');
 
-      const left = item.offsetLeft + item.offsetWidth / 2
-        - (item.parentNode.offsetLeft + item.parentNode.offsetWidth / 2);
+      const left = item.offsetLeft + item.offsetWidth / 2 - (item.parentNode.offsetLeft + item.parentNode.offsetWidth / 2);
       ul.scrollTo({ top: 0, left, behavior: 'smooth' });
     });
 
@@ -86,14 +93,18 @@ function createMobileControls(ul) {
 
   let scrollTimeout;
   ul.addEventListener('scroll', () => {
-    if (scrollTimeout) clearTimeout(scrollTimeout);
+    if (scrollTimeout) {
+      clearTimeout(scrollTimeout);
+    }
     scrollTimeout = setTimeout(() => {
       const first = ul.firstElementChild;
       const second = first.nextElementSibling;
       const scrollOffset = second.getBoundingClientRect().x - first.getBoundingClientRect().x;
       let index = 0;
       // how many items have scrolled out?
-      while (ul.scrollLeft - scrollOffset * (index + 1) > 0) index += 1;
+      while (ul.scrollLeft - scrollOffset * (index + 1) > 0) {
+        index += 1;
+      }
       mobileControls.querySelector('li.active').classList.remove('active');
       mobileControls.children[index].classList.add('active');
     }, debounceDelay);
@@ -160,8 +171,7 @@ export default function decorate(block) {
       li.prepend(clone);
     }
 
-    const textItems = container.innerHTML
-      .split('<br>').filter((text) => text.trim() !== '');
+    const textItems = container.innerHTML.split('<br>').filter((text) => text.trim() !== '');
 
     container.innerHTML = `
       <p>${textItems.join('</p><p>')}</p>
