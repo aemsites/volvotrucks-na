@@ -2,6 +2,7 @@ import {
   createElement,
   createResponsivePicture,
   stringToElement,
+  unwrapDivs,
 } from '../../scripts/common.js';
 
 const blockName = 'v2-applications-carousel';
@@ -169,7 +170,7 @@ const createCarouselCardsContainer = (carouselCardsData) => {
  * @param {HTMLElement} block - The block element to decorate.
  */
 export default async function decorate(block) {
-  const cardElements = [...block.querySelectorAll(':scope > div')];
+  const cardElements = [...block.querySelectorAll(':scope > div')].slice(1);
   const carouselCardsData = extractCarouselCardData(cardElements);
   const fragment = document.createDocumentFragment();
   const navigationContainer = createCarouselCardsContainer(carouselCardsData);
@@ -177,4 +178,5 @@ export default async function decorate(block) {
   fragment.append(navigationContainer, imageContainer);
   block.appendChild(fragment);
   cardElements.forEach((card) => card.remove());
+  unwrapDivs(block);
 }
