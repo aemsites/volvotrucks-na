@@ -30,7 +30,7 @@ const createCard = (article) => {
 
   const shortTitle = title.split('|')[0];
   const card = createElement('a', { classes: `${blockName}__article-card`, props: { href: url } });
-  const picture = createOptimizedPicture(image, shortTitle, false, [{ width: '380', height: '214' }]);
+  const picture = createOptimizedPicture(image, shortTitle, false);
   const pictureTag = picture.outerHTML;
   const formattedDate = getDateFromTimestamp(publishDate);
   const cardContent = document.createRange().createContextualFragment(`
