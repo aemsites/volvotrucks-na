@@ -1,0 +1,132 @@
+.redesign-v2 .v2-applications-carousel-container .v2-applications-carousel-wrapper {
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+  max-width: none;
+}
+
+.v2-applications-carousel > div:first-child {
+  max-width: 734px;
+  margin-bottom: 48px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  text-align: center;
+}
+
+.v2-applications-carousel > div:first-child p {
+  margin-bottom: 16px;
+}
+
+.v2-applications-carousel > div:first-child p:first-of-type {
+  font-size: 24px;
+  line-height: 30px;
+}
+
+.v2-applications-carousel > div:first-child h3 {
+  margin-bottom: 24px;
+  font-size: 48px;
+  line-height: 52.8px;
+}
+
+.v2-applications-carousel > div:first-child p:last-of-type {
+  font-size: 18px;
+  line-height: 25.92px;
+}
+
+.v2-applications-carousel__cards {
+  margin-bottom: 40px;
+}
+
+.v2-applications-carousel__cards .v2-applications-carousel__cards-list {
+  display: flex;
+  list-style-type: none;
+  gap: 4px;
+  padding-left: 20px;
+  padding-right: 20px;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.v2-applications-carousel__cards-list::-webkit-scrollbar {
+  display: none;
+}
+
+.v2-applications-carousel__card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  border: 1px solid var(--c-grey-2);
+  border-radius: 8px;
+  height: 200px;
+  width: 160px;
+  padding: 24px;
+}
+
+.v2-applications-carousel__card[aria-selected="true"] {
+  background-color: var(--c-grey-50);
+  border-color: var(--c-main-black);
+}
+
+.v2-applications-carousel__card .icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: auto;
+  border: 1px solid var(--c-grey-3);
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  color: var(--c-grey-4);
+}
+
+.v2-applications-carousel__image[aria-hidden="false"] {
+  display: block;
+}
+
+.v2-applications-carousel__image[aria-hidden="true"] {
+  display: none;
+}
+
+.v2-applications-carousel__image-display {
+  aspect-ratio: 1/1;
+  object-fit: cover;
+  width: 100%;
+}
+
+@media screen and (min-width: 768px) {
+  .v2-applications-carousel__image-display {
+    aspect-ratio: 16/9;
+    max-height: 600px;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  .v2-applications-carousel > div:first-child {
+    max-width: 694px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .v2-applications-carousel__cards {
+    margin-bottom: 48px;
+  }
+
+  .v2-applications-carousel__cards .v2-applications-carousel__cards-list {
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .v2-applications-carousel__card {
+    height: 235px;
+    width: 201px;
+  }
+
+  .v2-applications-carousel__card-title {
+    font-size: 18px;
+    line-height: 25.92px;
+  }
+}
