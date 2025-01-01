@@ -104,7 +104,7 @@ const mobileActions = () => {
   </a>`;
 
   const actions = document.createRange().createContextualFragment(`
-    ${SEARCH_DISABLED.toLowerCase() === 'true' ? '' : searchEl}
+    ${!SEARCH_DISABLED || SEARCH_DISABLED.toLowerCase() === 'true' ? '' : searchEl}
     <button
       aria-label="${openMenuLabel}"
       class="${blockClass}__hamburger-menu ${blockClass}__action-link ${blockClass}__link"
