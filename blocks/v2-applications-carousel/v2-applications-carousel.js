@@ -145,17 +145,132 @@ const createCarouselCardsContainer = (carouselCardsData) => {
 };
 
 /**
+ * Initializes the carousel scroll functionality for a vertical-to-horizontal scrolling carousel.
+ */
+const initializeCarouselBehavior = () => {
+  const carouselContainer = document.querySelector(`.${blockName}`);
+  const cardsList = document.querySelector(`.${blockName}__cards-list`);
+  const cards = Array.from(document.querySelectorAll(`.${blockName}__card`));
+  const images = Array.from(document.querySelectorAll(`.${blockName}__image`));
+  let startX = 0;
+  let scrollLeft = 0;
+
+  /**
+   * Sets the height of the carousel container dynamically based on viewport and card count.
+   */
+  const setCarouselHeight = () => {
+    const viewportHeight = window.innerHeight;
+    const bufferHeight = viewportHeight;
+    carouselContainer.style.height = `${viewportHeight * cards.length + bufferHeight}px`;
+  };
+
+  /**
+   * Updates the active card and its corresponding image based on the provided index.
+   * @param {number} activeIndex - The index of the active card.
+   */
+  const updateActiveCardAndImage = (activeIndex) => {
+    cards.forEach((card, index) => {
+      card.setAttribute('aria-selected', index === activeIndex ? 'true' : 'false');
+      card.setAttribute('tabindex', index === activeIndex ? '0' : '-1');
+    });
+
+    images.forEach((image, index) => {
+      image.setAttribute('aria-hidden', index === activeIndex ? 'false' : 'true');
+      image.setAttribute('tabindex', index === activeIndex ? '0' : '-1');
+    });
+  };
+
+  /**
+   * Calculates the active card index based on the current scroll position.
+   * @param {number} scrollStart - The current scroll position.
+   * @param {number} cardHeight - The height of each card.
+   * @returns {number} - The calculated active index.
+   */
+  const calculateActiveIndex = (scrollStart, cardHeight) =>
+    Math.min(cards.length - 1, Math.max(0, Math.floor((scrollStart + cardHeight / 2) / cardHeight)));
+
+  /**
+   * Computes the horizontal scroll position based on the current vertical scroll.
+   * @param {number} scrollStart - The current scroll position.
+   * @param {number} totalHorizontalScroll - The total available horizontal scroll.
+   * @param {number} containerHeight - The height of the carousel container.
+   * @returns {number} - The computed horizontal scroll position.
+   */
+  const computeScrollLeft = (scrollStart, totalHorizontalScroll, containerHeight) =>
+    (scrollStart / (containerHeight - window.innerHeight)) * totalHorizontalScroll;
+
+  /**
+   * Handles the scroll event to update the carousel's active card and scroll position.
+   */
+  const handleScroll = () => {
+    const containerRect = carouselContainer.getBoundingClientRect();
+    const scrollStart = window.scrollY - carouselContainer.offsetTop;
+
+    if (containerRect.top < window.innerHeight && containerRect.bottom > 0) {
+      const cardHeight = window.innerHeight;
+      const activeIndex = calculateActiveIndex(scrollStart, cardHeight);
+      const totalHorizontalScroll = cardsList.scrollWidth - cardsList.clientWidth;
+      const targetScrollLeft = computeScrollLeft(scrollStart, totalHorizontalScroll, carouselContainer.offsetHeight);
+
+      cardsList.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
+      updateActiveCardAndImage(activeIndex);
+    }
+  };
+
+  /**
+   * Handles touchstart event for swipe gestures.
+   * @param {TouchEvent} e - The touch event.
+   */
+  const handleTouchStart = (e) => {
+    startX = e.touches[0].pageX;
+    scrollLeft = cardsList.scrollLeft;
+  };
+
+  /**
+   * Handles touchmove event for swipe gestures.
+   * @param {TouchEvent} e - The touch event.
+   */
+  const handleTouchMove = (e) => {
+    const deltaX = startX - e.touches[0].pageX;
+    cardsList.scrollLeft = scrollLeft + deltaX;
+  };
+
+  /**
+   * Initializes the carousel by setting up dynamic height, event listeners, and default states.
+   */
+  const initializeCarousel = () => {
+    setCarouselHeight();
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', setCarouselHeight);
+    cardsList.addEventListener('touchstart', handleTouchStart);
+    cardsList.addEventListener('touchmove', handleTouchMove);
+    updateActiveCardAndImage(0);
+  };
+
+  initializeCarousel();
+};
+
+/**
  * Decorates the block element by creating and appending the carousel elements.
  * @param {HTMLElement} block - The block element to decorate.
  */
 export default async function decorate(block) {
-  const cardElements = [...block.querySelectorAll(':scope > div')].slice(1);
+  const allElements = [...block.querySelectorAll(':scope > div')];
+  if (!allElements.length) {
+    return;
+  }
+  const header = allElements[0];
+  header.classList.add(`${blockName}__header`);
+  const cardElements = allElements.slice(1);
   const carouselCardsData = extractCarouselCardData(cardElements);
   const fragment = document.createDocumentFragment();
+  const stickyContent = createElement('div', { classes: `${blockName}__sticky-content` });
   const navigationContainer = createCarouselCardsContainer(carouselCardsData);
   const imageContainer = createImageCarousel(carouselCardsData);
-  fragment.append(navigationContainer, imageContainer);
+  stickyContent.append(navigationContainer, imageContainer);
+  fragment.appendChild(stickyContent);
   block.appendChild(fragment);
   cardElements.forEach((card) => card.remove());
   unwrapDivs(block);
+  initializeCarouselBehavior();
 }
