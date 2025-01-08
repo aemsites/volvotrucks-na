@@ -42,9 +42,11 @@ function buildTabNavigation(tabItems, clickHandler) {
     });
 
     const tabContent = tabItem.querySelector(':scope > div');
-    button.innerHTML = tabContent.dataset.truckCarousel;
-    listItem.append(button);
-    tabNavigation.append(listItem);
+    if (tabContent) {
+      button.innerHTML = tabContent.dataset.truckCarousel;
+      listItem.append(button);
+      tabNavigation.append(listItem);
+    }
   });
 
   tabNavigation.append(navigationLine);
