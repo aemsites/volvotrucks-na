@@ -173,7 +173,6 @@ const initializeCarouselScroll = () => {
     return;
   }
 
-  let maxHorizontalScroll;
   let touchStartX = 0;
   let initialScrollLeft = 0;
 
@@ -183,7 +182,6 @@ const initializeCarouselScroll = () => {
   const adjustCarouselHeight = () => {
     const viewportHeight = window.innerHeight;
     carouselElement.style.height = `${viewportHeight * cardElements.length + viewportHeight}px`;
-    maxHorizontalScroll = cardContainer.scrollWidth - cardContainer.clientWidth;
   };
 
   /**
