@@ -4,12 +4,12 @@ import { createCustomOptimizedPicture } from '../../scripts/scripts.js';
 
 function getItemsFromBlock(block) {
   const items = [];
-  block.querySelectorAll(':scope > div').forEach((item, index) => {
+  block.querySelectorAll(':scope > div').forEach((item) => {
     const cells = Array.from(item.querySelectorAll(':scope > div'));
-    const modelName = cells[0].textContent;
-    const description = cells[1].textContent;
-    const mobileImage = cells[2].querySelector('img');
-    const desktopImage = cells[3].querySelector('img');
+    const modelName = cells[0]?.textContent || '';
+    const description = cells[1]?.textContent || '';
+    const mobileImage = cells[2]?.querySelector('img') || '';
+    const desktopImage = cells[3]?.querySelector('img') || '';
 
     items.push({ modelName, description, mobileImage, desktopImage });
   });
