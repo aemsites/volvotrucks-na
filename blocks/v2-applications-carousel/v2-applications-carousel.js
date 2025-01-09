@@ -152,6 +152,8 @@ const initializeCarouselBehavior = () => {
   const cardsList = document.querySelector(`.${blockName}__cards-list`);
   const cards = Array.from(document.querySelectorAll(`.${blockName}__card`));
   const images = Array.from(document.querySelectorAll(`.${blockName}__image`));
+  let totalHorizontalScroll;
+  let lastScrollY = 0;
   let startX = 0;
   let scrollLeft = 0;
 
@@ -162,6 +164,7 @@ const initializeCarouselBehavior = () => {
     const viewportHeight = window.innerHeight;
     const bufferHeight = viewportHeight;
     carouselContainer.style.height = `${viewportHeight * cards.length + bufferHeight}px`;
+    totalHorizontalScroll = cardsList.scrollWidth - cardsList.clientWidth;
   };
 
   /**
@@ -192,28 +195,32 @@ const initializeCarouselBehavior = () => {
   /**
    * Computes the horizontal scroll position based on the current vertical scroll.
    * @param {number} scrollStart - The current scroll position.
-   * @param {number} totalHorizontalScroll - The total available horizontal scroll.
    * @param {number} containerHeight - The height of the carousel container.
    * @returns {number} - The computed horizontal scroll position.
    */
-  const computeScrollLeft = (scrollStart, totalHorizontalScroll, containerHeight) =>
-    (scrollStart / (containerHeight - window.innerHeight)) * totalHorizontalScroll;
+  const computeScrollLeft = (scrollStart, containerHeight) => (scrollStart / (containerHeight - window.innerHeight)) * totalHorizontalScroll;
 
   /**
    * Handles the scroll event to update the carousel's active card and scroll position.
    */
   const handleScroll = () => {
-    const containerRect = carouselContainer.getBoundingClientRect();
-    const scrollStart = window.scrollY - carouselContainer.offsetTop;
+    const currentScrollY = window.scrollY;
+    const delta = Math.abs(currentScrollY - lastScrollY);
+    lastScrollY = currentScrollY;
 
-    if (containerRect.top < window.innerHeight && containerRect.bottom > 0) {
-      const cardHeight = window.innerHeight;
-      const activeIndex = calculateActiveIndex(scrollStart, cardHeight);
-      const totalHorizontalScroll = cardsList.scrollWidth - cardsList.clientWidth;
-      const targetScrollLeft = computeScrollLeft(scrollStart, totalHorizontalScroll, carouselContainer.offsetHeight);
+    // Only update horizontal scroll if vertical scroll delta is small
+    if (delta < 50) {
+      const containerRect = carouselContainer.getBoundingClientRect();
+      const scrollStart = currentScrollY - carouselContainer.offsetTop;
 
-      cardsList.scrollTo({ left: targetScrollLeft, behavior: 'smooth' });
-      updateActiveCardAndImage(activeIndex);
+      if (containerRect.top < window.innerHeight && containerRect.bottom > 0) {
+        const cardHeight = window.innerHeight;
+        const activeIndex = calculateActiveIndex(scrollStart, cardHeight);
+        const targetScrollLeft = computeScrollLeft(scrollStart, carouselContainer.offsetHeight);
+
+        cardsList.scrollTo({ left: targetScrollLeft });
+        updateActiveCardAndImage(activeIndex);
+      }
     }
   };
 
