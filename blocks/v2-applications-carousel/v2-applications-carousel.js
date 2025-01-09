@@ -208,17 +208,8 @@ const initializeCarouselScroll = () => {
    * @returns {number} - The calculated active index.
    */
   const getActiveCardIndex = (scrollPosition, cardHeight) => {
-    return Math.min(cardElements.length - 1, Math.max(0, Math.floor((scrollPosition + cardHeight / 2) / cardHeight)));
-  };
-
-  /**
-   * Computes the horizontal scroll position based on the current vertical scroll.
-   * @param {number} scrollPosition - The current scroll position.
-   * @param {number} containerHeight - The height of the carousel container.
-   * @returns {number} - The computed horizontal scroll position.
-   */
-  const calculateHorizontalScroll = (scrollPosition, containerHeight) => {
-    return (scrollPosition / (containerHeight - window.innerHeight)) * maxHorizontalScroll;
+    const adjustedScroll = Math.max(0, scrollPosition - cardHeight / 2);
+    return Math.min(cardElements.length - 1, Math.floor(adjustedScroll / cardHeight));
   };
 
   /**
@@ -232,9 +223,11 @@ const initializeCarouselScroll = () => {
     if (containerRect.top < window.innerHeight && containerRect.bottom > 0) {
       const cardHeight = window.innerHeight;
       const activeIndex = getActiveCardIndex(scrollPosition, cardHeight);
-      const targetScrollLeft = calculateHorizontalScroll(scrollPosition, carouselElement.offsetHeight);
-
-      cardContainer.scrollTo({ left: targetScrollLeft });
+      const activeCard = cardElements[activeIndex];
+      const cardOffset = activeCard.offsetLeft;
+      const containerScrollWidth = cardContainer.scrollWidth - cardContainer.clientWidth;
+      const targetScrollLeft = Math.max(0, Math.min(cardOffset, containerScrollWidth));
+      cardContainer.scrollLeft = targetScrollLeft;
       setActiveCardAndImage(activeIndex);
     }
   };
