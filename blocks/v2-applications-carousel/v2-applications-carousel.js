@@ -1,4 +1,4 @@
-import { createElement, createResponsivePicture, unwrapDivs } from '../../scripts/common.js';
+import { createElement, createResponsivePicture, unwrapDivs, debounce } from '../../scripts/common.js';
 
 const blockName = 'v2-applications-carousel';
 
@@ -145,39 +145,57 @@ const createCarouselCardsContainer = (carouselCardsData) => {
 };
 
 /**
+ * Updates the CSS variable for --inpage-nav-height if the navigation wrapper exists.
+ */
+const updateInpageNavHeight = () => {
+  const inpageNavWrapper = document.querySelector('.v2-inpage-navigation-wrapper');
+  const root = document.documentElement;
+
+  if (inpageNavWrapper) {
+    const inpageNavHeight = `${inpageNavWrapper.offsetHeight}px`;
+    root.style.setProperty('--inpage-nav-height', inpageNavHeight);
+  } else {
+    root.style.setProperty('--inpage-nav-height', '0px');
+  }
+};
+
+/**
  * Initializes the carousel scroll functionality for a vertical-to-horizontal scrolling carousel.
  */
-const initializeCarouselBehavior = () => {
-  const carouselContainer = document.querySelector(`.${blockName}`);
-  const cardsList = document.querySelector(`.${blockName}__cards-list`);
-  const cards = Array.from(document.querySelectorAll(`.${blockName}__card`));
-  const images = Array.from(document.querySelectorAll(`.${blockName}__image`));
-  let totalHorizontalScroll;
-  let lastScrollY = 0;
-  let startX = 0;
-  let scrollLeft = 0;
+const initializeCarouselScroll = () => {
+  const carouselElement = document.querySelector(`.${blockName}`);
+  const cardContainer = document.querySelector(`.${blockName}__cards-list`);
+  const cardElements = Array.from(document.querySelectorAll(`.${blockName}__card`));
+  const imageElements = Array.from(document.querySelectorAll(`.${blockName}__image`));
+
+  if (!carouselElement || !cardContainer || cardElements.length === 0 || imageElements.length === 0) {
+    console.warn('Carousel elements are missing or not initialized correctly.');
+    return;
+  }
+
+  let maxHorizontalScroll;
+  let touchStartX = 0;
+  let initialScrollLeft = 0;
 
   /**
-   * Sets the height of the carousel container dynamically based on viewport and card count.
+   * Dynamically sets the height of the carousel container based on viewport and card count.
    */
-  const setCarouselHeight = () => {
+  const adjustCarouselHeight = () => {
     const viewportHeight = window.innerHeight;
-    const bufferHeight = viewportHeight;
-    carouselContainer.style.height = `${viewportHeight * cards.length + bufferHeight}px`;
-    totalHorizontalScroll = cardsList.scrollWidth - cardsList.clientWidth;
+    carouselElement.style.height = `${viewportHeight * cardElements.length + viewportHeight}px`;
+    maxHorizontalScroll = cardContainer.scrollWidth - cardContainer.clientWidth;
   };
 
   /**
    * Updates the active card and its corresponding image based on the provided index.
    * @param {number} activeIndex - The index of the active card.
    */
-  const updateActiveCardAndImage = (activeIndex) => {
-    cards.forEach((card, index) => {
+  const setActiveCardAndImage = (activeIndex) => {
+    cardElements.forEach((card, index) => {
       card.setAttribute('aria-selected', index === activeIndex ? 'true' : 'false');
       card.setAttribute('tabindex', index === activeIndex ? '0' : '-1');
     });
-
-    images.forEach((image, index) => {
+    imageElements.forEach((image, index) => {
       image.setAttribute('aria-hidden', index === activeIndex ? 'false' : 'true');
       image.setAttribute('tabindex', index === activeIndex ? '0' : '-1');
     });
@@ -185,42 +203,39 @@ const initializeCarouselBehavior = () => {
 
   /**
    * Calculates the active card index based on the current scroll position.
-   * @param {number} scrollStart - The current scroll position.
+   * @param {number} scrollPosition - The current scroll position.
    * @param {number} cardHeight - The height of each card.
    * @returns {number} - The calculated active index.
    */
-  const calculateActiveIndex = (scrollStart, cardHeight) =>
-    Math.min(cards.length - 1, Math.max(0, Math.floor((scrollStart + cardHeight / 2) / cardHeight)));
+  const getActiveCardIndex = (scrollPosition, cardHeight) => {
+    return Math.min(cardElements.length - 1, Math.max(0, Math.floor((scrollPosition + cardHeight / 2) / cardHeight)));
+  };
 
   /**
    * Computes the horizontal scroll position based on the current vertical scroll.
-   * @param {number} scrollStart - The current scroll position.
+   * @param {number} scrollPosition - The current scroll position.
    * @param {number} containerHeight - The height of the carousel container.
    * @returns {number} - The computed horizontal scroll position.
    */
-  const computeScrollLeft = (scrollStart, containerHeight) => (scrollStart / (containerHeight - window.innerHeight)) * totalHorizontalScroll;
+  const calculateHorizontalScroll = (scrollPosition, containerHeight) => {
+    return (scrollPosition / (containerHeight - window.innerHeight)) * maxHorizontalScroll;
+  };
 
   /**
    * Handles the scroll event to update the carousel's active card and scroll position.
    */
-  const handleScroll = () => {
+  const onScrollUpdate = () => {
     const currentScrollY = window.scrollY;
-    const delta = Math.abs(currentScrollY - lastScrollY);
-    lastScrollY = currentScrollY;
+    const containerRect = carouselElement.getBoundingClientRect();
+    const scrollPosition = currentScrollY - carouselElement.offsetTop;
 
-    // Only update horizontal scroll if vertical scroll delta is small
-    if (delta < 50) {
-      const containerRect = carouselContainer.getBoundingClientRect();
-      const scrollStart = currentScrollY - carouselContainer.offsetTop;
+    if (containerRect.top < window.innerHeight && containerRect.bottom > 0) {
+      const cardHeight = window.innerHeight;
+      const activeIndex = getActiveCardIndex(scrollPosition, cardHeight);
+      const targetScrollLeft = calculateHorizontalScroll(scrollPosition, carouselElement.offsetHeight);
 
-      if (containerRect.top < window.innerHeight && containerRect.bottom > 0) {
-        const cardHeight = window.innerHeight;
-        const activeIndex = calculateActiveIndex(scrollStart, cardHeight);
-        const targetScrollLeft = computeScrollLeft(scrollStart, carouselContainer.offsetHeight);
-
-        cardsList.scrollTo({ left: targetScrollLeft });
-        updateActiveCardAndImage(activeIndex);
-      }
+      cardContainer.scrollTo({ left: targetScrollLeft });
+      setActiveCardAndImage(activeIndex);
     }
   };
 
@@ -228,30 +243,30 @@ const initializeCarouselBehavior = () => {
    * Handles touchstart event for swipe gestures.
    * @param {TouchEvent} e - The touch event.
    */
-  const handleTouchStart = (e) => {
-    startX = e.touches[0].pageX;
-    scrollLeft = cardsList.scrollLeft;
+  const onTouchStart = (e) => {
+    touchStartX = e.touches[0].pageX;
+    initialScrollLeft = cardContainer.scrollLeft;
   };
 
   /**
    * Handles touchmove event for swipe gestures.
    * @param {TouchEvent} e - The touch event.
    */
-  const handleTouchMove = (e) => {
-    const deltaX = startX - e.touches[0].pageX;
-    cardsList.scrollLeft = scrollLeft + deltaX;
+  const onTouchMove = (e) => {
+    const deltaX = touchStartX - e.touches[0].pageX;
+    cardContainer.scrollLeft = initialScrollLeft + deltaX;
   };
 
   /**
    * Initializes the carousel by setting up dynamic height, event listeners, and default states.
    */
   const initializeCarousel = () => {
-    setCarouselHeight();
-    window.addEventListener('scroll', handleScroll);
-    window.addEventListener('resize', setCarouselHeight);
-    cardsList.addEventListener('touchstart', handleTouchStart);
-    cardsList.addEventListener('touchmove', handleTouchMove);
-    updateActiveCardAndImage(0);
+    adjustCarouselHeight();
+    window.addEventListener('scroll', onScrollUpdate, { passive: true });
+    window.addEventListener('resize', adjustCarouselHeight);
+    cardContainer.addEventListener('touchstart', onTouchStart);
+    cardContainer.addEventListener('touchmove', onTouchMove, { passive: true });
+    setActiveCardAndImage(0);
   };
 
   initializeCarousel();
@@ -279,5 +294,12 @@ export default async function decorate(block) {
   block.appendChild(fragment);
   cardElements.forEach((card) => card.remove());
   unwrapDivs(block);
-  initializeCarouselBehavior();
+  updateInpageNavHeight();
+  initializeCarouselScroll();
+  window.addEventListener(
+    'resize',
+    debounce(() => {
+      updateInpageNavHeight();
+    }, 150),
+  );
 }
