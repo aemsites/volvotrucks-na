@@ -1,7 +1,7 @@
 :root {
   --header-height: 52px;
   --inpage-nav-height: 0px;
-  --cards-height: 200px;
+  --cards-height: 240px;
 }
 
 .redesign-v2 .v2-applications-carousel-container .v2-applications-carousel-wrapper {
@@ -145,7 +145,7 @@
   :root {
     --header-height: 64px;
     --inpage-nav-height: 0px;
-    --cards-height: 235px;
+    --cards-height: 283px;
   }
 
   .v2-applications-carousel__header {
