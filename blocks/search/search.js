@@ -399,6 +399,11 @@ export default function decorate(block) {
       }
     });
 
+    if (!tenant) {
+      console.error('%cTenant %cis not defined', 'color: red', 'color: default');
+      return;
+    }
+
     fetchSearchData({
       query: searchQuery(),
       variables,

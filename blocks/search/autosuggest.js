@@ -8,6 +8,11 @@ export function fetchAutosuggest(term, autosuggestEle, rowEle, func) {
   const language = getLocale();
   const locale = language.split('-')[0].toUpperCase();
 
+  if (!TENANT) {
+    console.error('%cTenant %cis not defined', 'color: red', 'color: default');
+    return;
+  }
+
   fetchSearchData({
     query: autosuggestQuery(),
     variables: {
