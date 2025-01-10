@@ -206,7 +206,7 @@ const initializeCarouselScroll = () => {
    * @returns {number} - The calculated active index.
    */
   const getActiveCardIndex = (scrollPosition, cardHeight) => {
-    const adjustedScroll = Math.max(0, scrollPosition - cardHeight / 2);
+    const adjustedScroll = Math.max(0, scrollPosition);
     return Math.min(cardElements.length - 1, Math.floor(adjustedScroll / cardHeight));
   };
 
