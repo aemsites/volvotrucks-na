@@ -106,7 +106,7 @@
   position: relative;
   overflow: hidden;
   aspect-ratio: 1/1;
-  max-height: calc(100vh - (var(--header-height) + var(--inpage-nav-height) + var(--cards-height)));
+  height: calc(100vh - (var(--header-height) + var(--inpage-nav-height) + var(--cards-height)));
   width: 100%;
 }
 
