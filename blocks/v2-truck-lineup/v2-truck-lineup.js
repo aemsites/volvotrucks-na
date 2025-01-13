@@ -262,18 +262,6 @@ const getTabColor = (tabItem) => {
   return '';
 };
 
-function preload(images) {
-  if (document.images) {
-    let i = 0;
-    let imageArray = new Array();
-    imageArray = images.split(',');
-    const imageObj = new Image();
-    for (i = 0; i <= imageArray.length - 1; i++) {
-      imageObj.src = images[i];
-    }
-  }
-}
-
 export default function decorate(block) {
   const descriptionContainer = block.querySelector(':scope > div');
   const imagesWrapper = createElement('div', { classes: `${blockName}__slider-wrapper` });
@@ -346,7 +334,6 @@ export default function decorate(block) {
     [...headings].forEach((heading) => heading.classList.add(`${blockName}__title`));
 
     // Create div for image and append inside image div container
-    const imageElement = tabItem.querySelector('img');
     const picture = tabItem.querySelector('picture');
     const imageItem = createElement('div', { classes: `${blockName}__image-item` });
     imageItem.appendChild(picture);
