@@ -10,8 +10,9 @@ function getItemsFromBlock(block) {
     const description = cells[1]?.textContent || '';
     const mobileImage = cells[2]?.querySelector('img') || '';
     const desktopImage = cells[3]?.querySelector('img') || '';
+    const color = cells[4]?.textContent || '';
 
-    items.push({ modelName, description, mobileImage, desktopImage });
+    items.push({ modelName, description, mobileImage, desktopImage, color });
   });
   return items;
 }
@@ -31,10 +32,11 @@ export default function buildTruckLineupBlock(block) {
 
   const models = [];
 
-  config.forEach(({ modelName, description, mobileImage, desktopImage }) => {
+  config.forEach(({ modelName, description, mobileImage, desktopImage, color }) => {
     const tabContent = createElement('div', { classes: 'v2-truck-lineup__content' });
 
     tabContent.dataset.truckCarousel = modelName;
+    tabContent.dataset.truckColor = color;
     tabContent.innerHTML = getTabContentTemplate({ modelName, description });
 
     const imageBreakpoints = [
