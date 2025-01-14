@@ -1,0 +1,175 @@
+:root {
+  --header-height: 52px;
+  --inpage-nav-height: 0px;
+  --cards-height: 240px;
+}
+
+.redesign-v2 .v2-applications-carousel-container .v2-applications-carousel-wrapper {
+  margin: 0;
+  padding-left: 0;
+  padding-right: 0;
+  width: 100%;
+  max-width: none;
+}
+
+.v2-applications-carousel {
+  position: relative;
+  overflow: visible;
+}
+
+.v2-applications-carousel__header {
+  max-width: 734px;
+  margin-left: auto;
+  margin-right: auto;
+  padding-left: 20px;
+  padding-right: 20px;
+  text-align: center;
+}
+
+.v2-applications-carousel__header p {
+  margin-bottom: 16px;
+}
+
+.v2-applications-carousel .v2-applications-carousel__header p:first-of-type {
+  font-size: 24px;
+  line-height: 30px;
+}
+
+.v2-applications-carousel .v2-applications-carousel__header h3 {
+  margin-bottom: 24px;
+  font-size: 48px;
+  line-height: 52.8px;
+}
+
+.v2-applications-carousel .v2-applications-carousel__header p:last-of-type {
+  font-size: 18px;
+  line-height: 25.92px;
+}
+
+.v2-applications-carousel__sticky-content {
+  margin-top: 48px;
+  position: sticky;
+  top: calc(var(--header-height) + var(--inpage-nav-height));
+}
+
+.v2-applications-carousel__cards {
+  margin-bottom: 40px;
+}
+
+.v2-applications-carousel__cards .v2-applications-carousel__cards-list {
+  display: flex;
+  list-style-type: none;
+  gap: 4px;
+  padding-left: 20px;
+  padding-right: 20px;
+  overflow-x: auto;
+  scroll-padding: 0 20px;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.v2-applications-carousel__cards-list::-webkit-scrollbar {
+  display: none;
+}
+
+.v2-applications-carousel__card {
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  flex-shrink: 0;
+  border: 1px solid var(--c-grey-2);
+  border-radius: 8px;
+  height: 200px;
+  width: 160px;
+  padding: 24px;
+  scroll-snap-align: start;
+}
+
+.v2-applications-carousel__card[aria-selected="true"] {
+  background-color: var(--c-grey-50);
+  border-color: var(--c-main-black);
+}
+
+.v2-applications-carousel__card .icon {
+  width: 48px;
+  height: 48px;
+  margin-bottom: auto;
+  border: 1px solid var(--c-grey-3);
+  border-radius: 50%;
+  justify-content: center;
+  align-items: center;
+  color: var(--c-grey-4);
+}
+
+.v2-applications-carousel__images {
+  position: relative;
+  overflow: hidden;
+  aspect-ratio: 1/1;
+  height: calc(100vh - (var(--header-height) + var(--inpage-nav-height) + var(--cards-height)));
+  width: 100%;
+}
+
+.v2-applications-carousel__image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  visibility: hidden;
+  opacity: 0;
+  transform: scale(1.2);
+  transition: transform 0.5s ease, opacity 0.5s ease, visibility 0.01s ease 0.5s;
+}
+
+.v2-applications-carousel__image[aria-hidden="false"] {
+  visibility: visible;
+  opacity: 1;
+  transform: scale(1);
+  transition: transform 0.5s ease, opacity 0.5s ease, visibility 0s;
+}
+
+.v2-applications-carousel__image-display {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+@media screen and (min-width: 768px) {
+  .v2-applications-carousel__images {
+    aspect-ratio: 16/9;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+  :root {
+    --header-height: 64px;
+    --inpage-nav-height: 0px;
+    --cards-height: 283px;
+  }
+
+  .v2-applications-carousel__header {
+    max-width: 694px;
+    padding-left: 0;
+    padding-right: 0;
+  }
+
+  .v2-applications-carousel__cards {
+    margin-bottom: 48px;
+  }
+
+  .v2-applications-carousel__cards .v2-applications-carousel__cards-list {
+    gap: 8px;
+    justify-content: center;
+  }
+
+  .v2-applications-carousel__card {
+    height: 235px;
+    width: 201px;
+  }
+
+  .v2-applications-carousel__card-title {
+    font-size: 18px;
+    line-height: 25.92px;
+  }
+}

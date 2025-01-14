@@ -2,6 +2,7 @@ import { createElement } from '../../scripts/common.js';
 import { smoothScrollHorizontal } from '../../scripts/motion-helper.js';
 
 const blockName = 'v2-truck-lineup';
+let currentColor;
 
 function stripEmptyTags(main, child) {
   if (child !== main && child.innerHTML.trim() === '') {
@@ -12,6 +13,9 @@ function stripEmptyTags(main, child) {
 }
 
 const moveNavigationLine = (navigationLine, activeTab, tabNavigation) => {
+  if (!activeTab) {
+    return;
+  }
   const { x: navigationX } = tabNavigation.getBoundingClientRect();
   const { x, width } = activeTab.getBoundingClientRect();
   Object.assign(navigationLine.style, {
@@ -25,48 +29,92 @@ function buildTabNavigation(tabItems, clickHandler) {
   const navigationLine = createElement('li', { classes: `${blockName}__navigation-line` });
   let timeout;
 
-  [...tabItems].forEach((tabItem, i) => {
-    const listItem = createElement('li', { classes: `${blockName}__navigation-item` });
-    const button = createElement('button');
-    button.addEventListener('click', () => clickHandler(i));
-    button.addEventListener('mouseover', (e) => {
-      clearTimeout(timeout);
-      moveNavigationLine(navigationLine, e.currentTarget, tabNavigation);
-    });
+  [...tabItems]
+    .filter((tabItem) => !tabItem.classList.contains('hidden'))
+    .forEach((tabItem, i) => {
+      const listItem = createElement('li', { classes: `${blockName}__navigation-item` });
+      const button = createElement('button');
+      button.addEventListener('click', () => clickHandler(i));
+      button.addEventListener('mouseover', (e) => {
+        clearTimeout(timeout);
+        moveNavigationLine(navigationLine, e.currentTarget, tabNavigation);
+      });
 
-    button.addEventListener('mouseout', () => {
-      timeout = setTimeout(() => {
-        const activeItem = document.querySelector(`.${blockName}__navigation-item.active`);
-        moveNavigationLine(navigationLine, activeItem, tabNavigation);
-      }, 600);
-    });
+      button.addEventListener('mouseout', () => {
+        timeout = setTimeout(() => {
+          const activeItem = document.querySelector(`.${blockName}__navigation-item.active`);
+          moveNavigationLine(navigationLine, activeItem, tabNavigation);
+        }, 600);
+      });
 
-    const tabContent = tabItem.querySelector(':scope > div');
-    button.innerHTML = tabContent.dataset.truckCarousel;
-    listItem.append(button);
-    tabNavigation.append(listItem);
-  });
+      const tabContent = tabItem.querySelector(':scope > div');
+      if (tabContent) {
+        button.innerHTML = tabContent.dataset.truckCarousel;
+        listItem.append(button);
+        tabNavigation.append(listItem);
+      }
+    });
 
   tabNavigation.append(navigationLine);
 
   return tabNavigation;
 }
 
+function buildColorSwitcherList(colors, carousel, onColorChangeCallback) {
+  const colorSwitcherList = createElement('ul', { classes: `${blockName}__color-switcher` });
+  const colorElements = [];
+  let firstItemActiveClass = 'active';
+
+  colors.forEach((color) => {
+    colorElements.push(`
+      <li>
+        <button class="v2-truck-lineup__color-button ${firstItemActiveClass}" data-color="${color}" title="${color}" style="background-color: ${color}"></button>
+      </li>
+    `);
+    firstItemActiveClass = '';
+  });
+
+  colorSwitcherList.append(document.createRange().createContextualFragment(colorElements.join('')));
+
+  colorSwitcherList.querySelectorAll('button').forEach((button) => {
+    button.addEventListener('click', (e) => {
+      if (carousel.classList.contains('is-animating')) {
+        return;
+      }
+
+      const color = e.currentTarget.dataset.color;
+      const activeColor = colorSwitcherList.querySelector('.active');
+      activeColor.classList.remove('active');
+      e.currentTarget.classList.add('active');
+
+      onColorChangeCallback(color);
+    });
+  });
+
+  return colorSwitcherList;
+}
+
 const updateActiveItem = (index) => {
-  const images = document.querySelector(`.${blockName}__images-container`);
+  const allImages = document.querySelector(`.${blockName}__images-container`);
+  const currentImages = document.querySelectorAll(
+    currentColor ? `.${blockName}__image-item[data-color="${currentColor}"]` : `.${blockName}__image-item`,
+  );
   const descriptions = document.querySelector(`.${blockName}__description-container`);
   const navigation = document.querySelector(`.${blockName}__navigation`);
   const navigationLine = document.querySelector(`.${blockName}__navigation-line`);
 
-  [images, descriptions, navigation].forEach((c) => c.querySelectorAll('.active').forEach((i) => {
-    i.classList.remove('active');
+  [allImages, descriptions, navigation].forEach((c) =>
+    c.querySelectorAll('.active').forEach((i) => {
+      i.classList.remove('active');
 
-    // Remove aria-hidden and tabindex from previously active items
-    i.setAttribute('aria-hidden', 'true');
-    i.querySelectorAll('a').forEach((link) => link.setAttribute('tabindex', '-1'));
-  }));
+      // Remove aria-hidden and tabindex from previously active items
+      i.setAttribute('aria-hidden', 'true');
+      i.querySelectorAll('a').forEach((link) => link.setAttribute('tabindex', '-1'));
+    }),
+  );
 
-  images.children[index].classList.add('active');
+  currentImages[index].classList.add('active');
+
   descriptions.children[index].classList.add('active');
   navigation.children[index].classList.add('active');
 
@@ -102,27 +150,36 @@ const updateActiveItem = (index) => {
 };
 
 const listenScroll = (carousel) => {
-  const imageLoadPromises = Array.from(carousel.querySelectorAll('picture > img'))
+  const imageLoadPromises = Array.from(carousel.querySelectorAll('.v2-truck-lineup__image-item:not(.hidden) picture > img'))
     .filter((img) => !img.complete)
-    .map((img) => new Promise((resolve) => {
-      img.addEventListener('load', resolve);
-    }));
+    .map(
+      (img) =>
+        new Promise((resolve) => {
+          img.addEventListener('load', resolve);
+        }),
+    );
 
   Promise.all(imageLoadPromises).then(() => {
     const elements = carousel.querySelectorAll(':scope > *');
 
-    const io = new IntersectionObserver((entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.9) {
-          const activeItem = entry.target;
-          const currentIndex = Array.from(activeItem.parentNode.children).indexOf(activeItem);
-          updateActiveItem(currentIndex);
-        }
-      });
-    }, {
-      root: carousel,
-      threshold: 0.9,
-    });
+    const io = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting && entry.intersectionRatio >= 0.9) {
+            const activeItem = entry.target;
+            if (activeItem.classList.contains('hidden')) {
+              return;
+            }
+            const currentIndex = Array.from(activeItem.parentNode.children).indexOf(activeItem);
+            updateActiveItem(currentIndex);
+          }
+        });
+      },
+      {
+        root: carousel,
+        threshold: 0.9,
+      },
+    );
 
     elements.forEach((el) => io.observe(el));
 
@@ -135,28 +192,37 @@ const listenScroll = (carousel) => {
 };
 
 const setCarouselPosition = (carousel, index) => {
-  const scrollOffset = carousel.firstElementChild.getBoundingClientRect().width;
+  const scrollOffset = carousel.querySelector('.v2-truck-lineup__image-item:not(.hidden)')?.getBoundingClientRect().width;
   const targetX = index * scrollOffset;
 
   smoothScrollHorizontal(carousel, targetX, 1200);
 };
 
 const navigate = (carousel, direction) => {
-  if (carousel.classList.contains('is-animating')) return;
+  if (carousel.classList.contains('is-animating')) {
+    return;
+  }
 
+  const currentImages = document.querySelectorAll(
+    currentColor ? `.${blockName}__image-item[data-color="${currentColor}"]` : `.${blockName}__image-item`,
+  );
   const activeItem = carousel.querySelector(`.${blockName}__image-item.active`);
-  let index = [...activeItem.parentNode.children].indexOf(activeItem);
+  let index = [...activeItem.parentNode.querySelectorAll(`.${blockName}__image-item:not(.hidden)`)].indexOf(activeItem);
   if (direction === 'left') {
     index -= 1;
     if (index === -1) {
-      index = carousel.childElementCount - 1;
+      index = currentImages.length - 1;
     }
   } else {
     index += 1;
-    if (index > carousel.childElementCount - 1) {
+    if (index > currentImages.length - 1) {
       index = 0;
     }
   }
+
+  const images = carousel.querySelectorAll('.v2-truck-lineup__image-item');
+  images.forEach((image) => image.classList.remove('active'));
+  currentImages[index].classList.add('active');
 
   setCarouselPosition(carousel, index);
 };
@@ -186,21 +252,66 @@ const createArrowControls = (carousel) => {
   nextButton.addEventListener('click', () => navigate(carousel, 'right'));
 };
 
+const getTabColor = (tabItem) => {
+  const tabContent = tabItem.querySelector(':scope > div, :scope > p > div');
+
+  if (tabContent) {
+    return tabContent.dataset.truckColor;
+  }
+
+  return '';
+};
+
 export default function decorate(block) {
   const descriptionContainer = block.querySelector(':scope > div');
+  const imagesWrapper = createElement('div', { classes: `${blockName}__slider-wrapper` });
+  const imagesContainer = createElement('div', { classes: `${blockName}__images-container` });
   descriptionContainer.classList.add(`${blockName}__description-container`);
 
-  const tabItems = block.querySelectorAll(':scope > div > div');
+  let tabItems = block.querySelectorAll(':scope > div > div');
+  const selectedColor = getTabColor(tabItems[0]);
+  const colors = new Set();
 
   tabItems.forEach((tabItem) => {
     const firstChildParagraph = tabItem.querySelector(':scope > p');
+
     if (firstChildParagraph) {
       tabItem.innerHTML = firstChildParagraph.innerHTML;
     }
+
+    const color = getTabColor(tabItem);
+
+    colors.add(getTabColor(tabItem));
+
+    if (color !== selectedColor) {
+      tabItem.classList.add('hidden');
+      return;
+    }
   });
 
-  const imagesWrapper = createElement('div', { classes: `${blockName}__slider-wrapper` });
-  const imagesContainer = createElement('div', { classes: `${blockName}__images-container` });
+  tabItems = block.querySelectorAll(':scope > div > div');
+
+  if (colors.size > 1) {
+    currentColor = getTabColor(tabItems[0]);
+
+    const colorSwitcherList = buildColorSwitcherList(colors, imagesContainer, function onColorChange(color) {
+      if (imagesContainer.classList.contains('is-animating')) {
+        return;
+      }
+
+      currentColor = color;
+      const imageItems = block.querySelectorAll(`.${blockName}__image-item:not(.hidden)`);
+      const newColorImageItems = block.querySelectorAll(`.${blockName}__image-item[data-color="${color}"]`);
+
+      imageItems.forEach((element) => element.classList.add('hidden'));
+      newColorImageItems.forEach((element) => element.classList.remove('hidden'));
+      imagesContainer.scrollLeft = 0;
+
+      updateActiveItem(0);
+    });
+
+    descriptionContainer.parentNode.prepend(colorSwitcherList);
+  }
   descriptionContainer.parentNode.prepend(imagesWrapper);
   imagesWrapper.appendChild(imagesContainer);
 
@@ -213,7 +324,10 @@ export default function decorate(block) {
 
   descriptionContainer.parentNode.prepend(tabNavigation);
 
+  const colorCheck = [];
+  const imageObj = new Image();
   tabItems.forEach((tabItem) => {
+    const color = getTabColor(tabItem);
     tabItem.classList.add(`${blockName}__desc-item`);
     const tabContent = tabItem.querySelector(':scope > div');
     const headings = tabContent.querySelectorAll('h1, h2, h3, h4, h5, h6');
@@ -223,6 +337,19 @@ export default function decorate(block) {
     const picture = tabItem.querySelector('picture');
     const imageItem = createElement('div', { classes: `${blockName}__image-item` });
     imageItem.appendChild(picture);
+    imageItem.setAttribute('data-color', color);
+
+    if (!colorCheck.includes(color)) {
+      imageItem.classList.add('first-of-color');
+      colorCheck.push(color);
+    }
+
+    if (selectedColor && getTabColor(tabItem) !== selectedColor) {
+      imageItem.classList.add('hidden');
+    }
+
+    imageObj.src = imageItem?.src;
+
     imagesContainer.appendChild(imageItem);
 
     // Remove empty tags

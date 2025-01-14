@@ -1,12 +1,11 @@
-import {
-  addVideoShowHandler, isVideoLink, selectVideoLink, wrapImageWithVideoLink,
-} from '../../scripts/video-helper.js';
-/* eslint-disable no-use-before-define */
+import { addVideoShowHandler, isVideoLink, selectVideoLink, wrapImageWithVideoLink } from '../../scripts/video-helper.js';
 
 export default function decorate(block) {
   // apply modifiers to the wrapper as well
   const gapCls = [...block.classList].filter((cls) => cls.indexOf('gap') >= 0);
-  if (gapCls.length) block.parentElement.classList.add(gapCls);
+  if (gapCls.length) {
+    block.parentElement.classList.add(gapCls);
+  }
   // Formats a table and applies background images. Generally, each item should be in a table cell.
   // When a cell is empty, the cells are merged vertically.
   const columns = [...block.firstElementChild.children];
@@ -39,10 +38,17 @@ export default function decorate(block) {
 
   const colCount = columns.length;
   // get the max of list items per column, remove empty ones
-  const rowCount = columns.map((col) => [...col.querySelectorAll('li')].filter((li) => {
-    if (li.innerHTML.trim() === '') li.remove();
-    return !!li.parentElement;
-  }).length).reduce((l, r) => Math.max(l, r), 0);
+  const rowCount = columns
+    .map(
+      (col) =>
+        [...col.querySelectorAll('li')].filter((li) => {
+          if (li.innerHTML.trim() === '') {
+            li.remove();
+          }
+          return !!li.parentElement;
+        }).length,
+    )
+    .reduce((l, r) => Math.max(l, r), 0);
 
   grid.style.setProperty('--grid-row-count', rowCount);
   grid.style.setProperty('--grid-col-count', colCount);
@@ -86,7 +92,9 @@ export default function decorate(block) {
       }
 
       // first item spans multiple rows
-      if (i === 0 && liCount < rowCount) li.style.setProperty('--grid-row-span', rowCount - liCount + 1);
+      if (i === 0 && liCount < rowCount) {
+        li.style.setProperty('--grid-row-span', rowCount - liCount + 1);
+      }
 
       grid.appendChild(li);
     });
@@ -97,10 +105,12 @@ export default function decorate(block) {
   // iterating through the list after the HTML manipulation
   const links = [...block.querySelectorAll('a')];
 
-  links.filter((link) => isVideoLink(link)).forEach((link) => {
-    addVideoShowHandler(link);
-    wrapImageWithVideoLink(link, link.querySelector('picture'));
-  });
+  links
+    .filter((link) => isVideoLink(link))
+    .forEach((link) => {
+      addVideoShowHandler(link);
+      wrapImageWithVideoLink(link, link.querySelector('picture'));
+    });
 }
 
 /**
@@ -117,7 +127,9 @@ function wrapContentInList(cell) {
 
   if (nonListContent.length) {
     const li = document.createElement('li');
-    if (cell.dataset.align) li.dataset.align = cell.dataset.align;
+    if (cell.dataset.align) {
+      li.dataset.align = cell.dataset.align;
+    }
     li.append(...nonListContent);
     ul.append(li);
   }
@@ -125,6 +137,8 @@ function wrapContentInList(cell) {
 
 function removeEmptyLi(cell) {
   cell.querySelectorAll('li').forEach((li) => {
-    if (li.innerHTML.trim() === '') li.remove();
+    if (li.innerHTML.trim() === '') {
+      li.remove();
+    }
   });
 }

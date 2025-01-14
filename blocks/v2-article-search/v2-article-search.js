@@ -1,7 +1,4 @@
-import {
-  decorateIcons, getPlaceholders, getTextLabel, getLocale,
-  variantsClassesToBEM,
-} from '../../scripts/common.js';
+import { decorateIcons, getPlaceholders, getTextLabel, getLocale, variantsClassesToBEM } from '../../scripts/common.js';
 import { topicSearchQuery, fetchSearchData, TENANT } from '../../scripts/search-api.js';
 
 const blockName = 'v2-article-search';
@@ -36,14 +33,14 @@ const getTopics = async (props = {}) => {
     category: 'magazine',
     article,
     sort: 'BEST_MATCH',
-    facets: [
-      'ARTICLE',
-      'TOPIC',
-      'TRUCK',
-    ],
+    facets: ['ARTICLE', 'TOPIC', 'TRUCK'],
   };
 
   try {
+    if (!TENANT) {
+      throw new Error('TENANT not defined');
+    }
+
     const rawData = await fetchSearchData({
       query: topicSearchQuery(),
       variables,
@@ -62,13 +59,13 @@ const getTopics = async (props = {}) => {
       ...new Set(articles.items.map((item) => ({ key: 'category', value: item.value.trim() }))),
     ].sort((a, b) => a.value.localeCompare(b.value));
   } catch (error) {
-    // eslint-disable-next-line no-console
     console.error('Error fetching data:', error);
     throw error;
   }
 };
 
-const buildFilterElement = () => document.createRange().createContextualFragment(`
+const buildFilterElement = () =>
+  document.createRange().createContextualFragment(`
   <div class="${blockName}__filter-container">
     <form class="${blockName}__filter">
       <fieldset class="${blockName}__fieldset">
@@ -93,19 +90,21 @@ const buildFilterElement = () => document.createRange().createContextualFragment
 // Capitalize the first letter of each word
 const formatValue = (item) => {
   const { key, value } = item;
-  return key === 'truck'
-    ? value.toUpperCase() : value.replace(/\b\w/g, (char) => char.toUpperCase());
+  return key === 'truck' ? value.toUpperCase() : value.replace(/\b\w/g, (char) => char.toUpperCase());
 };
 
-const buildBulletList = (allTopics) => allTopics.map((item) => {
-  const param = item.value.toLowerCase().replace(/\s/g, '-');
-  currentURL.search = magazineParam;
-  currentURL.searchParams.set(item.key, param);
-  return `<li class="${blockName}__filter-item">
+const buildBulletList = (allTopics) =>
+  allTopics
+    .map((item) => {
+      const param = item.value.toLowerCase().replace(/\s/g, '-');
+      currentURL.search = magazineParam;
+      currentURL.searchParams.set(item.key, param);
+      return `<li class="${blockName}__filter-item">
     <a href="${currentURL.href.replace('#', '')}"
       class="${blockName}__filter-link">${formatValue(item)}</a>
   </li>`;
-}).join('');
+    })
+    .join('');
 
 const buildFilterList = async () => {
   const allTopics = await getTopics();
@@ -118,8 +117,7 @@ const buildFilterList = async () => {
 
 const addDropdownHandler = (filter) => {
   filter.addEventListener('click', (e) => {
-    const dropdown = e.target.tagName === 'svg'
-      ? e.target.closest(`.${dropdownClass}`) : e.target;
+    const dropdown = e.target.tagName === 'svg' ? e.target.closest(`.${dropdownClass}`) : e.target;
     const filterContainer = dropdown.closest(`.${filterContainerClass}`);
     const filterList = filterContainer.querySelector(`.${blockName}__filter-list-wrapper`);
     dropdown.classList.toggle(dropdownOpen);
@@ -129,11 +127,12 @@ const addDropdownHandler = (filter) => {
 
 const addFilterListHandler = (itemLink) => {
   itemLink.addEventListener('click', (e) => {
-    if (e.target.tagName !== 'A') return;
+    if (e.target.tagName !== 'A') {
+      return;
+    }
     const isActive = e.target.classList.contains(filterActive);
     const filterList = e.target.closest(`.${blockName}__filter-list`);
-    const otherItems = [...filterList.querySelectorAll(`.${blockName}__filter-link`)]
-      .filter((item) => item !== e.target);
+    const otherItems = [...filterList.querySelectorAll(`.${blockName}__filter-link`)].filter((item) => item !== e.target);
     otherItems.forEach((item) => item.classList.remove(filterActive));
     e.target.classList.toggle(filterActive);
 
@@ -202,7 +201,6 @@ const initializeSearchHandlers = (searchContainer) => {
 
   const handleOutsideClick = (event) => {
     if (!searchContainer.contains(event.target)) {
-      // eslint-disable-next-line no-use-before-define
       collapseSearchContainer();
     }
   };
@@ -239,7 +237,9 @@ const initializeSearchHandlers = (searchContainer) => {
 
     // Find the close icon and add its collapse functionality
     const closeIcon = searchContainer.querySelector('.icon-close');
-    if (closeIcon) addCloseHandler(closeIcon);
+    if (closeIcon) {
+      addCloseHandler(closeIcon);
+    }
   }
 };
 

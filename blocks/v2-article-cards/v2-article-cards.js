@@ -1,36 +1,19 @@
-import {
-  createElement,
-  unwrapDivs,
-  getTextLabel,
-  getDateFromTimestamp,
-} from '../../scripts/common.js';
-import {
-  createOptimizedPicture,
-  loadCSS,
-} from '../../scripts/aem.js';
-import {
-  fetchMagazineArticles,
-  removeArticlesWithNoImage,
-  sortArticlesByDateField,
-} from '../../scripts/services/magazine.service.js';
+import { createElement, unwrapDivs, getTextLabel, getDateFromTimestamp } from '../../scripts/common.js';
+import { createOptimizedPicture, loadCSS } from '../../scripts/aem.js';
+import { fetchMagazineArticles, removeArticlesWithNoImage, sortArticlesByDateField } from '../../scripts/services/magazine.service.js';
 import createPagination from '../../common/pagination/pagination.js';
 
 const blockName = 'v2-article-cards';
 
 const createCard = (article) => {
   const {
-    metadata: {
-      url,
-      image,
-      title,
-      publishDate,
-    },
+    metadata: { url, image, title, publishDate },
     button = false,
   } = article;
 
   const shortTitle = title.split('|')[0];
   const card = createElement('a', { classes: `${blockName}__article-card`, props: { href: url } });
-  const picture = createOptimizedPicture(image, shortTitle, false, [{ width: '380', height: '214' }]);
+  const picture = createOptimizedPicture(image, shortTitle, false);
   const pictureTag = picture.outerHTML;
   const formattedDate = getDateFromTimestamp(publishDate);
   const cardContent = document.createRange().createContextualFragment(`
@@ -94,7 +77,9 @@ export default async function decorate(block) {
   const allArticles = await fetchMagazineArticles({ limit: 100 });
   const articles = removeArticlesWithNoImage(allArticles);
 
-  if (!articles) return;
+  if (!articles) {
+    return;
+  }
 
   const amountOfLinks = block.children.length;
   const blockClassList = [...block.classList];
@@ -134,7 +119,9 @@ export default async function decorate(block) {
     const chunkedArticles = sortedArticles?.reduce((resultArray, item, index) => {
       limitAmount = limitAmount || 9;
       const chunkIndex = Math.floor(index / limitAmount);
-      if (!resultArray[chunkIndex]) resultArray[chunkIndex] = [];
+      if (!resultArray[chunkIndex]) {
+        resultArray[chunkIndex] = [];
+      }
       resultArray[chunkIndex].push(item);
       return resultArray;
     }, []);
@@ -148,7 +135,6 @@ export default async function decorate(block) {
       await loadCSS(`${baseURL}/common/pagination/pagination.css`);
       createPagination(chunkedArticles, block, createArticleCards, contentArea, 0);
     } else {
-      // eslint-disable-next-line no-console
       console.error('No chunked articles created.');
     }
   }

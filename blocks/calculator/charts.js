@@ -20,7 +20,9 @@ const charts = (data) => {
     anchor.classList.add('selector');
     anchor.id = idx;
     anchor.innerText = Object.keys(e);
-    if (idx === 0) anchor.dataset.active = true;
+    if (idx === 0) {
+      anchor.dataset.active = true;
+    }
 
     chartSelectors.append(anchor);
   });
@@ -39,7 +41,9 @@ const charts = (data) => {
     };
     chart.id = idx;
     chart.classList.add('chart');
-    if (idx === 0) chart.dataset.active = true;
+    if (idx === 0) {
+      chart.dataset.active = true;
+    }
     chart.innerHTML = buildChartFn[idx](e);
     chartsList.append(chart);
   });

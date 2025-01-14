@@ -1,4 +1,3 @@
-/* eslint-disable no-use-before-define */
 export default function decorate(block) {
   const [downloadDir, ...imgContainers] = block.children;
 

@@ -41,7 +41,6 @@ export default async function decorate(block) {
             anchor.classList.remove('show');
           }, 1000);
         } catch (err) {
-          /* eslint-disable-next-line no-console */
           console.error('Failed to copy: ', err);
         }
       });

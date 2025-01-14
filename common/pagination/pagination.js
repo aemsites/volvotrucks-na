@@ -1,9 +1,4 @@
-import {
-  createElement,
-  debounce,
-  decorateIcons,
-  getTextLabel,
-} from '../../scripts/common.js';
+import { createElement, debounce, decorateIcons, getTextLabel } from '../../scripts/common.js';
 
 /**
  * Creates an icon element.
@@ -68,14 +63,7 @@ const createPageButton = (pageIndex, currentPage, onClick) => {
   const classes = isActive ? ['pagination-button', 'active'] : ['pagination-button'];
   const paginationPageAriaLabel = getTextLabel('paginationPageAriaLabel');
   const ariaLabel = `${paginationPageAriaLabel} ${pageIndex + 1}`;
-  const button = createButton(
-    pageIndex + 1,
-    classes,
-    () => onClick(pageIndex),
-    false,
-    null,
-    ariaLabel,
-  );
+  const button = createButton(pageIndex + 1, classes, () => onClick(pageIndex), false, null, ariaLabel);
 
   if (isActive) {
     button.setAttribute('aria-current', 'page');
@@ -179,16 +167,12 @@ const getPageRange = (currentPage, totalPages) => {
 const createPaginationControls = (paginationList, currentPage, totalPages, changePage) => {
   paginationList.innerHTML = '';
 
-  paginationList.appendChild(
-    createArrowButton('prev', currentPage === 0, () => changePage(currentPage - 1)),
-  );
+  paginationList.appendChild(createArrowButton('prev', currentPage === 0, () => changePage(currentPage - 1)));
 
   const pages = getPageRange(currentPage, totalPages);
   appendPages(paginationList, pages, currentPage, changePage);
 
-  paginationList.appendChild(
-    createArrowButton('next', currentPage === totalPages - 1, () => changePage(currentPage + 1)),
-  );
+  paginationList.appendChild(createArrowButton('next', currentPage === totalPages - 1, () => changePage(currentPage + 1)));
 
   decorateIcons(paginationList);
 };
@@ -217,7 +201,9 @@ const createPagination = (chunkedItems, block, renderItems, contentArea, current
   paginationNav.appendChild(paginationList);
 
   const changePage = debounce((newPage) => {
-    if (newPage < 0 || newPage >= totalPages) return;
+    if (newPage < 0 || newPage >= totalPages) {
+      return;
+    }
     contentArea.innerHTML = '';
     renderItems(contentArea, chunkedItems[newPage]);
     createPaginationControls(paginationList, newPage, totalPages, changePage);

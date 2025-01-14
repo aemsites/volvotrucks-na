@@ -1,11 +1,4 @@
-import {
-  createElement,
-  decorateIcons,
-  generateId,
-  getTextLabel,
-  getLanguagePath,
-  HEADER_CONFIGS,
-} from '../../scripts/common.js';
+import { createElement, decorateIcons, generateId, getTextLabel, getLanguagePath, HEADER_CONFIGS } from '../../scripts/common.js';
 import { createOptimizedPicture, getMetadata } from '../../scripts/aem.js';
 
 const blockClass = 'header';
@@ -111,7 +104,7 @@ const mobileActions = () => {
   </a>`;
 
   const actions = document.createRange().createContextualFragment(`
-    ${SEARCH_DISABLED.toLowerCase() === 'true' ? '' : searchEl}
+    ${!SEARCH_DISABLED || SEARCH_DISABLED.toLowerCase() === 'true' ? '' : searchEl}
     <button
       aria-label="${openMenuLabel}"
       class="${blockClass}__hamburger-menu ${blockClass}__action-link ${blockClass}__link"
@@ -156,7 +149,9 @@ const rebuildCategoryItem = (item) => {
 
   [...item.childNodes].forEach((el) => {
     // removing new lines
-    if (el.tagName === 'BR') el.remove();
+    if (el.tagName === 'BR') {
+      el.remove();
+    }
 
     // wrapping orphan text
     if (el.nodeType === Node.TEXT_NODE) {
@@ -177,7 +172,10 @@ const rebuildCategoryItem = (item) => {
 
 const optimiseImage = (picture) => {
   const img = picture.querySelector('img');
-  const newPicture = createOptimizedPicture(img.src, img.alt, false, [{ media: '(min-width: 1200px) and (min-resolution: 2x)', width: '320' }, { media: '(min-width: 1200px)', width: '180' }]);
+  const newPicture = createOptimizedPicture(img.src, img.alt, false, [
+    { media: '(min-width: 1200px) and (min-resolution: 2x)', width: '320' },
+    { media: '(min-width: 1200px)', width: '180' },
+  ]);
 
   picture.replaceWith(newPicture);
 };
@@ -211,10 +209,12 @@ const buildMenuContent = (menuData, navEl) => {
         const openMenus = document.querySelectorAll(`.${blockClass}__menu-open`);
         navEl.parentElement.classList.toggle(`${blockClass}--menu-open`, isExpanded);
 
-        [...openMenus].filter((menu) => menu !== menuEl).forEach((menu) => {
-          menu.classList.remove(`${blockClass}__menu-open`);
-          menu.querySelector(':scope > a').setAttribute('aria-expanded', false);
-        });
+        [...openMenus]
+          .filter((menu) => menu !== menuEl)
+          .forEach((menu) => {
+            menu.classList.remove(`${blockClass}__menu-open`);
+            menu.querySelector(':scope > a').setAttribute('aria-expanded', false);
+          });
       }
 
       // disabling scroll when menu is open
@@ -293,25 +293,23 @@ export default async function decorate(block) {
   const resp = await fetch(`${navPath}.plain.html`);
 
   if (!resp.ok) {
-    // eslint-disable-next-line no-console
     console.error(`Header is not loaded: ${resp.status}`);
   }
 
   // get the navigation text, turn it into html elements
   const content = document.createRange().createContextualFragment(await resp.text());
-  const [
-    logoContainer,
-    navigationContainer,
-    actionsContainer,
-    menuContent,
-  ] = content.children;
+  const [logoContainer, navigationContainer, actionsContainer, menuContent] = content.children;
   const nav = createElement('nav', { classes: [`${blockClass}__nav`] });
   const navContent = document.createRange().createContextualFragment(`
     <div class="${blockClass}__menu-overlay"></div>
     ${createLogo(logoContainer).outerHTML}
-    ${navigationContainer.children.length ? `<div class="${blockClass}__main-links">
+    ${
+      navigationContainer.children.length
+        ? `<div class="${blockClass}__main-links">
       ${createMainLinks(navigationContainer).outerHTML}
-    </div>` : ''}
+    </div>`
+        : ''
+    }
     <div class="${blockClass}__actions">
       ${isCustomHeader ? '' : mobileActions().outerHTML}
       ${isCustomHeader ? decorateCTA(actionsContainer).outerHTML : createActions(actionsContainer).outerHTML}
@@ -383,7 +381,9 @@ export default async function decorate(block) {
 
   // hide nav when clicking outside the menu on desktop
   document.addEventListener('click', (event) => {
-    if (!desktopMQ.matches) return;
+    if (!desktopMQ.matches) {
+      return;
+    }
 
     const isTargetOutsideMenu = !event.target.closest(`.${blockClass}__main-nav`);
     const openMenu = block.querySelector(`.${blockClass}__main-nav-item.${blockClass}__menu-open`);

@@ -1,4 +1,3 @@
-/* eslint-disable no-unused-expressions */
 /* global describe before it beforeEach afterEach */
 
 import { readFile } from '@web/test-runner-commands';
@@ -109,7 +108,10 @@ describe('Video URL Analysis', () => {
 
     const testCases = [
       { url: '', expected: false },
-      { url: 'https://delivery-p107394-e1241111.adobeaemcloud.com/adobe/assets/urn:aaid:aem:ad1d25-ffffff-1e4785/play?accept-experimental', expected: true },
+      {
+        url: 'https://delivery-p107394-e1241111.adobeaemcloud.com/adobe/assets/urn:aaid:aem:ad1d25-ffffff-1e4785/play?accept-experimental',
+        expected: true,
+      },
       { url: 'https://delivery-p107394-e1241111.adobeaemcloud.com/adobe/assets/urn:aaid:aem:ad1d25-ffffff-1e4785/', expected: false },
       { url: 'https://www.youtube.com/embed/videoID', expected: true },
       { url: 'https://example.com/video_low.mp4?param=value', expected: true },
