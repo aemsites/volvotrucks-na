@@ -553,6 +553,11 @@ export function createVideoWithPoster(linkUrl, poster, className, videoConfig = 
 
   if (isLowResolutionVideoUrl(linkUrl)) {
     const videoOrIframe = createProgressivePlaybackVideo(linkUrl, 'video-wrapper', config);
+    if (poster) {
+      const posterSrc = poster.querySelector('img')?.src;
+      videoOrIframe.setAttribute('poster', posterSrc);
+      poster.remove();
+    }
     videoContainer.append(videoOrIframe);
   } else {
     const videoUrl = getDeviceSpecificVideoUrl(linkUrl);

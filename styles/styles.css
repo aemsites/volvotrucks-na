@@ -854,7 +854,8 @@ a.button.text-link-with-video {
   padding: 5px;
 }
 
-.icon-play-video {
+.icon-play-video,
+.icon-pause-video {
   position: absolute;
   top: 50%;
   right: 50%;
