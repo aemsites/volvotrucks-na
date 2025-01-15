@@ -37,11 +37,6 @@
   aspect-ratio: 1;
 }
 
-.v2-media-with-text--video-with-poster video.v2-media-with-text__media,
-.v2-media-with-text--video-with-poster iframe.v2-media-with-text__media {
-  display: none;
-}
-
 .v2-media-with-text--video-with-poster .icon-play-video {
   display: flex;
 }

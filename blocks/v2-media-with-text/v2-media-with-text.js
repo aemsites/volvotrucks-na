@@ -32,6 +32,7 @@ export default async function decorate(block) {
   let mediaSection;
   let subTextSection;
   let containerSection;
+  let videoLinks;
 
   cells.forEach((cell, index) => {
     // First cell for content, second for media and last for the subtext
@@ -48,18 +49,18 @@ export default async function decorate(block) {
     } else {
       mediaSection = createNewSection(blockName, 'media', cell);
 
-      const videos = [...mediaSection.querySelectorAll('a')].filter((link) => isVideoLink(link));
+      videoLinks = [...mediaSection.querySelectorAll('a')].filter((link) => isVideoLink(link));
       const picture = mediaSection.querySelector('picture');
 
-      if (videos.length) {
-        const linkEl = selectVideoLink(videos);
+      if (videoLinks.length) {
+        const videoLink = selectVideoLink(videoLinks);
 
-        if (linkEl) {
+        if (videoLink) {
           if (picture) {
-            const videoWithPoster = createVideoWithPoster(linkEl.href, picture, `${blockName}--video-with-poster`);
+            const videoWithPoster = createVideoWithPoster(videoLink.href, picture, `${blockName}--video-with-poster`, { controls: false });
             mediaSection.append(videoWithPoster);
           } else {
-            mediaSection = addVideoToSection(blockName, mediaSection, linkEl);
+            mediaSection = addVideoToSection(blockName, mediaSection, videoLink);
             if (block.classList.contains(`${blockName}--mute-controls`)) {
               addMuteControls(mediaSection);
             }
@@ -91,6 +92,7 @@ export default async function decorate(block) {
   const medias = block.querySelectorAll(['img', 'video', 'iframe']);
   medias.forEach((media) => media.classList.add(`${blockName}__media`));
 
+  videoLinks.forEach((videoLink) => videoLink.remove());
   unwrapDivs(block, { ignoreDataAlign: true });
   removeEmptyTags(block);
 }
