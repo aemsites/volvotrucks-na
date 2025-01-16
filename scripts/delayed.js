@@ -30,7 +30,6 @@ if (isSocialAllowed()) {
   FACEBOOK_PIXEL_ID && loadFacebookPixel();
   TIKTOK_PIXEL_ID && loadTiktokPixel();
   MNTN_PIXEL_ID && loadMNTNTrackingPixel();
-  MNTN_PIXEL_ID && loadMNTNConversionPixel();
 }
 
 // add more delayed functionality here
