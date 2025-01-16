@@ -302,66 +302,6 @@ async function loadMNTNTrackingPixel() {
   })();
 }
 
-// MNTN Conversion Pixel
-// Install ONLY on conversion page/event
-async function loadMNTNConversionPixel() {
-  !(function loadMNTNConversionPixelInit() {
-    const x = null;
-    let p;
-    let q;
-    let m;
-    const o = MNTN_PIXEL_ID;
-    const l = 'ORDER ID';
-    const i = 'TOTAL ORDER AMOUNT';
-    const c = '';
-    const k = '';
-    const g = '';
-    const j = '';
-    const u = '';
-    const shadditional = '';
-    try {
-      p = top.document.referer !== '' ? encodeURIComponent(top.document.referrer.substring(0, 512)) : '';
-    } catch (n) {
-      p = document.referrer !== null ? document.referrer.toString().substring(0, 512) : '';
-    }
-    try {
-      if (window && window.top && document.location && window.top.location === document.location) {
-        q = document.location;
-      } else if (window && window.top && window.top.location && '' !== window.top.location) {
-        q = window.top.location;
-      } else {
-        q = document.location;
-      }
-    } catch (b) {
-      q = document.location;
-    }
-    try {
-      m = parent.location.href !== '' ? encodeURIComponent(parent.location.href.toString().substring(0, 512)) : '';
-    } catch (z) {
-      try {
-        m = q !== null ? encodeURIComponent(q.toString().substring(0, 512)) : '';
-      } catch (h) {
-        m = '';
-      }
-    }
-    let A;
-    const y = document.createElement('script');
-    let w = null;
-    const v = document.getElementsByTagName('script');
-    const t = Number(v.length) - 1;
-    const r = document.getElementsByTagName('script')[t];
-    if (typeof A === 'undefined') {
-      A = Math.floor(Math.random() * 100000000000000000);
-    }
-    w = `dx.mountain.com/spx?conv=1&shaid=${o}&tdr=${p}&plh=${m}&cb=${A}&shoid=${l}&shoamt=${i}&shocur=${c}&shopid=${k}&shoq=${g}&shoup=${j}&shpil=${
-      u
-    }${shadditional}`;
-    y.type = 'text/javascript';
-    y.src = ('https:' === document.location.protocol ? 'https://' : 'http://') + w;
-    r.parentNode.insertBefore(y, r);
-  })();
-}
-
 async function loadVideoJs() {
   await Promise.all([loadCSS(VIDEO_JS_CSS), loadScript(VIDEO_JS_SCRIPT)]);
 
