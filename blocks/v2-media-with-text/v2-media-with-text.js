@@ -22,6 +22,25 @@ const variantClasses = [
   'media-autoplay',
   'mute-controls',
 ];
+
+const buildGallery = (section) => {
+  const allCaptions = section.querySelectorAll('p:not(:has(picture))');
+  const allPictures = section.querySelectorAll('picture');
+
+  allPictures.forEach((picture, idx) => {
+    const caption = allCaptions[idx];
+    const figure = document.createRange().createContextualFragment(`
+      <figure>
+        ${picture.outerHTML}
+        ${caption ? `<figcaption class="caption">${caption.textContent}</figcaption>` : ''}
+      <figure>
+    `);
+    section.append(figure);
+  });
+
+  section.querySelectorAll('p').forEach((p) => (p.outerHTML = ''));
+};
+
 export default async function decorate(block) {
   variantsClassesToBEM(block.classList, variantClasses, blockName);
   addClassIfChildHasClass(block, 'full-width');
@@ -45,10 +64,16 @@ export default async function decorate(block) {
     } else if (isCellNumberEven) {
       contentSection = createNewSection(blockName, 'content', cell);
       const headings = [...cell.querySelectorAll(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])];
-      headings.forEach((heading) => heading.classList.add(`${blockName}__heading`));
+      headings.forEach((heading, idx) => {
+        const hasPretitle = headings.length > 1;
+        console.log(hasPretitle);
+        heading.classList.add(`${blockName}__${hasPretitle && idx < 1 ? 'pretitle' : 'heading'}`);
+      });
     } else {
       mediaSection = createNewSection(blockName, 'media', cell);
-
+      if (block.classList.contains(`${blockName}--media-gallery`)) {
+        buildGallery(mediaSection);
+      }
       videoLinks = [...mediaSection.querySelectorAll('a')].filter((link) => isVideoLink(link));
       const picture = mediaSection.querySelector('picture');
 
