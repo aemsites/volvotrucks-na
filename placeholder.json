@@ -228,6 +228,14 @@
       "Text": "Add event to calendar"
     },
     {
+      "Key": "event-notify:company",
+      "Text": "Company"
+    },
+    {
+      "Key": "event-notify:country",
+      "Text": "Country"
+    },
+    {
       "Key": "view all",
       "Text": "View all"
     },
