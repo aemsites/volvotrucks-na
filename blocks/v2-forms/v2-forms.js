@@ -56,10 +56,19 @@ const addForm = async (block) => {
   const displayValue = block.style.display;
   block.style.display = 'none';
 
+  let formContent;
   const formName = block.firstElementChild.innerText.trim();
   const formAction = block.firstElementChild.nextElementSibling.innerText.trim();
 
-  const formContent = await import(`./forms/${formName}.js`);
+  try {
+    formContent = await import(`./forms/${formName}.js`);
+  } catch (error) {
+    console.error(error);
+  }
+
+  if (!formContent) {
+    return;
+  }
 
   const form = `
     <form

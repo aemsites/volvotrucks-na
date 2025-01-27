@@ -41,29 +41,32 @@ const keyFactsColumns = (el, v2) => {
     const preSubheading = el.querySelector(':scope > :not(strong, i):first-child');
     preSubheading?.classList.add('subtitle-2');
 
-    // 2nd line:
-    // find and split number/unit
     const value = el.querySelector('strong:only-child');
-    // separate number and unit. e.g. up | +31% | Freight efficiency, or 120,000 | psi,
-    const [, prenumber, number, postnumber, text] = value.innerHTML.match('([\\+,\\-]*)([0-9,\\.,]+)([\\%]*) *(.*)');
-    const newValue = `
-      <span class="${blockName}__main-text">
-        <span class="${blockName}__main-text--small">${prenumber}</span>
-        ${number}
-        <span class="${blockName}__main-text--small">${postnumber}</span>
-      </span>
-    `;
 
-    const numberFragment = document.createRange().createContextualFragment(newValue);
-    value.innerHTML = '';
-    value.append(...numberFragment.childNodes);
-    value.classList.add(`${blockName}__main-text-wrapper`);
+    if (value) {
+      // 2nd line:
+      // find and split number/unit
+      // separate number and unit. e.g. up | +31% | Freight efficiency, or 120,000 | psi,
+      const [, prenumber, number, postnumber, text] = value.innerHTML.match('([\\+,\\-]*)([0-9,\\.,]+)([\\%]*) *(.*)');
+      const newValue = `
+        <span class="${blockName}__main-text">
+          <span class="${blockName}__main-text--small">${prenumber}</span>
+          ${number}
+          <span class="${blockName}__main-text--small">${postnumber}</span>
+        </span>
+      `;
 
-    // 3rd line:
-    if (text) {
-      const unit = createElement('strong', { classes: [`${blockName}__unit`, 'subtitle-2'] });
-      unit.innerText = text;
-      value.parentNode.append(unit);
+      const numberFragment = document.createRange().createContextualFragment(newValue);
+      value.innerHTML = '';
+      value.append(...numberFragment.childNodes);
+      value.classList.add(`${blockName}__main-text-wrapper`);
+
+      // 3rd line:
+      if (text) {
+        const unit = createElement('strong', { classes: [`${blockName}__unit`, 'subtitle-2'] });
+        unit.innerText = text;
+        value.parentNode.append(unit);
+      }
     }
 
     // traing line variant

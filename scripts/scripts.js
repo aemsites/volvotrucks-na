@@ -145,7 +145,18 @@ function buildHeroBlock(main) {
     // adding video with delay to not affect page loading time
     setTimeout(() => {
       picture.replaceWith(video);
-      video.play();
+
+      // TODO: This is just a way of prevent the code to break due to the NotAllowedError error on iOS and Safari
+      // For this to work better needs further development and either way it will always be an hack can at any point can stop working
+      try {
+        video.play();
+      } catch (error) {
+        if (error.name === 'NotAllowedError') {
+          console.error('Playback was prevented by the browser:', error);
+        } else {
+          console.error('An error occurred while trying to play the video:', error);
+        }
+      }
     }, 3000);
   }
 

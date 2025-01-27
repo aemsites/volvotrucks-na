@@ -14,18 +14,6 @@
     import { sampleRUM } from '/scripts/aem.js';
 
     window.addEventListener('load', () => {
-      if (document.referrer) {
-        const { origin, pathname } = new URL(document.referrer);
-        if (origin === window.location.origin) {
-          const backBtn = document.createElement('a');
-          backBtn.classList.add('button', 'error-button-back');
-          backBtn.href = pathname;
-          backBtn.textContent = 'Go back';
-          backBtn.title = 'Go back';
-          const btnContainer = document.querySelector('.button-container');
-          btnContainer.append(backBtn);
-        }
-      }
       sampleRUM('404', { source: document.referrer, target: window.location.href });
     });
   </script>
@@ -63,7 +51,7 @@
       <h3>Suggested actions</h3>
       <ul>
         <li>Make sure the web address has been entered correctly</li>
-        <li>Go <a title="Go back" onclick="history.go(-1)">back</a> to the previous page</li>
+        <li>Go <a title="Go back" onclick="history.go(-1)" class="go-back-link">back</a> to the previous page</li>
         <li>Visit the <a title="Home page" href="/">Volvo Trucks
             Homepage</a></li>
         <li>Search the VolvoTrucks.com site (search box above)</li>
