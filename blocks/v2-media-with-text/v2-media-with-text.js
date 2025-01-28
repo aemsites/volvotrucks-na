@@ -22,6 +22,24 @@ const variantClasses = [
   'media-autoplay',
   'mute-controls',
 ];
+
+const buildMediaGallery = (section) => {
+  const allCaptions = section.querySelectorAll('p:not(:has(picture))');
+  const allPictures = section.querySelectorAll('picture');
+
+  allPictures.forEach((picture, idx) => {
+    const caption = allCaptions[idx];
+    const figureElmt = document.createRange().createContextualFragment(`
+      <figure>
+        ${picture.outerHTML}
+        ${caption ? `<figcaption class="caption">${caption.textContent}</figcaption>` : ''}
+      <figure>
+    `);
+    section.append(figureElmt);
+  });
+  section.querySelectorAll('p').forEach((p) => (p.outerHTML = ''));
+};
+
 export default async function decorate(block) {
   variantsClassesToBEM(block.classList, variantClasses, blockName);
   addClassIfChildHasClass(block, 'full-width');
@@ -32,6 +50,7 @@ export default async function decorate(block) {
   let mediaSection;
   let subTextSection;
   let containerSection;
+  let videoLinks;
 
   cells.forEach((cell, index) => {
     // First cell for content, second for media and last for the subtext
@@ -44,22 +63,27 @@ export default async function decorate(block) {
     } else if (isCellNumberEven) {
       contentSection = createNewSection(blockName, 'content', cell);
       const headings = [...cell.querySelectorAll(['h1', 'h2', 'h3', 'h4', 'h5', 'h6'])];
-      headings.forEach((heading) => heading.classList.add(`${blockName}__heading`));
+      headings.forEach((heading, idx) => {
+        const hasPretitle = headings.length > 1;
+        heading.classList.add(`${blockName}__${hasPretitle && idx < 1 ? 'pretitle' : 'heading'}`);
+      });
     } else {
       mediaSection = createNewSection(blockName, 'media', cell);
-
-      const videos = [...mediaSection.querySelectorAll('a')].filter((link) => isVideoLink(link));
+      if (block.classList.contains(`${blockName}--media-gallery`)) {
+        buildMediaGallery(mediaSection);
+      }
+      videoLinks = [...mediaSection.querySelectorAll('a')].filter((link) => isVideoLink(link));
       const picture = mediaSection.querySelector('picture');
 
-      if (videos.length) {
-        const linkEl = selectVideoLink(videos);
+      if (videoLinks.length) {
+        const videoLink = selectVideoLink(videoLinks);
 
-        if (linkEl) {
+        if (videoLink) {
           if (picture) {
-            const videoWithPoster = createVideoWithPoster(linkEl.href, picture, `${blockName}--video-with-poster`);
+            const videoWithPoster = createVideoWithPoster(videoLink.href, picture, `${blockName}--video-with-poster`, { controls: false });
             mediaSection.append(videoWithPoster);
           } else {
-            mediaSection = addVideoToSection(blockName, mediaSection, linkEl);
+            mediaSection = addVideoToSection(blockName, mediaSection, videoLink);
             if (block.classList.contains(`${blockName}--mute-controls`)) {
               addMuteControls(mediaSection);
             }
@@ -91,6 +115,7 @@ export default async function decorate(block) {
   const medias = block.querySelectorAll(['img', 'video', 'iframe']);
   medias.forEach((media) => media.classList.add(`${blockName}__media`));
 
+  videoLinks.forEach((videoLink) => videoLink.remove());
   unwrapDivs(block, { ignoreDataAlign: true });
   removeEmptyTags(block);
 }

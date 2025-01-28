@@ -455,7 +455,17 @@ function createProgressivePlaybackVideo(src, className = '', props = {}) {
         setTimeout(() => {
           if (video.paused) {
             console.warn('Failed to autoplay video, fallback code executed');
-            video.play();
+            // TODO: This is just a way of prevent the code to break due to the NotAllowedError error on iOS and Safari
+            // For this to work better needs further development and either way it will always be an hack can at any point can stop working
+            try {
+              video.play();
+            } catch (error) {
+              if (error.name === 'NotAllowedError') {
+                console.error('Playback was prevented by the browser:', error);
+              } else {
+                console.error('An error occurred while trying to play the video:', error);
+              }
+            }
           }
         }, 500);
       },
@@ -553,6 +563,11 @@ export function createVideoWithPoster(linkUrl, poster, className, videoConfig = 
 
   if (isLowResolutionVideoUrl(linkUrl)) {
     const videoOrIframe = createProgressivePlaybackVideo(linkUrl, 'video-wrapper', config);
+    if (poster) {
+      const posterSrc = poster.querySelector('img')?.src;
+      videoOrIframe.setAttribute('poster', posterSrc);
+      poster.remove();
+    }
     videoContainer.append(videoOrIframe);
   } else {
     const videoUrl = getDeviceSpecificVideoUrl(linkUrl);
