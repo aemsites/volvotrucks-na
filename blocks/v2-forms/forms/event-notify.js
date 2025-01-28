@@ -24,17 +24,17 @@ const formContent = `
       <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
     </div>
     <div class="${formName}__field-wrapper">
-      <label for="${formName}-company">${getTextLabel('event-notify:company')}*</label>
-      <input type="company" id="${formName}-company" name="company" autocomplete="off" placeholder="" required />
-      <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
-    </div>
-    <div class="${formName}__field-wrapper">
       <label for="${formName}-country">${getTextLabel('event-notify:country')}*</label>
       <select type="country" id="${formName}-country" name="country" autocomplete="off" placeholder="" required>
         <option value="United States" selected >United States</option>
         <option value="Canada">Canada</option>
         <option value="Other">Other</option>
       </select>
+      <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
+    </div>
+    <div class="${formName}__field-wrapper">
+      <label for="${formName}-company">${getTextLabel('event-notify:company')}*</label>
+      <input type="company" id="${formName}-company" name="company" autocomplete="off" placeholder="" required />
       <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
     </div>
   </div>
