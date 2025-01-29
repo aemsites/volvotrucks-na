@@ -158,7 +158,7 @@ function init() {
     window.addEventListener(event, ({ reason, error }) => {
       const errorInfo = reason || error;
 
-      if (errorInfo) {
+      if (errorInfo && errorInfo.stack) {
         const source = errorInfo.stack
           .split('\n')
           .filter((line) => line.match(/https?:\/\//))
