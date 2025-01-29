@@ -1709,6 +1709,10 @@ $.fn.tmpPins = function (tmpPinList) {
     templateClone.find('.direction a').attr('data-id', pin.IDENTIFIER_VALUE);
     templateClone.find('.direction a').text('Direction');
     templateClone.find('.website a').text('Dealer Site');
+    // Here: templateClone.find('.website a').click(function () { /* Send event here */ });
+    templateClone.find('.website a').click(function () { 
+      console.log('Send event: "dealer-site-button-click"')
+     });
     templateClone.find('.phone').text($.fn.formatPhoneNumber(pin.REG_PHONE_NUMBER));
 
 
@@ -2414,6 +2418,7 @@ $.fn.deg2rad = function ($deg) {
 $.fn.setAddress2 = function () {
 
   address2 = $('#location2').val();
+  console.log('Send event: "locate-a-delaer-search" with the value="' + address2 + '"');
 
 
   if (!address2) {
@@ -2526,6 +2531,8 @@ $.fn.setAddress = function () {
     address = address2;
   }
   address = $('#location').val();
+
+  console.log('Send event: "locate-a-delaer-search" with the value="' + address + '"');
   if (!address) {
     return null;
   }
@@ -3185,11 +3192,13 @@ $('.go-back-direction').on('click', function () {
 
 $("#location").on('keyup', function (e) {
   if (e.keyCode == 13) {
+    // HERE: desktop
     $.fn.setAddress();
   }
 });
 $("#location2").on('keyup', function (e) {
   if (e.keyCode == 13) {
+    // HERE: mobile
     $.fn.setAddress2();
   }
 });
