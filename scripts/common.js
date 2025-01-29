@@ -117,18 +117,18 @@ export function addVideoToSection(blockName, section, link) {
   }
   return section;
 }
+
 /**
- * Adds the favicon.
- * @param {string} href The favicon URL
+ * Adds a favicon to the document head.
+ * @param {string} href The favicon URL.
+ * @param {string} type The favicon MIME type ('image/svg+xml' or 'image/x-icon').
  */
-export function addFavIcon(href) {
-  const link = createElement('link', { props: { rel: 'icon', type: 'image/svg+xml', href } });
-  const existingLink = document.querySelector('head link[rel="icon"]');
-  if (existingLink) {
-    existingLink.parentElement.replaceChild(link, existingLink);
-  } else {
-    document.getElementsByTagName('head')[0].appendChild(link);
-  }
+export function addFavicon(href, type) {
+  const link = createElement('link', { 
+    props: { rel: 'icon', type, href } 
+  });
+
+  document.head.appendChild(link);
 }
 
 const ICONS_CACHE = {};
@@ -260,7 +260,9 @@ export async function loadLazy(doc) {
   }
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
-  addFavIcon(`${window.hlx.codeBasePath}/styles/favicon.svg`);
+  document.querySelectorAll('head link[rel="icon"]').forEach(link => link.remove());
+  addFavicon(`${window.hlx.codeBasePath}/styles/favicon.svg`, 'image/svg+xml');
+  addFavicon(`${window.hlx.codeBasePath}/favicon.ico`, 'image/x-icon');
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   sampleRUM.observe(main.querySelectorAll('picture > img'));
