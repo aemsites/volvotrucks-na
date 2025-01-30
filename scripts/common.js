@@ -118,19 +118,6 @@ export function addVideoToSection(blockName, section, link) {
   return section;
 }
 
-/**
- * Adds a favicon to the document head.
- * @param {string} href The favicon URL.
- * @param {string} type The favicon MIME type ('image/svg+xml' or 'image/x-icon').
- */
-export function addFavicon(href, type) {
-  const link = createElement('link', {
-    props: { rel: 'icon', type, href },
-  });
-
-  document.head.appendChild(link);
-}
-
 const ICONS_CACHE = {};
 /**
  * Replace icons with inline SVG and prefix with codeBasePath.
@@ -260,9 +247,6 @@ export async function loadLazy(doc) {
   }
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
-  document.querySelectorAll('head link[rel="icon"]').forEach((link) => link.remove());
-  addFavicon(`${window.hlx.codeBasePath}/styles/favicon.svg`, 'image/svg+xml');
-  addFavicon(`${window.hlx.codeBasePath}/favicon.ico`, 'image/x-icon');
   sampleRUM('lazy');
   sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
   sampleRUM.observe(main.querySelectorAll('picture > img'));
