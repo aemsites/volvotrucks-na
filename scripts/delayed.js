@@ -44,6 +44,14 @@ document.addEventListener('click', (e) => {
   }
 });
 
+/**
+ * This loader is meant to load the MNTN conversion pixel on the correct pages.
+ * The conversion pixel is loaded on the following pages:
+ * - Home Page: when the Find a Dealer button is clicked
+ * - Find a Dealer Page: when the Dealer Site button is clicked or when the Locate a Dealer search is performed
+ * - Truck Builder Page: when the Submit Build button is clicked
+ * Note: the Find a Dealer events are handled by sidebar-maps.js
+ */
 !(function onDelayedLoad() {
   const conversionURLs = ['/', '/find-a-dealer/', '/truck-builder'];
   const [homePage, findADealer, truckBuilder] = conversionURLs;
@@ -61,7 +69,6 @@ document.addEventListener('click', (e) => {
     if (!window.dataLayer || !MNTN_PIXEL_ID) {
       return;
     }
-    // the Find a Dealer events are handled by sidebar-maps.js
     if (conversion === homePage) {
       const findADealerButtons = document.querySelectorAll('a[href$="/find-a-dealer/"]');
       const eventName = conversionEvents.find((event) => event.pathname === homePage).eventName;
