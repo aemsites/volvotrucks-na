@@ -44,6 +44,49 @@ document.addEventListener('click', (e) => {
   }
 });
 
+!(function onDelayedLoad() {
+  const conversionURLs = ['/', '/find-a-dealer/', '/truck-builder'];
+  const [homePage, findADealer, truckBuilder] = conversionURLs;
+  const conversionEvents = [
+    { pathname: homePage, eventName: 'find-a-dealer-button-click' },
+    { pathname: findADealer, eventName: 'dealer-site-button-click' },
+    { pathname: findADealer, eventName: 'locate-a-dealer-search' },
+    { pathname: truckBuilder, eventName: 'submit-build-button-click' },
+  ];
+  const currentURL = new URL(window.location.href);
+  const currentPath = currentURL.pathname;
+  const conversion = conversionURLs.find((url) => url === currentPath);
+  if (conversion) {
+    console.log({ conversion, currentPath, dataLayer: window.dataLayer });
+    if (!window.dataLayer || !MNTN_PIXEL_ID) {
+      return;
+    }
+    // the Find a Dealer events are handled by sidebar-maps.js
+    if (conversion === homePage) {
+      const findADealerButtons = document.querySelectorAll('a[href$="/find-a-dealer/"]');
+      const eventName = conversionEvents.find((event) => event.pathname === homePage).eventName;
+      findADealerButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          window.dataLayer.push({ event: eventName });
+          loadMNTNConversionPixel(eventName);
+        });
+      });
+    } else if (conversion === truckBuilder) {
+      const observer = new MutationObserver(() => {
+        if (window.location.href.includes('summary')) {
+          const submitButton = document.querySelector('.external-app #configurator div > h4 + h5 + div > button');
+          const eventName = conversionEvents.find((event) => event.pathname === truckBuilder).eventName;
+          submitButton.addEventListener('click', () => {
+            window.dataLayer.push({ event: eventName });
+            loadMNTNConversionPixel(eventName);
+          });
+        }
+      });
+      observer.observe(document, { subtree: true, childList: true });
+    }
+  }
+})();
+
 // OneTrust Cookies Consent Notice start for volvotrucks.us
 if (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc') && !isDevHost()) {
   // when running on localhost in the block library host is empty but the path is srcdoc
@@ -299,6 +342,66 @@ async function loadMNTNTrackingPixel() {
     c.type = 'text/javascript';
     c.src = ('https:' === document.location.protocol ? 'https://' : 'http://') + h;
     v.parentNode.insertBefore(c, v);
+  })();
+}
+
+// MNTN Conversion Pixel
+// Install ONLY on conversion page/event
+export async function loadMNTNConversionPixel(orderId, orderAmount = 'TOTAL ORDER AMOUNT') {
+  !(function loadMNTNConversionPixelInit() {
+    const x = null;
+    let p;
+    let q;
+    let m;
+    const o = MNTN_PIXEL_ID;
+    const l = orderId;
+    const i = orderAmount;
+    const c = '';
+    const k = '';
+    const g = '';
+    const j = '';
+    const u = '';
+    const shadditional = '';
+    try {
+      p = top.document.referer !== '' ? encodeURIComponent(top.document.referrer.substring(0, 512)) : '';
+    } catch (n) {
+      p = document.referrer !== null ? document.referrer.toString().substring(0, 512) : '';
+    }
+    try {
+      if (window && window.top && document.location && window.top.location === document.location) {
+        q = document.location;
+      } else if (window && window.top && window.top.location && '' !== window.top.location) {
+        q = window.top.location;
+      } else {
+        q = document.location;
+      }
+    } catch (b) {
+      q = document.location;
+    }
+    try {
+      m = parent.location.href !== '' ? encodeURIComponent(parent.location.href.toString().substring(0, 512)) : '';
+    } catch (z) {
+      try {
+        m = q !== null ? encodeURIComponent(q.toString().substring(0, 512)) : '';
+      } catch (h) {
+        m = '';
+      }
+    }
+    let A;
+    const y = document.createElement('script');
+    let w = null;
+    const v = document.getElementsByTagName('script');
+    const t = Number(v.length) - 1;
+    const r = document.getElementsByTagName('script')[t];
+    if (typeof A === 'undefined') {
+      A = Math.floor(Math.random() * 100000000000000000);
+    }
+    w = `dx.mountain.com/spx?conv=1&shaid=${o}&tdr=${p}&plh=${m}&cb=${A}&shoid=${l}&shoamt=${i}&shocur=${c}&shopid=${k}&shoq=${g}&shoup=${j}&shpil=${
+      u
+    }${shadditional}`;
+    y.type = 'text/javascript';
+    y.src = ('https:' === document.location.protocol ? 'https://' : 'http://') + w;
+    r.parentNode.insertBefore(y, r);
   })();
 }
 

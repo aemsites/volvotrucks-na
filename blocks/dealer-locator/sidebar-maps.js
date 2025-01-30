@@ -1,4 +1,5 @@
 /* eslint-disable  */
+import { loadMNTNConversionPixel } from "../../scripts/delayed";
 
 // Map Sidebar Animation
 $('.slider-arrow').click(function () {
@@ -1709,6 +1710,16 @@ $.fn.tmpPins = function (tmpPinList) {
     templateClone.find('.direction a').attr('data-id', pin.IDENTIFIER_VALUE);
     templateClone.find('.direction a').text('Direction');
     templateClone.find('.website a').text('Dealer Site');
+    templateClone.find('.website a').click(function () {
+      const dataLayer = window.dataLayer || null;
+      if (dataLayer) {
+        const eventName = 'dealer-site-button-click';
+        dataLayer.push({
+          event: eventName,
+        });
+        loadMNTNConversionPixel(eventName);
+      }
+    });
     templateClone.find('.phone').text($.fn.formatPhoneNumber(pin.REG_PHONE_NUMBER));
 
 
@@ -2415,9 +2426,18 @@ $.fn.setAddress2 = function () {
 
   address2 = $('#location2').val();
 
-
   if (!address2) {
     return null;
+  }
+
+  const dataLayer = window.dataLayer || null;
+  if (dataLayer) {
+    const eventName = 'locate-a-dealer-search';
+    dataLayer.push({
+      event: eventName,
+      value: address2,
+    });
+    loadMNTNConversionPixel(eventName, address2);
   }
 
   $geocoder = new google.maps.Geocoder;
@@ -2528,6 +2548,15 @@ $.fn.setAddress = function () {
   address = $('#location').val();
   if (!address) {
     return null;
+  }
+  const dataLayer = window.dataLayer || null;
+  if (dataLayer) {
+    const eventName = 'locate-a-dealer-search';
+    dataLayer.push({
+      event: eventName,
+      value: address,
+    });
+    loadMNTNConversionPixel(eventName, address);
   }
 
   $geocoder = new google.maps.Geocoder;
