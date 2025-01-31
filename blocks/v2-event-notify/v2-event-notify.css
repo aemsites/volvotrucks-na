@@ -98,15 +98,6 @@
   border-color: var(--c-error-red);
 }
 
-.v2-event-notify__container .v2-forms__container select {
-  background: var(--c-white);
-  letter-spacing: var(--f-body-letter-spacing);
-  color: var(--c-grey-4);
-  padding: 16px;
-  border-radius: 4px;
-  border: 1px solid var(--c-grey-2);
-}
-
 @supports not selector(:user-invalid) {
   .v2-event-notify__container input:invalid,
   .v2-event-notify__container input:invalid:hover,
