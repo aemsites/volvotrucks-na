@@ -23,6 +23,20 @@ const formContent = `
       <input type="email" id="${formName}-email" name="email" autocomplete="off" placeholder="" required />
       <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
     </div>
+    <div class="${formName}__field-wrapper">
+      <label for="${formName}-country">${getTextLabel('event-notify:country')}*</label>
+      <select id="${formName}-country" name="country" autocomplete="off" placeholder="" required>
+        <option value="${getTextLabel('event-notify:united-states')}" selected >${getTextLabel('event-notify:united-states')}</option>
+        <option value="${getTextLabel('event-notify:canada')}">${getTextLabel('event-notify:canada')}</option>
+        <option value="${getTextLabel('event-notify:other')}">${getTextLabel('event-notify:other')}</option>
+      </select>
+      <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
+    </div>
+    <div class="${formName}__field-wrapper">
+      <label for="${formName}-company">${getTextLabel('event-notify:company')}*</label>
+      <input type="text" id="${formName}-company" name="company" autocomplete="off" placeholder="" required />
+      <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
+    </div>
   </div>
   <div class="${formName}__agreement-section">
     <div class="checkbox-with-label">
@@ -57,7 +71,6 @@ const checkFieldValidity = (field, useUserInvalid = true) => {
 
 export const postLoad = (form) => {
   form.setAttribute('novalidate', 'novalidate');
-
   const fields = [...form.querySelectorAll('input')];
 
   fields.forEach((field) => {
@@ -74,7 +87,7 @@ export const postLoad = (form) => {
 };
 
 export const onSubmit = async (form, handleSubmit) => {
-  const fields = [...form.querySelectorAll('input')];
+  const fields = [...form.querySelectorAll('input, select')];
 
   fields.forEach((el) => checkFieldValidity(el, false));
 
