@@ -1,4 +1,16 @@
-import { getTextLabel } from '../../../scripts/common.js';
+import { decorateIcons, getTextLabel } from '../../../scripts/common.js';
+import { getCustomDropdown, addDropdownListeners } from '../../../common/dropdown/dropdown.js';
+
+const countryList = ['united-states', 'canada', 'other'];
+
+const createCountryList = (arrayOfNames = []) => {
+  const list = [];
+  arrayOfNames?.forEach((name) => {
+    const countryName = getTextLabel(`event-notify:${name}`);
+    list.push(countryName);
+  });
+  return list;
+};
 
 const formName = 'event-notify';
 const formContent = `
@@ -23,15 +35,7 @@ const formContent = `
       <input type="email" id="${formName}-email" name="email" autocomplete="off" placeholder="" required />
       <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
     </div>
-    <div class="${formName}__field-wrapper">
-      <label for="${formName}-country">${getTextLabel('event-notify:country')}*</label>
-      <select id="${formName}-country" name="country" autocomplete="off" placeholder="" required>
-        <option value="${getTextLabel('event-notify:united-states')}" selected >${getTextLabel('event-notify:united-states')}</option>
-        <option value="${getTextLabel('event-notify:canada')}">${getTextLabel('event-notify:canada')}</option>
-        <option value="${getTextLabel('event-notify:other')}">${getTextLabel('event-notify:other')}</option>
-      </select>
-      <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
-    </div>
+    ${getCustomDropdown(formName, createCountryList(countryList), 'country')}
     <div class="${formName}__field-wrapper">
       <label for="${formName}-company">${getTextLabel('event-notify:company')}*</label>
       <input type="text" id="${formName}-company" name="company" autocomplete="off" placeholder="" required />
@@ -71,6 +75,12 @@ const checkFieldValidity = (field, useUserInvalid = true) => {
 
 export const postLoad = (form) => {
   form.setAttribute('novalidate', 'novalidate');
+
+  if (form.querySelector('.custom-select')) {
+    decorateIcons(form);
+    addDropdownListeners(form);
+  }
+
   const fields = [...form.querySelectorAll('input')];
 
   fields.forEach((field) => {
