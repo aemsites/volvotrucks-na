@@ -26,9 +26,9 @@ const formContent = `
     <div class="${formName}__field-wrapper">
       <label for="${formName}-country">${getTextLabel('event-notify:country')}*</label>
       <select id="${formName}-country" name="country" autocomplete="off" placeholder="" required>
-        <option value="United States" selected >United States</option>
-        <option value="Canada">Canada</option>
-        <option value="Other">Other</option>
+        <option value="${getTextLabel('event-notify:united-states')}" selected >${getTextLabel('event-notify:united-states')}</option>
+        <option value="${getTextLabel('event-notify:canada')}">${getTextLabel('event-notify:canada')}</option>
+        <option value="${getTextLabel('event-notify:other')}">${getTextLabel('event-notify:other')}</option>
       </select>
       <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
     </div>
