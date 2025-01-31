@@ -1,0 +1,110 @@
+.custom-select {
+  position: relative;
+}
+
+.native-select {
+  visibility: hidden;
+  position: absolute;
+}
+
+.custom-trigger {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  background: var(--c-white);
+  letter-spacing: var(--f-body-letter-spacing);
+  line-height: var(--body-regular-line-height);
+  text-align: left;
+  color: var(--c-grey-4);
+  padding: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--c-grey-2);
+}
+
+.custom-select span {
+  --icon-padding: 10px;
+
+  position: absolute;
+  width: calc(24px + 2 * var(--icon-padding));
+  height: calc(24px + 2 * var(--icon-padding));
+  right: 4px;
+  top: 4px;
+  border-radius: var(--border-radius-small);
+  padding: var(--icon-padding);
+}
+
+.custom-select .icon svg {
+  height: 24px;
+  width: 24px;
+}
+
+.custom-select span:hover {
+  background-color: var(--c-grey-100);
+}
+
+button.custom-trigger.open {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+.custom-trigger.open svg {
+  transform: rotate(180deg);
+}
+
+.custom-dropdown {
+  display: none;
+}
+
+.custom-dropdown.expand {
+  --color-bg-shadow: rgb(0 0 0 / 20%);
+
+  display: block;
+  position: absolute;
+  top: calc(100% + 4px);
+  width: 100%;
+  background-color: var(--c-white);
+  border: 1px solid var(--border-subtle);
+  border-radius: var(--border-radius-small);
+  box-shadow:
+    0 0.3px 2px 0 var(--color-bg-shadow, rgb(0 0 0 / 20%)),
+    0 3px 8px 0 var(--color-bg-shadow, rgb(0 0 0 / 20%));
+  padding-block: 4px;
+  z-index: 1;
+}
+
+.custom-option {
+  color: var(--c-grey-950);
+  line-height: 24px;
+  background-color: var(--c-white);
+  width: 100%;
+  padding: 8px 12px;
+}
+
+.custom-trigger:hover {
+  outline: 2px solid var(--border-focus);
+}
+
+.custom-option:hover {
+  background-color: var(--c-grey-50);
+  cursor: pointer;
+}
+
+.custom-option.selected {
+  display: flex;
+  justify-content: space-between;
+  background-color: var(--c-grey-100);
+  pointer-events: none;
+}
+
+.custom-option.selected::after {
+  content: url('/icons/check-thin.svg');
+  display: block;
+  width: 24px;
+  height: 24px;
+}
+
+@media (min-width: 744px) {
+  .custom-dropdown.expand {
+    top: 100%;
+  }
+}
