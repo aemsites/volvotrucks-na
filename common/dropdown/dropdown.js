@@ -103,21 +103,37 @@ export const getCustomDropdown = (formName, optionsList, type) => {
   const defaultValue = optionsList[0];
   const customSelect = `
     <div class="${formName}__field-wrapper custom-select">
-      <label for="${formName}-${type}">${getTextLabel(`event-notify:${type}`)}*</label>
+      <label
+        id="${formName}-${type}-label">
+        ${getTextLabel(`event-notify:${type}`)}*
+      </label>
 
-      <select class="native-select" type="country" id="${formName}-country" name="country" autocomplete="off" required>
+      <select 
+        class="native-select"
+        type="${type}"
+        id="${formName}-${type}"
+        name="${type}"
+        autocomplete="off"
+        required>
         ${createSelects(optionsList, 'option', defaultValue)} 
       </select>
 
       <button class="custom-trigger" 
         aria-haspopup="listbox" 
         aria-expanded="false" 
+        aria-controls="listbox"
+        aria-labelledby="${formName}-${type}-label"
         aria-label="Select a ${type}">
         ${defaultValue}
         <span class="icon icon-chevron-down" aria-hidden="true" />
       </button>
 
-      <div class="custom-dropdown" role="listbox" aria-label="${type} selection">
+      <div 
+        class="custom-dropdown"
+        id="listbox"
+        role="listbox" 
+        aria-label="${type}-selection"
+        aria-labelledby="${formName}-${type}-label">
         ${createSelects(optionsList, 'div', defaultValue)} 
       </div>
     </div>`;
