@@ -65,22 +65,18 @@ const isOutsideClick = (e, dropdown, button) => {
 const moveFocus = (e) => {
   const currentIndex = e.target.dataset.indexNumber;
   const options = e.target.closest('.custom-dropdown');
-  console.log(options);
 
   if (e.key === 'ArrowDown') {
-    console.log('abajo');
     const nextOption = options[currentIndex + 1];
     if (nextOption) {
       nextOption.focus();
     }
   } else if (e.key === 'ArrowUp') {
-    console.log('arriba');
     const prevOption = options[currentIndex - 1];
     if (prevOption) {
       prevOption.focus();
     }
   } else if (e.key === 'Enter' || e.key === ' ') {
-    console.log('enter');
     handleValueChange(e);
   }
 };
