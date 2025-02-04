@@ -122,8 +122,8 @@ function createLabel(fd, tagName = 'label') {
   if (fd.tooltip) {
     label.title = fd.tooltip;
   }
-  if (fd.label) {
-    label.textContent = fd.label;
+  if (fd.Label) {
+    label.textContent = fd.Label;
   }
   return label;
 }
@@ -140,8 +140,12 @@ function createHelpText(fd) {
   return div;
 }
 
+function kebabName(name) {
+  return name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+}
+
 function createFieldWrapper(fd, tagName = 'div') {
-  const nameStyle = fd.Name ? `form-${fd.Name}` : '';
+  const nameStyle = fd.Name ? `form-${kebabName(fd.Name)}` : '';
   const fieldWrapper = createElement(tagName, {
     classes: [`form-${fd.Type}-wrapper`, 'field-wrapper'],
     props: {
@@ -150,7 +154,7 @@ function createFieldWrapper(fd, tagName = 'div') {
     },
   });
   if (fd.Mandatory && fd.Mandatory.toLowerCase() === 'true') {
-    fieldWrapper.setAttribute('required');
+    fieldWrapper.setAttribute('required', 'required');
   }
   if (fd.Fieldset) {
     fieldWrapper.dataset.fieldset = fd.Fieldset;
@@ -172,7 +176,7 @@ function createButton(fd) {
       name: fd.Name,
     },
   });
-  if (fd.type === 'submit' && fd.Action) {
+  if (fd.Type === 'submit' && fd.Action) {
     button.formAction = fd.Action;
   }
   if (fd.Extra) {
@@ -293,7 +297,7 @@ function groupFieldsByFieldSet(form) {
 }
 
 function createPlainText(fd) {
-  const nameStyle = fd.Name ? `form-${fd.Name}` : '';
+  const nameStyle = fd.Name ? `form-${kebabName(fd.Name)}` : '';
   const paragraph = createElement('p', {
     classes: nameStyle,
   });

@@ -29,9 +29,7 @@
     color: var(--text-color);
 }
 
-/* stylelint-disable selector-class-pattern */
-/* stylelint-disable-next-line media-feature-range-notation */
-@media (width >= 768px) {
+@media (min-width: 768px) {
     .v2-pardot-form-container form {
         display: flex;
         flex-flow: row wrap;
@@ -42,8 +40,8 @@
         width: 100%;
     }
 
-    .v2-pardot-form-container .form-firstName,
-    .v2-pardot-form-container .form-lastName {
+    .v2-pardot-form-container .form-first-name,
+    .v2-pardot-form-container .form-last-name {
         width: calc(50% - 8px);
         flex: 1;
     }
