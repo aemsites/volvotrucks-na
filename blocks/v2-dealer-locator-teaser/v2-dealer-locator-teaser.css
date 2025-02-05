@@ -111,4 +111,13 @@
     line-height: var(--f-body-2-line-height);
     letter-spacing: var(--f-body-2-letter-spacing);
   }
+
+  .v2-dealer-locator-teaser--right-align {
+    justify-content: flex-end;
+  }
+  
+  .v2-dealer-locator-teaser--right-align .v2-dlt__content-wrapper {
+    width: auto;
+    padding-right: 12vw;
+  }
 }
