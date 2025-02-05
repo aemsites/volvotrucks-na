@@ -1,5 +1,5 @@
-import { decorateIcons, getTextLabel } from '../../../scripts/common.js';
-import { getCustomDropdown, addDropdownListeners } from '../../../common/dropdown/dropdown.js';
+import { getTextLabel } from '../../../scripts/common.js';
+import { getCustomDropdown, addDropdownInteraction } from '../../../common/dropdown/dropdown.js';
 
 const countryList = ['united-states', 'canada', 'other'];
 
@@ -76,9 +76,9 @@ const checkFieldValidity = (field, useUserInvalid = true) => {
 export const postLoad = (form) => {
   form.setAttribute('novalidate', 'novalidate');
 
-  if (form.querySelector('.custom-select')) {
-    decorateIcons(form);
-    addDropdownListeners(form);
+  const formHasCustomDropdown = form.querySelector('.custom-dropdown');
+  if (formHasCustomDropdown) {
+    addDropdownInteraction(form);
   }
 
   const fields = [...form.querySelectorAll('input')];
