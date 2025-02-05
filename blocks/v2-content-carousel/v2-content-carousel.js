@@ -133,14 +133,32 @@ export default function decorate(block) {
     el.classList.add(`${blockName}__images-list-item`);
 
     const figure = createElement('figure', { classes: `${blockName}__figure` });
-    figure.append(...el.childNodes);
-    el.append(figure);
-
     const figCaption = createElement('figcaption', { classes: `${blockName}__figure-text` });
-    const lastItems = [...figure.childNodes].at(-1);
-    if (lastItems.nodeType === Node.TEXT_NODE) {
-      figCaption.append(lastItems);
-      figure.append(figCaption);
+    const fragment = document.createDocumentFragment();
+
+    while (el.firstChild) {
+      fragment.appendChild(el.firstChild);
+    }
+
+    figure.appendChild(fragment);
+    el.appendChild(figure);
+
+    const picture = figure.querySelector('picture');
+
+    if (picture) {
+      const captionFragment = document.createDocumentFragment();
+      let nextNode = picture.nextSibling;
+
+      while (nextNode) {
+        const toMove = nextNode;
+        nextNode = nextNode.nextSibling;
+        captionFragment.appendChild(toMove);
+      }
+
+      if (captionFragment.hasChildNodes()) {
+        figCaption.appendChild(captionFragment);
+        figure.appendChild(figCaption);
+      }
     }
   });
 
