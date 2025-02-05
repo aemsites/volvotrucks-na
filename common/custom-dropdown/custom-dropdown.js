@@ -403,48 +403,46 @@ const createSelectHtml = (list) => {
 
 export const getCustomDropdown = (formName, list, type) => {
   const baseURL = window.location.origin;
-  let customDropdown;
   optionsList = list;
 
-  try {
-    loadCSS(`${baseURL}/common/${componentName}/${componentName}.css`);
-  } catch (error) {
-    console.error(error);
-  } finally {
-    customDropdown = `
-      <div class="${componentName} ${formName}__field-wrapper">
-        <label
-          id="${componentName}-label" 
-          class="${componentName}-label">${getTextLabel(`event-notify:${type}`)}*
-        </label>
-        <div
-          aria-controls="options"
-          aria-expanded="false"
-          aria-haspopup="${componentName}"
-          aria-labelledby="${componentName}-label"
-          id="${componentName}"
-          class="${componentName}-button"
-          role="${componentName}-button"
-          tabindex="0"
-        ></div>
-        <div
-          aria-labelledby="${componentName}-label"
-          id="options"
-          class="${componentName}-option-list"
-          role="${componentName}-option-list"
-          tabindex="-1"
-        ></div>
-        <select
-          aria-hidden="true"
-          name="${type}"
-          class="native-select"
-          autocomplete="off"
-          required>
-          ${createSelectHtml(optionsList)} 
-        </select>
-      </div>
-    `;
-  }
-
-  return customDropdown;
+  return loadCSS(`${baseURL}/common/${componentName}/${componentName}.css`)
+    .then(() => {
+      return `
+        <div class="${componentName} ${formName}__field-wrapper">
+          <label
+            id="${componentName}-label" 
+            class="${componentName}-label">${getTextLabel(`event-notify:${type}`)}*
+          </label>
+          <div
+            aria-controls="options"
+            aria-expanded="false"
+            aria-haspopup="${componentName}"
+            aria-labelledby="${componentName}-label"
+            id="${componentName}"
+            class="${componentName}-button"
+            role="${componentName}-button"
+            tabindex="0"
+          ></div>
+          <div
+            aria-labelledby="${componentName}-label"
+            id="options"
+            class="${componentName}-option-list"
+            role="${componentName}-option-list"
+            tabindex="-1"
+          ></div>
+          <select
+            aria-hidden="true"
+            name="${type}"
+            class="native-select"
+            autocomplete="off"
+            required>
+            ${createSelectHtml(optionsList)} 
+          </select>
+        </div>
+      `;
+    })
+    .catch((error) => {
+      console.error('Failed to load CSS:', error);
+      return '';
+    });
 };

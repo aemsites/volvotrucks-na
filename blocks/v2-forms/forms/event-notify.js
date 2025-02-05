@@ -30,7 +30,7 @@ const formContent = `
       <input type="email" id="${formName}-email" name="email" autocomplete="off" placeholder="" required />
       <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
     </div>
-    ${getCustomDropdown(formName, mapCountryCodesToLabels(COUNTRY_CODES), 'country')}
+    ${await getCustomDropdown(formName, mapCountryCodesToLabels(COUNTRY_CODES), 'country')}
     <div class="${formName}__field-wrapper">
       <label for="${formName}-company">${getTextLabel('event-notify:company')}*</label>
       <input type="text" id="${formName}-company" name="company" autocomplete="off" placeholder="" required />
