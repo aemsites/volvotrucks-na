@@ -67,6 +67,7 @@
     0 0.3px 2px 0 var(--color-bg-shadow, var(--color-bg-shadow)),
     0 3px 8px 0 var(--color-bg-shadow, var(--color-bg-shadow));
   z-index: 1;
+  padding: 4px 0;
 }
 
 .open .option-list {
@@ -74,7 +75,7 @@
 }
 
 .dropdown-option {
-  padding: 10px 12px 12px;
+  padding: 10px 16px;
 }
 
 .dropdown-option.option-current {

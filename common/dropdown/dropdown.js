@@ -5,7 +5,7 @@ const componentName = 'dropdown';
 loadCSS(`${window.hlx.codeBasePath}/common/${componentName}/${componentName}.css`);
 let optionsList;
 
-// Save a list of named combobox actions, for future readability
+// Save a list of named actions, for future readability
 const SelectActions = {
   Close: 0,
   CloseSelect: 1,
@@ -152,17 +152,17 @@ function maintainScrollVisibility(activeElement, scrollParent) {
 
 /*
  * Select Component
- * Accepts a combobox element and an array of string options
+ * Accepts a clickable element and an array of string options
  */
 const Select = function (el, options = []) {
   // element refs
   this.el = el;
   this.labelEl = el.querySelector(`.${componentName}-label`);
-  this.comboEl = el.querySelector(`[role=${componentName}-button]`);
-  this.listboxEl = el.querySelector('[role=option-list]');
+  this.buttonEl = el.querySelector(`[role=${componentName}-button]`);
+  this.listEl = el.querySelector('[role=option-list]');
 
   // data
-  this.idBase = this.comboEl.id || `${componentName}`;
+  this.idBase = this.buttonEl.id || `${componentName}`;
   this.options = options;
 
   // state
@@ -172,25 +172,25 @@ const Select = function (el, options = []) {
   this.searchTimeout = null;
 
   // init
-  if (el && this.comboEl && this.listboxEl) {
+  if (el && this.buttonEl && this.listEl) {
     this.init();
   }
 };
 
 Select.prototype.init = function init() {
   // select first option by default
-  this.comboEl.innerHTML = this.options[0];
+  this.buttonEl.innerHTML = this.options[0];
 
   // add event listeners
-  this.comboEl.addEventListener('blur', this.onComboBlur.bind(this));
-  this.listboxEl.addEventListener('focusout', this.onComboBlur.bind(this));
-  this.comboEl.addEventListener('click', this.onComboClick.bind(this));
-  this.comboEl.addEventListener('keydown', this.onComboKeyDown.bind(this));
+  this.buttonEl.addEventListener('blur', this.onButtonBlur.bind(this));
+  this.listEl.addEventListener('focusout', this.onButtonBlur.bind(this));
+  this.buttonEl.addEventListener('click', this.onButtonClick.bind(this));
+  this.buttonEl.addEventListener('keydown', this.onButtonKeyDown.bind(this));
 
   // create options
   this.options.map((option, index) => {
     const optionEl = this.createOption(option, index);
-    this.listboxEl.appendChild(optionEl);
+    this.listEl.appendChild(optionEl);
   });
 };
 
@@ -227,9 +227,9 @@ Select.prototype.getSearchString = function getSearchString(char) {
   return this.searchString;
 };
 
-Select.prototype.onComboBlur = function onComboBlur(event) {
-  // do nothing if relatedTarget is contained within listboxEl
-  if (this.listboxEl.contains(event.relatedTarget)) {
+Select.prototype.onButtonBlur = function onButtonBlur(event) {
+  // do nothing if relatedTarget is contained within listEl
+  if (this.listEl.contains(event.relatedTarget)) {
     return;
   }
 
@@ -240,11 +240,11 @@ Select.prototype.onComboBlur = function onComboBlur(event) {
   }
 };
 
-Select.prototype.onComboClick = function onComboClick() {
+Select.prototype.onButtonClick = function onButtonClick() {
   this.updateMenuState(!this.open, false);
 };
 
-Select.prototype.onComboKeyDown = function onComboKeyDown(event) {
+Select.prototype.onButtonKeyDown = function onButtonKeyDown(event) {
   const { key } = event;
   const max = this.options.length - 1;
 
@@ -269,14 +269,14 @@ Select.prototype.onComboKeyDown = function onComboKeyDown(event) {
       event.preventDefault();
       return this.updateMenuState(false);
     case SelectActions.Type:
-      return this.onComboType(key);
+      return this.onButtonType(key);
     case SelectActions.Open:
       event.preventDefault();
       return this.updateMenuState(true);
   }
 };
 
-Select.prototype.onComboType = function onComboType(letter) {
+Select.prototype.onButtonType = function onButtonType(letter) {
   // open the listbox if it is closed
   this.updateMenuState(true);
 
@@ -300,7 +300,7 @@ Select.prototype.onOptionChange = function onOptionChange(index) {
   this.activeIndex = index;
 
   // update aria-activedescendant
-  this.comboEl.setAttribute('aria-activedescendant', `${this.idBase}-${index}`);
+  this.buttonEl.setAttribute('aria-activedescendant', `${this.idBase}-${index}`);
 
   // update active option styles
   const options = this.el.querySelectorAll('[role=option]');
@@ -310,8 +310,8 @@ Select.prototype.onOptionChange = function onOptionChange(index) {
   options[index].classList.add('option-current');
 
   // ensure the new option is in view
-  if (isScrollable(this.listboxEl)) {
-    maintainScrollVisibility(options[index], this.listboxEl);
+  if (isScrollable(this.listEl)) {
+    maintainScrollVisibility(options[index], this.listEl);
   }
 
   // ensure the new option is visible on screen
@@ -339,7 +339,7 @@ Select.prototype.selectOption = function selectOption(index) {
 
   // update displayed value
   const selected = this.options[index];
-  this.comboEl.innerHTML = selected;
+  this.buttonEl.innerHTML = selected;
 
   // this updates the value of the select that gets inputed in the forms
   const selectHtml = this.el.closest(`.custom-${componentName}`).querySelector('select');
@@ -362,19 +362,19 @@ Select.prototype.updateMenuState = function updateMenuState(open, callFocus = tr
   this.open = open;
 
   // update aria-expanded and styles
-  this.comboEl.setAttribute('aria-expanded', `${open}`);
+  this.buttonEl.setAttribute('aria-expanded', `${open}`);
   open ? this.el.classList.add('open') : this.el.classList.remove('open');
 
   // update activedescendant
   const activeID = open ? `${this.idBase}-${this.activeIndex}` : '';
-  this.comboEl.setAttribute('aria-activedescendant', activeID);
+  this.buttonEl.setAttribute('aria-activedescendant', activeID);
 
-  if (activeID === '' && !isElementInView(this.comboEl)) {
-    this.comboEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  if (activeID === '' && !isElementInView(this.buttonEl)) {
+    this.buttonEl.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 
-  // move focus back to the combobox, if needed
-  callFocus && this.comboEl.focus();
+  // move focus back to the button, if needed
+  callFocus && this.buttonEl.focus();
 };
 
 export const addDropdownInteraction = (form) => {
