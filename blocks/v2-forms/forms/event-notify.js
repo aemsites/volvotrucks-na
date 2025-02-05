@@ -1,5 +1,5 @@
 import { getTextLabel } from '../../../scripts/common.js';
-import { getCustomDropdown, addDropdownInteraction } from '../../../common/dropdown/dropdown.js';
+import { getCustomDropdown, addDropdownInteraction } from '../../../common/custom-dropdown/custom-dropdown.js';
 
 const COUNTRY_CODES = ['united-states', 'canada', 'other'];
 

@@ -1,7 +1,7 @@
 import { getTextLabel, createElement } from '../../../scripts/common.js';
 import { loadCSS } from '../../scripts/aem.js';
 
-const componentName = 'dropdown';
+const componentName = 'custom-dropdown';
 let optionsList;
 
 try {
@@ -171,7 +171,7 @@ const Select = function (el, options = []) {
   this.listEl = el.querySelector('[role=option-list]');
 
   // data
-  this.idBase = this.buttonEl.id || `${componentName}`;
+  this.idBase = this.buttonEl.id || componentName;
   this.options = options;
 
   // state
@@ -351,7 +351,7 @@ Select.prototype.selectOption = function selectOption(index) {
   this.buttonEl.innerHTML = selected;
 
   // this updates the value of the select that gets inputed in the forms
-  const selectHtml = this.el.closest(`.custom-${componentName}`).querySelector('select');
+  const selectHtml = this.el.closest(`.${componentName}`).querySelector('select');
   selectHtml.selectedIndex = index;
 
   // update aria-selected
@@ -387,7 +387,7 @@ Select.prototype.updateMenuState = function updateMenuState(open, callFocus = tr
 };
 
 export const addDropdownInteraction = (form) => {
-  const selectEls = form.querySelectorAll(`.custom-${componentName}`);
+  const selectEls = form.querySelectorAll(`.${componentName}`);
   selectEls?.forEach((el) => {
     new Select(el, optionsList);
   });
@@ -410,7 +410,7 @@ const createSelectHtml = (list) => {
 export const getCustomDropdown = (formName, list, type) => {
   optionsList = list;
   const customDropdown = `
-    <div class="custom-${componentName} ${formName}__field-wrapper">
+    <div class="${componentName} ${formName}__field-wrapper">
       <label
         id="${componentName}-label" 
         class="${componentName}-label">${getTextLabel(`event-notify:${type}`)}*
