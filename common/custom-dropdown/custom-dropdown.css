@@ -110,7 +110,7 @@
     margin-bottom: 0;
   }
 
-  .option-list {
-    top: calc(100% + 4px);
+  .custom-dropdown-option-list {
+    top: 100%;
   }
 }
