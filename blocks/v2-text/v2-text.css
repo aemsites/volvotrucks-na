@@ -45,6 +45,8 @@
 .v2-text--title-small h5,
 .v2-text--title-small h6 {
   font-size: 20px;
+  line-height: 1em;
+  letter-spacing: normal;
 }
 
 /* heading-3-5 variant */
