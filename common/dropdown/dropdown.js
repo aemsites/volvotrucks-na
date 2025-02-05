@@ -2,8 +2,17 @@ import { getTextLabel, createElement } from '../../../scripts/common.js';
 import { loadCSS } from '../../scripts/aem.js';
 
 const componentName = 'dropdown';
-loadCSS(`${window.hlx.codeBasePath}/common/${componentName}/${componentName}.css`);
 let optionsList;
+
+try {
+  await loadCSS(`${window.hlx.codeBasePath}/common/${componentName}/${componentName}.css`);
+} catch (error) {
+  console.error('Failed to load countdown CSS:', error);
+}
+
+// NOTE: the code for this component was adapted from this page:
+// https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/
+// Its here for further changes or reference
 
 // Save a list of named actions, for future readability
 const SelectActions = {
@@ -379,7 +388,7 @@ Select.prototype.updateMenuState = function updateMenuState(open, callFocus = tr
 
 export const addDropdownInteraction = (form) => {
   const selectEls = form.querySelectorAll(`.custom-${componentName}`);
-  selectEls.forEach((el) => {
+  selectEls?.forEach((el) => {
     new Select(el, optionsList);
   });
 };

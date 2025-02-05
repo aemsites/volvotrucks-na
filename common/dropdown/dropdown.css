@@ -23,8 +23,9 @@
   right: 10px;
   height: 32px;
   width: 32px;
-  padding: 4px;
   border-radius: var(--border-radius-small);
+  pointer-events: none;
+  padding: 4px;
 }
 
 .custom-dropdown.open::after {
