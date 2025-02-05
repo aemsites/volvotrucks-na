@@ -4,12 +4,6 @@ import { loadCSS } from '../../scripts/aem.js';
 const componentName = 'custom-dropdown';
 let optionsList;
 
-try {
-  await loadCSS(`${window.hlx.codeBasePath}/common/${componentName}/${componentName}.css`);
-} catch (error) {
-  console.error('Failed to load countdown CSS:', error);
-}
-
 // NOTE: the code for this component was adapted from this page:
 // https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/
 // Its here for further changes or reference
@@ -168,7 +162,7 @@ const Select = function (el, options = []) {
   this.el = el;
   this.labelEl = el.querySelector(`.${componentName}-label`);
   this.buttonEl = el.querySelector(`[role=${componentName}-button]`);
-  this.listEl = el.querySelector('[role=option-list]');
+  this.listEl = el.querySelector(`[role=${componentName}-option-list]`);
 
   // data
   this.idBase = this.buttonEl.id || componentName;
@@ -408,40 +402,49 @@ const createSelectHtml = (list) => {
 };
 
 export const getCustomDropdown = (formName, list, type) => {
+  const baseURL = window.location.origin;
+  let customDropdown;
   optionsList = list;
-  const customDropdown = `
-    <div class="${componentName} ${formName}__field-wrapper">
-      <label
-        id="${componentName}-label" 
-        class="${componentName}-label">${getTextLabel(`event-notify:${type}`)}*
-      </label>
-      <div
-        aria-controls="options"
-        aria-expanded="false"
-        aria-haspopup="${componentName}"
-        aria-labelledby="${componentName}-label"
-        id="${componentName}"
-        class="${componentName}-button"
-        role="${componentName}-button"
-        tabindex="0"
-      ></div>
-      <div
-        aria-labelledby="${componentName}-label"
-        id="options"
-        class="option-list"
-        role="option-list"
-        tabindex="-1"
-      ></div>
-      <select
-        aria-hidden="true"
-        name="${type}"
-        class="native-select"
-        autocomplete="off"
-        required>
-        ${createSelectHtml(optionsList)} 
-      </select>
-    </div>
-  `;
+
+  try {
+    loadCSS(`${baseURL}/common/${componentName}/${componentName}.css`);
+  } catch (error) {
+    console.error(error);
+  } finally {
+    customDropdown = `
+      <div class="${componentName} ${formName}__field-wrapper">
+        <label
+          id="${componentName}-label" 
+          class="${componentName}-label">${getTextLabel(`event-notify:${type}`)}*
+        </label>
+        <div
+          aria-controls="options"
+          aria-expanded="false"
+          aria-haspopup="${componentName}"
+          aria-labelledby="${componentName}-label"
+          id="${componentName}"
+          class="${componentName}-button"
+          role="${componentName}-button"
+          tabindex="0"
+        ></div>
+        <div
+          aria-labelledby="${componentName}-label"
+          id="options"
+          class="${componentName}-option-list"
+          role="${componentName}-option-list"
+          tabindex="-1"
+        ></div>
+        <select
+          aria-hidden="true"
+          name="${type}"
+          class="native-select"
+          autocomplete="off"
+          required>
+          ${createSelectHtml(optionsList)} 
+        </select>
+      </div>
+    `;
+  }
 
   return customDropdown;
 };

@@ -55,7 +55,7 @@
   outline-offset: 2px;
 }
 
-.option-list {
+.custom-dropdown-option-list {
   --color-bg-shadow: rgb(0 0 0 / 20%);
 
   display: none;
@@ -71,7 +71,7 @@
   padding: 4px 0;
 }
 
-.open .option-list {
+.open .custom-dropdown-option-list {
   display: block;
 }
 
