@@ -32,7 +32,7 @@
   transform: rotate(180deg);
 }
 
-.custom-dropdown-button {
+.custom-dropdown__button {
   display: flex;
   justify-content: space-between;
   position: relative;
@@ -46,16 +46,16 @@
   border: 1px solid var(--c-grey-2);
 }
 
-.custom-dropdown-button:hover {
+.custom-dropdown__button:hover {
   outline: 2px solid var(--border-focus);
 }
 
-.custom-dropdown-button:focus {
+.custom-dropdown__button:focus {
   outline: 2px solid var(--border-focus);
   outline-offset: 2px;
 }
 
-.custom-dropdown-option-list {
+.custom-dropdown__option-list {
   --color-bg-shadow: rgb(0 0 0 / 20%);
 
   display: none;
@@ -71,27 +71,27 @@
   padding: 4px 0;
 }
 
-.open .custom-dropdown-option-list {
+.open .custom-dropdown__option-list {
   display: block;
 }
 
-.custom-dropdown-option {
+.custom-dropdown__option {
   padding: 10px 16px;
 }
 
-.custom-dropdown-option.option-current {
+.custom-dropdown__option.option-current {
   pointer-events: none;
   outline: 2px solid var(--border-focus);
   outline-offset: -2px;
 }
 
-.custom-dropdown-option[aria-selected='true'] {
+.custom-dropdown__option[aria-selected='true'] {
   background-color: var(--c-grey-100);
   padding-right: 30px;
   position: relative;
 }
 
-.custom-dropdown-option[aria-selected='true']::after {
+.custom-dropdown__option[aria-selected='true']::after {
   content: url('/icons/check-thin.svg');
   height: 24px;
   width: 24px;
@@ -100,7 +100,7 @@
   top: 25%;
 }
 
-.custom-dropdown-option:hover {
+.custom-dropdown__option:hover {
   background-color: var(--c-grey-50);
   cursor: pointer;
 }
@@ -110,7 +110,7 @@
     margin-bottom: 0;
   }
 
-  .custom-dropdown-option-list {
+  .custom-dropdown__option-list {
     top: 100%;
   }
 }

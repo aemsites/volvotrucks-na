@@ -160,7 +160,7 @@ function maintainScrollVisibility(activeElement, scrollParent) {
 const Select = function (el, options = []) {
   // element refs
   this.el = el;
-  this.labelEl = el.querySelector(`.${componentName}-label`);
+  this.labelEl = el.querySelector(`.${componentName}__label`);
   this.buttonEl = el.querySelector(`[role=${componentName}-button]`);
   this.listEl = el.querySelector(`[role=${componentName}-option-list]`);
 
@@ -201,7 +201,7 @@ Select.prototype.createOption = function createOption(optionText, index) {
   const optionEl = createElement('div');
   optionEl.setAttribute('role', 'option');
   optionEl.id = `${this.idBase}-${index}`;
-  optionEl.className = index === 0 ? `${componentName}-option option-current` : `${componentName}-option`;
+  optionEl.className = index === 0 ? `${componentName}__option option-current` : `${componentName}__option`;
   optionEl.setAttribute('aria-selected', `${index === 0}`);
   optionEl.innerText = optionText;
 
@@ -411,7 +411,7 @@ export const getCustomDropdown = (formName, list, type) => {
         <div class="${componentName} ${formName}__field-wrapper">
           <label
             id="${componentName}-label" 
-            class="${componentName}-label">${getTextLabel(`event-notify:${type}`)}*
+            class="${componentName}__label">${getTextLabel(`event-notify:${type}`)}*
           </label>
           <div
             aria-controls="options"
@@ -419,14 +419,14 @@ export const getCustomDropdown = (formName, list, type) => {
             aria-haspopup="${componentName}"
             aria-labelledby="${componentName}-label"
             id="${componentName}"
-            class="${componentName}-button"
+            class="${componentName}__button"
             role="${componentName}-button"
             tabindex="0"
           ></div>
           <div
             aria-labelledby="${componentName}-label"
             id="options"
-            class="${componentName}-option-list"
+            class="${componentName}__option-list"
             role="${componentName}-option-list"
             tabindex="-1"
           ></div>
