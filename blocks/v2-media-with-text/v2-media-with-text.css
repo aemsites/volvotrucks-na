@@ -72,6 +72,12 @@
   margin-bottom: 16px;
 }
 
+.v2-media-with-text--title-small .v2-media-with-text__heading {
+  font-size: var(--f-heading-6-font-size);
+  line-height: var(--f-heading-6-line-height);
+  letter-spacing: var(--f-heading-6-letter-spacing);
+}
+
 .v2-media-with-text__sub-text-section {
   color: var(--text-subtle);
 }
