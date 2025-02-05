@@ -177,7 +177,7 @@ const Select = function (el, options = []) {
   }
 };
 
-Select.prototype.init = function () {
+Select.prototype.init = function init() {
   // select first option by default
   this.comboEl.innerHTML = this.options[0];
 
@@ -194,7 +194,7 @@ Select.prototype.init = function () {
   });
 };
 
-Select.prototype.createOption = function (optionText, index) {
+Select.prototype.createOption = function createOption(optionText, index) {
   const optionEl = createElement('div');
   optionEl.setAttribute('role', 'option');
   optionEl.id = `${this.idBase}-${index}`;
@@ -211,7 +211,7 @@ Select.prototype.createOption = function (optionText, index) {
   return optionEl;
 };
 
-Select.prototype.getSearchString = function (char) {
+Select.prototype.getSearchString = function getSearchString(char) {
   // reset typing timeout and start new timeout
   // this allows us to make multiple-letter matches, like a native select
   if (typeof this.searchTimeout === 'number') {
@@ -227,7 +227,7 @@ Select.prototype.getSearchString = function (char) {
   return this.searchString;
 };
 
-Select.prototype.onComboBlur = function (event) {
+Select.prototype.onComboBlur = function onComboBlur(event) {
   // do nothing if relatedTarget is contained within listboxEl
   if (this.listboxEl.contains(event.relatedTarget)) {
     return;
@@ -240,11 +240,11 @@ Select.prototype.onComboBlur = function (event) {
   }
 };
 
-Select.prototype.onComboClick = function () {
+Select.prototype.onComboClick = function onComboClick() {
   this.updateMenuState(!this.open, false);
 };
 
-Select.prototype.onComboKeyDown = function (event) {
+Select.prototype.onComboKeyDown = function onComboKeyDown(event) {
   const { key } = event;
   const max = this.options.length - 1;
 
@@ -276,7 +276,7 @@ Select.prototype.onComboKeyDown = function (event) {
   }
 };
 
-Select.prototype.onComboType = function (letter) {
+Select.prototype.onComboType = function onComboType(letter) {
   // open the listbox if it is closed
   this.updateMenuState(true);
 
@@ -295,7 +295,7 @@ Select.prototype.onComboType = function (letter) {
   }
 };
 
-Select.prototype.onOptionChange = function (index) {
+Select.prototype.onOptionChange = function onOptionChange(index) {
   // update state
   this.activeIndex = index;
 
@@ -321,19 +321,19 @@ Select.prototype.onOptionChange = function (index) {
   }
 };
 
-Select.prototype.onOptionClick = function (index) {
+Select.prototype.onOptionClick = function onOptionClick(index) {
   this.onOptionChange(index);
   this.selectOption(index);
   this.updateMenuState(false);
 };
 
-Select.prototype.onOptionMouseDown = function () {
+Select.prototype.onOptionMouseDown = function onOptionMouseDown() {
   // Clicking an option will cause a blur event,
   // but we don't want to perform the default keyboard blur action
   this.ignoreBlur = true;
 };
 
-Select.prototype.selectOption = function (index) {
+Select.prototype.selectOption = function selectOption(index) {
   // update state
   this.activeIndex = index;
 
@@ -353,7 +353,7 @@ Select.prototype.selectOption = function (index) {
   options[index].setAttribute('aria-selected', 'true');
 };
 
-Select.prototype.updateMenuState = function (open, callFocus = true) {
+Select.prototype.updateMenuState = function updateMenuState(open, callFocus = true) {
   if (this.open === open) {
     return;
   }
