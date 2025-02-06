@@ -47,46 +47,47 @@ document.addEventListener('click', (e) => {
 /**
  * This loader is meant to load the MNTN conversion pixel on the correct pages.
  * The conversion pixel is loaded on the following pages:
- * - Home Page: when the Find a Dealer button is clicked
- * - Find a Dealer Page: when the Dealer Site button is clicked or when the Locate a Dealer search is performed
- * - Truck Builder Page: when the Submit Build button is clicked
- * Note: the Find a Dealer events are handled by sidebar-maps.js
+ * - Find a Dealer Page: when the Dealer Site is loaded or when the Locate a Dealer search is performed once
+ * - Truck Builder Page: when the Submit Build button appears
+ * NOTE: By now, the event names are hardcoded, but they can be changed to be dynamic if needed.
  */
 !(function onDelayedLoad() {
-  const conversionURLs = ['/', '/find-a-dealer/', '/truck-builder'];
-  const [homePage, findADealer, truckBuilder] = conversionURLs;
+  const conversionURLs = ['/find-a-dealer/', '/truck-builder'];
+  const [findADealer, truckBuilder] = conversionURLs;
   const conversionEvents = [
-    { pathname: homePage, eventName: 'find-a-dealer-button-click' },
-    { pathname: findADealer, eventName: 'dealer-site-button-click' },
+    { pathname: findADealer, eventName: 'find-a-dealer-button-click' },
     { pathname: findADealer, eventName: 'locate-a-dealer-search' },
     { pathname: truckBuilder, eventName: 'submit-build-button-click' },
   ];
   const currentURL = new URL(window.location.href);
   const currentPath = currentURL.pathname;
   const conversion = conversionURLs.find((url) => url === currentPath);
+
   if (conversion) {
-    console.log({ conversion, currentPath, dataLayer: window.dataLayer });
-    if (!window.dataLayer || !MNTN_PIXEL_ID) {
+    if (!MNTN_PIXEL_ID) {
       return;
     }
-    if (conversion === homePage) {
-      const findADealerButtons = document.querySelectorAll('a[href$="/find-a-dealer/"]');
-      const eventName = conversionEvents.find((event) => event.pathname === homePage).eventName;
-      findADealerButtons.forEach((button) => {
+
+    if (conversion === findADealer) {
+      const searchButtons = document.querySelectorAll('button[onClick*="$.fn.setAddress"]');
+      const [findDealerOnLoad, findDealerOnSearch] = conversionEvents;
+      loadMNTNConversionPixel(findDealerOnLoad.eventName);
+      [...searchButtons].forEach((button) => {
         button.addEventListener('click', () => {
-          window.dataLayer.push({ event: eventName });
-          loadMNTNConversionPixel(eventName);
+          const onSearchScript = document.querySelector(`script[src*="shoid=${findDealerOnSearch.eventName}"]`);
+          if (!onSearchScript) {
+            loadMNTNConversionPixel(findDealerOnSearch.eventName);
+          }
         });
       });
     } else if (conversion === truckBuilder) {
       const observer = new MutationObserver(() => {
         if (window.location.href.includes('summary')) {
           const submitButton = document.querySelector('.external-app #configurator div > h4 + h5 + div > button');
-          const eventName = conversionEvents.find((event) => event.pathname === truckBuilder).eventName;
-          submitButton.addEventListener('click', () => {
-            window.dataLayer.push({ event: eventName });
-            loadMNTNConversionPixel(eventName);
-          });
+          if (submitButton) {
+            const [, , TruckBuilder] = conversionEvents;
+            loadMNTNConversionPixel(TruckBuilder.eventName);
+          }
         }
       });
       observer.observe(document, { subtree: true, childList: true });
@@ -354,7 +355,7 @@ async function loadMNTNTrackingPixel() {
 
 // MNTN Conversion Pixel
 // Install ONLY on conversion page/event
-export async function loadMNTNConversionPixel(orderId, orderAmount = 'TOTAL ORDER AMOUNT') {
+async function loadMNTNConversionPixel(orderId, orderAmount = '') {
   !(function loadMNTNConversionPixelInit() {
     const x = null;
     let p;
