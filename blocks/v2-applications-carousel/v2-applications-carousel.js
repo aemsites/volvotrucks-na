@@ -175,13 +175,14 @@ const initializeCarouselScroll = () => {
 
   let touchStartX = 0;
   let initialScrollLeft = 0;
+  const SLIDE_SCROLL_DISTANCE = 500;
 
   /**
-   * Dynamically sets the height of the carousel container based on viewport and card count.
+   * Dynamically sets the height of the carousel container based on slide scroll distance and viewport height.
    */
   const adjustCarouselHeight = () => {
     const viewportHeight = window.innerHeight;
-    carouselElement.style.height = `${viewportHeight * cardElements.length + viewportHeight}px`;
+    carouselElement.style.height = `${SLIDE_SCROLL_DISTANCE * cardElements.length + viewportHeight}px`;
   };
 
   /**
@@ -202,12 +203,11 @@ const initializeCarouselScroll = () => {
   /**
    * Calculates the active card index based on the current scroll position.
    * @param {number} scrollPosition - The current scroll position.
-   * @param {number} cardHeight - The height of each card.
    * @returns {number} - The calculated active index.
    */
-  const getActiveCardIndex = (scrollPosition, cardHeight) => {
+  const getActiveCardIndex = (scrollPosition) => {
     const adjustedScroll = Math.max(0, scrollPosition);
-    return Math.min(cardElements.length - 1, Math.floor(adjustedScroll / cardHeight));
+    return Math.min(cardElements.length - 1, Math.floor(adjustedScroll / SLIDE_SCROLL_DISTANCE));
   };
 
   /**
@@ -219,8 +219,7 @@ const initializeCarouselScroll = () => {
     const scrollPosition = currentScrollY - carouselElement.offsetTop;
 
     if (containerRect.top < window.innerHeight && containerRect.bottom > 0) {
-      const cardHeight = window.innerHeight;
-      const activeIndex = getActiveCardIndex(scrollPosition, cardHeight);
+      const activeIndex = getActiveCardIndex(scrollPosition); // Uses fixed scroll step
       const activeCard = cardElements[activeIndex];
       const cardOffset = activeCard.offsetLeft;
       const containerScrollWidth = cardContainer.scrollWidth - cardContainer.clientWidth;
