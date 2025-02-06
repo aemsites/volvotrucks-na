@@ -219,7 +219,7 @@ const initializeCarouselScroll = () => {
     const scrollPosition = currentScrollY - carouselElement.offsetTop;
 
     if (containerRect.top < window.innerHeight && containerRect.bottom > 0) {
-      const activeIndex = getActiveCardIndex(scrollPosition); // Uses fixed scroll step
+      const activeIndex = getActiveCardIndex(scrollPosition);
       const activeCard = cardElements[activeIndex];
       const cardOffset = activeCard.offsetLeft;
       const containerScrollWidth = cardContainer.scrollWidth - cardContainer.clientWidth;
