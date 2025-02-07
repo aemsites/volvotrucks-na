@@ -61,7 +61,7 @@ document.addEventListener('click', (e) => {
   ];
   const currentURL = new URL(window.location.href);
   const currentPath = currentURL.pathname;
-  const conversion = conversionURLs.find((url) => url === currentPath);
+  const conversion = conversionURLs.find((url) => currentPath.includes(url));
 
   if (conversion) {
     if (!MNTN_PIXEL_ID) {
