@@ -61,14 +61,16 @@ document.addEventListener('click', (e) => {
   ];
   const currentURL = new URL(window.location.href);
   const currentPath = currentURL.pathname;
-  const conversion = conversionURLs.find((url) => currentPath.includes(url));
+  const isDealerPage = currentPath === findADealer;
+  const isBuilderPage = currentPath.includes(truckBuilder);
+  const conversion = isDealerPage || isBuilderPage;
 
   if (conversion) {
     if (!MNTN_PIXEL_ID) {
       return;
     }
 
-    if (conversion === findADealer) {
+    if (isDealerPage) {
       const searchButtons = document.querySelectorAll('button[onClick*="$.fn.setAddress"]');
       const [findDealerOnLoad, findDealerOnSearch] = conversionEvents;
       loadMNTNConversionPixel(findDealerOnLoad.eventName);
@@ -80,7 +82,7 @@ document.addEventListener('click', (e) => {
           }
         });
       });
-    } else if (conversion === truckBuilder) {
+    } else if (isBuilderPage) {
       const observer = new MutationObserver(() => {
         if (window.location.href.includes('summary')) {
           const submitButton = document.querySelector('.external-app #configurator div > h4 + h5 + div > button');
