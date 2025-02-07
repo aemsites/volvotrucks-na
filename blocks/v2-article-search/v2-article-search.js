@@ -30,7 +30,7 @@ const getTopics = async (props = {}) => {
     language,
     limit,
     offset,
-    category: 'magazine',
+    category: 'Magazine',
     article,
     sort: 'BEST_MATCH',
     facets: ['ARTICLE', 'TOPIC', 'TRUCK'],
