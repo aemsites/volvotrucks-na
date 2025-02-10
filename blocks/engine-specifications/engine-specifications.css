@@ -59,7 +59,7 @@ main .section .engine-specifications-wrapper {
 }
 
 .performance {
-  background-color: #F7F7F7;
+  background-color: var(--c-grey-50);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -81,7 +81,6 @@ main .section .engine-specifications-wrapper {
 }
 
 .performance .engine-rating .rating-title {
-  font-size: var(--heading-font-size-s);
   color: var(--c-grey-3);
   font-style: normal;
   font-weight: 500;
@@ -159,10 +158,15 @@ main .section .engine-specifications-wrapper {
 }
 
 .chart-label-numbers {
+  display: none;
   font-size: calc(var(--body-font-size-xs) * 0.75 * var(--scale-factor));
   font-weight: 400;
   line-height: 125%;
   letter-spacing: 0.4px;
+}
+
+.chart-label-numbers:nth-of-type(3n) {
+  display: block;
 }
 
 .chart-label-text {
@@ -268,12 +272,12 @@ main .section .engine-specifications-wrapper {
   }
 
   .performance-chart::before {
-    background: linear-gradient(90deg, #F7F7F7 54.11%, rgb(247 247 247 / 0%) 100%);
+    background: linear-gradient(90deg, var(--c-grey-50) 54.11%, rgb(247 247 247 / 0%) 100%);
     left: calc(43vw - 600px);
   }
 
   .performance-chart::after {
-    background: linear-gradient(90deg, #F7F7F7 54.11%, rgb(247 247 247 / 0%) 100%);
+    background: linear-gradient(90deg, var(--c-grey-50) 54.11%, rgb(247 247 247 / 0%) 100%);
     transform: matrix(-1, 0, 0, 1, 0, 0);
     right: calc(43vw - 600px);
   }
@@ -297,7 +301,7 @@ main .section .engine-specifications-wrapper {
   main .section .engine-specifications-wrapper  {
     width: 100vw;
     padding: 0 0 80px;
-    background-color: #F7F7F7;
+    background-color: var(--c-grey-50);
     margin-top: 0 !important;
   }
 
@@ -441,6 +445,10 @@ main .section .engine-specifications-wrapper {
 
 .redesign-v2 .chart-label-numbers {
   font-size: calc(var(--f-body-font-size) * 0.75 * var(--scale-factor));
+}
+
+.redesign-v2 .chart-label-numbers:nth-of-type(even) {
+display: none;
 }
 
 .redesign-v2 .chart-label-text {
