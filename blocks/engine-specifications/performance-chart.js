@@ -184,7 +184,7 @@ const getDisplayableLabels = (valuesX, rpm) => {
 };
 // Gets data from engine-specifications.js block renders the SVG with all the values.
 const getPerformanceChart = (data) => {
-  const scale = JSON.parse(data.scale);
+  const scale = data.scale ?? JSON.parse(data.scale);
   const jasonDataRPM = JSON.parse(data.rpm);
   const jasonDataTQ = JSON.parse(data.torque);
   const jasonDataHP = JSON.parse(data.horsepower);
