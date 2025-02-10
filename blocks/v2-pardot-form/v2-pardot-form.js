@@ -1,5 +1,5 @@
 import { loadScript, sampleRUM } from '../../scripts/aem.js';
-import { getTextLabel } from '../../scripts/common.js';
+import { getTextLabel, createElement } from '../../scripts/common.js';
 
 const successMessage = `<p class='pardot-form__title pardot-form__title--success'>${getTextLabel('Successful submission title')}</p>
 <p class='pardot-form__text pardot-form__text--success'>${getTextLabel('Successful submission text')}</p>
@@ -17,7 +17,7 @@ const SUBMIT_ACTION = '';
 
 async function submissionSuccess() {
   sampleRUM('form:submit');
-  const successDiv = document.createElement('div');
+  const successDiv = createElement('div');
   successDiv.innerHTML = successMessage;
   const form = document.querySelector('form[data-submitting=true]');
   form.setAttribute('data-submitting', 'false');
@@ -25,7 +25,7 @@ async function submissionSuccess() {
 }
 
 async function submissionFailure() {
-  const errorDiv = document.createElement('div');
+  const errorDiv = createElement('div');
   errorDiv.innerHTML = errorMessage;
   const form = document.querySelector('form[data-submitting=true]');
   form.setAttribute('data-submitting', 'false');
@@ -33,11 +33,7 @@ async function submissionFailure() {
   form.replaceWith(errorDiv);
 }
 
-function serialize(obj) {
-  const str = Object.keys(obj).map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`);
-  return str.join('&');
-}
-
+// callback
 window.logResult = function logResult(json) {
   if (json.result === 'success') {
     submissionSuccess();
@@ -45,6 +41,11 @@ window.logResult = function logResult(json) {
     submissionFailure();
   }
 };
+
+function serialize(obj) {
+  const str = Object.keys(obj).map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(obj[key])}`);
+  return str.join('&');
+}
 
 function generateUnique() {
   return new Date().valueOf() + Math.random();
@@ -54,14 +55,10 @@ function constructPayload(form) {
   const payload = { __id__: generateUnique() };
   [...form.elements].forEach((fe) => {
     if (fe.name) {
-      if (fe.type === 'radio') {
-        if (fe.checked) {
-          payload[fe.name] = fe.value;
-        }
-      } else if (fe.type === 'checkbox') {
-        if (fe.checked) {
-          payload[fe.name] = payload[fe.name] ? `${payload[fe.name]},${fe.value}` : fe.value;
-        }
+      if (fe.type === 'radio' && fe.checked) {
+        payload[fe.name] = fe.value;
+      } else if (fe.type === 'checkbox' && fe.checked) {
+        payload[fe.name] = payload[fe.name] ? `${payload[fe.name]},${fe.value}` : fe.value;
       } else if (fe.type !== 'file') {
         payload[fe.name] = fe.value;
       }
@@ -116,53 +113,76 @@ function setConstraints(element, fd) {
 }
 
 function createLabel(fd, tagName = 'label') {
-  const label = document.createElement(tagName);
-  label.setAttribute('for', fd.Id);
-  label.className = 'field-label';
-  label.textContent = fd.Label || '';
-  if (fd.Tooltip) {
-    label.title = fd.Tooltip;
+  const label = createElement(tagName, {
+    classes: 'field-label',
+    props: {
+      for: fd.Id,
+    },
+  });
+  if (fd.tooltip) {
+    label.title = fd.tooltip;
+  }
+  if (fd.Label) {
+    label.textContent = fd.Label;
   }
   return label;
 }
 
 function createHelpText(fd) {
-  const div = document.createElement('div');
-  div.className = 'field-description';
-  div.setAttribute('aria-live', 'polite');
-  div.innerText = fd.Description;
-  div.id = `${fd.Id}-description`;
+  const div = createElement('div', {
+    classes: 'field-description',
+    props: {
+      'aria-live': 'polite',
+      id: `${fd.Id}-description`,
+    },
+  });
+  div.textContent = fd.Description;
   return div;
 }
 
+function kebabName(name) {
+  return name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+}
+
 function createFieldWrapper(fd, tagName = 'div') {
-  const fieldWrapper = document.createElement(tagName);
-  const nameStyle = fd.Name ? ` form-${fd.Name}` : '';
-  const fieldId = `form-${fd.Type}-wrapper${nameStyle}`;
-  fieldWrapper.className = fieldId;
+  const nameStyle = fd.Name ? `form-${kebabName(fd.Name)}` : '';
+  const fieldWrapper = createElement(tagName, {
+    classes: [`form-${fd.Type}-wrapper`, 'field-wrapper'],
+    props: {
+      id: fd.Id,
+      name: fd.Name,
+    },
+  });
+  if (fd.Mandatory && fd.Mandatory.toLowerCase() === 'true') {
+    fieldWrapper.setAttribute('required', 'required');
+  }
   if (fd.Fieldset) {
     fieldWrapper.dataset.fieldset = fd.Fieldset;
   }
-  if (fd.Mandatory.toLowerCase() === 'true') {
-    fieldWrapper.dataset.required = '';
+  if (nameStyle) {
+    fieldWrapper.classList.add(nameStyle);
   }
-  fieldWrapper.classList.add('field-wrapper');
   fieldWrapper.append(createLabel(fd));
   return fieldWrapper;
 }
 
 function createButton(fd) {
   const wrapper = createFieldWrapper(fd);
-  const button = document.createElement('button');
-  button.textContent = fd.Label;
-  button.type = fd.Type;
-  if (button.type === 'submit' && fd.Action) {
+  const button = createElement('button', {
+    classes: ['button', 'primary'],
+    props: {
+      type: fd.Type,
+      id: fd.Id,
+      name: fd.Name,
+    },
+  });
+  if (fd.Type === 'submit' && fd.Action) {
     button.formAction = fd.Action;
   }
-  button.classList.add('button');
-  button.dataset.redirect = fd.Extra || '';
-  button.id = fd.Id;
-  button.name = fd.Name;
+  if (fd.Extra) {
+    button.dataset.redirect = fd.Extra;
+  }
+  button.textContent = fd.Label;
   wrapper.replaceChildren(button);
   return wrapper;
 }
@@ -173,8 +193,11 @@ function createSubmit(fd) {
 }
 
 function createInput(fd) {
-  const input = document.createElement('input');
-  input.type = fd.Type;
+  const input = createElement('input', {
+    props: {
+      type: fd.Type,
+    },
+  });
   setPlaceholder(input, fd);
   setConstraints(input, fd);
   return input;
@@ -187,24 +210,31 @@ const withFieldWrapper = (element) => (fd) => {
 };
 
 const createTextArea = withFieldWrapper((fd) => {
-  const input = document.createElement('textarea');
-  setPlaceholder(input, fd);
-  return input;
+  const textArea = createElement('textarea');
+  setPlaceholder(textArea, fd);
+  return textArea;
 });
 
 const createSelect = withFieldWrapper((fd) => {
-  const select = document.createElement('select');
+  const select = createElement('select');
   if (fd.Placeholder) {
-    const ph = document.createElement('option');
+    const ph = createElement('option', {
+      props: {
+        selected: '',
+        disabled: '',
+      },
+    });
     ph.textContent = fd.Placeholder;
-    ph.setAttribute('selected', '');
-    ph.setAttribute('disabled', '');
     select.append(ph);
   }
   fd.Options.split(',').forEach((o) => {
-    const option = document.createElement('option');
-    option.textContent = o.trim();
-    option.value = o.trim();
+    const oTrimed = o.trim();
+    const option = createElement('option', {
+      props: {
+        value: oTrimed,
+      },
+    });
+    option.textContent = oTrimed;
     select.append(option);
   });
   return select;
@@ -217,19 +247,27 @@ function createRadio(fd) {
 }
 
 const createOutput = withFieldWrapper((fd) => {
-  const output = document.createElement('output');
-  output.name = fd.Name;
-  output.dataset.fieldset = fd.Fieldset ? fd.Fieldset : '';
-  output.innerText = fd.Value;
+  const output = createElement('output', {
+    props: {
+      name: fd.Name,
+    },
+  });
+  if (fd.Fieldset) {
+    output.dataset.fieldset = fd.Fieldset;
+  }
+  output.textContent = fd.Value;
   return output;
 });
 
 function createHidden(fd) {
-  const input = document.createElement('input');
-  input.type = 'hidden';
-  input.id = fd.Id;
-  input.name = fd.Name;
-  input.value = fd.Value;
+  const input = createInput('input', {
+    props: {
+      type: 'hidden',
+      id: fd.Id,
+      name: fd.Name,
+      value: fd.Value,
+    },
+  });
   return input;
 }
 
@@ -259,10 +297,13 @@ function groupFieldsByFieldSet(form) {
 }
 
 function createPlainText(fd) {
-  const paragraph = document.createElement('p');
-  const nameStyle = fd.Name ? `form-${fd.Name}` : '';
-  paragraph.className = nameStyle;
-  paragraph.dataset.fieldset = fd.Fieldset ? fd.Fieldset : '';
+  const nameStyle = fd.Name ? `form-${kebabName(fd.Name)}` : '';
+  const paragraph = createElement('p', {
+    classes: nameStyle,
+  });
+  if (fd.Fieldset) {
+    paragraph.dataset.fieldset = fd.Fieldset;
+  }
   paragraph.textContent = fd.Label;
   return paragraph;
 }
@@ -306,19 +347,29 @@ function renderField(fd) {
 }
 
 async function fetchData(url) {
-  const resp = await fetch(url);
-  const json = await resp.json();
-  return json.data.map((fd) => ({
-    ...fd,
-    Id: fd.Id || getId(fd.Name),
-    Value: fd.Value || '',
-  }));
+  try {
+    const resp = await fetch(url);
+    const json = await resp.json();
+    return json.data.map((fd) => ({
+      ...fd,
+      Id: fd.Id || getId(fd.Name),
+      Value: fd.Value || '',
+    }));
+  } catch (error) {
+    console.error('Error fetching data:', error);
+    return [];
+  }
 }
 
 async function fetchForm(pathname) {
   // get the main form
-  const jsonData = await fetchData(pathname);
-  return jsonData;
+  try {
+    const jsonData = await fetchData(pathname);
+    return jsonData;
+  } catch (error) {
+    console.error('Error fetching form data:', error);
+    return [];
+  }
 }
 
 function showError(evnt) {
@@ -332,7 +383,6 @@ function showError(evnt) {
     fieldWrapper.append(errorSpan);
   }
   errorSpan.innerText = field.validationMessage;
-
   field.addEventListener('blur', hideError);
 }
 
@@ -357,7 +407,13 @@ function decorateValidation(form) {
 async function createForm(formURL) {
   const { pathname } = new URL(formURL);
   const data = await fetchForm(pathname);
-  const form = document.createElement('form');
+  if (data.length === 0) {
+    return createElement('div', {
+      classes: 'pardot-form__error',
+      content: 'Error fetching form data',
+    });
+  }
+  const form = createElement('form');
   data.forEach((fd) => {
     const el = renderField(fd);
     const input = el.querySelector('input,textarea,select');
@@ -375,7 +431,6 @@ async function createForm(formURL) {
     form.append(el);
   });
   groupFieldsByFieldSet(form);
-
   form.addEventListener('submit', (e) => {
     let isValid = true;
     if (form.hasAttribute('novalidate')) {
