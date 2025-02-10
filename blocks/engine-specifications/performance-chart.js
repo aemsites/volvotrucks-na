@@ -105,11 +105,26 @@ const getDevice = () => {
 };
 
 // Identifies the higher value and returns the label and its position on the chart.
+let isFirstLabel = null;
 const buildPeakLabel = (values, valuesX, category, device) => {
   const peakValue = Math.max(...values);
   const indexPosition = values.indexOf(peakValue);
 
-  const positionX = valuesX[indexPosition];
+  const labelWidth = Math.round(128 * device.scale);
+  const labelHeight = Math.round(76 * device.scale);
+
+  let positionX = Math.round(valuesX[indexPosition]);
+
+  if (isFirstLabel === null) {
+    isFirstLabel = positionX;
+  } else {
+    const overlap = (positionX - isFirstLabel) / 2;
+    if (overlap < labelWidth / 2) {
+      positionX = positionX + (labelWidth - overlap);
+    }
+    isFirstLabel = null;
+  }
+
   const positionY = Number(400 - peakValue * verticalScaleFactor);
 
   const peakLabel = category === 'HP' ? ['HP', 'Power', COLORS.lineHP] : ['lb-ft', 'Torque', COLORS.lineTQ];
@@ -118,8 +133,8 @@ const buildPeakLabel = (values, valuesX, category, device) => {
     <rect
       x=${Math.round(positionX - 128 / 2)}
       y=${Math.round(positionY - 76 - 18)}
-      width="${Math.round(128 * device.scale)}px"
-      height="${Math.round(76 * device.scale)}px"
+      width="${labelWidth}px"
+      height="${labelHeight}px"
       rx="8"
       ry="8"
       data-z-index="5"
