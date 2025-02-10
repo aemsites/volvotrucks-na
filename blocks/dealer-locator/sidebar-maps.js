@@ -2415,7 +2415,6 @@ $.fn.setAddress2 = function () {
 
   address2 = $('#location2').val();
 
-
   if (!address2) {
     return null;
   }
