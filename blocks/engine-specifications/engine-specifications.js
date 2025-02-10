@@ -139,12 +139,12 @@ const buildPerformanceSpecifications = (block, engineData) => {
 };
 
 export default async function decorate(block) {
-  const typeDetector = [...block.classList];
+  const blockClassList = [...block.classList];
 
   // This detects what block needs to be render and calls the corresponding function.
-  if (typeDetector.includes('engine')) {
+  if (blockClassList.includes('engine')) {
     buildEngineSpecifications(block);
-  } else if (typeDetector.includes('performance')) {
+  } else if (blockClassList.includes('performance')) {
     const engineData = await getEngineChartData();
     buildPerformanceSpecifications(block, engineData);
   }
