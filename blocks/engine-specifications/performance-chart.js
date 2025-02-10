@@ -199,7 +199,9 @@ const getDisplayableLabels = (valuesX, rpm) => {
 };
 // Gets data from engine-specifications.js block renders the SVG with all the values.
 const getPerformanceChart = (data) => {
-  const scale = data.scale ?? JSON.parse(data.scale);
+  if (data.scale) {
+    verticalScaleFactor = JSON.parse(data.scale) / 100;
+  }
   const jasonDataRPM = JSON.parse(data.rpm);
   const jasonDataTQ = JSON.parse(data.torque);
   const jasonDataHP = JSON.parse(data.horsepower);
@@ -210,10 +212,6 @@ const getPerformanceChart = (data) => {
   const valuesTQ = createFakeValues('torque', jasonDataTQ);
 
   conversionFactor = Number((Math.max(...valuesHP) / Math.max(...valuesTQ)).toFixed(5));
-
-  if (scale) {
-    verticalScaleFactor = scale / 100;
-  }
 
   const adjustedTQValues = valuesTQ.map((value) => parseInt(value * conversionFactor));
 
