@@ -1,3 +1,13 @@
+// TEXT
+// TODO move to placeholder
+const TEXT = {
+  bottom: 'Engine Speed (RPM)',
+  labelTQ: 'Peak Torque',
+  labelHP: 'Peak Power',
+  unitTQ: 'lb-ft',
+  unitHP: 'HP',
+};
+
 // STYLING
 const COLORS = {
   lineHP: '#78B833',
@@ -127,7 +137,7 @@ const buildPeakLabel = (values, valuesX, category, device) => {
 
   const positionY = Number(400 - peakValue * verticalScaleFactor);
 
-  const peakLabel = category === 'HP' ? ['HP', 'Power', COLORS.lineHP] : ['lb-ft', 'Torque', COLORS.lineTQ];
+  const peakLabel = category === 'HP' ? [TEXT.unitHP, TEXT.labelHP, COLORS.lineHP] : [TEXT.unitTQ, TEXT.labelTQ, COLORS.lineTQ];
 
   return `
     <rect
@@ -177,7 +187,7 @@ const buildPeakLabel = (values, valuesX, category, device) => {
       text-anchor="middle"
       class="peak-text"
     >
-      Peak ${peakLabel[1]}
+      ${peakLabel[1]}
     </text>
   `;
 };
@@ -221,7 +231,6 @@ const getPerformanceChart = (data) => {
   const device = getDevice();
 
   const valuesOnAxisX = generatePositionsX(0, valuesRPM.length, sectionWidth);
-
   const svg = `
     <svg 
       version="1.1" 
@@ -323,7 +332,7 @@ const getPerformanceChart = (data) => {
     </g>
 
     <!-- HORIZONTAL VALUES - RPM -->
-    <g data-z-index="7" aria-hidden="true">
+    <g data-z-index="7" aria-hidden="true" class="${valuesRPM.length > 26 ? 'display-less-values' : 'display-more-values'}">
       ${getDisplayableLabels(valuesOnAxisX, valuesRPM)}
       <text 
         x="${totalWidthChart / 2}"
@@ -331,7 +340,7 @@ const getPerformanceChart = (data) => {
         class="chart-label-text"
         text-anchor="middle"
       >
-        Engine Speed (RPM)
+        ${TEXT.bottom}
       </text>
     </g>
   </svg>

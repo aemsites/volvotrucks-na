@@ -165,10 +165,6 @@ main .section .engine-specifications-wrapper {
   letter-spacing: 0.4px;
 }
 
-.chart-label-numbers:nth-of-type(3n) {
-  display: block;
-}
-
 .chart-label-text {
   font-size: calc(var(--body-font-size-xs) * var(--scale-factor));
   font-weight: 400;
@@ -298,7 +294,7 @@ main .section .engine-specifications-wrapper {
     margin: 0;
   }
 
-  main .section .engine-specifications-wrapper  {
+  main .section .engine-specifications-wrapper {
     width: 100vw;
     padding: 0 0 80px;
     background-color: var(--c-grey-50);
@@ -372,7 +368,6 @@ main .section .engine-specifications-wrapper {
   line-height: var(--f-heading-3-line-height);
   letter-spacing: var(--f-heading-3-letter-spacing);
 }
-
 
 .redesign-v2 .engine-specifications .rating-title,
 .redesign-v2 .engine-specifications .power-title,
@@ -448,7 +443,15 @@ main .section .engine-specifications-wrapper {
 }
 
 .redesign-v2 .chart-label-numbers:nth-of-type(even) {
-display: none;
+  display: none;
+}
+
+.display-more-values .chart-label-numbers:nth-of-type(2n) {
+  display: block;
+}
+
+.display-less-values .chart-label-numbers:nth-of-type(3n) {
+  display: block;
 }
 
 .redesign-v2 .chart-label-text {
@@ -518,7 +521,7 @@ display: none;
   }
 }
 
-@media (min-width: 1440px){
+@media (min-width: 1440px) {
   .redesign-v2 main .section .engine-specifications-wrapper {
     padding: var(--section-div-padding);
     margin: auto;
