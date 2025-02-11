@@ -1,6 +1,6 @@
 import { unwrapDivs, variantsClassesToBEM } from '../../scripts/common.js';
 
-const variantClasses = ['double', 'heading-3-5'];
+const variantClasses = ['double', 'heading-3-5', 'title-small'];
 
 export default function decorate(block) {
   const blockName = 'v2-text';

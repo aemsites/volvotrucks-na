@@ -12,50 +12,50 @@
   <script src="/scripts/scripts.js" type="module" crossorigin="use-credentials"></script>
   <script type="module">
     import { sampleRUM } from '/scripts/aem.js';
+    import { getTextLabel } from '/scripts/common.js';
 
     window.addEventListener('load', () => {
+      if (document.referrer) {
+        const { origin, pathname } = new URL(document.referrer);
+        if (origin === window.location.origin) {
+          const main = document.querySelector('main.error');
+
+          const observer = new MutationObserver((mutations, observer) => {
+            const fragmentContainer = document.querySelector('.fragment');
+            if (fragmentContainer) {
+              const backLinkTitle = getTextLabel('404-back-link');
+              const btnContainer = document.createElement('p');
+              const backBtn = document.createElement('a');
+              backBtn.classList.add('button', 'button--primary');
+              backBtn.href = pathname;
+              backBtn.textContent = backLinkTitle;
+              backBtn.title = backLinkTitle;
+              btnContainer.append(backBtn);
+              fragmentContainer.append(btnContainer);
+              observer.disconnect();
+            }
+          });
+
+          observer.observe(main, {
+            childList: true,
+            subtree: true
+          });
+        }
+      }
       sampleRUM('404', { source: document.referrer, target: window.location.href });
     });
   </script>
   <link rel="stylesheet" href="/styles/styles.css">
-  <style>
-    main.error {
-      align-items: center;
-    }
-
-    main.error .error-number {
-      width: 100%;
-    }
-
-    main.error .error-number text {
-      font-family: var(--font-family-fixed);
-    }
-  </style>
   <link rel="stylesheet" href="/styles/lazy-styles.css">
 </head>
 
 <body>
   <header></header>
   <main class="error">
-    <div class="container main-content">
-      <h1 id="social-feed">Sorry, we've looked high and low and can't find the page you're looking
-        for.</h1>
-      <h2>You might try searching for it or try some of our most commonly visited pages.</h2>
-      <h3>Possible reasons:</h3>
-      <ul>
-        <li>The page has moved</li>
-        <li>The page no longer exists</li>
-        <li>The web address was not entered correctly</li>
-        <li>The page was accessed from an expired search result</li>
-      </ul>
-      <h3>Suggested actions</h3>
-      <ul>
-        <li>Make sure the web address has been entered correctly</li>
-        <li>Go <a title="Go back" onclick="history.go(-1)" class="go-back-link">back</a> to the previous page</li>
-        <li>Visit the <a title="Home page" href="/">Volvo Trucks
-            Homepage</a></li>
-        <li>Search the VolvoTrucks.com site (search box above)</li>
-      </ul>
+    <div>
+      <div class="fragment" style="--section-padding-top: ">
+        <a href="/404" style="visibility: hidden;">/404</a>
+      </div>
     </div>
   </main>
   <footer></footer>
