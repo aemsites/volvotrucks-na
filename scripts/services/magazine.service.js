@@ -121,7 +121,7 @@ export const fetchMagazineArticles = async ({
   sort,
   tenant = TENANT,
   language = getLocale().split('-')[0].toUpperCase(),
-  category = 'magazine',
+  category = 'Magazine',
   facets = ['ARTICLE', 'TOPIC', 'TRUCK'],
 } = {}) => {
   const variables = {

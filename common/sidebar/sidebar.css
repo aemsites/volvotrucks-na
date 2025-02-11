@@ -10,7 +10,7 @@ aside.sidebar {
     z-index: 1090;
 }
 
-aside.sidebar[aria-expanded=true] {
+aside.sidebar[aria-expanded="true"] {
     right: 0;
 }
 
