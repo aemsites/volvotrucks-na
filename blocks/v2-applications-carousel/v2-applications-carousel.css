@@ -102,6 +102,11 @@
   color: var(--c-grey-4);
 }
 
+.v2-applications-carousel__card .icon svg {
+  height: 24px;
+  width: 24px;
+}
+
 .v2-applications-carousel__images {
   position: relative;
   overflow: hidden;
@@ -171,5 +176,10 @@
   .v2-applications-carousel__card-title {
     font-size: 18px;
     line-height: 25.92px;
+  }
+
+  .v2-applications-carousel__card .icon svg {
+    height: 32px;
+    width: 32px;
   }
 }

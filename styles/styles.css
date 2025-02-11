@@ -60,6 +60,7 @@
 
   /* Sizings */
   --border-radius: 8px;
+  --border-radius-small: 4px;
   --section-padding: 40px 0;
   --section-div-padding: 24px 16px;
   --carousel-gap: 8px;

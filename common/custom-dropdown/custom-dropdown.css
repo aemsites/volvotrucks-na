@@ -1,0 +1,116 @@
+.native-select {
+  visibility: hidden;
+  position: absolute;
+}
+
+.custom-dropdown *,
+.custom-dropdown *::before,
+.custom-dropdown *::after {
+  box-sizing: border-box;
+}
+
+.custom-dropdown {
+  display: block;
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.custom-dropdown::after {
+  display: block;
+  content: url('../../icons/chevron-down.svg');
+  position: absolute;
+  top: 38px;
+  right: 10px;
+  height: 32px;
+  width: 32px;
+  border-radius: var(--border-radius-small);
+  pointer-events: none;
+  padding: 4px;
+}
+
+.custom-dropdown.open::after {
+  transform: rotate(180deg);
+}
+
+.custom-dropdown__button {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  background: var(--c-white);
+  letter-spacing: var(--f-body-letter-spacing);
+  line-height: var(--body-regular-line-height);
+  text-align: left;
+  color: var(--c-grey-4);
+  padding: 16px;
+  border-radius: 4px;
+  border: 1px solid var(--c-grey-2);
+}
+
+.custom-dropdown__button:hover {
+  outline: 2px solid var(--border-focus);
+}
+
+.custom-dropdown__button:focus {
+  outline: 2px solid var(--border-focus);
+  outline-offset: 2px;
+}
+
+.custom-dropdown__option-list {
+  --color-bg-shadow: rgb(0 0 0 / 20%);
+
+  display: none;
+  position: absolute;
+  top: calc(100% + 8px);
+  width: 100%;
+  background-color: var(--c-white);
+  border-radius: var(--border-radius-small);
+  box-shadow:
+    0 0.3px 2px 0 var(--color-bg-shadow, var(--color-bg-shadow)),
+    0 3px 8px 0 var(--color-bg-shadow, var(--color-bg-shadow));
+  z-index: 1;
+  padding: 4px 0;
+}
+
+.open .custom-dropdown__option-list {
+  display: block;
+}
+
+.custom-dropdown__option {
+  padding: 10px 16px;
+}
+
+.custom-dropdown__option.option-current {
+  pointer-events: none;
+  outline: 2px solid var(--border-focus);
+  outline-offset: -2px;
+}
+
+.custom-dropdown__option[aria-selected='true'] {
+  background-color: var(--c-grey-100);
+  padding-right: 30px;
+  position: relative;
+}
+
+.custom-dropdown__option[aria-selected='true']::after {
+  content: url('/icons/check-thin.svg');
+  height: 24px;
+  width: 24px;
+  position: absolute;
+  right: 15px;
+  top: 25%;
+}
+
+.custom-dropdown__option:hover {
+  background-color: var(--c-grey-50);
+  cursor: pointer;
+}
+
+@media (min-width: 744px) {
+  .custom-dropdown {
+    margin-bottom: 0;
+  }
+
+  .custom-dropdown__option-list {
+    top: 100%;
+  }
+}

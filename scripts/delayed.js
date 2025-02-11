@@ -44,6 +44,63 @@ document.addEventListener('click', (e) => {
   }
 });
 
+/**
+ * This loader is meant to load the MNTN conversion pixel on the correct pages.
+ * The conversion pixel is loaded on the following pages:
+ * - Find a Dealer Page: when the Dealer Site is loaded or when the Locate a Dealer search is performed once
+ * - Truck Builder Page: when the Submit Build button appears
+ * NOTE: By now, the event names are hardcoded, but they can be changed to be dynamic if needed.
+ */
+!(function onDelayedLoad() {
+  const conversionURLs = ['/find-a-dealer/', '/truck-builder'];
+  const [findADealer, truckBuilder] = conversionURLs;
+  const conversionEvents = [
+    { pathname: findADealer, eventName: 'find-a-dealer-button-click' },
+    { pathname: findADealer, eventName: 'locate-a-dealer-search' },
+    { pathname: truckBuilder, eventName: 'submit-build-button-click' },
+  ];
+  const currentURL = new URL(window.location.href);
+  const currentPath = currentURL.pathname;
+  const isDealerPage = currentPath === findADealer;
+  const isBuilderPage = currentPath.includes(truckBuilder);
+  const conversion = isDealerPage || isBuilderPage;
+
+  if (conversion) {
+    if (!MNTN_PIXEL_ID) {
+      return;
+    }
+
+    if (isDealerPage) {
+      const searchButtons = document.querySelectorAll('button[onClick*="$.fn.setAddress"]');
+      const [findDealerOnLoad, findDealerOnSearch] = conversionEvents;
+      loadMNTNConversionPixel(findDealerOnLoad.eventName);
+      [...searchButtons].forEach((button) => {
+        button.addEventListener('click', () => {
+          const onSearchScript = document.querySelector(`script[src*="shoid=${findDealerOnSearch.eventName}"]`);
+          if (!onSearchScript) {
+            loadMNTNConversionPixel(findDealerOnSearch.eventName);
+          }
+        });
+      });
+    } else if (isBuilderPage) {
+      const observer = new MutationObserver(() => {
+        if (window.location.href.includes('summary')) {
+          const submitButton = document.querySelector('.external-app #configurator div > h4 + h5 + div > button');
+          if (submitButton) {
+            const [, , TruckBuilder] = conversionEvents;
+            const submitPixelScript = document.querySelector(`script[src*="shoid=${TruckBuilder.eventName}"]`);
+            if (!submitPixelScript) {
+              loadMNTNConversionPixel(TruckBuilder.eventName);
+            }
+            observer.disconnect();
+          }
+        }
+      });
+      observer.observe(document, { subtree: true, childList: true });
+    }
+  }
+})();
+
 // OneTrust Cookies Consent Notice start for volvotrucks.us
 if (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc') && !isDevHost()) {
   // when running on localhost in the block library host is empty but the path is srcdoc
@@ -299,6 +356,66 @@ async function loadMNTNTrackingPixel() {
     c.type = 'text/javascript';
     c.src = ('https:' === document.location.protocol ? 'https://' : 'http://') + h;
     v.parentNode.insertBefore(c, v);
+  })();
+}
+
+// MNTN Conversion Pixel
+// Install ONLY on conversion page/event
+async function loadMNTNConversionPixel(orderId, orderAmount = '') {
+  !(function loadMNTNConversionPixelInit() {
+    const x = null;
+    let p;
+    let q;
+    let m;
+    const o = MNTN_PIXEL_ID;
+    const l = orderId;
+    const i = orderAmount;
+    const c = '';
+    const k = '';
+    const g = '';
+    const j = '';
+    const u = '';
+    const shadditional = '';
+    try {
+      p = top.document.referer !== '' ? encodeURIComponent(top.document.referrer.substring(0, 512)) : '';
+    } catch (n) {
+      p = document.referrer !== null ? document.referrer.toString().substring(0, 512) : '';
+    }
+    try {
+      if (window && window.top && document.location && window.top.location === document.location) {
+        q = document.location;
+      } else if (window && window.top && window.top.location && '' !== window.top.location) {
+        q = window.top.location;
+      } else {
+        q = document.location;
+      }
+    } catch (b) {
+      q = document.location;
+    }
+    try {
+      m = parent.location.href !== '' ? encodeURIComponent(parent.location.href.toString().substring(0, 512)) : '';
+    } catch (z) {
+      try {
+        m = q !== null ? encodeURIComponent(q.toString().substring(0, 512)) : '';
+      } catch (h) {
+        m = '';
+      }
+    }
+    let A;
+    const y = document.createElement('script');
+    let w = null;
+    const v = document.getElementsByTagName('script');
+    const t = Number(v.length) - 1;
+    const r = document.getElementsByTagName('script')[t];
+    if (typeof A === 'undefined') {
+      A = Math.floor(Math.random() * 100000000000000000);
+    }
+    w = `dx.mountain.com/spx?conv=1&shaid=${o}&tdr=${p}&plh=${m}&cb=${A}&shoid=${l}&shoamt=${i}&shocur=${c}&shopid=${k}&shoq=${g}&shoup=${j}&shpil=${
+      u
+    }${shadditional}`;
+    y.type = 'text/javascript';
+    y.src = ('https:' === document.location.protocol ? 'https://' : 'http://') + w;
+    r.parentNode.insertBefore(y, r);
   })();
 }
 
