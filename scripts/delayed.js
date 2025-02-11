@@ -88,7 +88,11 @@ document.addEventListener('click', (e) => {
           const submitButton = document.querySelector('.external-app #configurator div > h4 + h5 + div > button');
           if (submitButton) {
             const [, , TruckBuilder] = conversionEvents;
-            loadMNTNConversionPixel(TruckBuilder.eventName);
+            const submitPixelScript = document.querySelector(`script[src*="shoid=${TruckBuilder.eventName}"]`);
+            if (!submitPixelScript) {
+              loadMNTNConversionPixel(TruckBuilder.eventName);
+            }
+            observer.disconnect();
           }
         }
       });

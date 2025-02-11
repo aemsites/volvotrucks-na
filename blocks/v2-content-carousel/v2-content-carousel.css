@@ -79,6 +79,7 @@
   display: block;
   background-color: var(--media-background);
   border-radius: var(--border-radius);
+  margin-bottom: 16px;
 }
 
 .v2-content-carousel__figure img {
@@ -89,7 +90,6 @@
 }
 
 .v2-content-carousel__figure-text {
-  padding-top: 16px;
   font: var(--f-overline-font-size)/var(--f-overline-line-height) var(--font-family-body);
   letter-spacing: var(--f-overline-letter-spacing);
 }

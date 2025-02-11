@@ -156,13 +156,19 @@ function init() {
 
   ['error', 'unhandledrejection'].forEach((event) => {
     window.addEventListener(event, ({ reason, error }) => {
-      const source = (reason || error).stack
-        .split('\n')
-        .filter((line) => line.match(/https?:\/\//))
-        .shift()
-        .replace(/at ([^ ]+) \((.+)\)/, '$1@$2');
-      const target = (reason || error).toString();
-      sampleRUM('error', { source, target });
+      const errorInfo = reason || error;
+
+      if (errorInfo && errorInfo.stack) {
+        const source = errorInfo.stack
+          .split('\n')
+          .filter((line) => line.match(/https?:\/\//))
+          .shift()
+          .replace(/at ([^ ]+) \((.+)\)/, '$1@$2');
+        const target = errorInfo.toString();
+        sampleRUM('error', { source, target });
+      } else {
+        sampleRUM('error', { source: 'Unknown', target: 'Unknown' });
+      }
     });
   });
 }

@@ -21,6 +21,7 @@ const variantClasses = [
   'media-gallery',
   'media-autoplay',
   'mute-controls',
+  'title-small',
 ];
 
 const buildMediaGallery = (section) => {
