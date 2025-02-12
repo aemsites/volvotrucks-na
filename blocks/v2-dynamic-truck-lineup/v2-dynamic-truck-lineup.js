@@ -1,6 +1,7 @@
-import { buildBlock, decorateBlock } from '../../scripts/aem.js';
+import { buildBlock, decorateBlock, readBlockConfig, loadBlock, updateSectionsStatus } from '../../scripts/aem.js';
 import { createElement, decorateIcons } from '../../scripts/common.js';
 import { createCustomOptimizedPicture } from '../../scripts/scripts.js';
+import { getTruckLineupData } from './ri-trucks.service.js';
 
 function getItemsFromBlock(block) {
   const items = [];
@@ -25,14 +26,25 @@ const getTabContentTemplate = ({ modelName, description }) => `
   </div>
 `;
 
-export default function buildTruckLineupBlock(block) {
-  // This data eventually will come from the RI API:
-  // The block will instead provide a configuration for the model that needs to be loaded
-  const config = getItemsFromBlock(block);
+const isApiConfigured = (config) => {
+  // TODO: All of these api configs need to be moved to the constants file
+  return config.category && config.apioneapplicationurl && config.apioneproducturl && config.apioneproductkey && config.apioneproductkey;
+};
 
+export default async function buildTruckLineupBlock(block) {
   const models = [];
+  let truckLineupData = getItemsFromBlock(block);
 
-  config.forEach(({ modelName, description, mobileImage, desktopImage, color }) => {
+  /// Lets get the config of the block:
+  // If the block has the required configurations to load the data from the API
+  // Lets load the data from the API, oherwise we revert to the blockContent
+  const config = readBlockConfig(block);
+
+  if (isApiConfigured(config)) {
+    truckLineupData = await getTruckLineupData(config);
+  }
+
+  truckLineupData.forEach(({ modelName, description, mobileImage, desktopImage, color }) => {
     const tabContent = createElement('div', { classes: 'v2-truck-lineup__content' });
 
     tabContent.dataset.truckCarousel = modelName;
@@ -41,20 +53,20 @@ export default function buildTruckLineupBlock(block) {
 
     const imageBreakpoints = [
       {
-        src: desktopImage?.src,
+        src: desktopImage?.src || desktopImage,
         width: desktopImage?.width,
         height: desktopImage?.height,
         media: '(min-width: 1200px)',
       },
       {
-        src: mobileImage.src,
+        src: mobileImage.src || mobileImage,
         width: mobileImage?.width,
         height: mobileImage?.height,
         media: '(min-width: 400px)',
       },
     ];
 
-    tabContent.prepend(createCustomOptimizedPicture(mobileImage?.src, mobileImage?.alt, false, imageBreakpoints));
+    tabContent.prepend(createCustomOptimizedPicture(mobileImage?.src || mobileImage, mobileImage?.alt || modelName, true, imageBreakpoints));
 
     models.push(tabContent);
   });
@@ -67,5 +79,9 @@ export default function buildTruckLineupBlock(block) {
 
     decorateIcons(truckLineupBlock);
     decorateBlock(truckLineupBlock);
+
+    await loadBlock(truckLineupBlock);
+
+    updateSectionsStatus(document.querySelector('main'));
   }
 }
