@@ -1,3 +1,16 @@
+.section.v2-pardot-form-container > .default-content-wrapper {
+    --heading-font-size: var(--f-heading-3-5-font-size-mobile); /* mobile: 24px, desktop 48px */
+    --subheading-font-size: var(--f-subtitle-1-font-size); /* mobile: 16px, desktop 24px */
+}
+
+.section.v2-pardot-form-container > .default-content-wrapper > h3.h3 {
+    font-size: var(--heading-font-size);
+}
+
+.section.v2-pardot-form-container > .default-content-wrapper > h5.h5 {
+    font-size: var(--subheading-font-size);
+}
+
 .v2-pardot-form-container form {
     display: flex;
     flex-direction: column;
@@ -16,6 +29,19 @@
     margin-bottom: 16px;
 }
 
+.v2-pardot-form-container .custom-dropdown {
+    margin-bottom: 16px;
+    position: unset;
+}
+
+.v2-pardot-form-container .custom-dropdown::after {
+    top: 32px;
+}
+
+.v2-pardot-form-container .form-custom-dropdown-wrapper {
+    position: relative;
+}
+
 .v2-pardot-form-container .field-wrapper {
     line-height: var(--f-body-line-height);
 }
@@ -29,7 +55,24 @@
     color: var(--text-color);
 }
 
+.v2-pardot-form-container.section-with-background.section {
+    --text-color: var(--c-black);
+
+    padding: 0;
+    margin: 0;
+    background-color: unset;
+}
+
+.v2-pardot-form-container.section-with-background.section > picture > img {
+    width: 100%;
+}
+
 @media (min-width: 768px) {
+    .section.v2-pardot-form-container > .default-content-wrapper {
+        --heading-font-size: var(--f-heading-3-font-size); /* mobile: 24px, desktop 48px */
+        --subheading-font-size: var(--f-heading-5-font-size); /* mobile: 16px, desktop 24px */
+    }
+
     .v2-pardot-form-container form {
         display: flex;
         flex-flow: row wrap;

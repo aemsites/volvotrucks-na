@@ -378,6 +378,22 @@
     {
       "Key": "searchPlaceholder",
       "Text": "Search magazine"
+    },
+    {
+      "Key": "V2PardotForm:SuccessfulSubmissionTitle",
+      "Text": "THANK YOU!"
+    },
+    {
+      "Key": "V2PardotForm:SuccessfulSubmissionText",
+      "Text": "Your information has been submitted. Someone will be in touch with you shortly."
+    },
+    {
+      "Key": "V2PardotForm:ErrorSubmissionTitle",
+      "Text": "Error"
+    },
+    {
+      "Key": "V2PardotForm:ErrorSubmissionText",
+      "Text": "Information not sent. Please, try again later."
     }
   ],
   ":type": "sheet"

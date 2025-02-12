@@ -1,12 +1,17 @@
 import { loadScript, sampleRUM } from '../../scripts/aem.js';
-import { getTextLabel, createElement } from '../../scripts/common.js';
+import { getTextLabel, createElement, variantsClassesToBEM } from '../../scripts/common.js';
+import { getAsyncCustomDropdown, addDropdownInteraction } from '../../../common/custom-dropdown/custom-dropdown.js';
 
-const successMessage = `<p class='pardot-form__title pardot-form__title--success'>${getTextLabel('Successful submission title')}</p>
-<p class='pardot-form__text pardot-form__text--success'>${getTextLabel('Successful submission text')}</p>
+const blockName = 'v2-pardot-form';
+const variantClasses = ['background-image'];
+const thankYouObj = {};
+
+const successMessage = `<p class='${blockName}__title ${blockName}__title--success'>${getTextLabel('V2PardotForm:SuccessfulSubmissionTitle')}</p>
+<p class='${blockName}__text ${blockName}__text--success'>${getTextLabel('V2PardotForm:SuccessfulSubmissionText')}</p>
 `;
 
-const errorMessage = `<p class='pardot-form__title pardot-form__title--error'>${getTextLabel('Error submission title')}</p>
-<p class='pardot-form__text pardot-form__text--error'>${getTextLabel('Error submission text')}</p>
+const errorMessage = `<p class='${blockName}__title ${blockName}__title--error'>${getTextLabel('V2PardotForm:ErrorSubmissionTitle')}</p>
+<p class='${blockName}__text ${blockName}__text--error'>${getTextLabel('V2PardotForm:ErrorSubmissionText')}</p>
 `;
 
 // Form Block identifies the submit endpoint via these rules and in order
@@ -308,6 +313,18 @@ function createPlainText(fd) {
   return paragraph;
 }
 
+async function createCustomDropdown(fd) {
+  const configFd = {
+    optionList: fd.Options.split(',').map((o) => o.trim()),
+    placeholder: fd.Placeholder,
+    id: fd.Id,
+    name: fd.Name,
+    mandatory: fd.Mandatory,
+  };
+  const customDropdown = await getAsyncCustomDropdown(configFd);
+  return document.createRange().createContextualFragment(customDropdown);
+}
+
 const getId = (function getId() {
   const ids = {};
   return (name) => {
@@ -329,6 +346,7 @@ const fieldRenderers = {
   hidden: createHidden,
   fieldset: createFieldSet,
   plaintext: createPlainText,
+  'custom-dropdown': createCustomDropdown,
 };
 
 function renderField(fd) {
@@ -414,8 +432,16 @@ async function createForm(formURL) {
     });
   }
   const form = createElement('form');
-  data.forEach((fd) => {
-    const el = renderField(fd);
+  const tempDropdownClass = 'custom-dropdown-placeholder';
+  const customDropdowns = [];
+  data.forEach(async (fd) => {
+    const isCustomDropdown = fd.Type === 'custom-dropdown';
+    const el = isCustomDropdown ? createSelect(fd) : renderField(fd);
+    if (isCustomDropdown) {
+      el.classList.add(tempDropdownClass);
+      customDropdowns.push(fd);
+    }
+    // console.log('%cel', 'color:gold', {el});
     const input = el.querySelector('input,textarea,select');
     if (fd.Mandatory && fd.Mandatory.toLowerCase() === 'true') {
       input.setAttribute('required', 'required');
@@ -430,6 +456,18 @@ async function createForm(formURL) {
     }
     form.append(el);
   });
+  // console.log('%cform', 'color:lime', {form});
+  if (customDropdowns.length > 0) {
+    customDropdowns.forEach(async (fd) => {
+      const customDropdownPlaceholder = form.querySelector(`.${tempDropdownClass}`);
+      const placholderSelect = customDropdownPlaceholder.querySelector('select');
+      const customDropdown = await createCustomDropdown(fd);
+      const optionList = fd.Options.split(',').map((o) => o.trim());
+      customDropdownPlaceholder.classList.remove(tempDropdownClass);
+      placholderSelect.replaceWith(customDropdown);
+      addDropdownInteraction(form, [fd.Placeholder, ...optionList]);
+    });
+  }
   groupFieldsByFieldSet(form);
   form.addEventListener('submit', (e) => {
     let isValid = true;
@@ -447,9 +485,36 @@ async function createForm(formURL) {
   return form;
 }
 
+function decorateTitles(block) {
+  const previousSibling = block.parentElement.previousElementSibling;
+  const title = previousSibling.querySelector('h3');
+  const subtitle = previousSibling.querySelector('h5');
+  title.classList.add('h3');
+  subtitle.classList.add('h5');
+}
+
 export default async function decorate(block) {
   const formLink = block.querySelector('a[href$=".json"]');
+  const backgroundImage = block.closest('.section.section-with-background');
+  const thankYouPage = [...block.querySelectorAll('a')].filter((a) => a.href.includes('thank-you'));
+  variantsClassesToBEM(block.classList, variantClasses, blockName);
+
+  if (backgroundImage) {
+    // console.log('backgroundImage', {backgroundImage});
+    // const bgImage = document.querySelector('meta[property="og:image"]').content;
+    // const sectionBlock = block.closest('.section.v2-pardot-form-container');
+    // sectionBlock.style.setProperty('--form-background-image', `url(${bgImage})`);
+  }
+
+  if (thankYouPage.length > 0) {
+    thankYouObj.url = `${thankYouPage[0].href}.plain.html`;
+    block.lastElementChild.remove();
+  } else if (thankYouObj.url) {
+    delete thankYouObj.url;
+  }
+
   if (formLink) {
+    decorateTitles(block);
     const form = await createForm(formLink.href);
     formLink.replaceWith(form);
   }

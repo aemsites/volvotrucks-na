@@ -380,17 +380,17 @@ Select.prototype.updateMenuState = function updateMenuState(open, callFocus = tr
   callFocus && this.buttonEl.focus();
 };
 
-export const addDropdownInteraction = (form) => {
+export const addDropdownInteraction = (form, optionList = optionsList) => {
   const selectEls = form.querySelectorAll(`.${componentName}`);
   selectEls?.forEach((el) => {
-    new Select(el, optionsList);
+    new Select(el, optionList);
   });
 };
 
 const createOptionMarkup = (idx, option) => {
   return `
       <option
-        value="${option}" 
+        value="${option}"
         data-index-number="${idx}"
         ${idx === 0 ? 'selected' : ''}>
           ${option}
@@ -410,7 +410,7 @@ export const getCustomDropdown = (formName, list, type) => {
       return `
         <div class="${componentName} ${formName}__field-wrapper">
           <label
-            id="${componentName}-label" 
+            id="${componentName}-label"
             class="${componentName}__label">${getTextLabel(`event-notify:${type}`)}*
           </label>
           <div
@@ -436,7 +436,7 @@ export const getCustomDropdown = (formName, list, type) => {
             class="native-select"
             autocomplete="off"
             required>
-            ${createSelectHtml(optionsList)} 
+            ${createSelectHtml(optionsList)}
           </select>
         </div>
       `;
@@ -445,4 +445,46 @@ export const getCustomDropdown = (formName, list, type) => {
       console.error('Failed to load CSS:', error);
       return '';
     });
+};
+
+export const getAsyncCustomDropdown = async (options = {}) => {
+  const baseUrl = window.location.origin;
+  const { optionList = [], label = '', mandatory = false, id = '', placeholder = '', name = '' } = options;
+  try {
+    await loadCSS(`${baseUrl}/common/${componentName}/${componentName}.css`);
+    const labelClass = label ? `${componentName}__label` : 'field-label';
+    return `
+      <div class="${componentName}">
+        ${label ? `<label class="${labelClass}">${getTextLabel(label)}${mandatory ? '*' : ''}</label>` : ''}
+        <div
+          aria-controls="options"
+          aria-expanded="false"
+          aria-haspopup="${componentName}"
+          aria-labelledby="${labelClass}"
+          id="${id ? id : `${componentName}`}"
+          class="${componentName}__button"
+          role="${componentName}-button"
+          tabindex="0"
+        >${placeholder || optionList[0]}</div>
+        <div
+          aria-labelledby="${labelClass}"
+          id="options"
+          class="${componentName}__option-list"
+          role="${componentName}-option-list"
+          tabindex="-1"
+        ></div>
+        <select
+          aria-hidden="true"
+          name="${name}"
+          class="native-select"
+          autocomplete="off"
+          ${mandatory ? 'required' : ''}>
+          ${placeholder ? `<option value="" selected disabled>${placeholder}</option>` : ''}
+          ${createSelectHtml(optionList)}
+        </select>
+      </div>
+    `;
+  } catch (error) {
+    console.error('Something went wrong:', error);
+  }
 };
