@@ -107,6 +107,7 @@
     width: 100%;
 }
 
+.v2-pardot-form-container.section-with-background .v2-pardot-form--message,
 .v2-pardot-form-container.section-with-background.section label {
     background-color: #fffa;
 }

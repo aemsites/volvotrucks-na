@@ -1,17 +1,28 @@
 import { loadScript, sampleRUM } from '../../scripts/aem.js';
-import { getTextLabel, createElement, variantsClassesToBEM } from '../../scripts/common.js';
+import { getTextLabel, createElement } from '../../scripts/common.js';
 import { getAsyncCustomDropdown, addDropdownInteraction } from '../../../common/custom-dropdown/custom-dropdown.js';
 
 const blockName = 'v2-pardot-form';
-const thankYouObj = {};
 
-const successMessage = `<p class='${blockName}__title ${blockName}__title--success'>${getTextLabel('V2PardotForm:SuccessfulSubmissionTitle')}</p>
-<p class='${blockName}__text ${blockName}__text--success'>${getTextLabel('V2PardotForm:SuccessfulSubmissionText')}</p>
+const successMessage = (successTitle, successText) => `<h3 class='${blockName}__title ${blockName}__title--success'>${successTitle}</h3>
+<p class='${blockName}__text ${blockName}__text--success'>${successText}</p>
 `;
 
-const errorMessage = `<p class='${blockName}__title ${blockName}__title--error'>${getTextLabel('V2PardotForm:ErrorSubmissionTitle')}</p>
-<p class='${blockName}__text ${blockName}__text--error'>${getTextLabel('V2PardotForm:ErrorSubmissionText')}</p>
+const errorMessage = (errorTitle, errorText) => `<h3 class='${blockName}__title ${blockName}__title--error'>${errorTitle}</h3>
+<p class='${blockName}__text ${blockName}__text--error'>${errorText}</p>
 `;
+
+/**
+ * Get the message text from placeholder.json based on the success and title
+ * @param {Boolean} isSuccess get the success message if true, otherwise the error message
+ * @param {Boolean} isTitle get the title message if true, otherwise the text message
+ * @returns {String} use the fn getTextLabel to get the message from placeholder.json
+ */
+const getMessageText = (isSuccess, isTitle) => {
+  const key = isSuccess ? 'Successful' : 'Error';
+  const type = isTitle ? 'Title' : 'Text';
+  return getTextLabel(`V2PardotForm:${key}Submission${type}`);
+};
 
 // Form Block identifies the submit endpoint via these rules and in order
 // 1. action property on the submit button
@@ -19,18 +30,45 @@ const errorMessage = `<p class='${blockName}__title ${blockName}__title--error'>
 // 3. the path of the spreadsheet
 const SUBMIT_ACTION = '';
 
+/**
+ * Fetch the custom message from the thank you page fragment
+ * @param {String} url the url of the thank you page fragment
+ * @returns {String} the custom message from the thank you page fragment
+ */
+async function getCustomMessage(url) {
+  try {
+    const resp = await fetch(url);
+    if (resp.ok) {
+      return resp.text();
+    }
+  } catch (error) {
+    console.error('Error fetching custom message:', error);
+    return errorMessage(getMessageText(false, true), getMessageText(false, false));
+  }
+  return '';
+}
+
 async function submissionSuccess() {
   sampleRUM('form:submit');
-  const successDiv = createElement('div');
-  successDiv.innerHTML = successMessage;
+  const successDiv = createElement('div', {
+    classes: [`${blockName}--message`, `${blockName}__message--success`],
+  });
+  successDiv.innerHTML = successMessage(getMessageText(true, true), getMessageText(true, false));
   const form = document.querySelector('form[data-submitting=true]');
+  const hasCustomMessage = form.dataset.customMessage;
+
+  if (hasCustomMessage) {
+    successDiv.innerHTML = await getCustomMessage(hasCustomMessage);
+  }
   form.setAttribute('data-submitting', 'false');
   form.replaceWith(successDiv);
 }
 
 async function submissionFailure() {
-  const errorDiv = createElement('div');
-  errorDiv.innerHTML = errorMessage;
+  const errorDiv = createElement('div', {
+    classes: [`${blockName}--message`, `${blockName}__message--error`],
+  });
+  errorDiv.innerHTML = errorMessage(getMessageText(false, true), getMessageText(false, false));
   const form = document.querySelector('form[data-submitting=true]');
   form.setAttribute('data-submitting', 'false');
   form.querySelector('button[type="submit"]').disabled = false;
@@ -39,7 +77,6 @@ async function submissionFailure() {
 
 // callback
 window.logResult = function logResult(json) {
-  console.log('%cCallback', 'color:gold', { json, logResult: window.logResult });
   if (json.result === 'success') {
     submissionSuccess();
   } else if (json.result === 'error') {
@@ -502,16 +539,13 @@ export default async function decorate(block) {
   const formLink = block.querySelector('a[href$=".json"]');
   const thankYouPage = [...block.querySelectorAll('a')].filter((a) => a.href.includes('thank-you'));
 
-  if (thankYouPage.length > 0) {
-    thankYouObj.url = `${thankYouPage[0].href}.plain.html`;
-    block.lastElementChild.remove();
-  } else if (thankYouObj.url) {
-    delete thankYouObj.url;
-  }
-
   if (formLink) {
     decorateTitles(block);
     const form = await createForm(formLink.href);
+    if (thankYouPage.length > 0) {
+      form.dataset.customMessage = `${thankYouPage[0].href}.plain.html`;
+      block.lastElementChild.remove();
+    }
     formLink.replaceWith(form);
   }
 }
