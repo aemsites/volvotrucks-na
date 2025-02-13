@@ -39,6 +39,7 @@ async function submissionFailure() {
 
 // callback
 window.logResult = function logResult(json) {
+  console.log('%cCallback', 'color:gold', { json, logResult: window.logResult });
   if (json.result === 'success') {
     submissionSuccess();
   } else if (json.result === 'error') {
@@ -345,7 +346,7 @@ const fieldRenderers = {
   hidden: createHidden,
   fieldset: createFieldSet,
   plaintext: createPlainText,
-  'custom-dropdown': createCustomDropdown,
+  'custom-dropdown': createSelect, // create a select as a placeholder for the custom dropdown
 };
 
 function renderField(fd) {
@@ -435,24 +436,23 @@ async function createForm(formURL) {
   const tempDropdownClass = 'custom-dropdown-placeholder';
   const customDropdowns = [];
   data.forEach(async (fd) => {
-    const isCustomDropdown = fd.Type === 'custom-dropdown';
-    const el = isCustomDropdown ? createSelect(fd) : renderField(fd);
+    const el = renderField(fd);
 
-    if (isCustomDropdown) {
+    if (fd.Type === 'custom-dropdown') {
       el.classList.add(tempDropdownClass);
       customDropdowns.push(fd);
     }
 
-    const input = el.querySelector('input,textarea,select');
+    const formField = el.querySelector('input,textarea,select');
     if (fd.Mandatory && fd.Mandatory.toLowerCase() === 'true') {
-      input.setAttribute('required', 'required');
+      formField.setAttribute('required', 'required');
     }
-    if (input) {
-      input.id = fd.Id;
-      input.name = fd.Name;
-      input.value = fd.Value;
+    if (formField) {
+      formField.id = fd.Id;
+      formField.name = fd.Name;
+      formField.value = fd.Value;
       if (fd.Description) {
-        input.setAttribute('aria-describedby', `${fd.Id}-description`);
+        formField.setAttribute('aria-describedby', `${fd.Id}-description`);
       }
     }
     form.append(el);
@@ -463,10 +463,14 @@ async function createForm(formURL) {
       const customDropdownPlaceholder = form.querySelector(`.${tempDropdownClass}`);
       const placholderSelect = customDropdownPlaceholder.querySelector('select');
       const customDropdown = await createCustomDropdown(fd);
+      const optionPlaceholder = fd.Placeholder || null;
       const optionList = fd.Options.split(',').map((o) => o.trim());
       customDropdownPlaceholder.classList.remove(tempDropdownClass);
       placholderSelect.replaceWith(customDropdown);
-      addDropdownInteraction(form, [fd.Placeholder, ...optionList]);
+      if (optionPlaceholder) {
+        optionList.unshift(optionPlaceholder);
+      }
+      addDropdownInteraction(form, optionList);
     });
   }
   groupFieldsByFieldSet(form);
