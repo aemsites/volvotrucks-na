@@ -31,6 +31,30 @@
     height: 40px;
 }
 
+.v2-pardot-form-container .form-select-wrapper {
+    position: relative;
+    font-size: var(--f-subtitle-2-font-size);
+}
+
+.v2-pardot-form-container .form-select-wrapper::after {
+    content: url('../../icons/chevron-down.svg');
+    position: absolute;
+    display: block;
+    top: 32px;
+    right: 10px;
+    width: 32px;
+    height: 32px;
+    border-radius: var(--border-radius-small);
+    pointer-events: none;
+    padding: 4px;
+}
+
+.v2-pardot-form-container .form-select-wrapper select {
+    padding: 0 16px;
+    font-size: inherit;
+    color: var(--c-grey-4);
+}
+
 .v2-pardot-form-container textarea {
     height: 110px;
     font-size: var(--f-subtitle-2-font-size);
