@@ -3,7 +3,6 @@ import { getTextLabel, createElement, variantsClassesToBEM } from '../../scripts
 import { getAsyncCustomDropdown, addDropdownInteraction } from '../../../common/custom-dropdown/custom-dropdown.js';
 
 const blockName = 'v2-pardot-form';
-const variantClasses = ['background-image'];
 const thankYouObj = {};
 
 const successMessage = `<p class='${blockName}__title ${blockName}__title--success'>${getTextLabel('V2PardotForm:SuccessfulSubmissionTitle')}</p>
@@ -425,6 +424,7 @@ function decorateValidation(form) {
 async function createForm(formURL) {
   const { pathname } = new URL(formURL);
   const data = await fetchForm(pathname);
+
   if (data.length === 0) {
     return createElement('div', {
       classes: 'pardot-form__error',
@@ -437,11 +437,12 @@ async function createForm(formURL) {
   data.forEach(async (fd) => {
     const isCustomDropdown = fd.Type === 'custom-dropdown';
     const el = isCustomDropdown ? createSelect(fd) : renderField(fd);
+
     if (isCustomDropdown) {
       el.classList.add(tempDropdownClass);
       customDropdowns.push(fd);
     }
-    // console.log('%cel', 'color:gold', {el});
+
     const input = el.querySelector('input,textarea,select');
     if (fd.Mandatory && fd.Mandatory.toLowerCase() === 'true') {
       input.setAttribute('required', 'required');
@@ -456,7 +457,7 @@ async function createForm(formURL) {
     }
     form.append(el);
   });
-  // console.log('%cform', 'color:lime', {form});
+
   if (customDropdowns.length > 0) {
     customDropdowns.forEach(async (fd) => {
       const customDropdownPlaceholder = form.querySelector(`.${tempDropdownClass}`);
@@ -495,16 +496,7 @@ function decorateTitles(block) {
 
 export default async function decorate(block) {
   const formLink = block.querySelector('a[href$=".json"]');
-  const backgroundImage = block.closest('.section.section-with-background');
   const thankYouPage = [...block.querySelectorAll('a')].filter((a) => a.href.includes('thank-you'));
-  variantsClassesToBEM(block.classList, variantClasses, blockName);
-
-  if (backgroundImage) {
-    // console.log('backgroundImage', {backgroundImage});
-    // const bgImage = document.querySelector('meta[property="og:image"]').content;
-    // const sectionBlock = block.closest('.section.v2-pardot-form-container');
-    // sectionBlock.style.setProperty('--form-background-image', `url(${bgImage})`);
-  }
 
   if (thankYouPage.length > 0) {
     thankYouObj.url = `${thankYouPage[0].href}.plain.html`;

@@ -15,6 +15,7 @@
     display: flex;
     flex-direction: column;
     gap: 8px;
+    width: min(100%, 470px);
 }
 
 .v2-pardot-form-container textarea,
@@ -27,15 +28,28 @@
     max-width: 100%;
     padding: 16px;
     margin-bottom: 16px;
+    height: 40px;
+}
+
+.v2-pardot-form-container textarea {
+    height: 110px;
+    font-size: var(--f-subtitle-2-font-size);
 }
 
 .v2-pardot-form-container .custom-dropdown {
     margin-bottom: 16px;
     position: unset;
+    height: 40px;
+    font-size: var(--f-subtitle-2-font-size);
 }
 
 .v2-pardot-form-container .custom-dropdown::after {
     top: 32px;
+}
+
+.v2-pardot-form-container .custom-dropdown > :first-child {
+    height: 100%;
+    padding: 8px 16px;
 }
 
 .v2-pardot-form-container .form-custom-dropdown-wrapper {
@@ -46,8 +60,10 @@
     line-height: var(--f-body-line-height);
 }
 
-.v2-pardot-form-container label {
-    font-size: var(--body-font-size-s);
+.v2-pardot-form-container .v2-pardot-form label {
+    font-size: var(--f-subtitle-2-font-size);
+    display: inline-block;
+    margin-bottom: 8px;
 }
 
 .v2-pardot-form-container .field-wrapper[required] label::after {
@@ -67,6 +83,10 @@
     width: 100%;
 }
 
+.v2-pardot-form-container.section-with-background.section label {
+    background-color: #fffa;
+}
+
 @media (min-width: 768px) {
     .section.v2-pardot-form-container > .default-content-wrapper {
         --heading-font-size: var(--f-heading-3-font-size); /* mobile: 24px, desktop 48px */
@@ -81,11 +101,5 @@
 
     .v2-pardot-form-container .field-wrapper {
         width: 100%;
-    }
-
-    .v2-pardot-form-container .form-first-name,
-    .v2-pardot-form-container .form-last-name {
-        width: calc(50% - 8px);
-        flex: 1;
     }
 }
