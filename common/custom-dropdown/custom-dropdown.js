@@ -450,8 +450,9 @@ export const getCustomDropdown = (formName, list, type) => {
 export const getAsyncCustomDropdown = async (options = {}) => {
   const baseUrl = window.location.origin;
   const { optionList = [], label = '', mandatory = false, id = '', placeholder = '', name = '' } = options;
+  const dropdownCSS = `${baseUrl}/common/${componentName}/${componentName}.css`;
   try {
-    await loadCSS(`${baseUrl}/common/${componentName}/${componentName}.css`);
+    await loadCSS(dropdownCSS);
     const labelClass = label ? `${componentName}__label` : 'field-label';
     return `
       <div class="${componentName}">
@@ -485,6 +486,6 @@ export const getAsyncCustomDropdown = async (options = {}) => {
       </div>
     `;
   } catch (error) {
-    console.error('Something went wrong:', error);
+    console.error(`Failed to load CSS from ${dropdownCSS}:`, error);
   }
 };
