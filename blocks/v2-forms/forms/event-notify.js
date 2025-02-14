@@ -1,5 +1,5 @@
 import { getTextLabel } from '../../../scripts/common.js';
-import { getCustomDropdown, addDropdownInteraction } from '../../../common/custom-dropdown/custom-dropdown.js';
+import { getCustomDropdown } from '../../../common/custom-dropdown/custom-dropdown.js';
 
 const COUNTRY_CODES = ['united-states', 'canada', 'other'];
 const formName = 'event-notify';
@@ -47,13 +47,7 @@ const formContent = `
       <input type="email" id="${formName}-email" name="email" autocomplete="off" placeholder="" required />
       <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
     </div>
-    ${await getCustomDropdown({
-      formName,
-      label: getTypeKey(TYPES.country),
-      optionList,
-      name: TYPES.country,
-      mandatory: true,
-    })}
+    <div class="custom-dropdown">Placeholder component</div>
     <div class="${formName}__field-wrapper">
       <label for="${formName}-company">${getTextLabel(getTypeKey(TYPES.company))}*</label>
       <input type="text" id="${formName}-company" name="company" autocomplete="off" placeholder="" required />
@@ -91,12 +85,19 @@ const checkFieldValidity = (field, useUserInvalid = true) => {
   }
 };
 
-export const postLoad = (form) => {
+export const postLoad = async (form) => {
   form.setAttribute('novalidate', 'novalidate');
 
   const formHasCustomDropdown = form.querySelector('.custom-dropdown');
   if (formHasCustomDropdown) {
-    addDropdownInteraction(form, optionList);
+    const customDropDown = await getCustomDropdown({
+      formName,
+      label: getTypeKey(TYPES.country),
+      optionList,
+      name: TYPES.country,
+      mandatory: true,
+    });
+    formHasCustomDropdown.replaceWith(customDropDown);
   }
 
   const fields = [...form.querySelectorAll('input')];

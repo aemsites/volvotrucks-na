@@ -379,18 +379,6 @@ Select.prototype.updateMenuState = function updateMenuState(open, callFocus = tr
   callFocus && this.buttonEl.focus();
 };
 
-/**
- * Add dropdown interaction to mimic the option list of a select element using the custom dropdown component
- * @param {HTMLElement} form the form element that contains the dropdown
- * @param {string[]} optionList the list of items to display in the dropdown as options
- */
-export const addDropdownInteraction = (form, optionList) => {
-  const selectEls = form.querySelectorAll(`.${componentName}`);
-  selectEls?.forEach((el) => {
-    new Select(el, optionList);
-  });
-};
-
 const createOptionMarkup = (idx, option) => {
   return `
       <option
@@ -421,11 +409,17 @@ export const getCustomDropdown = async (options = {}) => {
   const baseUrl = window.location.origin;
   const { optionList = [], label = '', mandatory = false, id = '', placeholder = '', name = '', formName = '' } = options;
   const dropdownCSS = `${baseUrl}/common/${componentName}/${componentName}.css`;
+  const el = createElement('div', { classes: componentName });
+
+  if (formName) {
+    el.classList.add(`${formName}__field-wrapper`);
+  }
+
   try {
     await loadCSS(dropdownCSS);
     const labelClass = label ? `${componentName}__label` : 'field-label';
-    return `
-      <div class="${componentName}${formName ? ` ${formName}__field-wrapper` : ''}">
+    const innerContent = `
+
         ${label ? `<label id="${labelClass} class="${labelClass}">${getTextLabel(label)}${mandatory ? '*' : ''}</label>` : ''}
         <div
           aria-controls="options"
@@ -436,7 +430,7 @@ export const getCustomDropdown = async (options = {}) => {
           class="${componentName}__button"
           role="${componentName}-button"
           tabindex="0"
-        >${placeholder || optionList[0]}</div>
+        ></div>
         <div
           aria-labelledby="${labelClass}"
           id="options"
@@ -453,8 +447,16 @@ export const getCustomDropdown = async (options = {}) => {
           ${placeholder ? `<option value="" selected disabled>${placeholder}</option>` : ''}
           ${createSelectHtml(optionList)}
         </select>
-      </div>
+
     `;
+    el.appendChild(document.createRange().createContextualFragment(innerContent));
+
+    if (optionList.length > 0 && placeholder) {
+      optionList.unshift(placeholder);
+    }
+
+    new Select(el, optionList);
+    return el;
   } catch (error) {
     console.error(`Failed to load CSS from ${dropdownCSS}:`, error);
     return '';
