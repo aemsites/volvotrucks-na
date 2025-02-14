@@ -1,6 +1,6 @@
 import { loadScript, sampleRUM } from '../../scripts/aem.js';
 import { getTextLabel, createElement } from '../../scripts/common.js';
-import { getAsyncCustomDropdown, addDropdownInteraction } from '../../../common/custom-dropdown/custom-dropdown.js';
+import { getCustomDropdown, addDropdownInteraction } from '../../../common/custom-dropdown/custom-dropdown.js';
 
 const blockName = 'v2-pardot-form';
 
@@ -358,7 +358,7 @@ async function createCustomDropdown(fd) {
     name: fd.Name,
     mandatory: fd.Mandatory,
   };
-  const customDropdown = await getAsyncCustomDropdown(configFd);
+  const customDropdown = await getCustomDropdown(configFd);
   return document.createRange().createContextualFragment(customDropdown);
 }
 

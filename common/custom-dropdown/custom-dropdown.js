@@ -2,7 +2,6 @@ import { getTextLabel, createElement } from '../../../scripts/common.js';
 import { loadCSS } from '../../scripts/aem.js';
 
 const componentName = 'custom-dropdown';
-let optionsList;
 
 // NOTE: the code for this component was adapted from this page:
 // https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/
@@ -383,12 +382,12 @@ Select.prototype.updateMenuState = function updateMenuState(open, callFocus = tr
 /**
  * Add dropdown interaction to mimic the option list of a select element using the custom dropdown component
  * @param {HTMLElement} form the form element that contains the dropdown
- * @param {string[]} optionsArray the list of options to display in the dropdown (default is the optionsList)
+ * @param {string[]} optionList the list of items to display in the dropdown as options
  */
-export const addDropdownInteraction = (form, optionsArray = optionsList) => {
+export const addDropdownInteraction = (form, optionList) => {
   const selectEls = form.querySelectorAll(`.${componentName}`);
   selectEls?.forEach((el) => {
-    new Select(el, optionsArray);
+    new Select(el, optionList);
   });
 };
 
@@ -406,62 +405,28 @@ const createSelectHtml = (list) => {
   return list.map((item, idx) => createOptionMarkup(idx, item)).join('');
 };
 
-export const getCustomDropdown = (formName, list, type) => {
-  const baseURL = window.location.origin;
-  optionsList = list;
-
-  return loadCSS(`${baseURL}/common/${componentName}/${componentName}.css`)
-    .then(() => {
-      return `
-        <div class="${componentName} ${formName}__field-wrapper">
-          <label
-            id="${componentName}-label"
-            class="${componentName}__label">${getTextLabel(`event-notify:${type}`)}*
-          </label>
-          <div
-            aria-controls="options"
-            aria-expanded="false"
-            aria-haspopup="${componentName}"
-            aria-labelledby="${componentName}-label"
-            id="${componentName}"
-            class="${componentName}__button"
-            role="${componentName}-button"
-            tabindex="0"
-          ></div>
-          <div
-            aria-labelledby="${componentName}-label"
-            id="options"
-            class="${componentName}__option-list"
-            role="${componentName}-option-list"
-            tabindex="-1"
-          ></div>
-          <select
-            aria-hidden="true"
-            name="${type}"
-            class="native-select"
-            autocomplete="off"
-            required>
-            ${createSelectHtml(optionsList)}
-          </select>
-        </div>
-      `;
-    })
-    .catch((error) => {
-      console.error('Failed to load CSS:', error);
-      return '';
-    });
-};
-
-export const getAsyncCustomDropdown = async (options = {}) => {
+/**
+ * Get the custom dropdown component asynchronously because it requires a CSS file to be loaded
+ * @param {Object} options the options to configure the dropdown
+ * @param {string[]} options.optionList the list of options to display in the dropdown
+ * @param {string} options.label the label to grab from the placeholder file using getTextLabel function
+ * @param {boolean} options.mandatory if the dropdown is required or not
+ * @param {string} options.id the id of the dropdown
+ * @param {string} options.placeholder the placeholder text for the dropdown to be used as the default option
+ * @param {string} options.name the name of the hidden select element that will be submitted in the form
+ * @param {string} options.formName the name of the form that contains the dropdown
+ * @returns {Promise<string>} the custom dropdown component as a string
+ */
+export const getCustomDropdown = async (options = {}) => {
   const baseUrl = window.location.origin;
-  const { optionList = [], label = '', mandatory = false, id = '', placeholder = '', name = '' } = options;
+  const { optionList = [], label = '', mandatory = false, id = '', placeholder = '', name = '', formName = '' } = options;
   const dropdownCSS = `${baseUrl}/common/${componentName}/${componentName}.css`;
   try {
     await loadCSS(dropdownCSS);
     const labelClass = label ? `${componentName}__label` : 'field-label';
     return `
-      <div class="${componentName}">
-        ${label ? `<label class="${labelClass}">${getTextLabel(label)}${mandatory ? '*' : ''}</label>` : ''}
+      <div class="${componentName}${formName ? ` ${formName}__field-wrapper` : ''}">
+        ${label ? `<label id="${labelClass} class="${labelClass}">${getTextLabel(label)}${mandatory ? '*' : ''}</label>` : ''}
         <div
           aria-controls="options"
           aria-expanded="false"
@@ -492,5 +457,6 @@ export const getAsyncCustomDropdown = async (options = {}) => {
     `;
   } catch (error) {
     console.error(`Failed to load CSS from ${dropdownCSS}:`, error);
+    return '';
   }
 };
