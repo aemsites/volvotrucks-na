@@ -380,19 +380,19 @@
       "Text": "Search magazine"
     },
     {
-      "Key": "V2PardotForm:SuccessfulSubmissionTitle",
+      "Key": "V2CustomForm:SuccessfulSubmissionTitle",
       "Text": "THANK YOU!"
     },
     {
-      "Key": "V2PardotForm:SuccessfulSubmissionText",
+      "Key": "V2CustomForm:SuccessfulSubmissionText",
       "Text": "Your information has been submitted. Someone will be in touch with you shortly."
     },
     {
-      "Key": "V2PardotForm:ErrorSubmissionTitle",
+      "Key": "V2CustomForm:ErrorSubmissionTitle",
       "Text": "Error"
     },
     {
-      "Key": "V2PardotForm:ErrorSubmissionText",
+      "Key": "V2CustomForm:ErrorSubmissionText",
       "Text": "Information not sent. Please, try again later."
     }
   ],

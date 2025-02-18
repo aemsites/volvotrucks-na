@@ -2,7 +2,7 @@ import { loadScript, sampleRUM } from '../../scripts/aem.js';
 import { getTextLabel, createElement } from '../../scripts/common.js';
 import { getCustomDropdown } from '../../../common/custom-dropdown/custom-dropdown.js';
 
-const blockName = 'v2-pardot-form';
+const blockName = 'v2-custom-form';
 
 const successMessage = (successTitle, successText) => `<h3 class='${blockName}__title ${blockName}__title--success'>${successTitle}</h3>
 <p class='${blockName}__text ${blockName}__text--success'>${successText}</p>
@@ -21,7 +21,7 @@ const errorMessage = (errorTitle, errorText) => `<h3 class='${blockName}__title 
 const getMessageText = (isSuccess, isTitle) => {
   const key = isSuccess ? 'Successful' : 'Error';
   const type = isTitle ? 'Title' : 'Text';
-  return getTextLabel(`V2PardotForm:${key}Submission${type}`);
+  return getTextLabel(`V2CustomForm:${key}Submission${type}`);
 };
 
 // Form Block identifies the submit endpoint via these rules and in order
@@ -465,7 +465,7 @@ async function createForm(formURL) {
 
   if (data.length === 0) {
     return createElement('div', {
-      classes: 'pardot-form__error',
+      classes: 'custom-form__error',
       content: 'Error fetching form data',
     });
   }

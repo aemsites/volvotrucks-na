@@ -1,26 +1,26 @@
-.v2-pardot-form-container > .default-content-wrapper {
+.v2-custom-form-container > .default-content-wrapper {
     --heading-font-size: var(--f-heading-3-5-font-size-mobile); /* mobile: 24px, desktop 48px */
     --subheading-font-size: var(--f-subtitle-1-font-size); /* mobile: 16px, desktop 24px */
 }
 
-.v2-pardot-form-container > .default-content-wrapper > h3.h3 {
+.v2-custom-form-container > .default-content-wrapper > h3.h3 {
     font-size: var(--heading-font-size);
 }
 
-.v2-pardot-form-container > .default-content-wrapper > h5.h5 {
+.v2-custom-form-container > .default-content-wrapper > h5.h5 {
     font-size: var(--subheading-font-size);
 }
 
-.v2-pardot-form-container form {
+.v2-custom-form-container form {
     display: flex;
     flex-direction: column;
     gap: 8px;
     width: min(100%, 470px);
 }
 
-.v2-pardot-form-container textarea,
-.v2-pardot-form-container input,
-.v2-pardot-form-container select {
+.v2-custom-form-container textarea,
+.v2-custom-form-container input,
+.v2-custom-form-container select {
     background-color: var(--background-color);
     border: 1px solid var(--c-grey-2);
     border-radius: 4px;
@@ -31,12 +31,12 @@
     height: 40px;
 }
 
-.v2-pardot-form-container .form-select-wrapper {
+.v2-custom-form-container .form-select-wrapper {
     position: relative;
     font-size: var(--f-subtitle-2-font-size);
 }
 
-.v2-pardot-form-container .form-select-wrapper::after {
+.v2-custom-form-container .form-select-wrapper::after {
     content: url('../../icons/chevron-down.svg');
     position: absolute;
     display: block;
@@ -49,53 +49,53 @@
     padding: 4px;
 }
 
-.v2-pardot-form-container .form-select-wrapper select {
+.v2-custom-form-container .form-select-wrapper select {
     padding: 0 16px;
     font-size: inherit;
     color: var(--c-grey-4);
 }
 
-.v2-pardot-form-container textarea {
+.v2-custom-form-container textarea {
     height: 110px;
     font-size: var(--f-subtitle-2-font-size);
 }
 
-.v2-pardot-form-container .custom-dropdown {
+.v2-custom-form-container .custom-dropdown {
     margin-bottom: 16px;
     position: unset;
     height: 40px;
     font-size: var(--f-subtitle-2-font-size);
 }
 
-.v2-pardot-form-container .custom-dropdown::after {
+.v2-custom-form-container .custom-dropdown::after {
     top: 32px;
 }
 
-.v2-pardot-form-container .custom-dropdown > :first-child {
+.v2-custom-form-container .custom-dropdown > :first-child {
     height: 100%;
     padding: 8px 16px;
 }
 
-.v2-pardot-form-container .form-custom-dropdown-wrapper {
+.v2-custom-form-container .form-custom-dropdown-wrapper {
     position: relative;
 }
 
-.v2-pardot-form-container .field-wrapper {
+.v2-custom-form-container .field-wrapper {
     line-height: var(--f-body-line-height);
 }
 
-.v2-pardot-form-container .v2-pardot-form label {
+.v2-custom-form-container .v2-custom-form label {
     font-size: var(--f-subtitle-2-font-size);
     display: inline-block;
     margin-bottom: 8px;
 }
 
-.v2-pardot-form-container .field-wrapper[required] label::after {
+.v2-custom-form-container .field-wrapper[required] label::after {
     content: ' *';
     color: var(--text-color);
 }
 
-.v2-pardot-form-container.section-with-background.section {
+.v2-custom-form-container.section-with-background.section {
     --text-color: var(--c-black);
 
     padding: 0;
@@ -103,28 +103,28 @@
     background-color: unset;
 }
 
-.v2-pardot-form-container.section-with-background.section > picture > img {
+.v2-custom-form-container.section-with-background.section > picture > img {
     width: 100%;
 }
 
-.v2-pardot-form-container.section-with-background .v2-pardot-form--message,
-.v2-pardot-form-container.section-with-background.section label {
+.v2-custom-form-container.section-with-background .v2-custom-form--message,
+.v2-custom-form-container.section-with-background.section label {
     background-color: #fffa;
 }
 
 @media (min-width: 768px) {
-    .v2-pardot-form-container > .default-content-wrapper {
+    .v2-custom-form-container > .default-content-wrapper {
         --heading-font-size: var(--f-heading-3-font-size); /* mobile: 24px, desktop 48px */
         --subheading-font-size: var(--f-heading-5-font-size); /* mobile: 16px, desktop 24px */
     }
 
-    .v2-pardot-form-container form {
+    .v2-custom-form-container form {
         display: flex;
         flex-flow: row wrap;
         gap: 8px 16px;
     }
 
-    .v2-pardot-form-container .field-wrapper {
+    .v2-custom-form-container .field-wrapper {
         width: 100%;
     }
 }
