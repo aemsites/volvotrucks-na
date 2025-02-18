@@ -518,12 +518,33 @@ async function createForm(formURL) {
   return form;
 }
 
+function addHeadingClasses(row, tagName) {
+  // Check if the row is a heading to style the form title or subtitle
+  const isHeading = row.tagName === tagName;
+  if (!isHeading) {
+    row.classList.add(`heading-${tagName.slice(-1)}`);
+  }
+  // in both cases needs to add the tag class
+  row.classList.add(tagName.toLowerCase());
+}
+
 function decorateTitles(block) {
-  const previousSibling = block.parentElement.previousElementSibling;
-  const title = previousSibling.querySelector('h3');
-  const subtitle = previousSibling.querySelector('h5');
-  title.classList.add('h3');
-  subtitle.classList.add('h5');
+  const blockSection = block.closest('.section');
+  const defaultContent = blockSection.querySelector('.default-content-wrapper');
+  if (!defaultContent || blockSection.firstElementChild !== defaultContent) {
+    return;
+  }
+
+  // Check if the first row is a heading 3 to style the form title
+  addHeadingClasses(defaultContent.firstElementChild, 'H3');
+
+  const moreThanOneRow = defaultContent.childElementCount > 1;
+  if (!moreThanOneRow) {
+    return;
+  }
+
+  // Check if the second row is a heading 5 to style the form subtitle
+  addHeadingClasses(defaultContent.children[1], 'H5');
 }
 
 export default async function decorate(block) {
