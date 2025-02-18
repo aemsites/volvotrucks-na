@@ -459,6 +459,16 @@ function decorateValidation(form) {
   });
 }
 
+function cleanErrorMessages(form) {
+  const spanErrors = form.querySelectorAll('span.error');
+  spanErrors.forEach((span) => {
+    const parentEl = span.closest('.field-wrapper.invalid');
+    if (!parentEl) {
+      span.remove();
+    }
+  });
+}
+
 async function createForm(formURL) {
   const { pathname } = new URL(formURL);
   const data = await fetchForm(pathname);
@@ -507,6 +517,8 @@ async function createForm(formURL) {
     if (form.hasAttribute('novalidate')) {
       isValid = form.checkValidity();
     }
+    // after been submitted, the form needs to clean the error messages if the fields are valid
+    cleanErrorMessages(form);
     e.preventDefault();
     if (isValid) {
       e.submitter.setAttribute('disabled', '');
