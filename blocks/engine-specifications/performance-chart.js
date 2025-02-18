@@ -116,7 +116,7 @@ const getDevice = () => {
 
 // Identifies the higher value and returns the label and its position on the chart.
 let isFirstLabel = null;
-const buildPeakLabel = (values, valuesX, category, device) => {
+const buildPeakLabel = (values, valuesX, category, device, maxPeak) => {
   const peakValue = Math.max(...values);
   const indexPosition = values.indexOf(peakValue);
 
@@ -160,7 +160,7 @@ const buildPeakLabel = (values, valuesX, category, device) => {
       text-anchor="middle"
       class="peak-value"
     >
-      ${parseInt(peakValue / (category === 'HP' ? 1 : conversionFactor))} ${peakLabel[0]}
+      ${maxPeak} ${peakLabel[0]}
     </text>
 
     <path 
@@ -212,6 +212,17 @@ const getPerformanceChart = (data) => {
   if (data.scale) {
     verticalScaleFactor = JSON.parse(data.scale) / 100;
   }
+
+  let maxPeaks = [];
+
+  try {
+    maxPeaks = JSON.parse(data.peaks);
+  } catch (e) {
+    console.error('Error parsing peaks', e);
+  }
+
+  const hpPeak = maxPeaks[0];
+  const torquePeak = maxPeaks[1];
   const jasonDataRPM = JSON.parse(data.rpm);
   const jasonDataTQ = JSON.parse(data.torque);
   const jasonDataHP = JSON.parse(data.horsepower);
@@ -327,8 +338,8 @@ const getPerformanceChart = (data) => {
       aria-hidden="true"
       style="transform: translate(${device.translate[0]}px, ${device.translate[1]}px);)"
     >
-      ${buildPeakLabel(adjustedTQValues, valuesOnAxisX, 'TQ', device)}
-      ${buildPeakLabel(valuesHP, valuesOnAxisX, 'HP', device)}
+      ${buildPeakLabel(adjustedTQValues, valuesOnAxisX, 'TQ', device, torquePeak)}
+      ${buildPeakLabel(valuesHP, valuesOnAxisX, 'HP', device, hpPeak)}
     </g>
 
     <!-- HORIZONTAL VALUES - RPM -->
