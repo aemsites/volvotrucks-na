@@ -1,54 +1,56 @@
+// TEXT
+// TODO move to placeholder
+const TEXT = {
+  bottom: 'Engine Speed (RPM)',
+  labelTQ: 'Peak Torque',
+  labelHP: 'Peak Power',
+  unitTQ: 'lb-ft',
+  unitHP: 'HP',
+};
+
 // STYLING
+const COLORS = {
+  lineHP: '#78B833',
+  lineTQ: '#004FBC',
+  fillHP: '#C8E691',
+  fillTQ: '#76BAFF',
+  background: '#f7f7f7',
+};
 
-const colorLineHP = '#78B833';
-const colorLineTQ = '#004FBC';
-
-const colorFillHP = '#C8E691';
-const colorFillTQ = '#76BAFF';
-
-const colorBackground = '#f7f7f7';
-
-const strokeWidth = 3;
+const STROKE_WIDTH = 3;
 
 // MATH
+let conversionFactor;
+let verticalScaleFactor = 1;
 
-// These are to be used as a way to translate the values to chart positions.
-const conversionFactorHP = 0.815;
-const conversionFactorTQ = 0.15;
 // These are used to get 2 points in between each value to make the line curve.
-const bezierFactor1 = 0.3;
-const bezierFactor2 = 0.6;
+const BEZIER_FACTORS = {
+  factor1: 0.3,
+  factor2: 0.6,
+};
 
 // FUNCTIONS
 
 // From the array of values, this extrapolates 4 on each side to use as fading border.
 const createFakeValues = (type, values) => {
   const firstValue = values[0];
-  const lastValue = [...values].pop();
+  const lastValue = values[values.length - 1];
+  const modifiers = {
+    rpm: {
+      start: [200, 150, 100, 50],
+      end: [-50, -100, -150, -200],
+    },
+    horsepower: {
+      start: [20, 15, 10, 5],
+      end: [5, 10, 15, 20],
+    },
+    torque: {
+      start: [20, 15, 10, 5],
+      end: [5, 10, 15, 20],
+    },
+  };
 
-  let modifier = {};
-  const rpm = {
-    start: [200, 150, 100, 50],
-    end: [-50, -100, -150, -200],
-  };
-  const horsepower = {
-    start: [20, 15, 10, 5],
-    end: [5, 10, 15, 20],
-  };
-  const torque = {
-    start: [20, 30, 40, 50],
-    end: [20, 30, 40, 50],
-  };
-
-  if (type === 'rpm') {
-    modifier = rpm;
-  }
-  if (type === 'horsepower') {
-    modifier = horsepower;
-  }
-  if (type === 'torque') {
-    modifier = torque;
-  }
+  const modifier = modifiers[type] || [];
 
   const startingValues = [
     firstValue - modifier.start[0],
@@ -58,33 +60,28 @@ const createFakeValues = (type, values) => {
   ];
   const endingValues = [lastValue - modifier.end[0], lastValue - modifier.end[1], lastValue - modifier.end[2], lastValue - modifier.end[3]];
 
-  const completedValues = [...startingValues, ...values, ...endingValues];
-  return completedValues;
+  return [...startingValues, ...values, ...endingValues];
 };
+
 // Gets the total width of the chart and divides it into the correct number of sections.
 const generatePositionsX = (start, iterations, space) => {
-  const array = [];
-  for (let i = 0; i < iterations; i += 1) {
-    const section = start + space * i;
-    array.push(section);
-  }
-  return array;
+  return Array.from({ length: iterations }, (_, i) => start + space * i);
 };
+
 // From the values given applies the proportional conversion rate and plots the lines.
-const plotLine = (valuesOnX, typeOfLine, conversionFactor, totalWidth, sectionWidth) => {
+const plotLine = (valuesOnX, typeOfLine, totalWidth, sectionWidth) => {
   const plottedLine = valuesOnX.map((e, idx) => {
     const decimalCount = 2;
 
     const pureValueX = e;
-    const pureValueY = Number(400 - typeOfLine[idx] * conversionFactor);
-    const nextValueY = Number(400 - typeOfLine[idx + 1] * conversionFactor);
+    const pureValueY = Number(400 - typeOfLine[idx] * verticalScaleFactor);
+    const nextValueY = Number(400 - typeOfLine[idx + 1] * verticalScaleFactor);
     const difference = nextValueY - pureValueY;
 
-    const bezierPointX1 = (pureValueX + sectionWidth * 0.3).toFixed(decimalCount);
-    const bezierPointX2 = (pureValueX + sectionWidth * 0.6).toFixed(decimalCount);
-
-    const bezierPointY1 = (pureValueY + difference * bezierFactor1).toFixed(decimalCount);
-    const bezierPointY2 = (pureValueY + difference * bezierFactor2).toFixed(decimalCount);
+    const bezierPointX1 = (pureValueX + sectionWidth * BEZIER_FACTORS.factor1).toFixed(decimalCount);
+    const bezierPointX2 = (pureValueX + sectionWidth * BEZIER_FACTORS.factor2).toFixed(decimalCount);
+    const bezierPointY1 = (pureValueY + difference * BEZIER_FACTORS.factor1).toFixed(decimalCount);
+    const bezierPointY2 = (pureValueY + difference * BEZIER_FACTORS.factor2).toFixed(decimalCount);
 
     const valueX = pureValueX.toFixed(decimalCount);
     const valueY = pureValueY.toFixed(decimalCount);
@@ -101,69 +98,53 @@ const plotLine = (valuesOnX, typeOfLine, conversionFactor, totalWidth, sectionWi
 
   return plottedLine.join(' ');
 };
+
 // Identifies the width of the device and returns values for the position of the peak points.
 const getDevice = () => {
   const width = window.innerWidth;
-  let device = {};
-
   if (width < 480) {
-    device = {
-      name: 'mobile',
-      scale: 1.9,
-      translate: [-50, -70],
-      text1: [-55, 25],
-      text2: [-55, -15],
-      triangle: [50, 70],
-    };
+    return { scale: 1.9, translate: [-50, -70], text1: [-55, 25], text2: [-55, -15], triangle: [50, 70] };
   }
-  if (width >= 480 && width < 768) {
-    device = {
-      name: 'tablet',
-      scale: 1.8,
-      translate: [-40, -70],
-      text1: [-55, 30],
-      text2: [-55, -10],
-      triangle: [50, 60],
-    };
+  if (width < 768) {
+    return { scale: 1.8, translate: [-40, -70], text1: [-55, 30], text2: [-55, -10], triangle: [50, 60] };
   }
-  if (width >= 768 && width < 1200) {
-    device = {
-      name: 'desktop',
-      scale: 1.5,
-      translate: [-20, -40],
-      text1: [-30, 40],
-      text2: [-30, 10],
-      triangle: [30, 35],
-    };
+  if (width < 1200) {
+    return { scale: 1.5, translate: [-20, -40], text1: [-30, 40], text2: [-30, 10], triangle: [30, 35] };
   }
-  if (width >= 1200) {
-    device = {
-      name: 'desktop-l',
-      scale: 1.3,
-      translate: [-10, -25],
-      text1: [-20, 45],
-      text2: [-20, 20],
-      triangle: [20, 20],
-    };
-  }
-  return device;
+  return { scale: 1.3, translate: [-10, -25], text1: [-20, 45], text2: [-20, 20], triangle: [20, 20] };
 };
+
 // Identifies the higher value and returns the label and its position on the chart.
-const getPeakValue = (values, valuesX, conversionFactor, category, device) => {
+let isFirstLabel = null;
+const buildPeakLabel = (values, valuesX, category, device, maxPeak) => {
   const peakValue = Math.max(...values);
   const indexPosition = values.indexOf(peakValue);
 
-  const positionX = valuesX[indexPosition];
-  const positionY = Number(400 - peakValue * conversionFactor);
+  const labelWidth = Math.round(128 * device.scale);
+  const labelHeight = Math.round(76 * device.scale);
 
-  const peakLabel = category === 'HP' ? ['HP', 'Power', colorLineHP] : ['lb-ft', 'Torque', colorLineTQ];
+  let positionX = Math.round(valuesX[indexPosition]);
+
+  if (isFirstLabel === null) {
+    isFirstLabel = positionX;
+  } else {
+    const overlap = (positionX - isFirstLabel) / 2;
+    if (overlap < labelWidth / 2) {
+      positionX = positionX + (labelWidth - overlap);
+    }
+    isFirstLabel = null;
+  }
+
+  const positionY = Number(400 - peakValue * verticalScaleFactor);
+
+  const peakLabel = category === 'HP' ? [TEXT.unitHP, TEXT.labelHP, COLORS.lineHP] : [TEXT.unitTQ, TEXT.labelTQ, COLORS.lineTQ];
 
   return `
     <rect
       x=${Math.round(positionX - 128 / 2)}
       y=${Math.round(positionY - 76 - 18)}
-      width="${Math.round(128 * device.scale)}px"
-      height="${Math.round(76 * device.scale)}px"
+      width="${labelWidth}px"
+      height="${labelHeight}px"
       rx="8"
       ry="8"
       data-z-index="5"
@@ -179,7 +160,7 @@ const getPeakValue = (values, valuesX, conversionFactor, category, device) => {
       text-anchor="middle"
       class="peak-value"
     >
-      ${peakValue} ${peakLabel[0]}
+      ${maxPeak} ${peakLabel[0]}
     </text>
 
     <path 
@@ -206,34 +187,42 @@ const getPeakValue = (values, valuesX, conversionFactor, category, device) => {
       text-anchor="middle"
       class="peak-text"
     >
-      Peak ${peakLabel[1]}
+      ${peakLabel[1]}
     </text>
   `;
 };
 // Selects the middle values that should be displayed as rpm references.
 const getDisplayableLabels = (valuesX, rpm) => {
-  const rpmRevered = [...rpm].reverse();
+  const rpmReversed = [...rpm].reverse();
   const lowerLimit = rpm[5];
-  const higherLimit = rpmRevered[5];
+  const higherLimit = rpmReversed[5];
 
   const labels = valuesX.map((e, idx) => {
     const withinLimits = rpm[idx] >= lowerLimit && rpm[idx] <= higherLimit;
-    const isDisplayable = idx % 2 && (rpm[idx] / 20) % 2;
     const label = `
-      <text
-        x=${e}
-        y="410"
-        class="chart-label-numbers"
-        text-anchor="middle"
-      >
+      <text x=${e} y="410" class="chart-label-numbers" text-anchor="middle">
         ${rpm[idx]}
       </text>`;
-    return isDisplayable && withinLimits ? label : null;
+    return withinLimits ? label : null;
   });
   return labels.join(' ');
 };
 // Gets data from engine-specifications.js block renders the SVG with all the values.
 const getPerformanceChart = (data) => {
+  if (data.scale) {
+    verticalScaleFactor = JSON.parse(data.scale) / 100;
+  }
+
+  let maxPeaks = [];
+
+  try {
+    maxPeaks = JSON.parse(data.peaks);
+  } catch (e) {
+    console.error('Error parsing peaks', e);
+  }
+
+  const hpPeak = maxPeaks[0];
+  const torquePeak = maxPeaks[1];
   const jasonDataRPM = JSON.parse(data.rpm);
   const jasonDataTQ = JSON.parse(data.torque);
   const jasonDataHP = JSON.parse(data.horsepower);
@@ -243,13 +232,16 @@ const getPerformanceChart = (data) => {
   const valuesHP = createFakeValues('horsepower', jasonDataHP);
   const valuesTQ = createFakeValues('torque', jasonDataTQ);
 
+  conversionFactor = Number((Math.max(...valuesHP) / Math.max(...valuesTQ)).toFixed(5));
+
+  const adjustedTQValues = valuesTQ.map((value) => parseInt(value * conversionFactor));
+
   const totalWidthChart = 1200;
   const sectionWidth = totalWidthChart / valuesRPM.length;
 
   const device = getDevice();
 
   const valuesOnAxisX = generatePositionsX(0, valuesRPM.length, sectionWidth);
-
   const svg = `
     <svg 
       version="1.1" 
@@ -264,12 +256,12 @@ const getPerformanceChart = (data) => {
       <!-- GRADIENTS -->
       <defs>
         <linearGradient id="gradientHP" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stop-color="${colorFillHP}" stop-opacity="0.8"/>
-          <stop offset="100%" stop-color="${colorBackground}" stop-opacity="0"/>
+          <stop offset="0%" stop-color="${COLORS.fillHP}" stop-opacity="0.8"/>
+          <stop offset="100%" stop-color="${COLORS.background}" stop-opacity="0"/>
         </linearGradient>
         <linearGradient id="gradientTQ" x1="0" x2="0" y1="0" y2="1">
-          <stop offset="0%" stop-color="${colorFillTQ}" />
-          <stop offset="100%" stop-color="${colorBackground}" stop-opacity="0" />
+          <stop offset="0%" stop-color="${COLORS.fillTQ}" />
+          <stop offset="100%" stop-color="${COLORS.background}" stop-opacity="0" />
         </linearGradient>
       </defs>
 
@@ -283,8 +275,8 @@ const getPerformanceChart = (data) => {
         <path
           fill="url(#gradientHP)"
           d="
-            M ${valuesOnAxisX[0]} ${400 - valuesHP[0] * conversionFactorHP}
-            ${plotLine(valuesOnAxisX, valuesHP, conversionFactorHP, totalWidthChart, sectionWidth)}
+            M ${valuesOnAxisX[0]} ${400 - valuesHP[0]}
+            ${plotLine(valuesOnAxisX, valuesHP, totalWidthChart, sectionWidth)}
             L ${totalWidthChart} 400
             L 0 400
             Z
@@ -297,12 +289,12 @@ const getPerformanceChart = (data) => {
         <!-- STROKE -->
         <path fill="none"
           d="
-            M ${valuesOnAxisX[0]} ${400 - valuesHP[0] * conversionFactorHP} 
-            ${plotLine(valuesOnAxisX, valuesHP, conversionFactorHP, totalWidthChart, sectionWidth)}
+            M ${valuesOnAxisX[0]} ${400 - valuesHP[0]} 
+            ${plotLine(valuesOnAxisX, valuesHP, totalWidthChart, sectionWidth)}
           "
           data-z-index="1"
-          stroke="${colorLineHP}"
-          stroke-width="${strokeWidth}"
+          stroke="${COLORS.lineHP}"
+          stroke-width="${STROKE_WIDTH}"
           stroke-linejoin="round"
           stroke-linecap="round"
           opacity="1"
@@ -318,8 +310,8 @@ const getPerformanceChart = (data) => {
         <path
           fill="url(#gradientTQ)"
           d="
-            M ${valuesOnAxisX[0]} ${400 - valuesTQ[0] * conversionFactorTQ}
-            ${plotLine(valuesOnAxisX, valuesTQ, conversionFactorTQ, totalWidthChart, sectionWidth)}
+            M ${valuesOnAxisX[0]} ${400 - adjustedTQValues[0]}
+            ${plotLine(valuesOnAxisX, adjustedTQValues, totalWidthChart, sectionWidth)}
             L ${totalWidthChart} 400
             L 0 400
             Z
@@ -332,10 +324,10 @@ const getPerformanceChart = (data) => {
         <!-- STROKE -->
         <path fill="none"
           d="
-            M ${valuesOnAxisX[0]} ${400 - valuesTQ[0] * conversionFactorTQ}
-            ${plotLine(valuesOnAxisX, valuesTQ, conversionFactorTQ, totalWidthChart, sectionWidth)}
+            M ${valuesOnAxisX[0]} ${400 - adjustedTQValues[0]}
+            ${plotLine(valuesOnAxisX, adjustedTQValues, totalWidthChart, sectionWidth)}
           "
-          data-z-index="1" stroke="${colorLineTQ}" stroke-width="${strokeWidth}" stroke-linejoin="round" stroke-linecap="round" opacity="1">
+          data-z-index="1" stroke="${COLORS.lineTQ}" stroke-width="${STROKE_WIDTH}" stroke-linejoin="round" stroke-linecap="round" opacity="1">
         </path>
       </g>
     </g>
@@ -346,12 +338,12 @@ const getPerformanceChart = (data) => {
       aria-hidden="true"
       style="transform: translate(${device.translate[0]}px, ${device.translate[1]}px);)"
     >
-      ${getPeakValue(valuesTQ, valuesOnAxisX, conversionFactorTQ, 'TQ', device)}
-      ${getPeakValue(valuesHP, valuesOnAxisX, conversionFactorHP, 'HP', device)}
+      ${buildPeakLabel(adjustedTQValues, valuesOnAxisX, 'TQ', device, torquePeak)}
+      ${buildPeakLabel(valuesHP, valuesOnAxisX, 'HP', device, hpPeak)}
     </g>
 
     <!-- HORIZONTAL VALUES - RPM -->
-    <g data-z-index="7" aria-hidden="true">
+    <g data-z-index="7" aria-hidden="true" class="${valuesRPM.length > 26 ? 'display-less-values' : 'display-more-values'}">
       ${getDisplayableLabels(valuesOnAxisX, valuesRPM)}
       <text 
         x="${totalWidthChart / 2}"
@@ -359,7 +351,7 @@ const getPerformanceChart = (data) => {
         class="chart-label-text"
         text-anchor="middle"
       >
-        Engine Speed (RPM)
+        ${TEXT.bottom}
       </text>
     </g>
   </svg>
