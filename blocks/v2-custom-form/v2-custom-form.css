@@ -3,26 +3,12 @@
     --subheading-font-size: var(--f-subtitle-1-font-size); /* mobile: 16px, desktop 24px */
 }
 
-.v2-custom-form-container > .default-content-wrapper > .heading-3,
 .v2-custom-form-container > .default-content-wrapper > .h3 {
     font-size: var(--heading-font-size);
 }
 
-.v2-custom-form-container > .default-content-wrapper > .heading-3 {
-    letter-spacing: var(--f-heading-3-letter-spacing);
-    line-height: var(--f-heading-3-line-height);
-    margin: 0 0 10px;
-}
-
-.v2-custom-form-container > .default-content-wrapper > .heading-5,
 .v2-custom-form-container > .default-content-wrapper > .h5 {
     font-size: var(--subheading-font-size);
-}
-
-.v2-custom-form-container > .default-content-wrapper > .heading-5 {
-    letter-spacing: var(--f-heading-5-letter-spacing);
-    line-height: var(--f-heading-5-line-height);
-    margin: 0 0 10px;
 }
 
 .v2-custom-form-container form {
