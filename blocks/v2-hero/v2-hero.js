@@ -40,7 +40,7 @@ function updateCountdown(eventTime, block) {
   updateCountdownElement(block, 'seconds', seconds, secondLabel);
 }
 
-export default async function decorate(block) {
+function decorate(block) {
   // add Hero variant classnames
   variantsClassesToBEM(block.classList, variantClasses, blockName);
 
@@ -144,3 +144,7 @@ export default async function decorate(block) {
 
   block.parentElement.classList.add('full-width');
 }
+
+export default decorate;
+
+export { variantClasses };

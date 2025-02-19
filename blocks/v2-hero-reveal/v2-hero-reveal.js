@@ -1,0 +1,88 @@
+import { loadBlock } from '../../scripts/aem.js';
+import { createElement } from '../../scripts/common.js';
+import { variantClasses as heroVariantClasses } from '../v2-hero/v2-hero.js';
+
+function buildPreRevealCountdownHero(innerBlockCode, v2HeroRevealBlockClassList) {
+  return getV2HeroBlockCode(innerBlockCode, v2HeroRevealBlockClassList);
+}
+
+function buildRevealHero(innerBlockCode, v2HeroRevealBlockClassList) {
+  return getV2HeroBlockCode(innerBlockCode, v2HeroRevealBlockClassList);
+}
+
+function isCountDownFinished(eventTime) {
+  const now = new Date();
+  const diff = eventTime - now;
+
+  return diff <= 0;
+}
+
+function getV2HeroBlockCode(innerBlockCode, v2HeroRevealBlockClassList) {
+  const block = createElement('div', { classes: ['v2-hero', 'block'], props: { 'data-block-name': 'v2-hero', 'data-block-status': 'initialized' } });
+  const providedVariantClasses = Array.from(v2HeroRevealBlockClassList).filter((className) => heroVariantClasses.includes(className));
+
+  block.append(innerBlockCode);
+
+  block.classList.add(...providedVariantClasses);
+
+  return block;
+}
+
+function decorate(block) {
+  const blockRows = block.querySelectorAll(':scope > div');
+
+  if (blockRows.length !== 2) {
+    console.warn('V2 Hero Reveal block: Block misconfigured, please provide Countdown and Reveal Hero blocks.');
+    return;
+  }
+
+  const preRevealCountdownHeroBlock = blockRows[0]?.cloneNode(true);
+  const revealHeroBlock = blockRows[1]?.cloneNode(true);
+  const blockClassList = block.classList;
+
+  if (!preRevealCountdownHeroBlock || !revealHeroBlock) {
+    console.warn('V2 Hero Reveal block: Countdown and Reveal Hero blocks not provided.');
+    return;
+  }
+
+  const blockSection = block.parentElement?.parentElement;
+  const eventTimeIso = blockSection?.dataset?.countdownDate;
+  let v2HeroBlock;
+  let intervalId = null;
+
+  if (!eventTimeIso) {
+    console.warn('V2 Hero Reveal block: Countdown date not provided inthe Section Metadata.');
+    return;
+  }
+
+  const eventTime = new Date(eventTimeIso);
+
+  if (!eventTimeIso) {
+    console.warn('V2 Hero Reveal block: Countdown date invalid.');
+    return;
+  }
+
+  if (isCountDownFinished(eventTime)) {
+    v2HeroBlock = buildRevealHero(revealHeroBlock, blockClassList);
+  } else {
+    v2HeroBlock = buildPreRevealCountdownHero(preRevealCountdownHeroBlock, blockClassList);
+
+    intervalId = setInterval(() => {
+      // Build the reveal hero and replace the current block
+      // buildRevealHero();
+      if (isCountDownFinished(eventTime)) {
+        const newV2HeroBlock = buildRevealHero(revealHeroBlock, blockClassList);
+
+        v2HeroBlock.replaceWith(newV2HeroBlock);
+        loadBlock(newV2HeroBlock);
+        clearInterval(intervalId);
+      }
+    }, 1000);
+  }
+
+  block.replaceWith(v2HeroBlock);
+
+  loadBlock(block);
+}
+
+export default decorate;
