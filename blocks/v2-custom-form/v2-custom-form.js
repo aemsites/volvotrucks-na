@@ -70,6 +70,9 @@ async function submissionFailure() {
   });
   errorDiv.innerHTML = errorMessage(getMessageText(false, true), getMessageText(false, false));
   const form = document.querySelector('form[data-submitting=true]');
+  if (!form) {
+    return;
+  }
   form.setAttribute('data-submitting', 'false');
   form.querySelector('button[type="submit"]').disabled = false;
   form.replaceWith(errorDiv);
@@ -557,5 +560,11 @@ export default async function decorate(block) {
       block.lastElementChild.remove();
     }
     formLink.replaceWith(form);
+
+    // in case the form has any kind of error, the form will be replaced with the error message
+    window.addEventListener('unhandledrejection', ({ reason, error }) => {
+      console.error('Unhandled rejection. Error submitting form:', { reason, error });
+      submissionFailure();
+    });
   }
 }
