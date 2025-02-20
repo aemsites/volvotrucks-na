@@ -107,11 +107,6 @@
     width: 100%;
 }
 
-.v2-custom-form-container.section-with-background .v2-custom-form--message,
-.v2-custom-form-container.section-with-background.section label {
-    background-color: #fffa;
-}
-
 @media (min-width: 768px) {
     .v2-custom-form-container > .default-content-wrapper {
         --heading-font-size: var(--f-heading-3-font-size); /* mobile: 24px, desktop 48px */
