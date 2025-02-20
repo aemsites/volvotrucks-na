@@ -47,7 +47,7 @@ const formContent = `
       <input type="email" id="${formName}-email" name="email" autocomplete="off" placeholder="" required />
       <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
     </div>
-    <div class="custom-dropdown">Placeholder component</div>
+    <div class="custom-dropdown"></div>
     <div class="${formName}__field-wrapper">
       <label for="${formName}-company">${getTextLabel(getTypeKey(TYPES.company))}*</label>
       <input type="text" id="${formName}-company" name="company" autocomplete="off" placeholder="" required />
