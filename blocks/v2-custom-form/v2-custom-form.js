@@ -79,7 +79,7 @@ async function submissionFailure() {
 }
 
 // callback
-window.logResult = function logResult(json) {
+window.showResult = function showResult(json) {
   if (json.result === 'success') {
     submissionSuccess();
   } else if (json.result === 'error') {
@@ -109,7 +109,7 @@ function constructPayload(form) {
       }
     }
   });
-  payload.callback = 'logResult';
+  payload.callback = 'showResult';
   return { payload };
 }
 
