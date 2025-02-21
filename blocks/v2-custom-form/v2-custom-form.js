@@ -559,7 +559,9 @@ export default async function decorate(block) {
       form.dataset.customMessage = `${thankYouPage[0].href}.plain.html`;
       block.lastElementChild.remove();
     }
-    formLink.replaceWith(form);
+    // clean the content block before appending the form
+    block.innerText = '';
+    block.append(form);
 
     // in case the form has any kind of error, the form will be replaced with the error message
     window.addEventListener('unhandledrejection', ({ reason, error }) => {
