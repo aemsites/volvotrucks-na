@@ -1,5 +1,6 @@
 import { loadBlock } from '../../scripts/aem.js';
 import { createElement } from '../../scripts/common.js';
+import { decorateLinks } from '../../scripts/scripts.js';
 import { variantClasses as heroVariantClasses } from '../v2-hero/v2-hero.js';
 
 function buildPreRevealCountdownHero(innerBlockCode, v2HeroRevealBlockClassList) {
@@ -46,19 +47,19 @@ function decorate(block) {
   }
 
   const blockSection = block.parentElement?.parentElement;
-  const eventTimeIso = blockSection?.dataset?.countdownDate;
+  const revealEventTimeIso = blockSection?.dataset?.revealDate;
   let v2HeroBlock;
   let intervalId = null;
 
-  if (!eventTimeIso) {
-    console.warn('V2 Hero Reveal block: Countdown date not provided inthe Section Metadata.');
+  if (!revealEventTimeIso) {
+    console.warn('V2 Hero Reveal block: Reveal date not provided inthe Section Metadata.');
     return;
   }
 
-  const eventTime = new Date(eventTimeIso);
+  const eventTime = new Date(revealEventTimeIso);
 
-  if (!eventTimeIso) {
-    console.warn('V2 Hero Reveal block: Countdown date invalid.');
+  if (!revealEventTimeIso) {
+    console.warn('V2 Hero Reveal block: Reveal date invalid.');
     return;
   }
 
@@ -75,10 +76,13 @@ function decorate(block) {
 
         v2HeroBlock.replaceWith(newV2HeroBlock);
         loadBlock(newV2HeroBlock);
+        decorateLinks(newV2HeroBlock);
         clearInterval(intervalId);
       }
     }, 1000);
   }
+
+  decorateLinks(v2HeroBlock);
 
   block.replaceWith(v2HeroBlock);
 
