@@ -40,15 +40,10 @@ function updateCountdown(eventTime, block) {
   updateCountdownElement(block, 'seconds', seconds, secondLabel);
 }
 
-function decorate(block) {
-  // add Hero variant classnames
-  variantsClassesToBEM(block.classList, variantClasses, blockName);
+const processVideoLink = (block, link) => {
+  const linkText = link.innerText.trim().toLowerCase();
 
-  const isCompact = block.classList.contains(`${blockName}--compact`);
-  const picture = block.querySelector('picture');
-  const link = block.querySelector('a');
-  const isVideo = link ? isVideoLink(link) : false;
-  if (isVideo) {
+  if (linkText === 'background') {
     const video = createVideo(link.getAttribute('href'), `${blockName}__video`, {
       muted: true,
       autoplay: true,
@@ -57,6 +52,25 @@ function decorate(block) {
     });
     block.prepend(video);
     link.remove();
+  }
+};
+
+function decorate(block) {
+  // add Hero variant classnames
+  variantsClassesToBEM(block.classList, variantClasses, blockName);
+
+  const isCompact = block.classList.contains(`${blockName}--compact`);
+  const picture = block.querySelector('picture');
+
+  const links = block.querySelectorAll('a');
+  if (links) {
+    links.forEach((link) => {
+      const isVideo = isVideoLink(link);
+      if (isVideo) {
+        // hasVideo = true;
+        processVideoLink(block, link);
+      }
+    });
   }
 
   if (picture) {
