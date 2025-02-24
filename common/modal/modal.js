@@ -1,6 +1,16 @@
-import { createElement, decorateIcons, getTextLabel } from '../../scripts/common.js';
-import { loadCSS, updateSectionsStatus } from '../../scripts/aem.js';
-import { createIframe, isAEMVideoUrl, isLowResolutionVideoUrl, setupPlayer, getDeviceSpecificVideoUrl } from '../../scripts/video-helper.js';
+/* global YT */
+import { createElement, decorateIcons, getTextLabel, isSocialAllowed } from '../../scripts/common.js';
+import { loadCSS, loadScript, updateSectionsStatus } from '../../scripts/aem.js';
+import {
+  createIframe,
+  isAEMVideoUrl,
+  isYoutubeVideoUrl,
+  getYoutubeVideoId,
+  isLowResolutionVideoUrl,
+  setupPlayer,
+  getDeviceSpecificVideoUrl,
+  loadYouTubeIframeAPI,
+} from '../../scripts/video-helper.js';
 
 const HIDE_MODAL_CLASS = 'modal-hidden';
 let currentModalClasses = null;
@@ -98,7 +108,51 @@ const createModal = () => {
     videoElements.forEach(handleVideoLoad);
   };
 
+  async function addVideo(block, videoId) {
+    console.log('addVideo - videoId: ', videoId);
+    block.innerHTML = '';
+
+    const iframeSrc = `https://www.youtube.com/embed/${videoId}?color=white&amp;rel=0&amp;playsinline=1&amp;enablejsapi=1&amp;autoplay=1`;
+
+    const iframeYT = createIframe(iframeSrc, {
+      parentEl: block,
+      classes: 'modal-video',
+      props: { id: 'modal-youtube-iframe', allow: 'autoplay', allowfullscreen: 'true' },
+    });
+
+    block.append(...iframeYT.childNodes);
+
+    await loadYouTubeIframeAPI();
+
+    window.onYouTubeIframeAPIReady = function onYouTubeIframeAPIReadyInit() {
+      if (!YT) {
+        throw new Error('YouTube API not loaded');
+      }
+      new YT.Player('modal-youtube-iframe', {
+        events: {
+          onReady: onPlayerReady,
+          onError: onPlayerError,
+          onAutoplayBlocked: onPlayerAutoplayBlocked,
+        },
+      });
+    };
+  }
+
+  function onPlayerReady(event) {
+    event.target.playVideo();
+  }
+
+  function onPlayerError(event) {
+    console.warn(event.data);
+  }
+
+  function onPlayerAutoplayBlocked(event) {
+    console.warn(event.data);
+  }
+
   async function showModal(newContent, { beforeBanner, beforeIframe, modalClasses = [], invokeContext }) {
+    const shouldVideoSocialCheck = modalClasses.includes('modal-video-social-cookie-check');
+
     document.documentElement.style.setProperty('--scroll-y', `${window.scrollY}px`);
     currentInvokeContext = invokeContext;
     // disabling focus for header, footer and main elements when modal is open
@@ -110,7 +164,6 @@ const createModal = () => {
     modalBackground.classList.add(...modalClasses);
     currentModalClasses = modalClasses;
     window.addEventListener('keydown', keyDownAction);
-
     if (newContent && typeof newContent !== 'string') {
       handleNewContent(newContent);
     } else if (newContent) {
@@ -132,17 +185,69 @@ const createModal = () => {
         videoOrIframe.classList.add('modal-video');
 
         const videoUrl = getDeviceSpecificVideoUrl(newContent);
-        await setupPlayer(videoUrl, videoOrIframe, {
-          autoplay: 'any',
-          disablePictureInPicture: true,
-          loop: false,
-          muted: false,
-          playsinline: true,
-          fill: true,
-        });
+        await setupPlayer(
+          videoUrl,
+          videoOrIframe,
+          {
+            autoplay: 'any',
+            disablePictureInPicture: true,
+            loop: false,
+            muted: false,
+            playsinline: true,
+            fill: true,
+          },
+          null,
+        );
 
         modalBackground.classList.add('modal--video');
         modalContent.append(videoOrIframe);
+      } else if (isYoutubeVideoUrl(newContent) && shouldVideoSocialCheck) {
+        const videoId = getYoutubeVideoId(newContent);
+
+        if (!videoId) {
+          console.warn('V2 Video block: There is no video link. Please check the provided URL.');
+          return;
+        }
+        window.isSingleVideo = true;
+
+        if (!videoId) {
+          console.warn('V2 Livestream Embed block: There is no video link. Please check the provided URL.');
+          return;
+        }
+
+        // eslint-disable-next-line no-constant-condition
+        if (isSocialAllowed() || true) {
+          addVideo(modalContent, videoId);
+        } else {
+          const cookieMsgContainer = createElement('div', {
+            classes: 'modal-cookie-message',
+          });
+          cookieMsgContainer.style.background = 'linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.80) 100%) center / cover no-repeat';
+
+          const cookieMessage = document.createRange().createContextualFragment(`
+            <h3 class="modal-cookie-message__title">${getTextLabel('single video message title')}</h3>
+            ${getTextLabel('single video message text')}
+            <div class="modal-cookie-message__button-container">
+              <button class="primary dark">${getTextLabel('single video message button')}</button>
+              <button class="button secondary dark">${getTextLabel('single video message button deny')}</button>
+            </div>
+          `);
+
+          cookieMsgContainer.append(cookieMessage);
+          modalContent.append(cookieMsgContainer);
+
+          modalContent.querySelector('.modal-cookie-message__button-container .primary')?.addEventListener('click', () => {
+            if (window.OneTrust) {
+              window.OneTrust.AllowAll();
+            }
+
+            addVideo(modalContent, videoId);
+          });
+
+          modalContent.querySelector('.modal-cookie-message__button-container .secondary')?.addEventListener('click', () => {
+            hideModal();
+          });
+        }
       } else {
         videoOrIframe = createIframe(newContent, { parentEl: modalContent, classes: 'modal-video' });
         modalBackground.classList.add('modal--video');

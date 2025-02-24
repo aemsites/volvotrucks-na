@@ -1,6 +1,6 @@
 /* global videojs */
 import { isSocialAllowed, createElement, deepMerge, getTextLabel } from './common.js';
-import { getMetadata } from './aem.js';
+import { getMetadata, loadScript } from './aem.js';
 
 export const VIDEO_JS_SCRIPT = '/scripts/videojs/video.min.js';
 export const VIDEO_JS_CSS = '/scripts/videojs/video-js.min.css';
@@ -12,6 +12,9 @@ export const AEM_ASSETS = {
   videoURLRegex: /\/assets\/urn:aaid:aem:[\w-]+\/play/,
   videoIdRegex: /urn:aaid:aem:[0-9a-fA-F-]+/,
 };
+
+export const youtubeVideoRegex =
+  /^(?:(?:https?:)?\/\/)?(?:(?:(?:www|m(?:usic)?)\.)?youtu(?:\.be|be\.com)\/(?:shorts\/|live\/|v\/|e(?:mbed)?\/|watch(?:\/|\?(?:\S+=\S+&)*v=)|oembed\?url=https?%3A\/\/(?:www|m(?:usic)?)\.youtube\.com\/watch\?(?:\S+=\S+&)*v%3D|attribution_link\?(?:\S+=\S+&)*u=(?:\/|%2F)watch(?:\?|%3F)v(?:=|%3D))?|www\.youtube-nocookie\.com\/embed\/)([\w-]{11})[?&#]?\S*$/;
 
 const { aemCloudDomain, videoURLRegex } = AEM_ASSETS;
 
@@ -145,6 +148,16 @@ export function isLowResolutionVideoUrl(url) {
 
 export function isAEMVideoUrl(url) {
   return videoURLRegex.test(url);
+}
+
+export function isYoutubeVideoUrl(url) {
+  return youtubeVideoRegex.test(url);
+}
+
+export function getYoutubeVideoId(url) {
+  const match = url.match(youtubeVideoRegex);
+
+  return match?.length >= 2 ? match[1] : '';
 }
 
 export function isVideoLink(link) {
@@ -340,7 +353,7 @@ export function wrapImageWithVideoLink(videoLink, image) {
   addPlayIcon(videoLink);
 }
 
-export function createIframe(url, { parentEl, classes = [] }) {
+export function createIframe(url, { parentEl, classes = [], props = {} }) {
   // iframe must be recreated every time otherwise the new history record would be created
   const iframe = createElement('iframe', {
     classes: Array.isArray(classes) ? classes : [classes],
@@ -348,6 +361,7 @@ export function createIframe(url, { parentEl, classes = [] }) {
       frameborder: '0',
       allowfullscreen: 'allowfullscreen',
       src: url,
+      ...props,
     },
   });
 
@@ -621,17 +635,19 @@ export function createVideoWithPoster(linkUrl, poster, className, videoConfig = 
  * Creates a video element or videojs player, depending on whether the video is local
  * or not. Configures the element with specified classes, properties, and source.
  *
- * @param {HTMLAnchorElement | string} src The link that contains video url or the URL of the video.
- * @param {string} [className=''] Optional. CSS class names to apply to the video container.
- * @param {Object} [props={}] Optional. Properties for video player,
- *                            including attributes like 'muted', 'autoplay', 'title'.
- * @returns {HTMLElement} The created video element or player with specified configs.
+ * @param {HTMLAnchorElement | string} link - The link that contains the video URL or the URL of the video.
+ * @param {string} [className=''] - Optional. CSS class names to apply to the video container.
+ * @param {Object} [videoParams={}] - Optional. Properties for the video player, including attributes like 'muted', 'autoplay', 'title'.
+ * @param {Object} [configs={}] - Optional. Additional configurations such as 'usePosterAutoDetection' and 'checkVideoCookie'.
+ * @param {boolean} [configs.usePosterAutoDetection=false] - Whether to automatically detect and use a poster image.
+ * @param {boolean} [configs.checkVideoCookie=false] - Whether to check for video cookie settings.
+ * @returns {HTMLElement | null} - The created video element or player with specified configs, or null if the video link is invalid.
  */
-export const createVideo = (link, className = '', props = {}) => {
+export const createVideo = (link, className = '', videoParams = {}, configs = {}) => {
   let src;
   let poster;
 
-  const { usePosterAutoDetection, ...videoConfig } = props;
+  const { usePosterAutoDetection, checkVideoCookie } = configs;
   if (link instanceof HTMLAnchorElement) {
     const config = parseVideoLink(link, usePosterAutoDetection);
     if (!config) {
@@ -645,19 +661,19 @@ export const createVideo = (link, className = '', props = {}) => {
   }
 
   if (isLowResolutionVideoUrl(src)) {
-    return createProgressivePlaybackVideo(src, className, videoConfig);
+    return createProgressivePlaybackVideo(src, className, videoParams);
   }
 
   if (poster) {
-    return createVideoWithPoster(src, poster, className, videoConfig);
+    return createVideoWithPoster(src, poster, className, videoParams);
   }
 
   const container = document.createElement('div');
   container.classList.add(className);
 
   const videoUrl = getDeviceSpecificVideoUrl(src);
-  setupPlayer(videoUrl, container, videoConfig);
-  if (!videoConfig.controls) {
+  setupPlayer(videoUrl, container, videoParams, null, checkVideoCookie);
+  if (!videoParams.controls) {
     setPlaybackControls(container);
   }
 
@@ -736,10 +752,7 @@ export const addMuteControls = (section) => {
 };
 
 export function loadYouTubeIframeAPI() {
-  const tag = document.createElement('script');
-  tag.src = 'https://www.youtube.com/iframe_api';
-  const firstScriptTag = document.getElementsByTagName('script')[0];
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  return loadScript('https://www.youtube.com/iframe_api');
 }
 
 const logVideoEvent = (eventName, videoId, timeStamp, blockName = 'video') => {

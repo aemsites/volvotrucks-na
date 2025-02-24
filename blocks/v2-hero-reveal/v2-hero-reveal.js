@@ -39,7 +39,6 @@ function decorate(block) {
 
   const preRevealCountdownHeroBlock = blockRows[0]?.cloneNode(true);
   const revealHeroBlock = blockRows[1]?.cloneNode(true);
-  const blockClassList = block.classList;
 
   if (!preRevealCountdownHeroBlock || !revealHeroBlock) {
     console.warn('V2 Hero Reveal block: Countdown and Reveal Hero blocks not provided.');
@@ -48,6 +47,7 @@ function decorate(block) {
 
   const blockSection = block.parentElement?.parentElement;
   const revealEventTimeIso = blockSection?.dataset?.revealDate;
+  const blockClassList = block.classList;
   let v2HeroBlock;
   let intervalId = null;
 

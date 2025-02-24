@@ -37,7 +37,7 @@ function addVideo(block, videoId) {
 }
 
 export default function decorate(block) {
-  let videoId = block.querySelector('p + p');
+  let videoId = block.querySelector('p');
   videoId = videoId.innerText;
 
   window.isSingleVideo = true;
@@ -90,7 +90,9 @@ export default function decorate(block) {
     block.append(cookieMsgContainer);
 
     block.querySelector('.cookie-message__button-container .primary')?.addEventListener('click', () => {
-      window.OneTrust.AllowAll();
+      if (window.OneTrust) {
+        window.OneTrust.AllowAll();
+      }
 
       addVideo(block, videoId);
     });
