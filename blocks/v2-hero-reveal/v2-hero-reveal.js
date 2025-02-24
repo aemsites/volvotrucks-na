@@ -70,11 +70,11 @@ function decorate(block) {
 
     intervalId = setInterval(() => {
       // Build the reveal hero and replace the current block
-      // buildRevealHero();
       if (isCountDownFinished(eventTime)) {
         const newV2HeroBlock = buildRevealHero(revealHeroBlock, blockClassList);
 
         v2HeroBlock.replaceWith(newV2HeroBlock);
+
         loadBlock(newV2HeroBlock);
         decorateLinks(newV2HeroBlock);
         clearInterval(intervalId);

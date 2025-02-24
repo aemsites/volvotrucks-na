@@ -67,7 +67,6 @@ function decorate(block) {
     links.forEach((link) => {
       const isVideo = isVideoLink(link);
       if (isVideo) {
-        // hasVideo = true;
         processVideoLink(block, link);
       }
     });
