@@ -215,8 +215,7 @@ const createModal = () => {
           return;
         }
 
-        // eslint-disable-next-line no-constant-condition
-        if (isSocialAllowed() || true) {
+        if (isSocialAllowed()) {
           addVideo(modalContent, videoId);
         } else {
           const cookieMsgContainer = createElement('div', {
