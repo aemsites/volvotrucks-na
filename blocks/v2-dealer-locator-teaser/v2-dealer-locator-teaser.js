@@ -1,4 +1,8 @@
 import { MEDIA_BREAKPOINTS, getImageForBreakpoint } from '../../scripts/scripts.js';
+import { variantsClassesToBEM } from '../../scripts/common.js';
+
+const blockName = 'v2-dealer-locator-teaser';
+const variantClasses = ['right-align'];
 
 function initBackgroundPosition(classList, breakpoint) {
   const classPrefixes = {
@@ -57,6 +61,8 @@ function prepareBackgroundImage(block) {
 }
 
 export default async function decorate(block) {
+  variantsClassesToBEM(block.classList, variantClasses, blockName);
+
   prepareBackgroundImage(block);
   const headings = block.querySelectorAll('h1, h2, h3, h4, h5, h6');
 
