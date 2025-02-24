@@ -32,6 +32,11 @@ export default [
       'prefer-const': 'error',
       'prefer-template': 'error',
       'no-multiple-empty-lines': 'error',
+      'padding-line-between-statements': [
+        'error',
+        { blankLine: 'always', prev: '*', next: 'function' },
+        { blankLine: 'always', prev: 'function', next: 'function' },
+      ],
       quotes: ['error', 'single'],
       'no-constant-binary-expression': 'error',
     },
