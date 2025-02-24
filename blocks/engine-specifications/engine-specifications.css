@@ -59,7 +59,7 @@ main .section .engine-specifications-wrapper {
 }
 
 .performance {
-  background-color: #F7F7F7;
+  background-color: var(--c-grey-50);
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -81,7 +81,6 @@ main .section .engine-specifications-wrapper {
 }
 
 .performance .engine-rating .rating-title {
-  font-size: var(--heading-font-size-s);
   color: var(--c-grey-3);
   font-style: normal;
   font-weight: 500;
@@ -159,6 +158,7 @@ main .section .engine-specifications-wrapper {
 }
 
 .chart-label-numbers {
+  display: none;
   font-size: calc(var(--body-font-size-xs) * 0.75 * var(--scale-factor));
   font-weight: 400;
   line-height: 125%;
@@ -268,12 +268,12 @@ main .section .engine-specifications-wrapper {
   }
 
   .performance-chart::before {
-    background: linear-gradient(90deg, #F7F7F7 54.11%, rgb(247 247 247 / 0%) 100%);
+    background: linear-gradient(90deg, var(--c-grey-50) 54.11%, rgb(247 247 247 / 0%) 100%);
     left: calc(43vw - 600px);
   }
 
   .performance-chart::after {
-    background: linear-gradient(90deg, #F7F7F7 54.11%, rgb(247 247 247 / 0%) 100%);
+    background: linear-gradient(90deg, var(--c-grey-50) 54.11%, rgb(247 247 247 / 0%) 100%);
     transform: matrix(-1, 0, 0, 1, 0, 0);
     right: calc(43vw - 600px);
   }
@@ -294,10 +294,10 @@ main .section .engine-specifications-wrapper {
     margin: 0;
   }
 
-  main .section .engine-specifications-wrapper  {
+  main .section .engine-specifications-wrapper {
     width: 100vw;
     padding: 0 0 80px;
-    background-color: #F7F7F7;
+    background-color: var(--c-grey-50);
     margin-top: 0 !important;
   }
 
@@ -368,7 +368,6 @@ main .section .engine-specifications-wrapper {
   line-height: var(--f-heading-3-line-height);
   letter-spacing: var(--f-heading-3-letter-spacing);
 }
-
 
 .redesign-v2 .engine-specifications .rating-title,
 .redesign-v2 .engine-specifications .power-title,
@@ -443,6 +442,18 @@ main .section .engine-specifications-wrapper {
   font-size: calc(var(--f-body-font-size) * 0.75 * var(--scale-factor));
 }
 
+.redesign-v2 .chart-label-numbers:nth-of-type(even) {
+  display: none;
+}
+
+.display-more-values .chart-label-numbers:nth-of-type(2n) {
+  display: block;
+}
+
+.display-less-values .chart-label-numbers:nth-of-type(3n) {
+  display: block;
+}
+
 .redesign-v2 .chart-label-text {
   font-size: calc(var(--f-body-font-size) * var(--scale-factor));
   fill: var(--text-subtle);
@@ -510,7 +521,7 @@ main .section .engine-specifications-wrapper {
   }
 }
 
-@media (min-width: 1440px){
+@media (min-width: 1440px) {
   .redesign-v2 main .section .engine-specifications-wrapper {
     padding: var(--section-div-padding);
     margin: auto;
