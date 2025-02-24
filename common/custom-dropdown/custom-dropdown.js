@@ -406,7 +406,7 @@ const createSelectHtml = (list) => {
  * @returns {Promise<string>} the custom dropdown component as a string
  */
 export const getCustomDropdown = async (options = {}) => {
-  const baseUrl = window.location.origin;
+  const baseUrl = window.location.origin || (window.location.ancestorOrigins && window.location.ancestorOrigins[0]);
   const { optionList = [], label = '', mandatory = false, id = '', placeholder = '', name = '', formName = '' } = options;
   const dropdownCSS = `${baseUrl}/common/${componentName}/${componentName}.css`;
   const el = createElement('div', { classes: componentName });
