@@ -227,7 +227,7 @@ const createModal = () => {
             <h3 class="modal-cookie-message__title">${getTextLabel('single video message title')}</h3>
             ${getTextLabel('single video message text')}
             <div class="modal-cookie-message__button-container">
-              <button class="primary dark">${getTextLabel('single video message button')}</button>
+              <button class="button primary dark">${getTextLabel('single video message button')}</button>
               <button class="button secondary dark">${getTextLabel('single video message button deny')}</button>
             </div>
           `);
