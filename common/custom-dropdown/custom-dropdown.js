@@ -2,7 +2,6 @@ import { getTextLabel, createElement } from '../../../scripts/common.js';
 import { loadCSS } from '../../scripts/aem.js';
 
 const componentName = 'custom-dropdown';
-let optionsList;
 
 // NOTE: the code for this component was adapted from this page:
 // https://www.w3.org/WAI/ARIA/apg/patterns/combobox/examples/combobox-select-only/
@@ -380,17 +379,10 @@ Select.prototype.updateMenuState = function updateMenuState(open, callFocus = tr
   callFocus && this.buttonEl.focus();
 };
 
-export const addDropdownInteraction = (form) => {
-  const selectEls = form.querySelectorAll(`.${componentName}`);
-  selectEls?.forEach((el) => {
-    new Select(el, optionsList);
-  });
-};
-
 const createOptionMarkup = (idx, option) => {
   return `
       <option
-        value="${option}" 
+        value="${option}"
         data-index-number="${idx}"
         ${idx === 0 ? 'selected' : ''}>
           ${option}
@@ -401,48 +393,72 @@ const createSelectHtml = (list) => {
   return list.map((item, idx) => createOptionMarkup(idx, item)).join('');
 };
 
-export const getCustomDropdown = (formName, list, type) => {
-  const baseURL = window.location.origin;
-  optionsList = list;
+/**
+ * Get the custom dropdown component asynchronously because it requires a CSS file to be loaded
+ * @param {Object} options the options to configure the dropdown
+ * @param {string[]} options.optionList the list of options to display in the dropdown
+ * @param {string} options.label the label to grab from the placeholder file using getTextLabel function
+ * @param {boolean} options.mandatory if the dropdown is required or not
+ * @param {string} options.id the id of the dropdown
+ * @param {string} options.placeholder the placeholder text for the dropdown to be used as the default option
+ * @param {string} options.name the name of the hidden select element that will be submitted in the form
+ * @param {string} options.formName the name of the form that contains the dropdown
+ * @returns {Promise<string>} the custom dropdown component as a string
+ */
+export const getCustomDropdown = async (options = {}) => {
+  const baseUrl = window.location.origin !== 'null' ? window.location.origin : window.location.ancestorOrigins && window.location.ancestorOrigins[0];
+  const { optionList = [], label = '', mandatory = false, id = '', placeholder = '', name = '', formName = '' } = options;
+  const dropdownCSS = `${baseUrl}/common/${componentName}/${componentName}.css`;
+  const el = createElement('div', { classes: componentName });
 
-  return loadCSS(`${baseURL}/common/${componentName}/${componentName}.css`)
-    .then(() => {
-      return `
-        <div class="${componentName} ${formName}__field-wrapper">
-          <label
-            id="${componentName}-label" 
-            class="${componentName}__label">${getTextLabel(`event-notify:${type}`)}*
-          </label>
-          <div
-            aria-controls="options"
-            aria-expanded="false"
-            aria-haspopup="${componentName}"
-            aria-labelledby="${componentName}-label"
-            id="${componentName}"
-            class="${componentName}__button"
-            role="${componentName}-button"
-            tabindex="0"
-          ></div>
-          <div
-            aria-labelledby="${componentName}-label"
-            id="options"
-            class="${componentName}__option-list"
-            role="${componentName}-option-list"
-            tabindex="-1"
-          ></div>
-          <select
-            aria-hidden="true"
-            name="${type}"
-            class="native-select"
-            autocomplete="off"
-            required>
-            ${createSelectHtml(optionsList)} 
-          </select>
-        </div>
-      `;
-    })
-    .catch((error) => {
-      console.error('Failed to load CSS:', error);
-      return '';
-    });
+  if (formName) {
+    el.classList.add(`${formName}__field-wrapper`);
+  }
+
+  try {
+    await loadCSS(dropdownCSS);
+    const labelClass = label ? `${componentName}__label` : 'field-label';
+    const innerContent = `
+
+        ${label ? `<label id="${labelClass} class="${labelClass}">${getTextLabel(label)}${mandatory ? '*' : ''}</label>` : ''}
+        <div
+          aria-controls="options"
+          aria-expanded="false"
+          aria-haspopup="${componentName}"
+          aria-labelledby="${labelClass}"
+          id="${id ? id : `${componentName}`}"
+          class="${componentName}__button"
+          role="${componentName}-button"
+          tabindex="0"
+        ></div>
+        <div
+          aria-labelledby="${labelClass}"
+          id="options"
+          class="${componentName}__option-list"
+          role="${componentName}-option-list"
+          tabindex="-1"
+        ></div>
+        <select
+          aria-hidden="true"
+          name="${name}"
+          class="native-select"
+          autocomplete="off"
+          ${mandatory ? 'required' : ''}>
+          ${placeholder ? `<option value="" selected disabled>${placeholder}</option>` : ''}
+          ${createSelectHtml(optionList)}
+        </select>
+
+    `;
+    el.appendChild(document.createRange().createContextualFragment(innerContent));
+
+    if (optionList.length > 0 && placeholder) {
+      optionList.unshift(placeholder);
+    }
+
+    new Select(el, optionList);
+    return el;
+  } catch (error) {
+    console.error(`Failed to load CSS from ${dropdownCSS}:`, error);
+    return '';
+  }
 };
