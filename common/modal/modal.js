@@ -1,6 +1,6 @@
 /* global YT */
 import { createElement, decorateIcons, getTextLabel, isSocialAllowed } from '../../scripts/common.js';
-import { loadCSS, loadScript, updateSectionsStatus } from '../../scripts/aem.js';
+import { loadCSS, updateSectionsStatus } from '../../scripts/aem.js';
 import {
   createIframe,
   isAEMVideoUrl,
@@ -209,11 +209,6 @@ const createModal = () => {
           return;
         }
         window.isSingleVideo = true;
-
-        if (!videoId) {
-          console.warn('V2 Livestream Embed block: There is no video link. Please check the provided URL.');
-          return;
-        }
 
         if (isSocialAllowed()) {
           addVideo(modalContent, videoId);
