@@ -52,7 +52,7 @@ function decorate(block) {
   let intervalId = null;
 
   if (!revealEventTimeIso) {
-    console.warn('V2 Hero Reveal block: Reveal date not provided inthe Section Metadata.');
+    console.warn('V2 Hero Reveal block: Reveal date not provided in the Section Metadata.');
     return;
   }
 
