@@ -37,7 +37,7 @@ function addVideo(block, videoId) {
 }
 
 export default function decorate(block) {
-  let videoId = block.querySelector('p + p');
+  let videoId = block.querySelector('p');
   videoId = videoId.innerText;
 
   window.isSingleVideo = true;
@@ -66,7 +66,9 @@ export default function decorate(block) {
     }, 3000);
   };
 
-  if (!isSocialAllowed()) {
+  if (isSocialAllowed()) {
+    addVideo(block, videoId);
+  } else {
     const img = block.querySelector('picture img');
     block.innerHTML = '';
 
@@ -88,7 +90,9 @@ export default function decorate(block) {
     block.append(cookieMsgContainer);
 
     block.querySelector('.cookie-message__button-container .primary')?.addEventListener('click', () => {
-      window.OneTrust.AllowAll();
+      if (window.OneTrust) {
+        window.OneTrust.AllowAll();
+      }
 
       addVideo(block, videoId);
     });
@@ -96,7 +100,5 @@ export default function decorate(block) {
     block.querySelector('.cookie-message__button-container .secondary')?.addEventListener('click', () => {
       hideModal();
     });
-  } else {
-    addVideo(block, videoId);
   }
 }
