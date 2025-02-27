@@ -64,6 +64,10 @@
   transition: transform var(--duration-large) var(--easing-entrance);
 }
 
+.modal-content:has(.modal-video) {
+  text-align: center;
+}
+
 :root:not(.redesign-v2) .modal-content {
   margin-top: 100px;
   background-color: var(--c-grey-1);
