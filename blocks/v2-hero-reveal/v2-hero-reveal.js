@@ -86,7 +86,7 @@ function decorate(block) {
 
   block.replaceWith(v2HeroBlock);
 
-  const parentSection = block.closest('.section');
+  const parentSection = v2HeroBlock.closest('.section');
 
   if (parentSection) {
     loadBlocks(parentSection);
