@@ -86,7 +86,13 @@ function decorate(block) {
 
   block.replaceWith(v2HeroBlock);
 
-  loadBlocks(v2HeroBlock);
+  const parentSection = block.closest('.section');
+
+  if (parentSection) {
+    loadBlocks(parentSection);
+  } else {
+    loadBlocks(v2HeroBlock);
+  }
 }
 
 export default decorate;
