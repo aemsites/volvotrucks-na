@@ -1,4 +1,4 @@
-import { loadBlock } from '../../scripts/aem.js';
+import { loadBlock, loadBlocks } from '../../scripts/aem.js';
 import { createElement } from '../../scripts/common.js';
 import { decorateLinks } from '../../scripts/scripts.js';
 import { variantClasses as heroVariantClasses } from '../v2-hero/v2-hero.js';
@@ -86,7 +86,7 @@ function decorate(block) {
 
   block.replaceWith(v2HeroBlock);
 
-  loadBlock(v2HeroBlock);
+  loadBlocks(v2HeroBlock);
 }
 
 export default decorate;
