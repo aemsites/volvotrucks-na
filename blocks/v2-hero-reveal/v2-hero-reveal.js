@@ -86,7 +86,7 @@ function decorate(block) {
 
   block.replaceWith(v2HeroBlock);
 
-  loadBlock(block);
+  loadBlock(v2HeroBlock);
 }
 
 export default decorate;
