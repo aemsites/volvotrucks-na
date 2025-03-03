@@ -91,7 +91,7 @@ function decorate(block) {
   if (main) {
     loadBlocks(main);
   } else {
-    loadBlocks(v2HeroBlock);
+    loadBlock(v2HeroBlock);
   }
 }
 
