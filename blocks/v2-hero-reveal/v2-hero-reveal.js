@@ -86,10 +86,10 @@ function decorate(block) {
 
   block.replaceWith(v2HeroBlock);
 
-  const parentSection = v2HeroBlock.closest('.section');
+  const main = document.querySelector('main');
 
-  if (parentSection) {
-    loadBlocks(parentSection);
+  if (main) {
+    loadBlocks(main);
   } else {
     loadBlocks(v2HeroBlock);
   }
