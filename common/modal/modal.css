@@ -268,7 +268,7 @@ body:has(.modal--reveal[aria-hidden="false"]) :where(._hj-widget-container, .ot-
   margin-top: var(--modal-margin-top);
   padding: 0 16px;
   max-width: calc(var(--wrapper-width) + 32px);
-  height: calc(100% - var(--top-bar-height) - var(--modal-margin-top));
+  max-height: calc(100% - var(--top-bar-height) - var(--modal-margin-top));
 }
 
 .redesign-v2 .modal-video {
@@ -279,7 +279,7 @@ body:has(.modal--reveal[aria-hidden="false"]) :where(._hj-widget-container, .ot-
 
 .redesign-v2 iframe.modal-video {
   aspect-ratio: 16/9;
-  height: 100%;
+  max-height: 100%;
 }
 
 @media (min-width: 744px) {
