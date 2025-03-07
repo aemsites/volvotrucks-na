@@ -86,8 +86,13 @@ const buildHeroMetadata = () => {
   return textContainer;
 };
 
+const splitTags = (tags) => tags.split(',').map((tag) => tag.trim());
+
 const buildHeroTags = () => {
-  const tags = getMetadata('article:tag').split(',');
+  const articleCategory = splitTags(getMetadata('article-category'));
+  const topic = splitTags(getMetadata('topic'));
+  const truck = splitTags(getMetadata('truck'));
+  const tags = [...articleCategory, ...topic, ...truck].filter((tag) => tag !== '').sort((a, b) => a.localeCompare(b));
   if (tags.length > 0 && tags[0] !== '') {
     const tagList = createElement('ul', { classes: `${articleHero}__tags` });
     tags.forEach((tag) => {
