@@ -75,11 +75,12 @@ const addForm = async (block) => {
       method="post"
       name="form-${formName}"
       action="${formAction}"
+      class="${blockName}__form"
     >${formContent.default}
 
       <div style="position:absolute; left:-9999px; top: -9999px;" aria-hidden="true">
-        <label for="pardot_extra_field">Comments</label>
-        <input type="text" id="pardot_extra_field" name="pardot_extra_field" />
+        <label for="form_extra_field">Comments</label>
+        <input type="text" id="form_extra_field" name="form_extra_field" />
       </div>
     </form>
   `;
@@ -98,7 +99,7 @@ const addForm = async (block) => {
 
   block.style.display = displayValue;
 
-  const formObj = document.querySelector('form');
+  const formObj = document.querySelector(`.${blockName}__form`);
 
   formObj.addEventListener('submit', (e) => {
     if (formContent.onSubmit) {
