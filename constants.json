@@ -119,7 +119,7 @@
       },
       {
         "name": "v2AllowedBlocks",
-        "value": "[\"embed\",\"footer\",\"fragment\",\"header\",\"iframe\",\"library-metadata\"]"
+        "value": "[\"embed\",\"footer\",\"fragment\",\"header\",\"iframe\",\"library-metadata\",\"section-metadata\",\"engine-specifications\",\"sub-nav\"]"
       }
     ]
   },

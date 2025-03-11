@@ -17,7 +17,7 @@ main .section .engine-specifications-wrapper {
 }
 
 .engine-specifications .engine-title {
-  font-size: var(--heading-font-size-l);
+  font-size: var(--heading-font-size-xl);
   margin: 0;
   text-align: center;
 }
@@ -34,7 +34,6 @@ main .section .engine-specifications-wrapper {
   margin: 0 0 24px;
 }
 
-.engine-specifications .rating-title,
 .engine-specifications .power-title,
 .engine-specifications .torque-title,
 .engine-specifications .item-title {
@@ -46,9 +45,12 @@ main .section .engine-specifications-wrapper {
   font-weight: 500;
 }
 
+.engine-specifications .rating-title {
+  font-size: var(--body-font-size-s);
+}
+
+
 .engine-specifications .rating-item h5,
-.engine-specifications .power-item h5,
-.engine-specifications .torque-item h5,
 .engine-specifications .item-content {
   font-family: var(--ff-volvo-novum);
   margin: 4px 0 0;
@@ -63,13 +65,13 @@ main .section .engine-specifications-wrapper {
   display: flex;
   flex-direction: column;
   justify-content: center;
-  padding: 60px 0;
+  padding: 60px 0 0;
   width: 100vw;
   height: fit-content;
 }
 
 .performance .performance-title {
-  font-size: var(--heading-font-size-l);
+  font-size: var(--heading-font-size-xl);
   color: var(--c-main-black);
   margin: 0;
   padding-bottom: 8px;
@@ -166,7 +168,7 @@ main .section .engine-specifications-wrapper {
 }
 
 .chart-label-text {
-  font-size: calc(var(--body-font-size-xs) * var(--scale-factor));
+  font-size: calc(var(--f-body-font-size) * var(--scale-factor));
   font-weight: 400;
   line-height: 130%;
   letter-spacing: 0.5px;
@@ -213,6 +215,8 @@ main .section .engine-specifications-wrapper {
     flex-direction: row;
     overflow: auto;
     padding: 0 32px;
+    max-width: var(--wrapper-width);
+    margin: 40px auto 0;
   }
 
   .engine-specifications .item-wrapper {
@@ -236,6 +240,7 @@ main .section .engine-specifications-wrapper {
   .performance-chart-list,
   .performance-chart {
     height: 60vw;
+    margin: 0;
   }
 
   .chart {
@@ -259,6 +264,8 @@ main .section .engine-specifications-wrapper {
 
   .performance-chart::before,
   .performance-chart::after {
+    --fading-color: var(--c-grey-50);
+
     height: calc(1200px * 0.48);
     content: '';
     position: absolute;
@@ -268,12 +275,12 @@ main .section .engine-specifications-wrapper {
   }
 
   .performance-chart::before {
-    background: linear-gradient(90deg, var(--c-grey-50) 54.11%, rgb(247 247 247 / 0%) 100%);
+    background: linear-gradient(90deg, var(--fading-color) 54.11%, rgb(255 255 255 / 0%) 100%);
     left: calc(43vw - 600px);
   }
 
   .performance-chart::after {
-    background: linear-gradient(90deg, var(--c-grey-50) 54.11%, rgb(247 247 247 / 0%) 100%);
+    background: linear-gradient(90deg, var(--fading-color) 54.11%, rgb(255 255 255 / 0%) 100%);
     transform: matrix(-1, 0, 0, 1, 0, 0);
     right: calc(43vw - 600px);
   }
@@ -296,9 +303,12 @@ main .section .engine-specifications-wrapper {
 
   main .section .engine-specifications-wrapper {
     width: 100vw;
-    padding: 0 0 80px;
     background-color: var(--c-grey-50);
     margin-top: 0 !important;
+  }
+
+  main .section .engine-specifications-wrapper:nth-child(2) {
+    padding-bottom: 80px;
   }
 
   .engine-specifications.engine {
@@ -334,6 +344,14 @@ main .section .engine-specifications-wrapper {
 
 .redesign-v2 main .section .engine-specifications-wrapper {
   padding: var(--section-div-padding);
+}
+
+.redesign-v2 main .section .engine-specifications-wrapper:nth-child(1) {
+  padding: 32px 0 0;
+}
+
+.redesign-v2 main .section .engine-specifications-wrapper:nth-child(2) {
+  padding-top: 0;
 }
 
 .redesign-v2 .engine-specifications .item-list {
@@ -381,8 +399,6 @@ main .section .engine-specifications-wrapper {
 }
 
 .redesign-v2 .engine-specifications .rating-item h5,
-.redesign-v2 .engine-specifications .power-item h5,
-.redesign-v2 .engine-specifications .torque-item h5,
 .redesign-v2 .engine-specifications .item-content {
   margin: 0;
   color: var(--text-subtle);
@@ -393,15 +409,11 @@ main .section .engine-specifications-wrapper {
   font-size: 0.7rem;
 }
 
-.redesign-v2 .engine-specifications .rating-list .power-item h5,
-.redesign-v2 .engine-specifications .rating-list .torque-item h5,
 .redesign-v2 .engine-specifications .rating-list .item-content {
   font-size: var(--f-body-font-size);
 }
 
 .redesign-v2 .engine-specifications .rating-list .rating-item h5,
-.redesign-v2 .engine-specifications .rating-list .power-item h5,
-.redesign-v2 .engine-specifications .rating-list .torque-item h5,
 .redesign-v2 .engine-specifications .rating-list .item-content {
   border-radius: 1px;
   color: var(--text-subtle);
@@ -412,7 +424,7 @@ main .section .engine-specifications-wrapper {
 
 .redesign-v2 .performance .engine-rating .rating-title {
   font-family: var(--ff-volvo-novum-medium);
-  font-size: var(--f-heading-6-font-size);
+  font-size: var(--f-heading-5-font-size);
   letter-spacing: var(--f-heading-6-letter-spacing);
   color: var(--text-subtle);
   font-weight: normal;
@@ -455,7 +467,7 @@ main .section .engine-specifications-wrapper {
 }
 
 .redesign-v2 .chart-label-text {
-  font-size: calc(var(--f-body-font-size) * var(--scale-factor));
+  font-size: calc(var(--f-body-font-size) * var(--scale-factor) * 0.8);
   fill: var(--text-subtle);
 }
 
@@ -509,6 +521,8 @@ main .section .engine-specifications-wrapper {
 
   .redesign-v2 .performance-chart::before,
   .redesign-v2 .performance-chart::after {
+    --fading-color: var(--c-white);
+
     width: 180px;
   }
 
@@ -518,6 +532,11 @@ main .section .engine-specifications-wrapper {
 
   .redesign-v2 .performance-chart::after {
     right: 0;
+  }
+
+  .redesign-v2 .section.engine-specifications-container.section--gray-background .performance-chart::before,
+  .redesign-v2 .section.engine-specifications-container.section--gray-background .performance-chart::after {
+    --fading-color: var(--c-grey-50);
   }
 }
 
