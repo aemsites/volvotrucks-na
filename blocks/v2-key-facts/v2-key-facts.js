@@ -1,7 +1,7 @@
+import { createElement } from '../../scripts/common.js';
 import { isVideoLink, createVideo } from '../../scripts/video-helper.js';
 
 const blockName = 'v2-key-facts';
-const MAX_WORD_LENGTH = 12;
 
 const CLASSES = {
   row: `${blockName}__row`,
@@ -11,7 +11,7 @@ const CLASSES = {
   image: `${blockName}__image`,
   key_item: `${blockName}__key-item`,
   item_title: `${blockName}__key-title`,
-  item_title_sm: `${blockName}__key-title-small`,
+  item_title_long: `${blockName}__key-title-long`,
   item_subtitle: `${blockName}__key-subtitle`,
 };
 
@@ -19,7 +19,13 @@ const buildTextsSection = (el) => {
   el.querySelectorAll('p').forEach((pEl, idx) => {
     if (idx === 0) {
       pEl.classList.add(CLASSES.item_title);
-      pEl.classList.toggle(CLASSES.item_title_sm, pEl.textContent.length >= MAX_WORD_LENGTH);
+      // If there is a <br> tag in the first paragraph, we need to wrap the text in a span to apply the styles
+      if (pEl.querySelector('br')) {
+        const span = createElement('span', { classes: CLASSES.item_title_long });
+        const childNodes = Array.from(pEl.childNodes).slice(1);
+        span.append(...childNodes);
+        pEl.append(span);
+      }
       return;
     }
     pEl.classList.add(CLASSES.item_subtitle);
