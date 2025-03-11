@@ -70,12 +70,11 @@ const addForm = async (block) => {
     return;
   }
 
-  const form = `
+  const form = document.createRange().createContextualFragment(`
     <form
       method="post"
       name="form-${formName}"
       action="${formAction}"
-      class="${blockName}__form"
     >${formContent.default}
 
       <div style="position:absolute; left:-9999px; top: -9999px;" aria-hidden="true">
@@ -83,7 +82,7 @@ const addForm = async (block) => {
         <input type="text" id="form_extra_field" name="form_extra_field" />
       </div>
     </form>
-  `;
+  `);
 
   if (formCache.get(formName)) {
     const cachedForm = formCache.get(formName);
@@ -93,13 +92,14 @@ const addForm = async (block) => {
   }
 
   const formWrapper = createElement('div', { classes: `${blockName}__container` });
-  formWrapper.innerHTML = form;
-  block.replaceWith(formWrapper);
+  formWrapper.append(form);
+  block.innerText = '';
+  block.append(formWrapper);
   formCache.set(formName, formWrapper);
 
   block.style.display = displayValue;
 
-  const formObj = document.querySelector(`.${blockName}__form`);
+  const formObj = block.querySelector('form');
 
   formObj.addEventListener('submit', (e) => {
     if (formContent.onSubmit) {
