@@ -1,4 +1,4 @@
-import { getTextLabel } from '../../scripts/common';
+import { getTextLabel } from '../../scripts/common.js';
 // Text keys
 const TEXT_KEYS = {
   bottom: 'Engine Speed (RPM)',
@@ -372,7 +372,7 @@ const getPerformanceChart = (data) => {
         class="chart-label-text"
         text-anchor="middle"
       >
-        ${TEXT_KEYS(TEXT_KEYS.bottom)}
+        ${getTextLabel(TEXT_KEYS.bottom)}
       </text>
     </g>
   </svg>
