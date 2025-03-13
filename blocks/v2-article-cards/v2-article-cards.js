@@ -63,23 +63,29 @@ const createArticleCards = (block, articles = null, amount = null) => {
 };
 
 /**
- * Waits until at least one article heading (`h4.${blockName}__card-heading`) is rendered on the page.
- * If articles are already present, it resolves immediately. Otherwise, it waits for them to appear using MutationObserver.
+ * Waits until all `v2-article-cards` blocks are fully rendered.
+ * If only one block exists, resolves immediately with an empty set (no filtering needed).
  *
- * @returns {Promise<NodeListOf<HTMLHeadingElement>>} A promise that resolves with a list of `h4` elements when they are found.
+ * @returns {Promise<Set<string>>} A set of displayed article titles from all existing blocks.
  */
-const waitForArticlesToRender = () => {
+const waitForAllBlocksToRender = () => {
   return new Promise((resolve) => {
-    const existingArticles = document.querySelectorAll(`h4.${blockName}__card-heading`);
-    if (existingArticles.length > 0) {
-      return resolve(existingArticles);
+    const allBlocks = document.querySelectorAll(`.${blockName}`);
+
+    if (allBlocks.length <= 1) {
+      return resolve(new Set());
+    }
+
+    const existingTitles = getDisplayedTitles();
+    if (existingTitles.size > 0) {
+      return resolve(existingTitles);
     }
 
     const observer = new MutationObserver(() => {
-      const articles = document.querySelectorAll(`h4.${blockName}__card-heading`);
-      if (articles.length > 0) {
+      const titles = getDisplayedTitles();
+      if (titles.size > 0) {
         observer.disconnect();
-        resolve(articles);
+        resolve(titles);
       }
     });
 
@@ -88,20 +94,31 @@ const waitForArticlesToRender = () => {
 };
 
 /**
- * Filters out articles that are already displayed on the page.
- * Ensures only unique articles (not present in previous blocks) are returned.
+ * Gets the titles of already displayed articles across all `v2-article-cards` blocks.
  *
- * @param {Array<Object>} articles - List of fetched articles, each containing metadata including a title.
- * @returns {Promise<Array<Object>>} A promise resolving to an array of articles that are not already displayed on the page.
+ * @returns {Set<string>} A set of article titles that are already displayed.
+ */
+const getDisplayedTitles = () => {
+  return new Set(
+    Array.from(document.querySelectorAll(`h4.${blockName}__card-heading`))
+      .map((article) => article.textContent?.trim().toLowerCase())
+      .filter(Boolean),
+  );
+};
+
+/**
+ * Filters out articles that are already displayed in another `v2-article-cards` block.
+ * Ensures filtering happens only if multiple blocks exist.
+ *
+ * @param {Array<Object>} articles - List of fetched articles.
+ * @returns {Promise<Array<Object>>} A promise resolving to a filtered list of unique articles.
  */
 const removeArtsInPage = async (articles) => {
-  const existingArticles = await waitForArticlesToRender();
+  const displayedTitles = await waitForAllBlocksToRender();
 
-  if (existingArticles.length === 0) {
+  if (displayedTitles.size === 0) {
     return articles;
   }
-
-  const displayedTitles = new Set([...existingArticles].map((article) => article.textContent?.trim().toLowerCase()).filter(Boolean));
 
   return articles.filter((article) => {
     const title = article?.metadata?.title?.split('|')[0].trim().toLowerCase();
