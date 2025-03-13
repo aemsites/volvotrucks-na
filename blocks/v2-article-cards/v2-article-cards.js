@@ -62,15 +62,52 @@ const createArticleCards = (block, articles = null, amount = null) => {
   }
 };
 
-// Remove from the list articles that may appear in previous blocks
-const removeArtsInPage = (articles) => {
-  const existingArticles = document.querySelectorAll(`h4.${blockName}__card-heading`);
-  const articleTitles = Array.from(existingArticles).map((article) => article.textContent.trim());
-  const clearedArticles = articles.filter((art) => {
-    const title = art.metadata.title.split('|')[0].trim();
-    return !articleTitles.includes(title);
+/**
+ * Waits until at least one article heading (`h4.${blockName}__card-heading`) is rendered on the page.
+ * If articles are already present, it resolves immediately. Otherwise, it waits for them to appear using MutationObserver.
+ *
+ * @returns {Promise<NodeListOf<HTMLHeadingElement>>} A promise that resolves with a list of `h4` elements when they are found.
+ */
+const waitForArticlesToRender = () => {
+  return new Promise((resolve) => {
+    const existingArticles = document.querySelectorAll(`h4.${blockName}__card-heading`);
+    if (existingArticles.length > 0) {
+      return resolve(existingArticles);
+    }
+
+    const observer = new MutationObserver(() => {
+      const articles = document.querySelectorAll(`h4.${blockName}__card-heading`);
+      if (articles.length > 0) {
+        observer.disconnect();
+        resolve(articles);
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
   });
-  return clearedArticles;
+};
+
+/**
+ * Filters out articles that are already displayed on the page.
+ * Ensures only unique articles (not present in previous blocks) are returned.
+ *
+ * @param {Array<Object>} articles - List of fetched articles, each containing metadata including a title.
+ * @returns {Promise<Array<Object>>} A promise resolving to an array of articles that are not already displayed on the page.
+ */
+const removeArtsInPage = async (articles) => {
+  const existingArticles = await waitForArticlesToRender();
+  console.log(existingArticles);
+
+  if (existingArticles.length === 0) {
+    return articles;
+  }
+
+  const displayedTitles = new Set([...existingArticles].map((article) => article.textContent?.trim().toLowerCase()).filter(Boolean));
+
+  return articles.filter((article) => {
+    const title = article?.metadata?.title?.split('|')[0].trim().toLowerCase();
+    return title && !displayedTitles.has(title);
+  });
 };
 
 export default async function decorate(block) {
@@ -113,7 +150,7 @@ export default async function decorate(block) {
     block.querySelector('.pagination-content')?.remove();
     createArticleCards(block, selectedArticles, amountOfLinks);
   } else {
-    const uniqueArticles = removeArtsInPage(articles);
+    const uniqueArticles = await removeArtsInPage(articles);
     const sortedArticles = sortArticlesByDateField(uniqueArticles, 'publishDate');
     // After sorting articles by date, set the chunks of the array for future pagination
     const chunkedArticles = sortedArticles?.reduce((resultArray, item, index) => {
