@@ -191,6 +191,20 @@ const buildPeakLabel = (values, valuesX, category, device, maxPeak) => {
     </text>
   `;
 };
+
+const fillMissingValues = (rating, values, valuesOnAxisX, type) => {
+  if (values.length < valuesOnAxisX.length) {
+    console.warn(
+      `The number of ${type} values for the chart is less than the number of RPM values. Filling the rest with 0s. For the rating:`,
+      rating,
+    );
+    const diff = valuesOnAxisX.length - values.length;
+    for (let i = 0; i < diff; i++) {
+      values.push(0);
+    }
+  }
+};
+
 // Selects the middle values that should be displayed as rpm references.
 const getDisplayableLabels = (valuesX, rpm) => {
   const rpmReversed = [...rpm].reverse();
@@ -243,27 +257,8 @@ const getPerformanceChart = (data) => {
 
   const valuesOnAxisX = generatePositionsX(0, valuesRPM.length, sectionWidth);
 
-  if (valuesHP.length < valuesOnAxisX.length) {
-    console.warn(
-      'The number of HP values for the chart is less than the number of RPM values. Filling the rest with 0s. For the rating:',
-      data.rating,
-    );
-    const diff = valuesOnAxisX.length - valuesHP.length;
-    for (let i = 0; i < diff; i++) {
-      valuesHP.push(0);
-    }
-  }
-
-  if (adjustedTQValues.length < valuesOnAxisX.length) {
-    console.warn(
-      'The number of Torque values for the chart is less than the number of RPM values. Filling the rest with 0s. For the rating:',
-      data.rating,
-    );
-    const diff = valuesOnAxisX.length - adjustedTQValues.length;
-    for (let i = 0; i < diff; i++) {
-      adjustedTQValues.push(0);
-    }
-  }
+  fillMissingValues(data.rating, valuesHP, valuesOnAxisX, 'HP');
+  fillMissingValues(data.rating, adjustedTQValues, valuesOnAxisX, 'Torque');
 
   const svg = `
     <svg 

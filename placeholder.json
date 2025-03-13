@@ -394,6 +394,14 @@
     {
       "Key": "V2CustomForm:ErrorSubmissionText",
       "Text": "Information not sent. Please, try again later."
+    },
+    {
+      "Key": "HP",
+      "Text": "HP"
+    },
+    {
+      "Key": "lb/ft",
+      "Text": "lb/ft"
     }
   ],
   ":type": "sheet"

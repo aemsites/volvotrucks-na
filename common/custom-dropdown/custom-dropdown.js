@@ -413,26 +413,39 @@ const createSelectHtml = (list) => {
   return list.map((item, idx) => createOptionMarkup(idx, item)).join('');
 };
 
+function getVariantClasses(options) {
+  const { variants = [] } = options;
+  if (!Array.isArray(variants)) {
+    return [];
+  }
+  return variants.map((variant) => `${componentName}--variant-${variant}`).join(' ');
+}
+
 /**
  * Get the custom dropdown component asynchronously because it requires a CSS file to be loaded.
  *
  * @param {Object} options - The options to configure the dropdown.
- * @param {string[] || Object[]} options.optionList - The list of options to display in the dropdown. Each option can be a string or an object with `value` and `label` properties.
+ * @param {string[] | Object[]} options.optionList - The list of options to display in the dropdown. Each option can be a string or an object with `value` and `label` properties.
  * @param {string} options.label - The label to grab from the placeholder file using getTextLabel function.
  * @param {boolean} options.mandatory - If the dropdown is required or not.
  * @param {string} options.id - The id of the dropdown.
  * @param {string} options.placeholder - The placeholder text for the dropdown to be used as the default option.
  * @param {string} options.name - The name of the hidden select element that will be submitted in the form.
  * @param {string} options.formName - The name of the form that contains the dropdown.
- * @param {boolean} options.adjustWidthToContent - By default the dropdown will have a width of 100% of the container. If this option is set to true, the dropdown will adjust its width to the content.
  * @param {function} [options.onChangeCallback] - The callback function to be called when the value changes.
+ * @param {string[]} options.variants - "thick", "adjust-width-to-content".
+ *
+ * Variants:
+ * - "thick": Adds thicker appearance.
+ * - "adjust-width-to-content": By default the dropdown will have a width of 100% of the container. If this option is set to true, the dropdown will adjust its width to the content.
+ *
  * @returns {Promise<HTMLElement>} - The custom dropdown component as an HTMLElement.
  */
 export const getCustomDropdown = async (options = {}) => {
   const baseUrl = window.location.origin !== 'null' ? window.location.origin : window.location.ancestorOrigins && window.location.ancestorOrigins[0];
   const { optionList = [], label = '', mandatory = false, id = '', placeholder = '', name = '', formName = '' } = options;
   const dropdownCSS = `${baseUrl}/common/${componentName}/${componentName}.css`;
-  const className = options.adjustWidthToContent ? [componentName, `${componentName}--adjust-width`] : componentName;
+  const className = options.variants ? [componentName, getVariantClasses(options)] : componentName;
   const el = createElement('div', { classes: className });
 
   if (formName) {
@@ -474,11 +487,6 @@ export const getCustomDropdown = async (options = {}) => {
     `;
 
     el.appendChild(document.createRange().createContextualFragment(innerContent));
-
-    // TODO: Check this with Jonatan:
-    /* if (optionList.length > 0 && placeholder) {
-      optionList.unshift(placeholder);
-    } */
 
     new Select(el, optionList, options.onChangeCallback);
     return el;

@@ -15,7 +15,7 @@
   margin-bottom: 16px;
 }
 
-.custom-dropdown--adjust-width {
+.custom-dropdown--variant-adjust-width-to-content {
   display: inline-block;
 }
 
@@ -32,10 +32,14 @@
   line-height: var(--body-regular-line-height);
   text-align: left;
   color: var(--c-grey-4);
-  padding: 16px 50px 16px 16px;
+  padding: 8px 50px 8px 16px;
   border-radius: 4px;
   border: 1px solid var(--c-grey-2);
   cursor: pointer;
+}
+
+.custom-dropdown--variant-thick .custom-dropdown__button {
+  padding: 16px 50px 16px 16px;
 }
 
 .custom-dropdown__button:hover {
@@ -51,12 +55,16 @@
   display: block;
   content: url('../../icons/chevron-down.svg');
   position: absolute;
-  bottom: 12px;
+  bottom: 4px;
   right: 10px;
   height: 32px;
   width: 32px;
   pointer-events: none;
   padding: 4px;
+}
+
+.custom-dropdown--variant-thick .custom-dropdown__button::after {
+  bottom: 12px;
 }
 
 .custom-dropdown__option-list {
@@ -115,6 +123,6 @@
   }
 
   .custom-dropdown__option-list {
-    top: 100%;
+    top: calc(100% + 8px);
   }
 }

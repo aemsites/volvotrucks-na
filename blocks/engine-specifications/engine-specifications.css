@@ -109,18 +109,18 @@ main .section .engine-specifications-wrapper {
   margin: 20px 0 0;
 }
 
-.performance a,
-.performance a:visited {
-  text-decoration: none;
+.performance button {
+  background: none;
+  border: 0;
   cursor: pointer;
   padding-bottom: 12px;
 }
 
-.performance .engine-rating .rating-item a:hover {
+.performance .engine-rating .rating-item button:hover {
   border-bottom: 2px solid var(--c-grey-3);
 }
 
-.performance .engine-rating .rating-item[data-active] a {
+.performance .engine-rating .rating-item[data-active] button {
   color: var(--c-main-black);
   border-bottom: 2px solid var(--c-main-black);
 }
@@ -449,7 +449,6 @@ main .section .engine-specifications-wrapper {
   color: var(--text-subtle);
   letter-spacing: var(--f-button-letter-spacing);
   line-height: 100%;
-  text-transform: uppercase;
 }
 
 .redesign-v2 .engine-specifications .rating-title {

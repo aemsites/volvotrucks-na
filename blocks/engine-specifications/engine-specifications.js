@@ -1,3 +1,4 @@
+import { getTextLabel } from '../../scripts/common.js';
 import getPerformanceChart from './performance-chart.js';
 import { getCustomDropdown } from '../../common/custom-dropdown/custom-dropdown.js';
 
@@ -110,7 +111,9 @@ const getPeaksData = (engineData) =>
  * @param {HTMLElement} hpSelector - The container element where the tabs will be appended.
  * @param {Array<number>} powerRating - The list of power ratings to create tabs for.
  */
-const setupTabs = (container, powerRating) => {
+const setupTabs = (container, itemsToList, displayHp = true) => {
+  const hpLabel = getTextLabel('HP');
+  const torqueLabel = getTextLabel('lb/ft');
   let engineRatingContainer = container.querySelector('.engine-rating');
   let hpList = container.querySelector('.rating-list');
 
@@ -124,16 +127,16 @@ const setupTabs = (container, powerRating) => {
     hpList.innerHTML = '';
   }
 
-  powerRating.forEach(({ rating }) => {
-    const item = document.createElement('li');
-    item.classList.add('rating-item');
+  itemsToList.forEach(({ torque, horsepower, rating }) => {
+    const itemEl = document.createElement('li');
+    itemEl.classList.add('rating-item');
 
-    item.innerHTML = `
+    itemEl.innerHTML = `
       <h5 class="title-${rating}">
-        <a>${rating} HP</a>
+        <button data-rating="${rating}">${displayHp ? `${horsepower} ${hpLabel}` : `${torque} ${torqueLabel}`}</button>
       </h5>`;
 
-    hpList.appendChild(item);
+    hpList.appendChild(itemEl);
   });
   engineRatingContainer.innerHTML = '';
   engineRatingContainer.append(hpList);
@@ -164,16 +167,13 @@ const buildHeaders = (hpSelector) => {
  * @param {HTMLElement} chartListContainer - The container element that holds the charts.
  */
 const buildDrodownOptions = async (dropdownContainer, horsepowerMap, chartOptionsContainer, hpSelector, chartListContainer) => {
-  // TODO: This HP label should come from the placeholders
-  const horsepowerOptions = Array.from(horsepowerMap.keys()).map((hp) => ({ value: hp, label: `${hp} HP` }));
+  const hpLabel = getTextLabel('HP');
+  const horsepowerOptions = Array.from(horsepowerMap.keys()).map((hp) => ({ value: hp, label: `${hp} ${hpLabel}` }));
 
   const dropdownConfig = {
     optionList: horsepowerOptions,
-    adjustWidthToContent: true,
+    variants: ['adjust-width-to-content'],
     onChangeCallback: (selected) => {
-      console.log('Selected horsepower:', horsepowerMap.get(selected.value));
-      // Handle the change event here
-
       const chartParent = chartListContainer.closest('.performance-chart-list');
       const allCharts = chartParent.querySelectorAll('.performance-chart');
       allCharts.forEach((item) => {
@@ -183,7 +183,7 @@ const buildDrodownOptions = async (dropdownContainer, horsepowerMap, chartOption
       const selectedHp = horsepowerMap.get(selected.value);
       const firstItemOfSelectedHp = horsepowerMap.get(selected.value).values().next().value;
 
-      setupTabs(chartOptionsContainer, selectedHp);
+      setupTabs(chartOptionsContainer, selectedHp, false);
       setChartUpponSelection(firstItemOfSelectedHp.rating, chartParent, hpSelector, allCharts);
     },
   };
@@ -232,7 +232,7 @@ const setupTabButtonsInteractions = (hpSelector, chartContainer) => {
   ratingList.forEach((button) => {
     button.addEventListener('click', (e) => {
       const buttonParent = button.closest('ul');
-      const selectedNumber = e.target.innerText.split(' ')[0];
+      const selectedNumber = e.target.dataset.rating;
 
       const clickedButton = buttonParent.querySelector(`.title-${selectedNumber}`).closest('.rating-item');
       const activeButton = buttonParent.querySelector('[data-active]');
@@ -241,7 +241,7 @@ const setupTabButtonsInteractions = (hpSelector, chartContainer) => {
       const clickedChart = chartParent.querySelector(`.chart-${selectedNumber}`);
       const allCharts = chartParent.querySelectorAll('.performance-chart');
 
-      if (clickedChart && activeButton && activeButton.innerText.split(' ')[0] !== selectedNumber) {
+      if (clickedChart && activeButton && activeButton.dataset.rating !== selectedNumber) {
         [...allButtons, ...allCharts].forEach((item) => {
           delete item.dataset.active;
         });
@@ -290,7 +290,8 @@ const buildPerformanceSpecifications = (block, engineData) => {
   buildHeaders(hpSelector);
 
   if (showTabs) {
-    setupTabs(hpSelector, ratings);
+    const concatenatedTorques = Array.from(horsepowerMap.values()).flatMap((set) => Array.from(set));
+    setupTabs(hpSelector, concatenatedTorques, true);
     setupTabButtonsInteractions(hpSelector, chartListContainer);
 
     const initialButton = hpSelector.querySelector('.rating-item');
@@ -304,7 +305,7 @@ const buildPerformanceSpecifications = (block, engineData) => {
     dropdownContainer.classList.add('engine-specifications__dropdown-container');
     chartOptionsContainer.append(dropdownContainer);
 
-    setupTabs(chartOptionsContainer, firstHorsepowerSet);
+    setupTabs(chartOptionsContainer, firstHorsepowerSet, false);
     buildDrodownOptions(dropdownContainer, horsepowerMap, chartOptionsContainer, hpSelector, chartListContainer);
 
     hpSelector.append(chartOptionsContainer);

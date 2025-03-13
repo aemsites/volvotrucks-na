@@ -60,22 +60,6 @@
     font-size: var(--f-subtitle-2-font-size);
 }
 
-.v2-custom-form-container .custom-dropdown {
-    margin-bottom: 16px;
-    position: unset;
-    height: 40px;
-    font-size: var(--f-subtitle-2-font-size);
-}
-
-.v2-custom-form-container .custom-dropdown::after {
-    top: 32px;
-}
-
-.v2-custom-form-container .custom-dropdown > :first-child {
-    height: 100%;
-    padding: 8px 16px;
-}
-
 .v2-custom-form-container .form-custom-dropdown-wrapper {
     position: relative;
 }
