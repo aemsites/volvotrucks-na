@@ -96,7 +96,6 @@ const waitForArticlesToRender = () => {
  */
 const removeArtsInPage = async (articles) => {
   const existingArticles = await waitForArticlesToRender();
-  console.log(existingArticles);
 
   if (existingArticles.length === 0) {
     return articles;
