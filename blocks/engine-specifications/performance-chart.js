@@ -1,6 +1,6 @@
-// TEXT
-// TODO move to placeholder
-const TEXT = {
+import { getTextLabel } from '../../scripts/common';
+// Text keys
+const TEXT_KEYS = {
   bottom: 'Engine Speed (RPM)',
   labelTQ: 'Peak Torque',
   labelHP: 'Peak Power',
@@ -137,7 +137,10 @@ const buildPeakLabel = (values, valuesX, category, device, maxPeak) => {
 
   const positionY = Number(400 - peakValue * verticalScaleFactor);
 
-  const peakLabel = category === 'HP' ? [TEXT.unitHP, TEXT.labelHP, COLORS.lineHP] : [TEXT.unitTQ, TEXT.labelTQ, COLORS.lineTQ];
+  const peakLabel =
+    category === 'HP'
+      ? [getTextLabel(TEXT_KEYS.unitHP), getTextLabel(TEXT_KEYS.labelHP), COLORS.lineHP]
+      : [getTextLabel(TEXT_KEYS.unitTQ), getTextLabel(TEXT_KEYS.labelTQ), COLORS.lineTQ];
 
   return `
     <rect
@@ -369,7 +372,7 @@ const getPerformanceChart = (data) => {
         class="chart-label-text"
         text-anchor="middle"
       >
-        ${TEXT.bottom}
+        ${TEXT_KEYS(TEXT_KEYS.bottom)}
       </text>
     </g>
   </svg>

@@ -152,7 +152,7 @@ const setupTabs = (container, itemsToList, displayHp = true) => {
 const buildHeaders = (hpSelector) => {
   const ratingTitle = document.createElement('h6');
   ratingTitle.classList.add('rating-title');
-  ratingTitle.innerText = 'Engine Ratings';
+  ratingTitle.innerText = getTextLabel('Engine Ratings');
 
   hpSelector.append(ratingTitle);
 };
