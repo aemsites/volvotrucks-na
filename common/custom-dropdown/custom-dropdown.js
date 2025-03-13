@@ -22,6 +22,14 @@ const SelectActions = {
   Type: 10,
 };
 
+function getOptionValue(option) {
+  return typeof option === 'string' ? option : option.value;
+}
+
+function getOptionLabel(option) {
+  return typeof option === 'string' ? option : option.label;
+}
+
 // filter an array of options against an input string
 // returns an array of options that begin with the filter string, case-independent
 function filterOptions(options = [], filter, exclude = []) {
@@ -156,7 +164,7 @@ function maintainScrollVisibility(activeElement, scrollParent) {
  * Select Component
  * Accepts a clickable element and an array of string options
  */
-const Select = function (el, options = []) {
+const Select = function (el, options = [], onChangeCallback) {
   // element refs
   this.el = el;
   this.labelEl = el.querySelector(`.${componentName}__label`);
@@ -166,6 +174,7 @@ const Select = function (el, options = []) {
   // data
   this.idBase = this.buttonEl.id || componentName;
   this.options = options;
+  this.onChangeCallback = onChangeCallback;
 
   // state
   this.activeIndex = 0;
@@ -181,7 +190,7 @@ const Select = function (el, options = []) {
 
 Select.prototype.init = function init() {
   // select first option by default
-  this.buttonEl.innerHTML = this.options[0];
+  this.buttonEl.innerHTML = getOptionLabel(this.options[0]);
 
   // add event listeners
   this.buttonEl.addEventListener('blur', this.onButtonBlur.bind(this));
@@ -196,13 +205,13 @@ Select.prototype.init = function init() {
   });
 };
 
-Select.prototype.createOption = function createOption(optionText, index) {
+Select.prototype.createOption = function createOption(option, index) {
   const optionEl = createElement('div');
   optionEl.setAttribute('role', 'option');
   optionEl.id = `${this.idBase}-${index}`;
   optionEl.className = index === 0 ? `${componentName}__option option-current` : `${componentName}__option`;
   optionEl.setAttribute('aria-selected', `${index === 0}`);
-  optionEl.innerText = optionText;
+  optionEl.innerText = getOptionLabel(option);
 
   optionEl.addEventListener('click', (event) => {
     event.stopPropagation();
@@ -305,21 +314,21 @@ Select.prototype.onOptionChange = function onOptionChange(index) {
   this.buttonEl.setAttribute('aria-activedescendant', `${this.idBase}-${index}`);
 
   // update active option styles
-  const options = this.el.querySelectorAll('[role=option]');
-  [...options].forEach((optionEl) => {
+  const optionsElements = this.el.querySelectorAll('[role=option]');
+  [...optionsElements].forEach((optionEl) => {
     optionEl.classList.remove('option-current');
   });
-  options[index].classList.add('option-current');
+  optionsElements[index].classList.add('option-current');
 
   // ensure the new option is in view
   if (isScrollable(this.listEl)) {
-    maintainScrollVisibility(options[index], this.listEl);
+    maintainScrollVisibility(optionsElements[index], this.listEl);
   }
 
   // ensure the new option is visible on screen
   // ensure the new option is in view
-  if (!isElementInView(options[index])) {
-    options[index].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  if (!isElementInView(optionsElements[index])) {
+    optionsElements[index].scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }
 };
 
@@ -341,18 +350,23 @@ Select.prototype.selectOption = function selectOption(index) {
 
   // update displayed value
   const selected = this.options[index];
-  this.buttonEl.innerHTML = selected;
+  this.buttonEl.innerHTML = getOptionLabel(selected);
 
   // this updates the value of the select that gets inputed in the forms
   const selectHtml = this.el.closest(`.${componentName}`).querySelector('select');
   selectHtml.selectedIndex = index;
 
   // update aria-selected
-  const options = this.el.querySelectorAll('[role=option]');
-  [...options].forEach((optionEl) => {
+  const optionsElements = this.el.querySelectorAll('[role=option]');
+  [...optionsElements].forEach((optionEl) => {
     optionEl.setAttribute('aria-selected', 'false');
   });
-  options[index].setAttribute('aria-selected', 'true');
+  optionsElements[index].setAttribute('aria-selected', 'true');
+
+  // call the onChangeCallback if provided
+  if (this.onChangeCallback) {
+    this.onChangeCallback(selected);
+  }
 };
 
 Select.prototype.updateMenuState = function updateMenuState(open, callFocus = true) {
@@ -379,13 +393,19 @@ Select.prototype.updateMenuState = function updateMenuState(open, callFocus = tr
   callFocus && this.buttonEl.focus();
 };
 
+/**
+ * Generates the markup for an HTML option element.
+ *
+ * @param {number} idx - The index of the option in the list.
+ * @param {string|Object} option - The option data, which can be a string or an object with `value` and `label` properties.
+ * @returns {string} The HTML markup for the option element.
+ */
 const createOptionMarkup = (idx, option) => {
   return `
       <option
-        value="${option}"
-        data-index-number="${idx}"
+        value="${getOptionValue(option)}"
         ${idx === 0 ? 'selected' : ''}>
-          ${option}
+          ${getOptionLabel(option)}
       </option>`;
 };
 
@@ -394,22 +414,26 @@ const createSelectHtml = (list) => {
 };
 
 /**
- * Get the custom dropdown component asynchronously because it requires a CSS file to be loaded
- * @param {Object} options the options to configure the dropdown
- * @param {string[]} options.optionList the list of options to display in the dropdown
- * @param {string} options.label the label to grab from the placeholder file using getTextLabel function
- * @param {boolean} options.mandatory if the dropdown is required or not
- * @param {string} options.id the id of the dropdown
- * @param {string} options.placeholder the placeholder text for the dropdown to be used as the default option
- * @param {string} options.name the name of the hidden select element that will be submitted in the form
- * @param {string} options.formName the name of the form that contains the dropdown
- * @returns {Promise<string>} the custom dropdown component as a string
+ * Get the custom dropdown component asynchronously because it requires a CSS file to be loaded.
+ *
+ * @param {Object} options - The options to configure the dropdown.
+ * @param {string[] || Object[]} options.optionList - The list of options to display in the dropdown. Each option can be a string or an object with `value` and `label` properties.
+ * @param {string} options.label - The label to grab from the placeholder file using getTextLabel function.
+ * @param {boolean} options.mandatory - If the dropdown is required or not.
+ * @param {string} options.id - The id of the dropdown.
+ * @param {string} options.placeholder - The placeholder text for the dropdown to be used as the default option.
+ * @param {string} options.name - The name of the hidden select element that will be submitted in the form.
+ * @param {string} options.formName - The name of the form that contains the dropdown.
+ * @param {boolean} options.adjustWidthToContent - By default the dropdown will have a width of 100% of the container. If this option is set to true, the dropdown will adjust its width to the content.
+ * @param {function} [options.onChangeCallback] - The callback function to be called when the value changes.
+ * @returns {Promise<HTMLElement>} - The custom dropdown component as an HTMLElement.
  */
 export const getCustomDropdown = async (options = {}) => {
   const baseUrl = window.location.origin !== 'null' ? window.location.origin : window.location.ancestorOrigins && window.location.ancestorOrigins[0];
   const { optionList = [], label = '', mandatory = false, id = '', placeholder = '', name = '', formName = '' } = options;
   const dropdownCSS = `${baseUrl}/common/${componentName}/${componentName}.css`;
-  const el = createElement('div', { classes: componentName });
+  const className = options.adjustWidthToContent ? [componentName, `${componentName}--adjust-width`] : componentName;
+  const el = createElement('div', { classes: className });
 
   if (formName) {
     el.classList.add(`${formName}__field-wrapper`);
@@ -422,40 +446,41 @@ export const getCustomDropdown = async (options = {}) => {
 
         ${label ? `<label id="${labelClass} class="${labelClass}">${getTextLabel(label)}${mandatory ? '*' : ''}</label>` : ''}
         <div
+          ${id ? `id="${id}"` : ''}
+          ${labelClass ? `aria-labelledby="${labelClass}"` : ''}
           aria-controls="options"
           aria-expanded="false"
           aria-haspopup="${componentName}"
-          aria-labelledby="${labelClass}"
-          id="${id ? id : `${componentName}`}"
           class="${componentName}__button"
           role="${componentName}-button"
           tabindex="0"
         ></div>
         <div
-          aria-labelledby="${labelClass}"
+          ${labelClass ? `aria-labelledby="${labelClass}"` : ''}
           id="options"
           class="${componentName}__option-list"
           role="${componentName}-option-list"
           tabindex="-1"
         ></div>
         <select
+          ${name ? `name="${name}"` : ''}
           aria-hidden="true"
-          name="${name}"
           class="native-select"
           autocomplete="off"
           ${mandatory ? 'required' : ''}>
           ${placeholder ? `<option value="" selected disabled>${placeholder}</option>` : ''}
           ${createSelectHtml(optionList)}
         </select>
-
     `;
+
     el.appendChild(document.createRange().createContextualFragment(innerContent));
 
-    if (optionList.length > 0 && placeholder) {
+    // TODO: Check this with Jonatan:
+    /* if (optionList.length > 0 && placeholder) {
       optionList.unshift(placeholder);
-    }
+    } */
 
-    new Select(el, optionList);
+    new Select(el, optionList, options.onChangeCallback);
     return el;
   } catch (error) {
     console.error(`Failed to load CSS from ${dropdownCSS}:`, error);

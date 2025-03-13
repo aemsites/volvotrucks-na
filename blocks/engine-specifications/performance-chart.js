@@ -242,6 +242,29 @@ const getPerformanceChart = (data) => {
   const device = getDevice();
 
   const valuesOnAxisX = generatePositionsX(0, valuesRPM.length, sectionWidth);
+
+  if (valuesHP.length < valuesOnAxisX.length) {
+    console.warn(
+      'The number of HP values for the chart is less than the number of RPM values. Filling the rest with 0s. For the rating:',
+      data.rating,
+    );
+    const diff = valuesOnAxisX.length - valuesHP.length;
+    for (let i = 0; i < diff; i++) {
+      valuesHP.push(0);
+    }
+  }
+
+  if (adjustedTQValues.length < valuesOnAxisX.length) {
+    console.warn(
+      'The number of Torque values for the chart is less than the number of RPM values. Filling the rest with 0s. For the rating:',
+      data.rating,
+    );
+    const diff = valuesOnAxisX.length - adjustedTQValues.length;
+    for (let i = 0; i < diff; i++) {
+      adjustedTQValues.push(0);
+    }
+  }
+
   const svg = `
     <svg 
       version="1.1" 
