@@ -63,67 +63,48 @@ const createArticleCards = (block, articles = null, amount = null) => {
 };
 
 /**
- * Waits until all `v2-article-cards` blocks are fully rendered.
- * If only one block exists, resolves immediately with an empty set (no filtering needed).
- *
- * @returns {Promise<Set<string>>} A set of displayed article titles from all existing blocks.
+ * Waits for the specified elements to appear in the DOM.
+ * @param {string[]} elementSelectors - Array of CSS selectors to wait for.
+ * @param {HTMLElement} [root=document.body] - Root element to observe for mutations.
+ * @returns {Promise<void>} Resolves when all elements are found.
  */
-const waitForAllBlocksToRender = () => {
+const waitForElements = (elementSelectors, root = document.body) => {
   return new Promise((resolve) => {
-    const allBlocks = document.querySelectorAll(`.${blockName}`);
+    const areElementsAvailable = () => elementSelectors.every((selector) => document.querySelector(selector));
 
-    if (allBlocks.length <= 1) {
-      return resolve(new Set());
+    if (areElementsAvailable()) {
+      resolve();
+      return;
     }
 
-    const existingTitles = getDisplayedTitles();
-    if (existingTitles.size > 0) {
-      return resolve(existingTitles);
-    }
-
-    const observer = new MutationObserver(() => {
-      const titles = getDisplayedTitles();
-      if (titles.size > 0) {
+    const mutationObserver = new MutationObserver((_, observer) => {
+      if (areElementsAvailable()) {
         observer.disconnect();
-        resolve(titles);
+        resolve();
       }
     });
 
-    observer.observe(document.body, { childList: true, subtree: true });
+    mutationObserver.observe(root, { childList: true, subtree: true });
   });
 };
 
 /**
- * Gets the titles of already displayed articles across all `v2-article-cards` blocks.
- *
- * @returns {Set<string>} A set of article titles that are already displayed.
+ * Filters out articles that are already present on the page.
+ * @param {Array<{ metadata: { title: string } }>} articles - List of articles with metadata.
+ * @returns {Promise<Array<{ metadata: { title: string } }>>} Filtered articles.
  */
-const getDisplayedTitles = () => {
-  return new Set(
-    Array.from(document.querySelectorAll(`h4.${blockName}__card-heading`))
-      .map((article) => article.textContent?.trim().toLowerCase())
-      .filter(Boolean),
-  );
-};
+const filterOutExistingArticles = async (articles) => {
+  const selectorsToWatch = [`.${blockName}`, `h4.${blockName}__card-heading`];
+  await waitForElements(selectorsToWatch);
+  const articleHeadings = [...document.querySelectorAll(`h4.${blockName}__card-heading`)];
+  const existingTitlesSet = new Set(articleHeadings.map((heading) => heading.textContent.trim()));
 
-/**
- * Filters out articles that are already displayed in another `v2-article-cards` block.
- * Ensures filtering happens only if multiple blocks exist.
- *
- * @param {Array<Object>} articles - List of fetched articles.
- * @returns {Promise<Array<Object>>} A promise resolving to a filtered list of unique articles.
- */
-const removeArtsInPage = async (articles) => {
-  const displayedTitles = await waitForAllBlocksToRender();
-
-  if (displayedTitles.size === 0) {
-    return articles;
-  }
-
-  return articles.filter((article) => {
-    const title = article?.metadata?.title?.split('|')[0].trim().toLowerCase();
-    return title && !displayedTitles.has(title);
+  const filteredArticles = articles.filter(({ metadata: { title } }) => {
+    const normalizedTitle = title.split('|')[0].trim();
+    return !existingTitlesSet.has(normalizedTitle);
   });
+
+  return filteredArticles;
 };
 
 export default async function decorate(block) {
@@ -166,7 +147,7 @@ export default async function decorate(block) {
     block.querySelector('.pagination-content')?.remove();
     createArticleCards(block, selectedArticles, amountOfLinks);
   } else {
-    const uniqueArticles = await removeArtsInPage(articles);
+    const uniqueArticles = await filterOutExistingArticles(articles);
     const sortedArticles = sortArticlesByDateField(uniqueArticles, 'publishDate');
     // After sorting articles by date, set the chunks of the array for future pagination
     const chunkedArticles = sortedArticles?.reduce((resultArray, item, index) => {
