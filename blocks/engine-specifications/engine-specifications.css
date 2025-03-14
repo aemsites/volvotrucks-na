@@ -49,7 +49,6 @@ main .section .engine-specifications-wrapper {
   font-size: var(--body-font-size-s);
 }
 
-
 .engine-specifications .rating-item h5,
 .engine-specifications .item-content {
   font-family: var(--ff-volvo-novum);
@@ -216,7 +215,7 @@ main .section .engine-specifications-wrapper {
 }
 
 /* Media queries */
-@media (min-width: 768px) {
+@media (min-width: 744px) {
   .engine-specifications-wrapper {
     margin-right: 0 !important;
   }

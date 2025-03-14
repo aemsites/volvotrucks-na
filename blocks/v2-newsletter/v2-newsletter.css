@@ -40,7 +40,7 @@
   width: 100%;
 }
 
-.v2-newsletter__form-container input[type="email"],
+.v2-newsletter__form-container input[type='email'],
 .v2-newsletter__form-container .v2-forms__floating-label-group {
   margin: 0;
 }
@@ -83,7 +83,7 @@
   }
 
   /* Form */
-  .v2-newsletter__form-container input[type="email"] {
+  .v2-newsletter__form-container input[type='email'] {
     min-width: 300px;
   }
 }
