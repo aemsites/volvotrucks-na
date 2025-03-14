@@ -56,6 +56,7 @@ const createArticleCards = (block, articles = null, amount = null) => {
   });
   block.append(articleList);
   if (amount) {
+    articleList.classList.add(`${blockName}--featured-articles`);
     articleList.classList.add(`${blockName}--${amount}-articles`);
   } else {
     articleList.classList.add(`${blockName}--dynamic-articles`);
@@ -63,48 +64,51 @@ const createArticleCards = (block, articles = null, amount = null) => {
 };
 
 /**
- * Waits for the specified elements to appear in the DOM.
- * @param {string[]} elementSelectors - Array of CSS selectors to wait for.
- * @param {HTMLElement} [root=document.body] - Root element to observe for mutations.
- * @returns {Promise<void>} Resolves when all elements are found.
+ * Finds and associates articles with corresponding buttons within a given block.
+ *
+ * @param {Array} articles - The list of articles to match.
+ * @param {HTMLElement} block - The container element containing buttons.
+ * @returns {Array} - The list of selected articles with associated buttons.
  */
-const waitForElements = (elementSelectors, root = document.body) => {
-  return new Promise((resolve) => {
-    const areElementsAvailable = () => elementSelectors.every((selector) => document.querySelector(selector));
+const getSelectedArticles = (articles, block) => {
+  const selectedArticles = [];
+  const buttons = block.querySelectorAll('.button-container');
 
-    if (areElementsAvailable()) {
-      resolve();
-      return;
-    }
+  buttons.forEach((button) => {
+    const buttonLink = button.querySelector('a')?.href;
+    const buttonPath = buttonLink ? new URL(buttonLink).pathname : null;
 
-    const mutationObserver = new MutationObserver((_, observer) => {
-      if (areElementsAvailable()) {
-        observer.disconnect();
-        resolve();
+    articles.forEach((article) => {
+      const articlePath = article?.metadata?.url ? new URL(article.metadata.url).pathname : null;
+      if (buttonPath === articlePath) {
+        article.button = button;
+        selectedArticles.push(article);
       }
     });
-
-    mutationObserver.observe(root, { childList: true, subtree: true });
   });
+
+  return selectedArticles;
 };
 
 /**
- * Filters out articles that are already present on the page.
- * @param {Array<{ metadata: { title: string } }>} articles - List of articles with metadata.
- * @returns {Promise<Array<{ metadata: { title: string } }>>} Filtered articles.
+ * Filters out articles that are already displayed on the page.
+ *
+ * @param {Array} articles - The list of articles to filter.
+ * @returns {Array} - The list of articles that are not yet displayed.
  */
-const filterOutExistingArticles = async (articles) => {
-  const selectorsToWatch = [`.${blockName}`, `h4.${blockName}__card-heading`];
-  await waitForElements(selectorsToWatch);
-  const articleHeadings = [...document.querySelectorAll(`h4.${blockName}__card-heading`)];
-  const existingTitlesSet = new Set(articleHeadings.map((heading) => heading.textContent.trim()));
+const filterDisplayedArticles = (articles) => {
+  const existingArticleHeadings = new Set(
+    [...document.querySelectorAll(`h4.${blockName}__card-heading`)].map((heading) => heading.textContent.trim().toLowerCase()),
+  );
 
-  const filteredArticles = articles.filter(({ metadata: { title } }) => {
-    const normalizedTitle = title.split('|')[0].trim();
-    return !existingTitlesSet.has(normalizedTitle);
+  return articles.filter(({ metadata }) => {
+    if (!metadata?.title) {
+      return false;
+    }
+
+    const normalizedTitle = metadata.title.split('|')[0].trim().toLowerCase();
+    return !existingArticleHeadings.has(normalizedTitle);
   });
-
-  return filteredArticles;
 };
 
 export default async function decorate(block) {
@@ -127,50 +131,37 @@ export default async function decorate(block) {
     }
   });
 
-  const selectedArticles = [];
+  const selectedArticles = amountOfLinks !== 0 ? getSelectedArticles(articles, block) : [];
 
-  if (amountOfLinks !== 0) {
-    const buttons = block.querySelectorAll('.button-container');
-    buttons.forEach((button) => {
-      const buttonHref = button.querySelector('a')?.href;
-      const buttonPath = buttonHref ? new URL(buttonHref).pathname : null;
-      articles.forEach((article) => {
-        const articlePath = article?.metadata?.url ? new URL(article.metadata.url).pathname : null;
-        if (buttonPath === articlePath) {
-          article.button = button;
-          selectedArticles.push(article);
-        }
-      });
-    });
-  }
   if (selectedArticles.length > 0) {
     block.querySelector('.pagination-content')?.remove();
     createArticleCards(block, selectedArticles, amountOfLinks);
-  } else {
-    const uniqueArticles = await filterOutExistingArticles(articles);
-    const sortedArticles = sortArticlesByDateField(uniqueArticles, 'publishDate');
-    // After sorting articles by date, set the chunks of the array for future pagination
-    const chunkedArticles = sortedArticles?.reduce((resultArray, item, index) => {
-      limitAmount = limitAmount || 9;
-      const chunkIndex = Math.floor(index / limitAmount);
-      if (!resultArray[chunkIndex]) {
-        resultArray[chunkIndex] = [];
-      }
-      resultArray[chunkIndex].push(item);
-      return resultArray;
-    }, []);
-    if (chunkedArticles && chunkedArticles.length > 0) {
-      let contentArea = block.querySelector('.pagination-content');
-      if (!contentArea) {
-        contentArea = createElement('div', { classes: ['pagination-content'] });
-        block.appendChild(contentArea);
-      }
-      const baseURL = window.location.origin;
-      await loadCSS(`${baseURL}/common/pagination/pagination.css`);
-      createPagination(chunkedArticles, block, createArticleCards, contentArea, 0);
-    } else {
-      console.error('No chunked articles created.');
+  }
+
+  const uniqueArticles = filterDisplayedArticles(articles);
+  const sortedArticles = sortArticlesByDateField(uniqueArticles, 'publishDate');
+  // After sorting articles by date, set the chunks of the array for future pagination
+  const chunkedArticles = sortedArticles?.reduce((resultArray, item, index) => {
+    limitAmount = limitAmount || 9;
+    const chunkIndex = Math.floor(index / limitAmount);
+    if (!resultArray[chunkIndex]) {
+      resultArray[chunkIndex] = [];
     }
+    resultArray[chunkIndex].push(item);
+    return resultArray;
+  }, []);
+
+  if (chunkedArticles && chunkedArticles.length > 0) {
+    let contentArea = block.querySelector('.pagination-content');
+    if (!contentArea) {
+      contentArea = createElement('div', { classes: ['pagination-content'] });
+      block.appendChild(contentArea);
+    }
+    const baseURL = window.location.origin;
+    await loadCSS(`${baseURL}/common/pagination/pagination.css`);
+    createPagination(chunkedArticles, block, createArticleCards, contentArea, 0);
+  } else {
+    console.error('No chunked articles created.');
   }
   unwrapDivs(block);
 }
