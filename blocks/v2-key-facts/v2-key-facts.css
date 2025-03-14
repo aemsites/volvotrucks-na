@@ -62,10 +62,6 @@
   line-height: var(--f-subtitle-2-line-height);
 }
 
-.v2-key-facts__key-title-long {
-  display: none;
-}
-
 @media (min-width: 744px) {
   .v2-key-facts__row .embed-video,
   .v2-key-facts__row--with-media .v2-key-facts__video,
@@ -117,9 +113,5 @@
   .v2-key-facts .v2-key-facts__row--with-text .v2-key-facts__key-title {
     font-size: var(--f-heading-4-font-size);
     font-weight: 300;
-  }
-
-  .v2-key-facts__key-title-long {
-    display: initial;
   }
 }
