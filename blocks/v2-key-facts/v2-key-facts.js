@@ -1,4 +1,3 @@
-import { createElement } from '../../scripts/common.js';
 import { isVideoLink, createVideo } from '../../scripts/video-helper.js';
 
 const blockName = 'v2-key-facts';
