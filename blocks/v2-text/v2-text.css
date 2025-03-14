@@ -4,7 +4,7 @@
 
 .v2-text__title,
 .v2-text__sub-title {
-  font: var(--f-heading-5-font-size)/var(--f-heading-5-line-height) var(--ff-volvo-novum-medium);
+  font: var(--f-heading-5-font-size) / var(--f-heading-5-line-height) var(--ff-volvo-novum-medium);
   letter-spacing: 0.25px;
   margin: 0;
 }

@@ -72,7 +72,7 @@
 .block.magazine-articles .truck-field::after {
   font-family: var(--ff-fontawesome);
   color: var(--volvo-text-gray);
-  content: "\f107";
+  content: '\f107';
   position: absolute;
   display: inline-block;
   right: 15px;
@@ -199,7 +199,7 @@
 }
 
 .block.magazine-articles article .content ul li + li::before {
-  content: " | ";
+  content: ' | ';
   padding: 0 5px;
 }
 
@@ -224,7 +224,7 @@
   user-select: none;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 744px) {
   .block.magazine-articles .search-field button {
     top: 1.8rem;
   }

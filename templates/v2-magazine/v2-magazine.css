@@ -19,10 +19,10 @@
   gap: var(--hero-heading-items-gap);
   grid-template-columns: 1fr;
   grid-template-areas:
-    "image   "
-    "metadata"
-    "title   "
-    "tags    ";
+    'image   '
+    'metadata'
+    'title   '
+    'tags    ';
 }
 
 .v2-magazine-article-hero__img-container {
@@ -121,9 +121,9 @@
 
   .v2-magazine-article-hero__container {
     grid-template:
-      "metadata image" 1fr
-      "title    image" max-content
-      "tags     image" 1fr / 1fr 2fr;
+      'metadata image' 1fr
+      'title    image' max-content
+      'tags     image' 1fr / 1fr 2fr;
     max-width: var(--wrapper-width);
     margin: 0 auto;
   }

@@ -221,8 +221,7 @@
     flex-wrap: wrap;
   }
 
-  .key-facts.with-icons.key-facts--with-media
-    .key-facts__row.key-facts__row--with-media {
+  .key-facts.with-icons.key-facts--with-media .key-facts__row.key-facts__row--with-media {
     width: 100%;
     flex-direction: row;
     justify-content: space-evenly;

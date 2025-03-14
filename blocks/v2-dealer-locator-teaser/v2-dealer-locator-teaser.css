@@ -103,7 +103,6 @@
     font-size: var(--f-heading-4-font-size);
     line-height: var(--f-heading-4-line-height);
     letter-spacing: var(--f-heading-4-letter-spacing);
-  
   }
 
   .v2-dealer-locator-teaser .v2-dlt__content p {
@@ -115,7 +114,7 @@
   .v2-dealer-locator-teaser--right-align {
     justify-content: flex-end;
   }
-  
+
   .v2-dealer-locator-teaser--right-align .v2-dlt__content-wrapper {
     width: auto;
     padding-right: 12vw;

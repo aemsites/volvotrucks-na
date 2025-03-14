@@ -180,7 +180,7 @@
   animation: scroll-move 3s infinite;
   background-color: var(--c-white);
   border-radius: 50%;
-  content: "";
+  content: '';
   height: var(--scroll-dot-width);
   left: calc(50% - (var(--scroll-dot-width) / 2));
   position: absolute;
@@ -208,7 +208,7 @@
 }
 
 .v2-hero__countdown-segment + .v2-hero__countdown-segment::before {
-  content: ":";
+  content: ':';
   position: absolute;
   font: 400 var(--f-heading-3-5-font-size) / var(--f-heading-3-5-line-height) var(--ff-volvo-novum-medium);
   top: 0;
@@ -219,7 +219,7 @@
 .v2-hero__countdown-number {
   font: 400 var(--f-heading-3-5-font-size) / var(--f-heading-3-5-line-height) var(--ff-volvo-novum-medium);
   letter-spacing: 0.25px;
-  font-feature-settings: "tnum";
+  font-feature-settings: 'tnum';
 }
 
 .v2-hero__countdown-label {

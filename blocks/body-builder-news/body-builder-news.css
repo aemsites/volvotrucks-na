@@ -1,98 +1,97 @@
 .bb-news-list .news-list {
-    padding: 30px 0;
-    border-top: 1px solid #ebebea;
-    display: flex;
-    flex-flow: column wrap;
-    text-align: left;
+  padding: 30px 0;
+  border-top: 1px solid #ebebea;
+  display: flex;
+  flex-flow: column wrap;
+  text-align: left;
 }
 
 .bb-news-list-small .news-list {
-    text-align: left;
+  text-align: left;
 }
 
 .bb-news-list .image-container {
-    margin-bottom: 16px;
-    width: 45%;
-    float: left;
-    padding-right: 15px;
+  margin-bottom: 16px;
+  width: 45%;
+  float: left;
+  padding-right: 15px;
 }
 
 .bb-news-list .news-item-metadata {
-    width: 45%;
-    float: left;
-    font-size: 12px;
+  width: 45%;
+  float: left;
+  font-size: 12px;
 }
 
 .bb-news-list .news-item-date {
-    color: var(--c-grey-2);
+  color: var(--c-grey-2);
 }
 
 .bb-news-list .news-item-content {
-    width: 100%;
-    clear: both;
+  width: 100%;
+  clear: both;
 }
 
 .bb-news-list .news-item-title {
-    padding-top: 24px;
-    padding-bottom: 16px;
-    font-size: 24px;
+  padding-top: 24px;
+  padding-bottom: 16px;
+  font-size: 24px;
 }
 
-@media (min-width: 768px) {
-    .bb-news-list .image-container {
-        width: 25%;
-        float: left;
-        position: relative;
-    }
+@media (min-width: 744px) {
+  .bb-news-list .image-container {
+    width: 25%;
+    float: left;
+    position: relative;
+  }
 
-    .bb-news-list .news-item-metadata {
-        width: 75%;
-        font-size: 14px;
-        position: relative;
-        float: right;
-    }
+  .bb-news-list .news-item-metadata {
+    width: 75%;
+    font-size: 14px;
+    position: relative;
+    float: right;
+  }
 
-    .bb-news-list .news-item-content {
-        width: 75%;
-        clear: right;
-        margin-top: -40px;
-    }
+  .bb-news-list .news-item-content {
+    width: 75%;
+    clear: right;
+    margin-top: -40px;
+  }
 
-    .bb-news-list-small {
-        display: flex;
-        flex-wrap: wrap;
-    }
+  .bb-news-list-small {
+    display: flex;
+    flex-wrap: wrap;
+  }
 
-    .bb-news-list-small > news-list {
-        padding-left: 15px;
-        padding-right: 15px;
-    }
+  .bb-news-list-small > news-list {
+    padding-left: 15px;
+    padding-right: 15px;
+  }
 
-    .bb-news-list-small > * {
-        width: calc(100% / 3);
-        padding-left: 15px;
-        padding-right: 15px;
-    }
+  .bb-news-list-small > * {
+    width: calc(100% / 3);
+    padding-left: 15px;
+    padding-right: 15px;
+  }
 
-    .bb-news-list-small .news-item-metadata {
-        color: var(--c-grey-2);
-        text-transform: uppercase;
-        font-size: 16px;
-        margin-top: 16px;
-    }
+  .bb-news-list-small .news-item-metadata {
+    color: var(--c-grey-2);
+    text-transform: uppercase;
+    font-size: 16px;
+    margin-top: 16px;
+  }
 
+  .bb-news-list-small a:any-link::after {
+    content: none;
+  }
 
-    .bb-news-list-small a:any-link::after {
-        content: none;
-    }
+  .bb-news-list-small a {
+    font-weight: 700;
+  }
 
-    .bb-news-list-small a {
-        font-weight: 700;
-    }
-
-    .bb-news-list-small a.rm::after {
-        content: "\f105";
-        font-family: fontawesome, sans-serif;
-        padding-left: 8px;
-    }
+  .bb-news-list-small a.rm::after {
+    content: '\f105';
+    font-family: fontawesome, sans-serif;
+    padding-left: 8px;
+  }
 }

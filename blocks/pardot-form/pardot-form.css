@@ -1,24 +1,24 @@
 .pardot-form__floating-label-group {
-    margin-bottom: 35px;
-    margin-top: 35px;
-    position: relative;
-  }
-  
+  margin-bottom: 35px;
+  margin-top: 35px;
+  position: relative;
+}
+
 .pardot-form__floating-label {
-    left: var(--input-padding);
-    pointer-events: none;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    transition:
-      top var(--duration-small) var(--easing-standard),
-      left var(--duration-small) var(--easing-standard);
-  }
-  
+  left: var(--input-padding);
+  pointer-events: none;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  transition:
+    top var(--duration-small) var(--easing-standard),
+    left var(--duration-small) var(--easing-standard);
+}
+
 .pardot-form__floating-label-group input:focus ~ .pardot-form__floating-label,
 .pardot-form__floating-label-group input:not(:placeholder-shown) ~ .pardot-form__floating-label,
 .pardot-form__floating-label-group input:not(:focus):valid ~ .pardot-form__floating-label {
-    bottom: 0;
-    left: 0;
-    top: 3px;
-  }
+  bottom: 0;
+  left: 0;
+  top: 3px;
+}

@@ -1,78 +1,78 @@
 .document-list.block > ul {
-    display: flex;
-    flex-direction: column;
-    list-style: none;
-    padding: 0;
-    gap: 5px;
+  display: flex;
+  flex-direction: column;
+  list-style: none;
+  padding: 0;
+  gap: 5px;
 }
 
 .document-list.block > ul > li {
-    background-color: #dbdad8;
-    position: relative;
+  background-color: #dbdad8;
+  position: relative;
 }
 
 .document-list.block a {
-    padding: 10px 50px 10px 20px;
-    color: var(--c-grey-4);
-    text-overflow: ellipsis;
-    cursor: pointer;
-    display: block;
+  padding: 10px 50px 10px 20px;
+  color: var(--c-grey-4);
+  text-overflow: ellipsis;
+  cursor: pointer;
+  display: block;
 }
 
 .document-list.block a p {
-    margin: 10px 0;
-    font-size: 12px;
+  margin: 10px 0;
+  font-size: 12px;
 }
 
 .document-list.block a :first-child {
-    font-size: 20px;
-    line-height: 24px;
-    letter-spacing: -0.1px;
-    margin: 0;
+  font-size: 20px;
+  line-height: 24px;
+  letter-spacing: -0.1px;
+  margin: 0;
 }
 
 .document-list.block a :last-child {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .document-list.block.new > ul > li:first-of-type::after {
-    content: 'New';
-    color: white;
-    background-color: #00add5;
-    position: absolute;
-    right: 0;
-    top: 0;
-    bottom: 0;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    text-transform: uppercase;
-    font-family: var(--ff-volvo-broadprodigital);
-    font-size: 14px;
-    width: 50px;
+  content: 'New';
+  color: white;
+  background-color: #00add5;
+  position: absolute;
+  right: 0;
+  top: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-transform: uppercase;
+  font-family: var(--ff-volvo-broadprodigital);
+  font-size: 14px;
+  width: 50px;
 }
 
-@media (min-width: 768px) {
-    .document-list.block > ul {
-        gap: 10px;
-    }
+@media (min-width: 744px) {
+  .document-list.block > ul {
+    gap: 10px;
+  }
 
-    .document-list.block a {
-        padding: 20px 110px 20px 48px;
-    }
+  .document-list.block a {
+    padding: 20px 110px 20px 48px;
+  }
 
-    .document-list.block a p {
-        font-size: 20px;
-        line-height: 25px;
-    }
+  .document-list.block a p {
+    font-size: 20px;
+    line-height: 25px;
+  }
 
-    .document-list.block a :first-child {
-        font-size: 24px;
-        line-height: 32px;
-    }
+  .document-list.block a :first-child {
+    font-size: 24px;
+    line-height: 32px;
+  }
 
-    .document-list.block.new > ul > li:first-of-type::after {
-        font-size: 40px;
-        width: 110px;
-    }
+  .document-list.block.new > ul > li:first-of-type::after {
+    font-size: 40px;
+    width: 110px;
+  }
 }

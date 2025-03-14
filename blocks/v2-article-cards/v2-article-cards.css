@@ -6,7 +6,7 @@
 }
 
 .v2-article-cards-wrapper {
-  --section-div-padding: 16px
+  --section-div-padding: 16px;
 }
 
 .v2-article-cards__article-list {
@@ -44,8 +44,7 @@
   object-fit: cover;
   height: 100%;
   width: 100%;
-  border-radius: var(--v2-article-cards-border-radius)
-    var(--v2-article-cards-border-radius) 0 0;
+  border-radius: var(--v2-article-cards-border-radius) var(--v2-article-cards-border-radius) 0 0;
 }
 
 .v2-article-cards__texts-wrapper {
@@ -90,7 +89,7 @@
 
 @media (min-width: 744px) {
   .v2-article-cards-wrapper {
-    --section-div-padding: 24px 32px
+    --section-div-padding: 24px 32px;
   }
 
   .v2-article-cards__article-list {
@@ -118,9 +117,7 @@
   }
 
   .v2-article-cards__article-card {
-    max-width: calc(
-      (var(--wrapper-width) - (var(--v2-article-cards-gutter) * 2)) / 3
-    );
+    max-width: calc((var(--wrapper-width) - (var(--v2-article-cards-gutter) * 2)) / 3);
     width: 100%;
   }
 
@@ -162,8 +159,7 @@
 
   .v2-article-cards--1-articles .v2-article-cards__image-wrapper img,
   .v2-article-cards--3-articles .v2-article-cards__article-card:first-of-type .v2-article-cards__image-wrapper img {
-    border-radius: 0 var(--v2-article-cards-border-radius)
-      var(--v2-article-cards-border-radius) 0;
+    border-radius: 0 var(--v2-article-cards-border-radius) var(--v2-article-cards-border-radius) 0;
   }
 
   .v2-article-cards--1-articles .v2-article-cards__texts-wrapper,
@@ -175,19 +171,17 @@
   /* stylelint-disable-next-line no-descending-specificity */
   .v2-article-cards--2-articles .v2-article-cards__article-card,
   .v2-article-cards--3-articles .v2-article-cards__article-card:not(.v2-article-cards__article-card:first-of-type) {
-    max-width: calc(
-      (var(--wrapper-width) - var(--v2-article-cards-gutter)) / 2
-    );
+    max-width: calc((var(--wrapper-width) - var(--v2-article-cards-gutter)) / 2);
     width: 100%;
   }
 }
 
 @media (min-width: 1200px) {
   .v2-article-cards-wrapper {
-    --section-div-padding: 40px 0
+    --section-div-padding: 40px 0;
   }
 
-  .v2-article-cards__article-list.v2-article-cards--dynamic-articles{
+  .v2-article-cards__article-list.v2-article-cards--dynamic-articles {
     --v2-article-cards-gutter: 70px;
   }
 

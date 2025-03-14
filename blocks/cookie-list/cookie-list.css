@@ -1,10 +1,9 @@
-.cookie-list#ot-sdk-cookie-policy  {
-    font-size: var(--body-font-size-s);
-    font-weight: normal;
-    -webkit-font-smoothing: unset;
+.cookie-list#ot-sdk-cookie-policy {
+  font-size: var(--body-font-size-s);
+  font-weight: normal;
+  -webkit-font-smoothing: unset;
 }
 
-
 .cookie-list#ot-sdk-cookie-policy :is(h3, h4) {
-    font-size: inherit;
+  font-size: inherit;
 }

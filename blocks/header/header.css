@@ -67,7 +67,9 @@
   gap: 4px;
   color: var(--c-grey-4);
   font: 14px / var(--f-body-line-height) var(--ff-volvo-novum);
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
   letter-spacing: var(--f-body-letter-spacing);
   border-bottom: solid 2px transparent;
   padding: 12px 0;
@@ -368,7 +370,9 @@
     width: var(--wrapper-width);
     left: 50%;
     transform: translateX(-50%);
-    box-shadow: 0 -8px 0 0 #fff, 0 10px 15px rgb(0 0 0 / 20%);
+    box-shadow:
+      0 -8px 0 0 #fff,
+      0 10px 15px rgb(0 0 0 / 20%);
     top: var(--nav-height);
     transition: unset;
     overflow-y: auto;
@@ -409,12 +413,12 @@
     border-bottom: solid 2px transparent;
   }
 
-  .header__main-nav-link.header__link[aria-expanded="true"],
+  .header__main-nav-link.header__link[aria-expanded='true'],
   .header__main-nav-link.header__link:active {
     color: var(--c-main-black);
   }
 
-  .header__main-nav-link.header__link[aria-expanded="true"],
+  .header__main-nav-link.header__link[aria-expanded='true'],
   .header__main-nav-link.header__link:hover,
   .header__main-nav-link.header__link:active,
   .header__main-nav-link.header__link:focus {

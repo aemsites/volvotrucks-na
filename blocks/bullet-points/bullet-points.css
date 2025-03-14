@@ -52,7 +52,7 @@
   width: 42px;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 744px) {
   .bullet-points :is(h1, h2, h3, h4, h5, h6) {
     font-size: var(--heading-ml-font-size);
     line-height: var(--heading-ml-line-height);

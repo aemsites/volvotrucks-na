@@ -49,7 +49,6 @@
   margin-right: auto;
 }
 
-
 .v2-feature-carousel__cards-list::before,
 .v2-feature-carousel__cards-list::after {
   content: '';
@@ -60,7 +59,7 @@
 
 .v2-feature-carousel__card .icon {
   width: var(--v2-feature-carousel-icon-size);
-  height: var( --v2-feature-carousel-icon-size);
+  height: var(--v2-feature-carousel-icon-size);
   margin-bottom: auto;
   border: 1px solid;
   color: var(--c-grey-3);

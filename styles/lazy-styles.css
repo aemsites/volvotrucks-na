@@ -2,8 +2,9 @@
 
 @font-face {
   font-family: VolvoNovum;
-  src: url('/fonts/VolvoNovum-Regular.woff2') format('woff2'),
-       url('/fonts/volvonovum-regular.woff') format('woff');
+  src:
+    url('/fonts/VolvoNovum-Regular.woff2') format('woff2'),
+    url('/fonts/volvonovum-regular.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
@@ -11,8 +12,9 @@
 
 @font-face {
   font-family: VolvoNovum-Medium;
-  src: url('/fonts/VolvoNovum-Medium.woff2') format('woff2'),
-       url('/fonts/VolvoNovum-Medium.woff') format('woff');
+  src:
+    url('/fonts/VolvoNovum-Medium.woff2') format('woff2'),
+    url('/fonts/VolvoNovum-Medium.woff') format('woff');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
@@ -20,8 +22,9 @@
 
 @font-face {
   font-family: VolvoBroadProDigital;
-  src: url('/fonts/VolvoBroadProDigital.woff2') format('woff2'),
-       url('/fonts/volvobroadprodigital.woff') format('woff');
+  src:
+    url('/fonts/VolvoBroadProDigital.woff2') format('woff2'),
+    url('/fonts/volvobroadprodigital.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
@@ -35,7 +38,8 @@
   src: url('/fonts/fontawesome-webfont.woff') format('woff');
 }
 
-body.disable-scroll, body.disable-scroll main {
+body.disable-scroll,
+body.disable-scroll main {
   overflow: hidden;
 }
 
@@ -48,11 +52,13 @@ body.disable-scroll, body.disable-scroll main {
   height: 100vh;
   position: fixed;
   opacity: 0;
-  background-color: #7F7F7F;
-  transition: visibility .2s, opacity .2s cubic-bezier(.4, 0, .2, 1);
+  background-color: #7f7f7f;
+  transition:
+    visibility 0.2s,
+    opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
-.semitrans-trigger[aria-expanded='true']~.semitrans {
+.semitrans-trigger[aria-expanded='true'] ~ .semitrans {
   visibility: visible;
   opacity: 0.7;
 }
@@ -67,143 +73,149 @@ body.disable-scroll, body.disable-scroll main {
   text-rendering: auto;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  transform: translate(0,0)
+  transform: translate(0, 0);
 }
 
 .fa-angle-right::before {
-  content: "\f105";
+  content: '\f105';
 }
 
 .fa-angle-left::before {
-  content: "\f104";
+  content: '\f104';
 }
 
 .fa-angle-up::before {
-  content: "\f106"
+  content: '\f106';
 }
 
 .fa-search::before {
-  content: "\f002"
+  content: '\f002';
 }
 
 .fa-plug::before {
-  content: "\f1e6"
+  content: '\f1e6';
 }
 
-.fa-facebook-f::before,.fa-facebook::before {
-  content: "\f09a"
+.fa-facebook-f::before,
+.fa-facebook::before {
+  content: '\f09a';
 }
 
 .fa-bold::before {
-  content: "\f032"
+  content: '\f032';
 }
 
 .fa-engine-power::before {
-  content: "\e60c"
+  content: '\e60c';
 }
 
 .fa-play::before {
-  content: "\f04b"
+  content: '\f04b';
 }
 
 .fa-play-circle-o::before {
-  content: "\f01d"
+  content: '\f01d';
 }
 
 .fa-youtube::before {
-  content: "\f167"
+  content: '\f167';
 }
 
 .fa-linkedin::before {
-  content: "\f0e1"
+  content: '\f0e1';
 }
 
 .fa-instagram::before {
-  content: "\f16d"
+  content: '\f16d';
 }
 
 .fa-twitter::before {
-  content: "\f099"
+  content: '\f099';
 }
 
-.fa-bolt::before,.fa-flash::before {
-  content: "\f0e7"
+.fa-bolt::before,
+.fa-flash::before {
+  content: '\f0e7';
 }
 
 .fa-plus::before {
-  content: "\f067"
+  content: '\f067';
 }
 
 .fa-info-circle::before {
-  content: "\f05a"
+  content: '\f05a';
 }
 
-.fa-close::before,.fa-remove::before,.fa-times::before {
-  content: "\f00d"
+.fa-close::before,
+.fa-remove::before,
+.fa-times::before {
+  content: '\f00d';
 }
 
 .fa-star::before {
-  content: "\f005"
+  content: '\f005';
 }
 
 .fa-star-o::before {
-  content: "\f006"
+  content: '\f006';
 }
 
-.fa-cut::before,.fa-scissors::before {
-  content: "\f0c4"
+.fa-cut::before,
+.fa-scissors::before {
+  content: '\f0c4';
 }
 
-.fa-copy::before,.fa-files-o::before {
-  content: "\f0c5"
+.fa-copy::before,
+.fa-files-o::before {
+  content: '\f0c5';
 }
 
 .fa-external-link::before {
-  content: "\f08e"
+  content: '\f08e';
 }
 
 .fa-refresh::before {
-  content: "\f021"
+  content: '\f021';
 }
 
 .fa-user::before {
-  content: "\f007"
+  content: '\f007';
 }
 
 .fa-clock-o::before {
-  content: "\f017";
+  content: '\f017';
 }
 
 .fa-calendar::before {
-  content: "\f073"
+  content: '\f073';
 }
 
 .fa-envelope::before {
-  content: "\f0e0"
+  content: '\f0e0';
 }
 
 .fa-caret-left::before {
-  content: "\f0d9"
+  content: '\f0d9';
 }
 
 .fa-caret-right::before {
-  content: "\f0da"
+  content: '\f0da';
 }
 
 .fa-truck::before {
-  content: "\f0d1"
+  content: '\f0d1';
 }
 
 .fa-dashboard::before {
-  content: "\f0e4"
+  content: '\f0e4';
 }
 
 .fa-cog::before {
-  content: "\f013"
+  content: '\f013';
 }
 
 .fa-check::before {
-  content: "\f00c"
+  content: '\f00c';
 }
 
 /* The injected widget should be customized in the SDK UI by an administrator.
@@ -223,7 +235,7 @@ body.disable-scroll, body.disable-scroll main {
   font-size: var(--heading-font-size-s);
 }
 
-.body-dealer-locator footer.footer-wrapper{
+.body-dealer-locator footer.footer-wrapper {
   display: none;
 }
 
@@ -231,7 +243,7 @@ body.disable-scroll, body.disable-scroll main {
   padding: 0;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 744px) {
   .body-dealer-locator main .section {
     padding: 0;
     margin: 0;

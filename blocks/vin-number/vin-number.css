@@ -51,7 +51,7 @@
 }
 
 /* recalls list styling */
-.vin-number__results-container{
+.vin-number__results-container {
   margin: 40px 0;
 }
 
@@ -95,7 +95,7 @@
   gap: 0;
 }
 
-.vin-number__detail-item:not(:first-child){
+.vin-number__detail-item:not(:first-child) {
   margin-top: 10px;
 }
 

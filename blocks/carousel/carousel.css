@@ -1,204 +1,203 @@
 .section .carousel-wrapper {
-    padding: 0;
+  padding: 0;
 }
 
 .block.carousel > div > div {
-    position: relative;
-    display: flex;
-    flex-direction: column-reverse;
+  position: relative;
+  display: flex;
+  flex-direction: column-reverse;
 }
 
 .block.carousel ul {
-    display: flex;
-    list-style: none;
-    padding: 0;
-    margin: 0;
+  display: flex;
+  list-style: none;
+  padding: 0;
+  margin: 0;
 }
 
 .block.carousel .items {
-    padding: 0 50%;
-    gap: 20px;
-    overflow: scroll hidden;
-    scroll-behavior: smooth;
-    scroll-snap-type: x mandatory;
-    scrollbar-width: none;    
+  padding: 0 50%;
+  gap: 20px;
+  overflow: scroll hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: none;
 }
 
 .block.carousel .items::-webkit-scrollbar {
-    display: none;
+  display: none;
 }
 
 .block.carousel .items p {
-    margin: 0;
+  margin: 0;
 }
 
 .block.carousel .items li {
-    display: block;
-    scroll-snap-align: center;
-    text-align: center;
-    flex: 0 0 288px;
+  display: block;
+  scroll-snap-align: center;
+  text-align: center;
+  flex: 0 0 288px;
 }
 
 .block.carousel .items img {
-    display: block;
-    margin: 0 auto;
-    width: auto;
-    object-fit: cover;
-    height: 170px;
+  display: block;
+  margin: 0 auto;
+  width: auto;
+  object-fit: cover;
+  height: 170px;
 }
 
 .block.carousel .mobile-controls {
-    justify-content: center;
-    gap: 5px;
+  justify-content: center;
+  gap: 5px;
 }
 
 .block.carousel .mobile-controls button {
-    display: block;
-    position: relative;
-    margin: 0;
-    padding: 0;
-    width: 20px;
-    height: 20px;
-    cursor: pointer;
-    border: 0;
-    outline: 0;
-    background: 0 0;
-    font-size: 0;
+  display: block;
+  position: relative;
+  margin: 0;
+  padding: 0;
+  width: 20px;
+  height: 20px;
+  cursor: pointer;
+  border: 0;
+  outline: 0;
+  background: 0 0;
+  font-size: 0;
 }
 
 .block.carousel .mobile-controls button::after {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  inset: 0;
+  content: '\f10c';
+  font-family: var(--ff-fontawesome);
+  font-size: 1.2rem;
+  line-height: 1;
+  text-align: center;
+  color: var(--volvo-text-light-gray);
+}
+
+.block.carousel .mobile-controls .active button::after {
+  content: '\f192';
+}
+
+.block.carousel .desktop-controls,
+.block.carousel .mobile-controls.hidden,
+.block.carousel .desktop-controls.hidden {
+  display: none;
+}
+
+.block.carousel .carousel-link {
+  white-space: inherit;
+  font-family: inherit;
+  font-weight: 700;
+}
+
+@media screen and (min-width: 481px) {
+  .block.carousel .mobile-controls button::after {
+    font-size: 1.6rem;
+  }
+}
+
+@media screen and (min-width: 744px) {
+  .block.carousel .items {
+    padding: 0;
+    margin: 0 auto;
+    z-index: 1;
+  }
+
+  .block.carousel .items.centered {
+    justify-content: center;
+  }
+
+  .block.carousel .items li {
+    flex-basis: 101px;
+    scroll-snap-align: start;
+  }
+
+  .block.carousel .items img {
+    height: 101px;
+  }
+
+  .block.carousel .mobile-controls {
+    display: none;
+  }
+
+  .block.carousel .desktop-controls {
+    display: flex;
+    position: absolute;
+    justify-content: space-between;
+    inset: 0;
+  }
+
+  .block.carousel .desktop-controls button {
+    position: relative;
+    margin: 0;
+    width: 50px;
+    height: 100px;
+    border: 0;
+    border-radius: 0;
+    background-color: rgba(216 215 213 / 90%);
+    font-size: 0;
+  }
+
+  .block.carousel .desktop-controls button::after {
     display: flex;
     align-items: center;
     justify-content: center;
     position: absolute;
     inset: 0;
-    content: "\f10c";
+    content: '\f104';
     font-family: var(--ff-fontawesome);
-    font-size: 1.2rem;
+    font-size: 2rem;
     line-height: 1;
     text-align: center;
-    color: var(--volvo-text-light-gray);
- }
+    color: var(--volvo-text-gray);
+  }
 
- .block.carousel .mobile-controls .active button::after {
-    content: "\f192";
- }
+  .block.carousel .desktop-controls li:last-child button::after {
+    content: '\f105';
+  }
 
- .block.carousel .desktop-controls,
- .block.carousel .mobile-controls.hidden,
- .block.carousel .desktop-controls.hidden {
-     display: none;
- }
+  .block.carousel.grid-on-desktop .items {
+    margin: 0 15px;
+    gap: 24px 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+  }
 
- .block.carousel .carousel-link {
-    white-space: inherit;
-    font-family: inherit;
-    font-weight: 700;
- }
+  .block.carousel.grid-on-desktop .items li {
+    flex: 1 0 30%;
+  }
 
- @media screen and (min-width: 481px) {
-    .block.carousel .mobile-controls button::after {
-        font-size: 1.6rem;
-    }
-    
- }
+  .block.carousel.grid-on-desktop .items img {
+    height: auto;
+    max-height: 208px;
+  }
 
- @media screen and (min-width: 768px) {
-    .block.carousel .items {
-        padding: 0;
-        margin: 0 auto;
-        z-index: 1;
-    }
+  .block.carousel.grid-on-desktop .desktop-controls {
+    display: none;
+  }
+}
 
-    .block.carousel .items.centered {
-        justify-content: center;
-    }
+@media screen and (min-width: 992px) {
+  .block.carousel .items li {
+    flex-basis: 175px;
+  }
 
-    .block.carousel .items li {
-        flex-basis: 101px;
-        scroll-snap-align: start;
-    }
+  .block.carousel .items img {
+    height: 130px;
+  }
 
-    .block.carousel .items img {
-        height: 101px;
-    }
+  .block.carousel .desktop-controls {
+    top: 15px;
+  }
 
-    .block.carousel .mobile-controls {
-        display: none;
-    }
-
-    .block.carousel .desktop-controls {
-        display: flex;
-        position: absolute;
-        justify-content: space-between;
-        inset: 0;
-    }
-
-    .block.carousel .desktop-controls button {
-        position: relative;
-        margin: 0;
-        width: 50px;
-        height: 100px;
-        border: 0;
-        border-radius: 0;
-        background-color: rgba(216 215 213 / 90%);
-        font-size: 0;
-    }
-
-    .block.carousel .desktop-controls button::after {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        position: absolute;
-        inset: 0;
-        content: "\f104";
-        font-family: var(--ff-fontawesome);
-        font-size: 2rem;
-        line-height: 1;
-        text-align: center;
-        color: var(--volvo-text-gray);
-    }
-
-    .block.carousel .desktop-controls li:last-child button::after {
-        content: "\f105";
-    }
-
-    .block.carousel.grid-on-desktop .items {
-        margin: 0 15px;
-        gap: 24px 30px;
-        flex-wrap: wrap;
-        justify-content: center;
-    }
-
-    .block.carousel.grid-on-desktop .items li {
-        flex: 1 0 30%;
-    }
-
-    .block.carousel.grid-on-desktop .items img {
-        height: auto;
-        max-height: 208px;
-    }
-
-    .block.carousel.grid-on-desktop .desktop-controls {
-        display: none;
-    }
- }
-
- @media screen and (min-width: 992px) {
-    .block.carousel .items li {
-        flex-basis: 175px;
-    }
-
-    .block.carousel .items img {
-        height: 130px;
-    }
-
-    .block.carousel .desktop-controls {
-        top: 15px;
-    }
-
-    .block.carousel .carousel-content-wrapper {
-        padding-left: 18px;
-        padding-right: 18px;
-    }
- }
+  .block.carousel .carousel-content-wrapper {
+    padding-left: 18px;
+    padding-right: 18px;
+  }
+}

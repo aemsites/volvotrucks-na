@@ -221,20 +221,20 @@ ul.v2-tabbed-carousel__navigation {
 
 @media (min-width: 900px) {
   :root:not(.redesign-v2) ul.cta-list {
-      justify-content: unset;
+    justify-content: unset;
   }
 
   :root:not(.redesign-v2) ul.cta-list li {
-      flex: 1 0 auto;
-      min-width: 242px;
-      padding-left: 0;
-      text-align: left;
+    flex: 1 0 auto;
+    min-width: 242px;
+    padding-left: 0;
+    text-align: left;
   }
 
   :root:not(.redesign-v2) ul.cta-list.inline li {
-      min-width: unset;
-      flex: 0;
-      padding-right: 10px;
+    min-width: unset;
+    flex: 0;
+    padding-right: 10px;
   }
 }
 

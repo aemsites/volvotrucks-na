@@ -8,7 +8,9 @@
 
 .footer :is(p, a) {
   font-family: var(--ff-volvo-novum);
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
   font-size: 16px;
   letter-spacing: 0.5px;
 }
@@ -240,7 +242,7 @@ a.scroll-to-top:focus {
   .footer-list-wrapper {
     display: flex;
     max-width: 1200px;
-    gap: 20px
+    gap: 20px;
   }
 
   .footer-list,
