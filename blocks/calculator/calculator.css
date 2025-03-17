@@ -21,7 +21,9 @@ main .section .calculator-wrapper {
   flex-direction: column;
   align-items: center;
   padding: 30px 0;
-  box-shadow: 0 4px 8px 0 rgb(0 0 0 / 20%), 0 6px 20px 0 rgb(0 0 0 / 19%);
+  box-shadow:
+    0 4px 8px 0 rgb(0 0 0 / 20%),
+    0 6px 20px 0 rgb(0 0 0 / 19%);
   border-radius: 20px;
 }
 
@@ -147,7 +149,7 @@ main .section .calculator-wrapper {
   text-transform: uppercase;
 }
 
-.calculator-result-wrapper .percentage-wrapper{
+.calculator-result-wrapper .percentage-wrapper {
   font-family: var(--font-family-body);
   display: flex;
   flex-direction: row;
@@ -163,10 +165,10 @@ main .section .calculator-wrapper {
   margin: 0;
 }
 
-.calculator-result-wrapper .percentage-result{
+.calculator-result-wrapper .percentage-result {
   font-size: calc(var(--body-font-size-m) * 2.5);
   font-weight: 700;
-  color: #77B733;
+  color: #77b733;
   padding-left: 10px;
   margin: 0;
 }
@@ -188,7 +190,7 @@ main .section .calculator-wrapper {
 .calculator-savings-table td {
   font-size: var(--body-font-size-xs);
   font-weight: 100;
-  background-color: #F8F8F8;
+  background-color: #f8f8f8;
   padding: 15px;
 }
 
@@ -215,7 +217,7 @@ main .section .calculator-wrapper {
 }
 
 .charts-selectors .selector:hover,
-.charts-selectors .selector[data-active="true"] {
+.charts-selectors .selector[data-active='true'] {
   color: var(--c-white);
   background-color: var(--c-cta-blue-default);
 }
@@ -244,7 +246,7 @@ main .section .calculator-wrapper {
   top: 0%;
 }
 
-.charts-wrapper .chart[data-active="true"] {
+.charts-wrapper .chart[data-active='true'] {
   opacity: 1;
   transition-delay: 200ms;
 }
@@ -266,20 +268,20 @@ main .section .calculator-wrapper {
 
 .charts-wrapper .chart-title {
   font-size: calc(var(--heading-font-size-m) * var(--font-scale-factor));
-  fill:#182871;
+  fill: #182871;
   font-weight: 700;
 }
 
 .charts-wrapper .chart-bars .text {
   font-size: calc(var(--heading-font-size-m) * var(--font-scale-factor));
-  fill:var(--c-white);
+  fill: var(--c-white);
   font-weight: 700;
 }
 
 .charts-wrapper .chart-subtitle {
   /* font-size: var(--heading-font-size-s); */
   font-size: calc(var(--heading-font-size-s) * var(--font-scale-factor));
-  fill:#182871;
+  fill: #182871;
   font-weight: 700;
 }
 

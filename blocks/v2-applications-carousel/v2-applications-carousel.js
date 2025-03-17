@@ -36,7 +36,7 @@ const createResponsiveImageConfig = (mobileSrc, desktopSrc) => [
     src: mobileSrc,
     breakpoints: [
       {
-        media: '(max-width: 767px)',
+        media: '(max-width: 743px)',
         width: 750,
       },
     ],
@@ -45,7 +45,7 @@ const createResponsiveImageConfig = (mobileSrc, desktopSrc) => [
     src: desktopSrc,
     breakpoints: [
       {
-        media: '(min-width: 768px)',
+        media: '(min-width: 744px)',
         width: 750,
       },
       {

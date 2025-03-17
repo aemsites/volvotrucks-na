@@ -1,6 +1,6 @@
-// TEXT
-// TODO move to placeholder
-const TEXT = {
+import { getTextLabel } from '../../scripts/common.js';
+// Text keys
+const TEXT_KEYS = {
   bottom: 'Engine Speed (RPM)',
   labelTQ: 'Peak Torque',
   labelHP: 'Peak Power',
@@ -137,7 +137,10 @@ const buildPeakLabel = (values, valuesX, category, device, maxPeak) => {
 
   const positionY = Number(400 - peakValue * verticalScaleFactor);
 
-  const peakLabel = category === 'HP' ? [TEXT.unitHP, TEXT.labelHP, COLORS.lineHP] : [TEXT.unitTQ, TEXT.labelTQ, COLORS.lineTQ];
+  const peakLabel =
+    category === 'HP'
+      ? [getTextLabel(TEXT_KEYS.unitHP), getTextLabel(TEXT_KEYS.labelHP), COLORS.lineHP]
+      : [getTextLabel(TEXT_KEYS.unitTQ), getTextLabel(TEXT_KEYS.labelTQ), COLORS.lineTQ];
 
   return `
     <rect
@@ -191,6 +194,20 @@ const buildPeakLabel = (values, valuesX, category, device, maxPeak) => {
     </text>
   `;
 };
+
+const fillMissingValues = (rating, values, valuesOnAxisX, type) => {
+  if (values.length < valuesOnAxisX.length) {
+    console.warn(
+      `The number of ${type} values for the chart is less than the number of RPM values. Filling the rest with 0s. For the rating:`,
+      rating,
+    );
+    const diff = valuesOnAxisX.length - values.length;
+    for (let i = 0; i < diff; i++) {
+      values.push(0);
+    }
+  }
+};
+
 // Selects the middle values that should be displayed as rpm references.
 const getDisplayableLabels = (valuesX, rpm) => {
   const rpmReversed = [...rpm].reverse();
@@ -242,6 +259,10 @@ const getPerformanceChart = (data) => {
   const device = getDevice();
 
   const valuesOnAxisX = generatePositionsX(0, valuesRPM.length, sectionWidth);
+
+  fillMissingValues(data.rating, valuesHP, valuesOnAxisX, 'HP');
+  fillMissingValues(data.rating, adjustedTQValues, valuesOnAxisX, 'Torque');
+
   const svg = `
     <svg 
       version="1.1" 
@@ -351,7 +372,7 @@ const getPerformanceChart = (data) => {
         class="chart-label-text"
         text-anchor="middle"
       >
-        ${TEXT.bottom}
+        ${getTextLabel(TEXT_KEYS.bottom)}
       </text>
     </g>
   </svg>
