@@ -49,7 +49,6 @@ main .section .engine-specifications-wrapper {
   font-size: var(--body-font-size-s);
 }
 
-
 .engine-specifications .rating-item h5,
 .engine-specifications .item-content {
   font-family: var(--ff-volvo-novum);
@@ -204,6 +203,10 @@ main .section .engine-specifications-wrapper {
   font-size: calc(var(--body-font-size-xs) * 0.65 * var(--scale-factor));
 }
 
+.horizontal-lines {
+  opacity: 0.5;
+}
+
 /* Media queries */
 @media (min-width: 768px) {
   .engine-specifications-wrapper {
@@ -266,7 +269,7 @@ main .section .engine-specifications-wrapper {
   .performance-chart::after {
     --fading-color: var(--c-grey-50);
 
-    height: calc(1200px * 0.48);
+    height: calc(1200px * 0.45);
     content: '';
     position: absolute;
     width: 15vw;
@@ -275,12 +278,12 @@ main .section .engine-specifications-wrapper {
   }
 
   .performance-chart::before {
-    background: linear-gradient(90deg, var(--fading-color) 54.11%, rgb(255 255 255 / 0%) 100%);
+    background: linear-gradient(90deg, var(--fading-color) 50%, rgb(255 255 255 / 0%) 100%);
     left: calc(43vw - 600px);
   }
 
   .performance-chart::after {
-    background: linear-gradient(90deg, var(--fading-color) 54.11%, rgb(255 255 255 / 0%) 100%);
+    background: linear-gradient(90deg, var(--fading-color) 50%, rgb(255 255 255 / 0%) 100%);
     transform: matrix(-1, 0, 0, 1, 0, 0);
     right: calc(43vw - 600px);
   }
@@ -451,18 +454,13 @@ main .section .engine-specifications-wrapper {
 }
 
 .redesign-v2 .chart-label-numbers {
-  font-size: calc(var(--f-body-font-size) * 0.75 * var(--scale-factor));
+  font-size: calc(var(--f-body-font-size) * 0.6 * var(--scale-factor));
 }
 
-.redesign-v2 .chart-label-numbers:nth-of-type(even) {
-  display: none;
-}
-
-.display-more-values .chart-label-numbers:nth-of-type(2n) {
-  display: block;
-}
-
-.display-less-values .chart-label-numbers:nth-of-type(3n) {
+.chart-label-numbers.horizontal,
+.redesign-v2 .chart-label-numbers.vertical,
+.display-more-values .chart-label-numbers.horizontal:nth-of-type(2n),
+.display-less-values .chart-label-numbers.horizontal:nth-of-type(3n) {
   display: block;
 }
 
@@ -523,15 +521,15 @@ main .section .engine-specifications-wrapper {
   .redesign-v2 .performance-chart::after {
     --fading-color: var(--c-white);
 
-    width: 180px;
+    width: 100px;
   }
 
   .redesign-v2 .performance-chart::before {
-    left: 0;
+    left: 5%;
   }
 
   .redesign-v2 .performance-chart::after {
-    right: 0;
+    right: 5%;
   }
 
   .redesign-v2 .section.engine-specifications-container.section--gray-background .performance-chart::before,
