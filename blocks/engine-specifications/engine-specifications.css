@@ -272,18 +272,19 @@ main .section .engine-specifications-wrapper {
     height: calc(1200px * 0.45);
     content: '';
     position: absolute;
-    width: 15vw;
+
+    /* width: 0vw; */
     top: 0%;
     z-index: 1;
   }
 
   .performance-chart::before {
-    background: linear-gradient(90deg, var(--fading-color) 50%, rgb(255 255 255 / 0%) 100%);
+    background: linear-gradient(90deg, var(--fading-color) 10%, rgb(255 255 255 / 0%) 100%);
     left: calc(43vw - 600px);
   }
 
   .performance-chart::after {
-    background: linear-gradient(90deg, var(--fading-color) 50%, rgb(255 255 255 / 0%) 100%);
+    background: linear-gradient(90deg, var(--fading-color) 10%, rgb(255 255 255 / 0%) 100%);
     transform: matrix(-1, 0, 0, 1, 0, 0);
     right: calc(43vw - 600px);
   }
@@ -521,15 +522,15 @@ main .section .engine-specifications-wrapper {
   .redesign-v2 .performance-chart::after {
     --fading-color: var(--c-white);
 
-    width: 100px;
+    width: 50px;
   }
 
   .redesign-v2 .performance-chart::before {
-    left: 5%;
+    left: 6%;
   }
 
   .redesign-v2 .performance-chart::after {
-    right: 5%;
+    right: 6%;
   }
 
   .redesign-v2 .section.engine-specifications-container.section--gray-background .performance-chart::before,

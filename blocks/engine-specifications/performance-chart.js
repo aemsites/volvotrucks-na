@@ -1,11 +1,13 @@
+import { getTextLabel } from '../../scripts/common.js';
+
 // TEXT
 // TODO move to placeholder
 const TEXT = {
-  bottom: 'Revolutions Per Minute',
-  labelTQ: 'Peak Torque',
-  labelHP: 'Peak Power',
-  unitTQ: 'lb-ft',
-  unitHP: 'HP',
+  bottom: getTextLabel('charts:bottom-label'),
+  labelTQ: getTextLabel('charts:label-tq'),
+  labelHP: getTextLabel('charts:label-hp'),
+  unitTQ: getTextLabel('charts:unit-tq'),
+  unitHP: getTextLabel('charts:unit-hp'),
 };
 
 // STYLING
@@ -20,9 +22,11 @@ const COLORS = {
 
 const STROKE = {
   width: 3,
-  // for smooth lines set to 'round'
-  linejoin: 'miter',
-  linecap: 'square',
+  opacity: 1,
+};
+
+const FILL = {
+  opacity: 0.5,
 };
 
 // MATH
@@ -35,27 +39,25 @@ const totalHeightChart = totalWidthChart * 0.4; // 480
 
 const chartMargins = [70, 1100];
 
-const lineChartWidth = totalWidthChart - chartMargins[0] - (totalWidthChart - chartMargins[1]);
+const lineChartWidth = chartMargins[1] - chartMargins[0];
 const lineChartHeight = 400;
 
 // FUNCTIONS
 
 // Makes round numbers with a set interval from 0 to the max + interval.
 // This is used for the numbers on the sides of the charts.
-const generateNumberSequence = (max, interval, min = 0) => {
+// for vertical labels there is one extra value
+const generateNumberSequence = (max, interval, min = 0, isVertical = false) => {
   const result = [];
-  for (let i = min; i <= max; i += interval) {
+  for (let i = min; i <= (isVertical ? max + interval : max); i += interval) {
     result.push(i);
   }
   return result;
 };
 
-// Gets the total width of the chart and divides it into the correct number of EQUAL WIDTH sections.
 const getRegularValues = (values) => {
   const interval = values > 16 ? 200 : 100;
   const regularizedNumbers = generateNumberSequence(values[values.length - 1], interval, values[0]);
-  console.log(values);
-  console.log(regularizedNumbers);
   return regularizedNumbers;
 };
 
@@ -64,7 +66,7 @@ const getRealPositionsX = (values) => {
   const test = values.map((num) => num - firstElement);
   const lastElement = test[test.length - 1];
 
-  const factor = chartMargins[1] / lastElement;
+  const factor = lineChartWidth / lastElement;
 
   const test2 = test.map((num) => Math.round(num * factor + 70));
 
@@ -179,7 +181,6 @@ const buildPeakLabel = (values, valuesX, category, device, maxPeak) => {
 
 // Selects the middle values that should be displayed as rpm references.
 const getHorizontalLabels = (positionsX, valuesX) => {
-  console.warn(positionsX);
   const labels = positionsX.map((e, idx) => {
     const label = `
       <text x=${e} y="440" class="chart-label-numbers horizontal" text-anchor="middle">
@@ -196,7 +197,7 @@ const getVerticalLabels = (values, type, factor = 1) => {
   const interval = type === 'tq' ? 200 : 50;
   const side = type === 'tq' ? 30 : 1135;
 
-  const regularNumberSequence = generateNumberSequence(maxValue, interval);
+  const regularNumberSequence = generateNumberSequence(maxValue, interval, 0, true);
   const labels = regularNumberSequence.map((e) => {
     const label = `
       <text x="${side}" y="${405 - e * factor * verticalScaleFactor}" class="chart-label-numbers vertical" text-anchor="middle">
@@ -209,12 +210,9 @@ const getVerticalLabels = (values, type, factor = 1) => {
 
 const plotHorizontalLines = (values, factor) => {
   const maxValue = Math.max(...values);
-  const regularNumberSequence = generateNumberSequence(maxValue, 200);
+  const regularNumberSequence = generateNumberSequence(maxValue, 200, 0, true);
 
   const lines = regularNumberSequence.map((e) => {
-    if (e === 0) {
-      return;
-    }
     const verticalPosition = lineChartHeight - e * factor * verticalScaleFactor;
 
     const line = `
@@ -230,10 +228,9 @@ const plotHorizontalLines = (values, factor) => {
 
 // delete this after
 const plotVerticalLines = (arr, arr2) => {
-  arr.pop();
   const lines = arr.map((e, i) => {
     const line = `
-      <path d="M ${e} ${480} L ${e} ${0}"
+      <path d="M ${e} ${380} L ${e} ${-70}"
         stroke="${COLORS.lines}"
         stroke-width="1"
         stroke-opacity: "0.5"
@@ -266,14 +263,9 @@ const getPerformanceChart = (data) => {
   const valuesHP = JSON.parse(data.horsepower);
   const valuesTQ = JSON.parse(data.torque);
 
-  console.log(valuesHP.length);
-  console.log(valuesRPM.length);
-  console.log(valuesTQ.length);
-
   conversionFactor = Number((Math.max(...valuesHP) / Math.max(...valuesTQ)).toFixed(5));
 
   const adjustedTQValues = valuesTQ.map((value) => parseInt(value * conversionFactor));
-  // const sectionWidth = lineChartWidth / valuesRPM.length;
 
   const device = getDevice();
 
@@ -281,9 +273,6 @@ const getPerformanceChart = (data) => {
 
   const realPositionsOnAxisX = getRealPositionsX(valuesRPM);
   const regularPositionsOnAxisX = getRealPositionsX(regularValuesOnAxisX);
-
-  // const rpmInterval = valuesRPM > 15 ? 200 : 100;
-  // const regularValuesRPM = generateNumberSequence(Math.max(...valuesRPM), rpmInterval, Math.min(...valuesRPM));
 
   const svg = `
     <svg 
@@ -314,9 +303,12 @@ const getPerformanceChart = (data) => {
     </g>
 
     <!-- VERTICAL LINES - RPM -->
+    <!-- // delete this after -->
+    <!-- 
     <g aria-hidden="true" class="horizontal-lines">
-      ${plotVerticalLines(realPositionsOnAxisX, valuesRPM)}
+    ${plotVerticalLines(realPositionsOnAxisX, valuesRPM)}
     </g>
+    -->
 
       <!-- HORSEPOWER -->
       <g aria-hidden="false">
@@ -333,7 +325,7 @@ const getPerformanceChart = (data) => {
             L ${chartMargins[0]} ${lineChartHeight}
             Z
           "
-          opacity="0.5"
+          opacity="${FILL.opacity}"
         >
         </path>
 
@@ -344,9 +336,7 @@ const getPerformanceChart = (data) => {
           "
           stroke="${COLORS.lineHP}"
           stroke-width="${STROKE.width}"
-          stroke-linejoin="${STROKE.linejoin}"
-          stroke-linecap="${STROKE.linecap}"
-          opacity="1"
+          opacity="${STROKE.opacity}"
         >
         </path>
       </g>
@@ -364,7 +354,7 @@ const getPerformanceChart = (data) => {
             L ${chartMargins[0]} ${lineChartHeight}
             Z
           "
-          opacity="0.5"
+          opacity="${FILL.opacity}"
         >
         </path>
 
@@ -376,9 +366,7 @@ const getPerformanceChart = (data) => {
             "
             stroke="${COLORS.lineTQ}"
             stroke-width="${STROKE.width}"
-            stroke-linejoin="${STROKE.linejoin}"
-            stroke-linecap="${STROKE.linecap}"
-            opacity="1"
+            opacity="${STROKE.opacity}"
           >
         </path>
       </g>
@@ -389,15 +377,15 @@ const getPerformanceChart = (data) => {
       aria-hidden="true"
       style="transform: translate(${device.translate[0]}px, ${device.translate[1]}px);)"
     >
-      ${buildPeakLabel(adjustedTQValues, regularValuesOnAxisX, 'TQ', device, torquePeak)}
-      ${buildPeakLabel(valuesHP, regularValuesOnAxisX, 'HP', device, hpPeak)}
+      ${buildPeakLabel(adjustedTQValues, realPositionsOnAxisX, 'TQ', device, torquePeak)}
+      ${buildPeakLabel(valuesHP, realPositionsOnAxisX, 'HP', device, hpPeak)}
     </g>
 
     <!-- HORIZONTAL VALUES - RPM -->
     <g aria-hidden="true" class="${valuesRPM.length > 26 ? 'display-less-values' : 'display-more-values'}">
       ${getHorizontalLabels(regularPositionsOnAxisX, regularValuesOnAxisX)}
       <text 
-        x="${lineChartWidth / 2}"
+        x="${totalWidthChart / 2}"
         y="${totalHeightChart}"
         class="chart-label-text"
         text-anchor="middle"
@@ -410,12 +398,12 @@ const getPerformanceChart = (data) => {
     <g aria-hidden="true">
       ${getVerticalLabels(valuesTQ, 'tq', conversionFactor)}
       <text 
-        x="${35}"
+        x="${10}"
         y="-100"
         class="chart-label-text"
         text-anchor="left"
       >
-        lb
+        ${TEXT.unitTQ}
       </text>
     </g>
 
@@ -423,12 +411,12 @@ const getPerformanceChart = (data) => {
     <g aria-hidden="true">
       ${getVerticalLabels(valuesHP, 'hp')}
       <text 
-        x="${lineChartWidth - 85}"
+        x="${totalWidthChart - 80}"
         y="-100"
         class="chart-label-text"
         text-anchor="right"
       >
-        hp
+      ${TEXT.unitHP}
       </text>
     </g>
 
