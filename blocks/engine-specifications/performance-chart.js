@@ -32,6 +32,7 @@ const FILL = {
 // MATH
 let conversionFactor;
 let verticalScaleFactor = 1;
+const adjustHeight = 0.8;
 
 // CHART SIZES
 const totalWidthChart = 1200;
@@ -44,42 +45,54 @@ const lineChartHeight = 400;
 
 // FUNCTIONS
 
-// Makes round numbers with a set interval from 0 to the max + interval.
-// This is used for the numbers on the sides of the charts.
-// for vertical labels there is one extra value
+/**
+ * Makes round numbers with a set interval from 0 to the max.
+ * This is used for the numbers on the sides and bottom of the chart.
+ * For vertical labels there is one extra value that allows the values to go 3 intervals past the max.
+ * @param {number} max - The max value of that array
+ * @param {number} interval - Value that should be used as interval
+ * @param {number} min - The min value of that array. Defaults to 0
+ * @param {boolean} isVertical - Checks if the labels are vertical. Defaults to false
+ * @returns {Array} result - Returns an array with the regular sequence
+ */
 const generateNumberSequence = (max, interval, min = 0, isVertical = false) => {
   const result = [];
-  for (let i = min; i <= (isVertical ? max + interval : max); i += interval) {
+  for (let i = min; i <= (isVertical ? max + interval * 3 : max); i += interval) {
     result.push(i);
   }
   return result;
 };
 
-const getRegularValues = (values) => {
-  const interval = values > 16 ? 200 : 100;
-  const regularizedNumbers = generateNumberSequence(values[values.length - 1], interval, values[0]);
-  return regularizedNumbers;
-};
-
+/**
+ * Calculates the proportional horizontal placement between the raw values recieved
+ * and returns the correct position in the SVG
+ * @param {Array} values - HTML element that represents
+ * @returns {Array} proporionalPositions - Returns an array with the porpotional positions
+ */
 const getRealPositionsX = (values) => {
   const firstElement = values[0];
-  const test = values.map((num) => num - firstElement);
-  const lastElement = test[test.length - 1];
+  const absoluteValues = values.map((num) => num - firstElement);
+  const lastElement = absoluteValues[absoluteValues.length - 1];
 
   const factor = lineChartWidth / lastElement;
 
-  const test2 = test.map((num) => Math.round(num * factor + 70));
+  const proporionalPositions = absoluteValues.map((num) => Math.round(num * factor + chartMargins[0]));
 
-  return test2;
+  return proporionalPositions;
 };
 
-// From the values given applies the proportional conversion rate and plots the lines.
-const plotLine = (valuesOnX, typeOfLine) => {
+/**
+ * From the values given applies the proportional conversion rate and plots the lines.
+ * @param {Array} valuesOnX - Values to plot the line
+ * @param {Array} valuesOnY - Values to plot the line
+ * @returns {string} The set of points to be used to plot the line
+ */
+const plotLine = (valuesOnX, valuesOnY) => {
   const plottedLine = valuesOnX.map((e, idx) => {
     const decimalCount = 2;
 
     const pureValueX = e;
-    const pureValueY = Number(lineChartHeight - typeOfLine[idx] * verticalScaleFactor);
+    const pureValueY = Number(lineChartHeight - valuesOnY[idx] * verticalScaleFactor);
 
     const valueX = pureValueX.toFixed(decimalCount);
     const valueY = pureValueY.toFixed(decimalCount);
@@ -90,7 +103,10 @@ const plotLine = (valuesOnX, typeOfLine) => {
   return plottedLine.join(' ', 'z');
 };
 
-// Identifies the width of the device and returns values for the position of the peak points.
+/**
+ * Identifies the width of the device and returns values for the position of the peak points.
+ * @returns {Object} An object with the positions and sizes needed for the peak labels.
+ */
 const getDevice = () => {
   const width = window.innerWidth;
   if (width < 480) {
@@ -105,14 +121,23 @@ const getDevice = () => {
   return { scale: 1.3, translate: [-10, -25], text1: [-20, 45], text2: [-20, 20], triangle: [20, 20] };
 };
 
-// Identifies the higher value and returns the label and its position on the chart.
+/**
+ * Identifies the higher value and returns the label and its position on the chart.
+ * Sets the first label (TQ) and for the second one, it checks that it does not overlap
+ * @param {Array} valuesY - Vertical values
+ * @param {Array} valuesX - Horizontal values
+ * @param {string} valueType - What type of value is
+ * @param {Object} deviceData - Information on the device beign used
+ * @param {number} maxPeakValue - Displayable text to be used in label
+ * @returns {string} The label as a string to be inserted in the SVG
+ */
 let isFirstLabel = null;
-const buildPeakLabel = (values, valuesX, category, device, maxPeak) => {
-  const peakValue = Math.max(...values);
-  const indexPosition = values.indexOf(peakValue);
+const buildPeakLabel = (valuesY, valuesX, valueType, deviceData, maxPeakValue) => {
+  const peakValue = Math.max(...valuesY);
+  const indexPosition = valuesY.indexOf(peakValue);
 
-  const labelWidth = Math.round(128 * device.scale);
-  const labelHeight = Math.round(76 * device.scale);
+  const labelWidth = Math.round(128 * deviceData.scale);
+  const labelHeight = Math.round(76 * deviceData.scale);
 
   let positionX = Math.round(valuesX[indexPosition]);
 
@@ -127,8 +152,7 @@ const buildPeakLabel = (values, valuesX, category, device, maxPeak) => {
   }
 
   const positionY = Number(lineChartHeight - peakValue * verticalScaleFactor);
-
-  const peakLabel = category === 'HP' ? [TEXT.unitHP, TEXT.labelHP, COLORS.lineHP] : [TEXT.unitTQ, TEXT.labelTQ, COLORS.lineTQ];
+  const peakLabel = valueType === 'HP' ? [TEXT.unitHP, TEXT.labelHP, COLORS.lineHP] : [TEXT.unitTQ, TEXT.labelTQ, COLORS.lineTQ];
 
   return `
     <rect
@@ -140,17 +164,17 @@ const buildPeakLabel = (values, valuesX, category, device, maxPeak) => {
       ry="8"
       opacity="1"
       stroke="none"
-      class="peak-rectangle-${category.toLowerCase()}"
+      class="peak-rectangle-${valueType.toLowerCase()}"
     >
     </rect>
 
     <text
-      x=${positionX - device.text1[0]}
-      y=${positionY - device.text1[1]}
+      x=${positionX - deviceData.text1[0]}
+      y=${positionY - deviceData.text1[1]}
       text-anchor="middle"
       class="peak-value"
     >
-      ${maxPeak} ${peakLabel[0]}
+      ${maxPeakValue} ${peakLabel[0]}
     </text>
 
     <path 
@@ -165,12 +189,12 @@ const buildPeakLabel = (values, valuesX, category, device, maxPeak) => {
       stroke="${peakLabel[2]}"
       stroke-width="8"
       opacity="1"
-      style="transform: translate(${device.triangle[0]}px, ${device.triangle[1]}px)"
+      style="transform: translate(${deviceData.triangle[0]}px, ${deviceData.triangle[1]}px)"
     ></path>
 
     <text
-      x=${positionX - device.text2[0]}
-      y=${positionY - device.text2[1]}
+      x=${positionX - deviceData.text2[0]}
+      y=${positionY - deviceData.text2[1]}
       text-anchor="middle"
       class="peak-text"
     >
@@ -179,11 +203,16 @@ const buildPeakLabel = (values, valuesX, category, device, maxPeak) => {
   `;
 };
 
-// Selects the middle values that should be displayed as rpm references.
+/**
+ * With a list of positions and values it builds the horizontal reference for RPM
+ * @param {Array} positionsX - The proportional values needed to position the text in the SVG
+ * @param {Array} valuesX - The values that will bee seen in these positions
+ * @returns {string} The list of <text> elements to insert in the SVG element
+ */
 const getHorizontalLabels = (positionsX, valuesX) => {
   const labels = positionsX.map((e, idx) => {
     const label = `
-      <text x=${e} y="440" class="chart-label-numbers horizontal" text-anchor="middle">
+      <text x=${e} y="440" class="chart-label-number horizontal" text-anchor="middle">
         ${valuesX[idx]}
       </text>`;
     return label;
@@ -191,16 +220,31 @@ const getHorizontalLabels = (positionsX, valuesX) => {
   return labels.join(' ');
 };
 
-// Selects the middle values that should be displayed as rpm references.
+/**
+ * With a list of values it builds the vertical references for TQ and HP
+ * @param {Array} values - The whole list of values from where to extract the max value
+ * @param {string} type - Used to identify what values are to be set.
+ * @param {number} factor - In case the TQ values need to be adjusted to match the HP
+ * @returns {string} The list of <text> elements to insert in the SVG element
+ */
 const getVerticalLabels = (values, type, factor = 1) => {
   const maxValue = Math.max(...values);
-  const interval = type === 'tq' ? 200 : 50;
-  const side = type === 'tq' ? 30 : 1135;
+  const typeFixedValues = {
+    tq: { interval: 200, position: 60, align: 'end' },
+    hp: { interval: 50, position: 1120, align: 'start' },
+  };
+
+  const { interval, position, align } = typeFixedValues[type];
 
   const regularNumberSequence = generateNumberSequence(maxValue, interval, 0, true);
   const labels = regularNumberSequence.map((e) => {
     const label = `
-      <text x="${side}" y="${405 - e * factor * verticalScaleFactor}" class="chart-label-numbers vertical" text-anchor="middle">
+      <text 
+        x="${position}"
+        y="${405 - e * factor * verticalScaleFactor}"
+        class="chart-label-number vertical"
+        text-anchor="${align}"
+      >
         ${e}
       </text>`;
     return label;
@@ -208,6 +252,12 @@ const getVerticalLabels = (values, type, factor = 1) => {
   return labels.join(' ');
 };
 
+/**
+ * From the regularized torque values, it creates a set of <path> elements to appear as lines in the chart
+ * @param {Array} values - The whole list of values from where to extract the max value
+ * @param {number} factor - Since the lines respond to the TQ values, this needs to be adjusted to match the HP proportions
+ * @returns {string} The list of <path> elements to insert in the SVG element
+ */
 const plotHorizontalLines = (values, factor) => {
   const maxValue = Math.max(...values);
   const regularNumberSequence = generateNumberSequence(maxValue, 200, 0, true);
@@ -226,27 +276,14 @@ const plotHorizontalLines = (values, factor) => {
   return lines.join(' ');
 };
 
-// delete this after
-const plotVerticalLines = (arr, arr2) => {
-  const lines = arr.map((e, i) => {
-    const line = `
-      <path d="M ${e} ${380} L ${e} ${-70}"
-        stroke="${COLORS.lines}"
-        stroke-width="1"
-        stroke-opacity: "0.5"
-      />
-      <text x=${e} y="400" text-anchor="middle">
-        ${arr2[i]}
-      </text>`;
-    return line;
-  });
-  return lines.join(' ');
-};
-
-// Gets data from engine-specifications.js block renders the SVG with all the values.
+/**
+ * Gets data from engine-specifications.js block and returns the SVG with all the charts.
+ * @param {Object} data - The object that comes from the excell file.
+ * @returns {string} The <svg> elements with all the charts plotted
+ */
 const getPerformanceChart = (data) => {
   if (data.scale) {
-    verticalScaleFactor = JSON.parse(data.scale) / 100;
+    verticalScaleFactor = (JSON.parse(data.scale) / 100) * adjustHeight;
   }
 
   let maxPeaks = [];
@@ -264,12 +301,11 @@ const getPerformanceChart = (data) => {
   const valuesTQ = JSON.parse(data.torque);
 
   conversionFactor = Number((Math.max(...valuesHP) / Math.max(...valuesTQ)).toFixed(5));
-
   const adjustedTQValues = valuesTQ.map((value) => parseInt(value * conversionFactor));
 
   const device = getDevice();
 
-  const regularValuesOnAxisX = getRegularValues(valuesRPM);
+  const regularValuesOnAxisX = generateNumberSequence(valuesRPM[valuesRPM.length - 1], 100, valuesRPM[0]);
 
   const realPositionsOnAxisX = getRealPositionsX(valuesRPM);
   const regularPositionsOnAxisX = getRealPositionsX(regularValuesOnAxisX);
@@ -301,14 +337,6 @@ const getPerformanceChart = (data) => {
     <g aria-hidden="true" class="horizontal-lines">
       ${plotHorizontalLines(valuesTQ, conversionFactor)}
     </g>
-
-    <!-- VERTICAL LINES - RPM -->
-    <!-- // delete this after -->
-    <!-- 
-    <g aria-hidden="true" class="horizontal-lines">
-    ${plotVerticalLines(realPositionsOnAxisX, valuesRPM)}
-    </g>
-    -->
 
       <!-- HORSEPOWER -->
       <g aria-hidden="false">
@@ -382,7 +410,7 @@ const getPerformanceChart = (data) => {
     </g>
 
     <!-- HORIZONTAL VALUES - RPM -->
-    <g aria-hidden="true" class="${valuesRPM.length > 26 ? 'display-less-values' : 'display-more-values'}">
+    <g aria-hidden="true" class="chart-label-numbers ${valuesRPM.length > 20 ? 'display-less-values' : ''}">
       ${getHorizontalLabels(regularPositionsOnAxisX, regularValuesOnAxisX)}
       <text 
         x="${totalWidthChart / 2}"
@@ -399,9 +427,9 @@ const getPerformanceChart = (data) => {
       ${getVerticalLabels(valuesTQ, 'tq', conversionFactor)}
       <text 
         x="${10}"
-        y="-100"
+        y="-15%"
         class="chart-label-text"
-        text-anchor="left"
+        text-anchor="start"
       >
         ${TEXT.unitTQ}
       </text>
@@ -411,16 +439,16 @@ const getPerformanceChart = (data) => {
     <g aria-hidden="true">
       ${getVerticalLabels(valuesHP, 'hp')}
       <text 
-        x="${totalWidthChart - 80}"
-        y="-100"
+        x="${totalWidthChart - 50}"
+        y="-15%"
         class="chart-label-text"
-        text-anchor="right"
+        text-anchor="end"
       >
       ${TEXT.unitHP}
       </text>
     </g>
 
-  </svg>
+    </svg>
 `;
   return svg;
 };
