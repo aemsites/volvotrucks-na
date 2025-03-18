@@ -148,10 +148,7 @@ const buildPeakLabel = (valuesY, valuesX, valueType, deviceData, maxPeakValue) =
   }
 
   const positionY = Number(lineChartHeight - peakValue * verticalScaleFactor);
-  const peakLabel =
-    category === 'HP'
-      ? [getTextLabel(TEXT.unitHP), getTextLabel(TEXT.labelHP), COLORS.lineHP]
-      : [getTextLabel(TEXT.unitTQ), getTextLabel(TEXT.labelTQ), COLORS.lineTQ];
+  const peakLabel = valueType === 'HP' ? [TEXT.unitHP, TEXT.labelHP, COLORS.lineHP] : [TEXT.unitTQ, TEXT.labelTQ, COLORS.lineTQ];
 
   return `
     <rect
@@ -322,8 +319,8 @@ const getPerformanceChart = (data) => {
   const realPositionsOnAxisX = getRealPositionsX(valuesRPM);
   const regularPositionsOnAxisX = getRealPositionsX(regularValuesOnAxisX);
 
-  fillMissingValues(data.rating, valuesHP, valuesOnAxisX, 'HP');
-  fillMissingValues(data.rating, adjustedTQValues, valuesOnAxisX, 'Torque');
+  fillMissingValues(data.rating, valuesHP, realPositionsOnAxisX, 'HP');
+  fillMissingValues(data.rating, adjustedTQValues, realPositionsOnAxisX, 'Torque');
 
   const svg = `
     <svg 
@@ -432,7 +429,7 @@ const getPerformanceChart = (data) => {
         class="chart-label-text"
         text-anchor="middle"
       >
-        ${getTextLabel(TEXT_KEYS.bottom)}
+        ${TEXT.bottom}
       </text>
     </g>
 
