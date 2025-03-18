@@ -414,6 +414,10 @@
     {
       "Key": "charts:unit-hp",
       "Text": "HP"
+    },
+    {
+      "Key": "charts:subtitle",
+      "Text": "Engine Ratings"
     }
   ],
   ":type": "sheet"
