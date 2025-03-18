@@ -112,7 +112,7 @@ main .hero-with-video .hero-video {
   }
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 744px) {
   main .hero-headings {
     padding-top: 48px;
     top: 0;
@@ -236,7 +236,7 @@ main .hero.hero-large picture::after {
   display: none;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 744px) {
   main .hero.hero-large .hero-headings {
     padding: 48px 32px;
     max-width: 50%;

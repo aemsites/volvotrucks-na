@@ -81,7 +81,7 @@ main .section .engine-specifications-wrapper {
   letter-spacing: 0.25px;
 }
 
-.performance .engine-rating .rating-title {
+.performance .rating-title {
   color: var(--c-grey-3);
   font-style: normal;
   font-weight: 500;
@@ -108,18 +108,18 @@ main .section .engine-specifications-wrapper {
   margin: 20px 0 0;
 }
 
-.performance a,
-.performance a:visited {
-  text-decoration: none;
+.performance button {
+  background: none;
+  border: 0;
   cursor: pointer;
   padding-bottom: 12px;
 }
 
-.performance .engine-rating .rating-item a:hover {
+.performance .engine-rating .rating-item button:hover {
   border-bottom: 2px solid var(--c-grey-3);
 }
 
-.performance .engine-rating .rating-item[data-active] a {
+.performance .engine-rating .rating-item[data-active] button {
   color: var(--c-main-black);
   border-bottom: 2px solid var(--c-main-black);
 }
@@ -202,6 +202,17 @@ main .section .engine-specifications-wrapper {
   font-size: calc(var(--body-font-size-xs) * 0.65 * var(--scale-factor));
 }
 
+.engine-specifications__chart-options-container .rating-list,
+.engine-specifications__chart-options-container .rating-item {
+  margin-top: 0;
+}
+
+.engine-specifications__dropdown-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+}
+
 .horizontal-lines {
   opacity: 0;
 }
@@ -233,6 +244,25 @@ main .section .engine-specifications-wrapper {
 
   .performance .rating-item {
     margin: 20px 21px 0;
+  }
+
+  .engine-specifications__dropdown-container {
+    margin-top: 0;
+  }
+
+  .engine-specifications__chart-options-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 20px;
+    align-items: center;
+  }
+
+  .engine-specifications__chart-options-container .rating-item {
+    margin-top: 0;
+  }
+
+  .engine-specifications__chart-options-container .rating-list {
+    margin-left: 15px;
   }
 
   .performance-chart {
@@ -424,10 +454,9 @@ main .section .engine-specifications-wrapper {
   color: var(--text-subtle);
   letter-spacing: var(--f-button-letter-spacing);
   line-height: 100%;
-  text-transform: uppercase;
 }
 
-.redesign-v2 .performance .engine-rating .rating-title {
+.redesign-v2 .engine-specifications .rating-title {
   font-family: var(--ff-volvo-novum-medium);
   font-size: var(--f-heading-5-font-size);
   letter-spacing: var(--f-heading-6-letter-spacing);

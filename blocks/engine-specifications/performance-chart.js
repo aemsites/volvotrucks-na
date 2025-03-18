@@ -148,7 +148,10 @@ const buildPeakLabel = (valuesY, valuesX, valueType, deviceData, maxPeakValue) =
   }
 
   const positionY = Number(lineChartHeight - peakValue * verticalScaleFactor);
-  const peakLabel = valueType === 'HP' ? [TEXT.unitHP, TEXT.labelHP, COLORS.lineHP] : [TEXT.unitTQ, TEXT.labelTQ, COLORS.lineTQ];
+  const peakLabel =
+    category === 'HP'
+      ? [getTextLabel(TEXT.unitHP), getTextLabel(TEXT.labelHP), COLORS.lineHP]
+      : [getTextLabel(TEXT.unitTQ), getTextLabel(TEXT.labelTQ), COLORS.lineTQ];
 
   return `
     <rect
@@ -248,6 +251,19 @@ const getVerticalLabels = (values, type, factor = 1) => {
   return labels.join(' ');
 };
 
+const fillMissingValues = (rating, values, valuesOnAxisX, type) => {
+  if (values.length < valuesOnAxisX.length) {
+    console.warn(
+      `The number of ${type} values for the chart is less than the number of RPM values. Filling the rest with 0s. For the rating:`,
+      rating,
+    );
+    const diff = valuesOnAxisX.length - values.length;
+    for (let i = 0; i < diff; i++) {
+      values.push(0);
+    }
+  }
+};
+
 /**
  * From the regularized torque values, it creates a set of <path> elements to appear as lines in the chart
  * @param {Array} values - The whole list of values from where to extract the max value
@@ -305,6 +321,9 @@ const getPerformanceChart = (data) => {
 
   const realPositionsOnAxisX = getRealPositionsX(valuesRPM);
   const regularPositionsOnAxisX = getRealPositionsX(regularValuesOnAxisX);
+
+  fillMissingValues(data.rating, valuesHP, valuesOnAxisX, 'HP');
+  fillMissingValues(data.rating, adjustedTQValues, valuesOnAxisX, 'Torque');
 
   const svg = `
     <svg 
@@ -413,7 +432,7 @@ const getPerformanceChart = (data) => {
         class="chart-label-text"
         text-anchor="middle"
       >
-        ${TEXT.bottom}
+        ${getTextLabel(TEXT_KEYS.bottom)}
       </text>
     </g>
 
