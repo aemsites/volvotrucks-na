@@ -426,7 +426,7 @@ const getPerformanceChart = (data) => {
     <g aria-hidden="true">
       ${getVerticalLabels(valuesTQ, 'tq', conversionFactor)}
       <text 
-        x="${10}"
+        x="${25}"
         y="-15%"
         class="chart-label-text"
         text-anchor="start"
@@ -439,7 +439,7 @@ const getPerformanceChart = (data) => {
     <g aria-hidden="true">
       ${getVerticalLabels(valuesHP, 'hp')}
       <text 
-        x="${totalWidthChart - 50}"
+        x="${totalWidthChart - 55}"
         y="-15%"
         class="chart-label-text"
         text-anchor="end"
