@@ -63,7 +63,7 @@ const generateNumberSequence = (max, interval, min = 0, isVertical = false) => {
  * Calculates the proportional horizontal placement between the raw values recieved
  * and returns the correct position in the SVG
  * @param {Array} values - HTML element that represents
- * @returns {Array} proporionalPositions - Returns an array with the porpotional positions
+ * @returns {Array} proportionalPositions - Returns an array with the porpotional positions
  */
 const getRealPositionsX = (values) => {
   const firstElement = values[0];
@@ -72,9 +72,9 @@ const getRealPositionsX = (values) => {
 
   const factor = lineChartWidth / lastElement;
 
-  const proporionalPositions = absoluteValues.map((num) => Math.round(num * factor + chartMargins[0]));
+  const proportionalPositions = absoluteValues.map((num) => Math.round(num * factor + chartMargins[0]));
 
-  return proporionalPositions;
+  return proportionalPositions;
 };
 
 /**
