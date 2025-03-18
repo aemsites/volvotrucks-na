@@ -290,8 +290,8 @@ const getPerformanceChart = (data) => {
     console.error('Error parsing peaks', e);
   }
 
-  const hpPeak = maxPeaks[0];
-  const torquePeak = maxPeaks[1];
+  const [hpPeak, torquePeak] = maxPeaks;
+
   const valuesRPM = JSON.parse(data.rpm);
   const valuesHP = JSON.parse(data.horsepower);
   const valuesTQ = JSON.parse(data.torque);
@@ -308,7 +308,6 @@ const getPerformanceChart = (data) => {
 
   const svg = `
     <svg 
-      version="1.1" 
       xmlns="http://www.w3.org/2000/svg" 
       width="${totalWidthChart}"
       height="${totalHeightChart}"
@@ -329,16 +328,14 @@ const getPerformanceChart = (data) => {
         </linearGradient>
       </defs>
 
-          <!-- HORIZONTAL LINES - TQ -->
-    <g aria-hidden="true" class="horizontal-lines">
-      ${plotHorizontalLines(valuesTQ, conversionFactor)}
-    </g>
+      <!-- HORIZONTAL LINES - TQ -->
+      <g aria-hidden="true" class="horizontal-lines">
+        ${plotHorizontalLines(valuesTQ, conversionFactor)}
+      </g>
 
       <!-- HORSEPOWER -->
-      <g aria-hidden="false">
-        <g opacity="1"
-          aria-hidden="true"
-        >
+      <g aria-hidden="true">
+        <g aria-hidden="true">
 
         <!-- FILL -->
         <path
@@ -366,9 +363,8 @@ const getPerformanceChart = (data) => {
       </g>
 
       <!-- TORQUE -->
-      <g opacity="1"
-          aria-hidden="true"
-        >
+      <g aria-hidden="true">
+      
         <!-- FILL -->
         <path
           fill="url(#gradientTQ)"
@@ -384,7 +380,7 @@ const getPerformanceChart = (data) => {
 
         <!-- STROKE -->
         <path
-           fill="none"
+            fill="none"
             d="
               ${plotLine(realPositionsOnAxisX, adjustedTQValues)}
             "
@@ -397,7 +393,7 @@ const getPerformanceChart = (data) => {
     </g>
 
     <!-- PEAK LABELS -->
-    <g 
+    <g
       aria-hidden="true"
       style="transform: translate(${device.translate[0]}px, ${device.translate[1]}px);)"
     >
@@ -406,7 +402,10 @@ const getPerformanceChart = (data) => {
     </g>
 
     <!-- HORIZONTAL VALUES - RPM -->
-    <g aria-hidden="true" class="chart-label-numbers ${valuesRPM.length > 20 ? 'display-less-values' : ''}">
+    <g
+      aria-hidden="true"
+      class="chart-label-numbers ${valuesRPM.length > 20 ? 'display-less-values' : ''}"
+    >
       ${getHorizontalLabels(regularPositionsOnAxisX, regularValuesOnAxisX)}
       <text 
         x="${totalWidthChart / 2}"
@@ -440,11 +439,10 @@ const getPerformanceChart = (data) => {
         class="chart-label-text"
         text-anchor="end"
       >
-      ${TEXT.unitHP}
+        ${TEXT.unitHP}
       </text>
     </g>
-
-    </svg>
+  </svg>
 `;
   return svg;
 };
