@@ -1,7 +1,5 @@
 import { getTextLabel } from '../../scripts/common.js';
 
-// TEXT
-// TODO move to placeholder
 const TEXT = {
   bottom: getTextLabel('charts:bottom-label'),
   labelTQ: getTextLabel('charts:label-tq'),
@@ -10,7 +8,6 @@ const TEXT = {
   unitHP: getTextLabel('charts:unit-hp'),
 };
 
-// STYLING
 const COLORS = {
   lineHP: '#78B833',
   lineTQ: '#004FBC',
@@ -44,7 +41,6 @@ const lineChartWidth = chartMargins[1] - chartMargins[0];
 const lineChartHeight = 400;
 
 // FUNCTIONS
-
 /**
  * Makes round numbers with a set interval from 0 to the max.
  * This is used for the numbers on the sides and bottom of the chart.
