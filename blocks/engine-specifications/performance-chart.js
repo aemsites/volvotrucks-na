@@ -53,7 +53,7 @@ const lineChartHeight = 400;
  */
 const generateNumberSequence = (max, interval, min = 0, isVertical = false) => {
   const result = [];
-  for (let i = min; i <= (isVertical ? max + interval : max); i += interval) {
+  for (let i = min; i < (isVertical ? max + interval : max); i += interval) {
     result.push(i);
   }
   return result;
