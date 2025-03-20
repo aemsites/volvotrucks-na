@@ -1616,6 +1616,7 @@ main.blue-contract .section.section-with-title p {
   border-radius: 22px;
   border: 0;
   padding: 0;
+  z-index: 1;
 }
 
 .v2-video__mute-controls {
