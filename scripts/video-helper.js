@@ -93,8 +93,8 @@ export async function setupPlayer(url, videoContainer, config, video) {
   const videojsConfig = {
     ...config,
     preload: config.poster && !config.autoplay ? 'none' : 'auto',
-    bigPlayButton: false,
-    controls: true,
+    bigPlayButton: config.controls ?? true,
+    controls: config.controls ?? false,
   };
 
   if (config.autoplay) {
