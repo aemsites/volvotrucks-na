@@ -394,6 +394,30 @@
     {
       "Key": "V2CustomForm:ErrorSubmissionText",
       "Text": "Information not sent. Please, try again later."
+    },
+    {
+      "Key": "HP",
+      "Text": "HP"
+    },
+    {
+      "Key": "lb/ft",
+      "Text": "lb/ft"
+    },
+    {
+      "Key": "Engine Ratings",
+      "Text": "Engine Ratings"
+    },
+    {
+      "Key": "Peak Power",
+      "Text": "Peak Power"
+    },
+    {
+      "Key": "Peak Torque",
+      "Text": "Peak Torque"
+    },
+    {
+      "Key": "Engine Speed (RPM)",
+      "Text": "Engine Speed (RPM)"
     }
   ],
   ":type": "sheet"

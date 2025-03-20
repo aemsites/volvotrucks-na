@@ -87,7 +87,7 @@ body .section.v2-video-container .v2-video-wrapper {
 }
 
 .v2-video .v2-video__heading {
-  font: var(--f-heading-5-font-size)/var(--f-heading-5-line-height) var(--ff-volvo-novum-medium);
+  font: var(--f-heading-5-font-size) / var(--f-heading-5-line-height) var(--ff-volvo-novum-medium);
   letter-spacing: var(--f-heading-5-letter-spacing);
 }
 

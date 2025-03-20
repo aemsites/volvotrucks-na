@@ -1,32 +1,32 @@
 .block.image-360 {
-    display: grid;
-    position: relative;
+  display: grid;
+  position: relative;
 }
 
 .block.image-360 picture {
-    grid-column: 1;
-    grid-row: 1;
-    opacity: 0;
-    transition: opacity 500ms ease 0s;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+  grid-column: 1;
+  grid-row: 1;
+  opacity: 0;
+  transition: opacity 500ms ease 0s;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .block.image-360 picture.active {
-    opacity: 1;
+  opacity: 1;
 }
 
 .block.image-360 .controls i {
-    display: block;
-    position: absolute;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 70px;
-    cursor: pointer;
-    z-index: 1;
+  display: block;
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 70px;
+  cursor: pointer;
+  z-index: 1;
 }
 
 .block.image-360 .controls i.fa-caret-right {
-    right: 0;
+  right: 0;
 }
