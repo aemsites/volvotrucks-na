@@ -112,8 +112,8 @@ const getPeaksData = (engineData) =>
  * @param {Array<number>} powerRating - The list of power ratings to create tabs for.
  */
 const setupTabs = (container, itemsToList, displayHp = true) => {
-  const hpLabel = getTextLabel('HP');
-  const torqueLabel = getTextLabel('lb/ft');
+  const hpLabel = getTextLabel('charts:unit-hp');
+  const torqueLabel = getTextLabel('charts:unit-tq');
   let engineRatingContainer = container.querySelector('.engine-rating');
   let hpList = container.querySelector('.rating-list');
 
@@ -152,7 +152,7 @@ const setupTabs = (container, itemsToList, displayHp = true) => {
 const buildHeaders = (hpSelector) => {
   const ratingTitle = document.createElement('h6');
   ratingTitle.classList.add('rating-title');
-  ratingTitle.innerText = getTextLabel('Engine Ratings');
+  ratingTitle.innerText = getTextLabel('charts:subtitle');
 
   hpSelector.append(ratingTitle);
 };
@@ -167,7 +167,7 @@ const buildHeaders = (hpSelector) => {
  * @param {HTMLElement} chartListContainer - The container element that holds the charts.
  */
 const buildDrodownOptions = async (dropdownContainer, horsepowerMap, chartOptionsContainer, hpSelector, chartListContainer) => {
-  const hpLabel = getTextLabel('HP');
+  const hpLabel = getTextLabel('charts:unit-hp');
   const horsepowerOptions = Array.from(horsepowerMap.keys()).map((hp) => ({ value: hp, label: `${hp} ${hpLabel}` }));
 
   const dropdownConfig = {
