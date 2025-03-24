@@ -396,28 +396,28 @@
       "Text": "Information not sent. Please, try again later."
     },
     {
-      "Key": "HP",
-      "Text": "HP"
+      "Key": "charts:bottom-label",
+      "Text": "Revolutions Per Minute"
     },
     {
-      "Key": "lb/ft",
-      "Text": "lb/ft"
-    },
-    {
-      "Key": "Engine Ratings",
-      "Text": "Engine Ratings"
-    },
-    {
-      "Key": "Peak Power",
-      "Text": "Peak Power"
-    },
-    {
-      "Key": "Peak Torque",
+      "Key": "charts:label-tq",
       "Text": "Peak Torque"
     },
     {
-      "Key": "Engine Speed (RPM)",
-      "Text": "Engine Speed (RPM)"
+      "Key": "charts:label-hp",
+      "Text": "Peak Power"
+    },
+    {
+      "Key": "charts:unit-tq",
+      "Text": "lb-ft"
+    },
+    {
+      "Key": "charts:unit-hp",
+      "Text": "HP"
+    },
+    {
+      "Key": "charts:subtitle",
+      "Text": "Engine Ratings"
     }
   ],
   ":type": "sheet"
