@@ -1,6 +1,6 @@
 /* global videojs */
 import { isSocialAllowed, createElement, deepMerge, getTextLabel } from './common.js';
-import { getMetadata, loadScript } from './aem.js';
+import { loadScript } from './aem.js';
 
 export const VIDEO_JS_SCRIPT = '/scripts/videojs/video.min.js';
 export const VIDEO_JS_CSS = '/scripts/videojs/video-js.min.css';
@@ -93,8 +93,8 @@ export async function setupPlayer(url, videoContainer, config, video) {
   const videojsConfig = {
     ...config,
     preload: config.poster && !config.autoplay ? 'none' : 'auto',
-    bigPlayButton: false,
-    controls: true,
+    bigPlayButton: config.controls ?? true,
+    controls: config.controls ?? false,
   };
 
   if (config.autoplay) {
@@ -102,8 +102,9 @@ export async function setupPlayer(url, videoContainer, config, video) {
     videojsConfig.autoplay = true;
   }
 
-  const videoHasSound = getMetadata('video-sound').toLowerCase() === 'on';
-  videojsConfig.muted = !videoHasSound;
+  if (config.muted) {
+    videojsConfig.muted = true;
+  }
 
   await waitForVideoJs();
 
@@ -417,10 +418,20 @@ export function setPlaybackControls(container) {
   };
 
   const video = container.querySelector('video');
+  const poster = container.querySelector('picture');
   togglePlayPauseIcon(video.paused);
 
   const togglePlayPause = (el) => {
-    el[video.paused ? 'play' : 'pause']();
+    if (el.paused) {
+      if (poster) {
+        poster.remove();
+        video.parentElement.style.display = '';
+        video.style.display = '';
+      }
+      el.play();
+    } else {
+      el.pause();
+    }
   };
 
   playPauseButton.addEventListener('click', () => {
@@ -439,7 +450,7 @@ function createProgressivePlaybackVideo(src, className = '', props = {}) {
     classes: className,
   });
 
-  if (props.autoplay) {
+  if (props.muted || props.autoplay) {
     video.muted = true;
   }
 
@@ -536,7 +547,7 @@ export function getDynamicVideoHeight(video) {
  * @return {HTMLElement} - The container element that holds the video and poster.
  */
 export function createVideoWithPoster(linkUrl, poster, className, videoConfig = {}) {
-  const deafultConfig = {
+  const defaultConfig = {
     muted: false,
     autoplay: false,
     loop: false,
@@ -545,35 +556,24 @@ export function createVideoWithPoster(linkUrl, poster, className, videoConfig = 
   };
 
   const config = {
-    ...deafultConfig,
+    ...defaultConfig,
     ...videoConfig,
   };
 
   const videoContainer = document.createElement('div');
   videoContainer.classList.add('video-wrapper', className);
-
-  let playButton;
-
-  const showVideo = (e) => {
-    const ele = e.target.closest('.v2-video__big-play-button');
-    const eleParent = ele.parentElement;
-    const picture = eleParent?.querySelector('picture');
-    const video = eleParent?.querySelector('.video-js') || eleParent?.querySelector('video');
-    if (eleParent && picture && video) {
-      ele.remove();
-      picture.remove();
-      video.style.display = '';
-
-      if (video.classList.contains('video-js')) {
-        video.querySelector('video').style.display = '';
-        video.player.play();
-      } else {
-        video.play();
-      }
-    }
-  };
-
   videoContainer.append(poster);
+
+  const loadAndSetupPlayer = async (videoUrl) => {
+    const playerSetupPromise = setupPlayer(videoUrl, videoContainer, {
+      fill: true,
+      ...config,
+    });
+
+    const video = videoContainer.querySelector('.video-js');
+    video.style.display = 'none';
+    return playerSetupPromise;
+  };
 
   if (isLowResolutionVideoUrl(linkUrl)) {
     const videoOrIframe = createProgressivePlaybackVideo(linkUrl, 'video-wrapper', config);
@@ -585,47 +585,28 @@ export function createVideoWithPoster(linkUrl, poster, className, videoConfig = 
     videoContainer.append(videoOrIframe);
   } else {
     const videoUrl = getDeviceSpecificVideoUrl(linkUrl);
-    const loadPlayer = async () => {
-      const playerSetupPromise = setupPlayer(videoUrl, videoContainer, {
-        fill: true,
-        ...config,
-      });
-
-      const video = videoContainer.querySelector('.video-js');
-      video.style.display = 'none';
-
-      const player = await playerSetupPromise;
-      if (config.autoplay) {
-        player.on('loadeddata', () => {
-          if (poster) {
-            video.style.display = '';
-            // Videojs copies all video element properties to it's wrapper
-            // remove display property that was set before loading videojs
-            if (video.parentElement.classList.contains('video-js')) {
-              video.parentElement.style.display = '';
-            }
-            poster.style.display = 'none';
-            if (!config.controls) {
-              setPlaybackControls(videoContainer);
-            }
-          }
-        });
-      }
-    };
-
     if (config.autoplay) {
-      loadPlayer();
+      (async () => {
+        const player = await loadAndSetupPlayer(videoUrl);
+        const video = videoContainer.querySelector('.video-js');
+        if (config.autoplay) {
+          player.on('loadeddata', () => {
+            if (poster) {
+              video.style.display = '';
+              if (video.parentElement.classList.contains('video-js')) {
+                video.parentElement.style.display = '';
+              }
+              poster.style.display = 'none';
+              if (!config.controls) {
+                setPlaybackControls(videoContainer);
+              }
+            }
+          });
+        }
+      })();
     } else {
-      playButton = createElement('button', {
-        props: { type: 'button', class: 'v2-video__big-play-button' },
-      });
-      addPlayIcon(playButton);
-
-      playButton.addEventListener('click', async (evt) => {
-        await loadPlayer();
-        showVideo(evt);
-      });
-      videoContainer.append(playButton);
+      loadAndSetupPlayer(videoUrl);
+      setPlaybackControls(videoContainer);
     }
   }
   return videoContainer;
