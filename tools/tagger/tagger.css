@@ -108,11 +108,11 @@ span.psep {
   box-sizing: border-box;
   left: 0;
   display: grid;
-  gap: 1rem
+  gap: 1rem;
 }
 
 #selected button {
-  background-color: #F25749;
+  background-color: #f25749;
   color: white;
   border: 1px solid white;
   font-size: 13px;
@@ -147,7 +147,7 @@ main #selected button {
   top: -1000px;
 }
 
-@media(min-width: 600px) {
+@media (min-width: 600px) {
   #selected {
     grid-template-columns: 1fr 100px;
   }

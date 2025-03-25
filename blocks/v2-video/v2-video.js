@@ -56,7 +56,7 @@ const retrieveVideoConfig = (block, aspectRatio) => {
     ...(aspectRatio ? { aspectRatio: `${aspectRatio.width}:${aspectRatio.height}` } : {}),
     ...(poster ? { poster } : {}),
     autoplay: block.classList.contains('autoplay'),
-    muted: block.classList.contains('autoplay'),
+    muted: block.classList.contains('autoplay') || block.classList.contains('muted'),
     loop: block.classList.contains('loop'),
     controls: block.classList.contains('controls'),
     disablePictureInPicture: block.classList.contains('disable-picture-in-picture'),

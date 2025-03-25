@@ -398,12 +398,12 @@ header .sub-nav.block {
 }
 
 /* specific page styles */
-div:where([role="dialog"]).center,
+div:where([role='dialog']).center,
 main.center {
   text-align: center;
 }
 
-div:where([role="dialog"]).center :where(.block),
+div:where([role='dialog']).center :where(.block),
 main.center :where(.block) {
   text-align: initial;
 }
@@ -597,7 +597,9 @@ button.primary:hover {
 }
 
 /* stylelint-disable-next-line selector-list-comma-newline-after */
-input[type='text'], select, textarea {
+input[type='text'],
+select,
+textarea {
   display: block;
   padding: 10px 40px 10px 15px;
   border: none;
@@ -607,7 +609,7 @@ input[type='text'], select, textarea {
 }
 
 /* commont elements */
-div:where([role="dialog"]) input,
+div:where([role='dialog']) input,
 main input {
   font-size: 1.25rem;
   width: 100%;
@@ -622,12 +624,12 @@ main input {
   background-color: var(--c-white);
 }
 
-div:where([role="dialog"]) input:hover,
+div:where([role='dialog']) input:hover,
 main input:hover {
   outline: 2px solid var(--border-hover);
 }
 
-div:where([role="dialog"]) pre,
+div:where([role='dialog']) pre,
 main pre {
   background-color: var(--overlay-background-color);
   padding: 1em;
@@ -636,7 +638,7 @@ main pre {
   white-space: pre;
 }
 
-div:where([role="dialog"]) blockquote,
+div:where([role='dialog']) blockquote,
 main blockquote {
   font-style: italic;
   margin: 3rem;
@@ -644,13 +646,13 @@ main blockquote {
   hanging-punctuation: first;
 }
 
-div:where([role="dialog"]) blockquote p::before,
+div:where([role='dialog']) blockquote p::before,
 main blockquote p::before {
   content: '“';
   line-height: 0;
 }
 
-div:where([role="dialog"]) blockquote p::after,
+div:where([role='dialog']) blockquote p::after,
 main blockquote p::after {
   content: '”';
   line-height: 0;
@@ -663,14 +665,14 @@ hr {
   border-bottom: 1px solid var(--overlay-background-color);
 }
 
-div:where([role="dialog"]) img,
+div:where([role='dialog']) img,
 main img {
   max-width: 100%;
   height: auto;
   vertical-align: middle;
 }
 
-div:where([role="dialog"]) p img,
+div:where([role='dialog']) p img,
 main p img {
   display: block;
   margin: auto;
@@ -696,14 +698,14 @@ main p img {
 
 /* sections */
 
-div:where([role="dialog"]) .section > div,
+div:where([role='dialog']) .section > div,
 main .section > div {
   width: var(--wrapper-width);
   padding: 0 16px;
   margin: 48px auto;
 }
 
-div:where([role="dialog"]) .section-with-background,
+div:where([role='dialog']) .section-with-background,
 main .section-with-background {
   --text-color: white;
 
@@ -717,21 +719,21 @@ main .section-with-background {
   padding: 48px 0;
 }
 
-div:where([role="dialog"]) .section-with-background > div:first-of-type,
+div:where([role='dialog']) .section-with-background > div:first-of-type,
 main .section-with-background > div:first-of-type,
-div:where([role="dialog"]) .section-with-background > div:first-of-type > :first-child,
+div:where([role='dialog']) .section-with-background > div:first-of-type > :first-child,
 main .section-with-background > div:first-of-type > :first-child {
   margin-top: 0;
 }
 
-div:where([role="dialog"]) .section-with-background > div:last-of-type,
+div:where([role='dialog']) .section-with-background > div:last-of-type,
 main .section-with-background > div:last-of-type,
-div:where([role="dialog"]) .section-with-background > div:last-of-type > :last-child,
+div:where([role='dialog']) .section-with-background > div:last-of-type > :last-child,
 main .section-with-background > div:last-of-type > :last-child {
   margin-bottom: 0;
 }
 
-div:where([role="dialog"]) .section-with-background > picture:last-of-type img,
+div:where([role='dialog']) .section-with-background > picture:last-of-type img,
 main .section-with-background > picture:last-of-type img {
   width: var(--wrapper-width);
   height: 100%;
@@ -744,20 +746,20 @@ main .section-with-background > picture:last-of-type img {
   object-fit: cover;
 }
 
-div:where([role="dialog"]) .section:first-child > :first-child,
+div:where([role='dialog']) .section:first-child > :first-child,
 main .section:first-child > :first-child {
   margin-top: 0;
 }
 
 /* progressive section appearance */
-div:where([role="dialog"]) .section[data-section-status='loading'],
+div:where([role='dialog']) .section[data-section-status='loading'],
 main .section[data-section-status='loading'],
-div:where([role="dialog"]) .section[data-section-status='initialized'],
+div:where([role='dialog']) .section[data-section-status='initialized'],
 main .section[data-section-status='initialized'] {
   display: none;
 }
 
-div:where([role="dialog"]) .section.highlight,
+div:where([role='dialog']) .section.highlight,
 main .section.highlight {
   background-color: var(--highlight-background-color);
 }
@@ -789,25 +791,25 @@ ul.cta-list li {
   margin-top: -10px;
 }
 
-div:where([role="dialog"]) .section.tabbed-container-full-width > div,
+div:where([role='dialog']) .section.tabbed-container-full-width > div,
 main .section.tabbed-container-full-width > div {
   padding: 0;
   width: unset;
 }
 
-div:where([role="dialog"]) .section.tabbed-container-full-width,
+div:where([role='dialog']) .section.tabbed-container-full-width,
 main .section.tabbed-container-full-width {
   --horizontal-padding: calc((100% - var(--wrapper-width)) / 2);
 }
 
-div:where([role="dialog"]) .section.tabbed-container ul.tab-navigation,
+div:where([role='dialog']) .section.tabbed-container ul.tab-navigation,
 main .section.tabbed-container ul.tab-navigation {
   padding: 0;
   margin: 25px;
   text-align: center;
 }
 
-div:where([role="dialog"]) .section.tabbed-container ul.tab-navigation li,
+div:where([role='dialog']) .section.tabbed-container ul.tab-navigation li,
 main .section.tabbed-container ul.tab-navigation li {
   margin: 0 auto;
   padding: 0 1% 8px;
@@ -815,7 +817,7 @@ main .section.tabbed-container ul.tab-navigation li {
   width: 35%;
 }
 
-div:where([role="dialog"]) .section.tabbed-container ul.tab-navigation button,
+div:where([role='dialog']) .section.tabbed-container ul.tab-navigation button,
 main .section.tabbed-container ul.tab-navigation button {
   background: 0 0;
   border: none;
@@ -994,7 +996,7 @@ div.block div.pager .pagination .scroll li a {
 }
 
 @media screen and (min-width: 480px) {
-  div:where([role="dialog"]) .section.tabbed-container ul.tab-navigation li,
+  div:where([role='dialog']) .section.tabbed-container ul.tab-navigation li,
   main .section.tabbed-container ul.tab-navigation li {
     margin: 0 3%;
     display: inline-block;
@@ -1002,7 +1004,7 @@ div.block div.pager .pagination .scroll li a {
   }
 }
 
-@media (min-width: 768px) {
+@media (min-width: 744px) {
   ul.cta-list {
     display: inline-flex;
     width: 100%;
@@ -1016,7 +1018,7 @@ div.block div.pager .pagination .scroll li a {
     --sub-nav-height: 48px;
   }
 
-  :root:not(.redesign-v2) div:where([role="dialog"]):not(.remove-top-margin) .section:first-child > :first-child,
+  :root:not(.redesign-v2) div:where([role='dialog']):not(.remove-top-margin) .section:first-child > :first-child,
   :root:not(.redesign-v2) main:not(.remove-top-margin) .section:first-child > :first-child {
     margin-top: 30px;
   }
@@ -1026,24 +1028,24 @@ div.block div.pager .pagination .scroll li a {
   }
 }
 
-div:where([role="dialog"]).blue-contract .section,
+div:where([role='dialog']).blue-contract .section,
 main.blue-contract .section {
   padding: 40px 0;
 }
 
-div:where([role="dialog"]).blue-contract .section > div,
+div:where([role='dialog']).blue-contract .section > div,
 main.blue-contract .section > div {
   padding: 0 16px;
   margin: auto;
 }
 
-@media screen and (min-width: 768px) {
-  div:where([role="dialog"]).blue-contract .section,
+@media screen and (min-width: 744px) {
+  div:where([role='dialog']).blue-contract .section,
   main.blue-contract .section {
     padding: 80px 0;
   }
 
-  div:where([role="dialog"]).blue-contract .section > div,
+  div:where([role='dialog']).blue-contract .section > div,
   main.blue-contract .section > div {
     padding: 0 32px;
     margin: auto;
@@ -1051,7 +1053,7 @@ main.blue-contract .section > div {
 }
 
 @media screen and (min-width: 1024px) {
-  div:where([role="dialog"]).blue-contract .section > div,
+  div:where([role='dialog']).blue-contract .section > div,
   main.blue-contract .section > div {
     padding: 0 135px;
   }
@@ -1065,15 +1067,15 @@ main.blue-contract .section > div {
 
 /* Sections variant styling */
 @media (min-width: 1440px) {
-  :root:not(html.redesign-v2) div:where([role="dialog"]).blue-contract,
+  :root:not(html.redesign-v2) div:where([role='dialog']).blue-contract,
   :root:not(html.redesign-v2) main.blue-contract {
     --wrapper-width: 1440px;
   }
 }
 
-div:where([role="dialog"]).blue-contract .section.section-with-title h1,
+div:where([role='dialog']).blue-contract .section.section-with-title h1,
 main.blue-contract .section.section-with-title h1,
-div:where([role="dialog"]).blue-contract .section.section-with-title h2,
+div:where([role='dialog']).blue-contract .section.section-with-title h2,
 main.blue-contract .section.section-with-title h2 {
   font-size: var(--heading-ml-font-size);
   line-height: var(--heading-ml-line-height);
@@ -1081,7 +1083,7 @@ main.blue-contract .section.section-with-title h2 {
   margin: 0 0 16px;
 }
 
-div:where([role="dialog"]).blue-contract .section.section-with-title p,
+div:where([role='dialog']).blue-contract .section.section-with-title p,
 main.blue-contract .section.section-with-title p {
   font-size: var(--body-regular-font-size);
   line-height: var(--body-regular-line-height);
@@ -1089,40 +1091,40 @@ main.blue-contract .section.section-with-title p {
   margin: 0 0 16px;
 }
 
-@media screen and (min-width: 768px) {
-  div:where([role="dialog"]).blue-contract .section.section-with-title h1,
+@media screen and (min-width: 744px) {
+  div:where([role='dialog']).blue-contract .section.section-with-title h1,
   main.blue-contract .section.section-with-title h1,
-  div:where([role="dialog"]).blue-contract .section.section-with-title h2,
+  div:where([role='dialog']).blue-contract .section.section-with-title h2,
   main.blue-contract .section.section-with-title h2 {
     font-size: var(--heading-l-font-size);
     line-height: var(--heading-l-line-height);
     letter-spacing: var(--heading-l-letter-spacing);
   }
 
-  div:where([role="dialog"]).blue-contract .section.section-with-title p,
+  div:where([role='dialog']).blue-contract .section.section-with-title p,
   main.blue-contract .section.section-with-title p {
     font-size: var(--heading-m-font-size);
     line-height: var(--heading-m-line-height);
     letter-spacing: var(--heading-m-letter-spacing);
   }
 
-  div:where([role="dialog"]).blue-contract .section.section-with-title > p:last-of-type,
+  div:where([role='dialog']).blue-contract .section.section-with-title > p:last-of-type,
   main.blue-contract .section.section-with-title > p:last-of-type {
     margin: 0 0 40px;
   }
 }
 
 @media screen and (min-width: 1024px) {
-  div:where([role="dialog"]).blue-contract .section.section-with-title h1,
+  div:where([role='dialog']).blue-contract .section.section-with-title h1,
   main.blue-contract .section.section-with-title h1,
-  div:where([role="dialog"]).blue-contract .section.section-with-title h2,
+  div:where([role='dialog']).blue-contract .section.section-with-title h2,
   main.blue-contract .section.section-with-title h2 {
     font-size: var(--heading-xxl-font-size);
     line-height: var(--heading-xxl-line-height);
     letter-spacing: var(--heading-xxl-letter-spacing);
   }
 
-  div:where([role="dialog"]).blue-contract .section.section-with-title > p:last-of-type,
+  div:where([role='dialog']).blue-contract .section.section-with-title > p:last-of-type,
   main.blue-contract .section.section-with-title > p:last-of-type {
     margin: 0 0 80px;
   }
@@ -1191,8 +1193,9 @@ main.blue-contract .section.section-with-title p {
 }
 
 .redesign-v2 .section:first-child,
-.redesign-v2 .section:not(.section--black-background,
-.section--gray-background) + .section:not(.section--black-background, .section--gray-background) {
+.redesign-v2
+  .section:not(.section--black-background, .section--gray-background)
+  + .section:not(.section--black-background, .section--gray-background) {
   padding-top: 0;
 }
 
@@ -1384,8 +1387,8 @@ main.blue-contract .section.section-with-title p {
   --button-marketing-bg-active: #1f78d1;
 }
 
-.redesign-v2 .section--gray-background  a.button,
-.redesign-v2 .section--gray-background  button { /* stylelint-disable-line no-descending-specificity */
+.redesign-v2 .section--gray-background a.button,
+.redesign-v2 .section--gray-background button { /* stylelint-disable-line no-descending-specificity */
   --button-secondary-bg-hover: var(--c-grey-100);
   --button-secondary-bg-active: var(--c-grey-200);
   --button-tertiary-bg-hover: var(--c-grey-100);
@@ -1403,7 +1406,9 @@ main.blue-contract .section.section-with-title p {
   font-size: var(--f-heading-1-font-size);
   line-height: var(--f-heading-1-line-height);
   letter-spacing: var(--f-heading-1-letter-spacing);
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
 }
 
 .redesign-v2 .h2 {
@@ -1411,7 +1416,9 @@ main.blue-contract .section.section-with-title p {
   font-size: var(--f-heading-2-font-size);
   line-height: var(--f-heading-2-line-height);
   letter-spacing: var(--f-heading-2-letter-spacing);
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
 }
 
 .redesign-v2 .h3 {
@@ -1419,7 +1426,9 @@ main.blue-contract .section.section-with-title p {
   font-size: var(--f-heading-3-font-size);
   line-height: var(--f-heading-3-line-height);
   letter-spacing: var(--f-heading-3-letter-spacing);
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
 }
 
 .redesign-v2 .h4 {
@@ -1427,14 +1436,18 @@ main.blue-contract .section.section-with-title p {
   font-size: var(--f-heading-4-font-size);
   line-height: var(--f-heading-4-line-height);
   letter-spacing: var(--f-heading-4-letter-spacing);
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
 }
 
 .redesign-v2 .h5 {
   font-family: var(--ff-volvo-novum);
   font-size: var(--f-heading-5-font-size);
   line-height: var(--f-heading-5-line-height);
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
 }
 
 .redesign-v2 .h6 {
@@ -1442,7 +1455,9 @@ main.blue-contract .section.section-with-title p {
   font-size: var(--f-heading-6-font-size);
   line-height: var(--f-heading-6-line-height);
   letter-spacing: var(--f-heading-6-letter-spacing);
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
 }
 
 /* specificity needed to avoid breaking vendor styles */
@@ -1451,7 +1466,9 @@ main.blue-contract .section.section-with-title p {
   font-size: var(--f-subtitle-1-font-size);
   line-height: var(--f-subtitle-1-line-height);
   letter-spacing: var(--f-subtitle-1-letter-spacing);
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
 }
 
 .redesign-v2 .subtitle-2 {
@@ -1459,7 +1476,9 @@ main.blue-contract .section.section-with-title p {
   font-size: var(--f-subtitle-2-font-size);
   line-height: var(--f-subtitle-2-line-height);
   letter-spacing: var(--f-subtitle-2-letter-spacing);
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
 }
 
 .redesign-v2 .button .icon svg,
@@ -1469,7 +1488,7 @@ main.blue-contract .section.section-with-title p {
 }
 
 /* common elements */
-.redesign-v2 div:where([role="dialog"]) label,
+.redesign-v2 div:where([role='dialog']) label,
 .redesign-v2 main label {
   color: var(--c-grey-4);
   font-family: var(--font-family-heading);
@@ -1478,7 +1497,7 @@ main.blue-contract .section.section-with-title p {
   line-height: var(--f-subtitle-2-line-height);
 }
 
-.redesign-v2 div:where([role="dialog"]) input,
+.redesign-v2 div:where([role='dialog']) input,
 .redesign-v2 main input {
   color: var(--c-grey-4);
   padding: 16px;
@@ -1490,12 +1509,12 @@ main.blue-contract .section.section-with-title p {
   line-height: var(--f-subtitle-2-line-height);
 }
 
-.redesign-v2 div:where([role="dialog"]) input:hover,
+.redesign-v2 div:where([role='dialog']) input:hover,
 .redesign-v2 main input:hover {
   border-color: var(--c-grey-2);
 }
 
-.redesign-v2 div:where([role="dialog"]) input:focus-visible,
+.redesign-v2 div:where([role='dialog']) input:focus-visible,
 .redesign-v2 main input:focus-visible {
   outline: 2px solid var(--border-focus);
   outline-offset: 2px;
@@ -1570,7 +1589,9 @@ main.blue-contract .section.section-with-title p {
 
 .redesign-v2 .pretitle {
   color: var(--text-color);
-  font-feature-settings: 'clig' off, 'liga' off;
+  font-feature-settings:
+    'clig' off,
+    'liga' off;
   font-size: var(--f-body-2-font-size);
   letter-spacing: var(--f-body-2-letter-spacing);
   line-height: var(--f-body-2-line-height);
@@ -1595,6 +1616,7 @@ main.blue-contract .section.section-with-title p {
   border-radius: 22px;
   border: 0;
   padding: 0;
+  z-index: 1;
 }
 
 .v2-video__mute-controls {
@@ -1634,7 +1656,7 @@ main.blue-contract .section.section-with-title p {
   opacity: 0;
 }
 
-.v2-inpage-navigation[data-block-status="loaded"] {
+.v2-inpage-navigation[data-block-status='loaded'] {
   opacity: 1;
 }
 
@@ -1740,7 +1762,9 @@ main.blue-contract .section.section-with-title p {
   position: absolute;
   opacity: 0;
   visibility: hidden;
-  transition: opacity var(--duration-small) linear, visibility var(--duration-small) linear;
+  transition:
+    opacity var(--duration-small) linear,
+    visibility var(--duration-small) linear;
 }
 
 .redesign-v2 .tooltip.show::before,
@@ -1757,11 +1781,13 @@ main.blue-contract .section.section-with-title p {
   color: var(--c-main-black);
   background: var(--c-white);
   border-radius: 4px;
-  box-shadow: 0 2px 4px 0 rgb(0 0 0 / 20%), 0 0.3px 0.5px 0 rgb(0 0 0 / 10%);
+  box-shadow:
+    0 2px 4px 0 rgb(0 0 0 / 20%),
+    0 0.3px 0.5px 0 rgb(0 0 0 / 10%);
 }
 
 .redesign-v2 .tooltip::after {
-  content: "";
+  content: '';
   width: 0;
   height: 0;
   z-index: 4;
@@ -1875,7 +1901,7 @@ main.blue-contract .section.section-with-title p {
   display: none;
 }
 
-.truck-configurator input[type="radio"] {
+.truck-configurator input[type='radio'] {
   width: 20px;
   height: 20px;
   padding: 3px;
@@ -1884,7 +1910,7 @@ main.blue-contract .section.section-with-title p {
   margin-right: 10px;
 }
 
-.truck-configurator #configurator input[type="radio"] + label {
+.truck-configurator #configurator input[type='radio'] + label {
   font-size: 1rem;
   font-weight: normal;
 }

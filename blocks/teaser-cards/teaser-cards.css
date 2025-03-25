@@ -40,11 +40,10 @@
   object-fit: cover;
 }
 
-
 /* teaser title */
 .block.teaser-cards :is(h2, h3, h4) {
   margin: 0 0 10px;
-  letter-spacing: -.1px;
+  letter-spacing: -0.1px;
   line-height: 1.3333em;
 }
 
@@ -59,7 +58,7 @@
 .block.teaser-cards p.text {
   font-size: var(--body-font-size-xs);
   margin: 0 0 8px;
-  letter-spacing: -.1px;
+  letter-spacing: -0.1px;
 }
 
 /* cta's (maybe remove button container completely) */
@@ -123,7 +122,7 @@
   display: block;
 }
 
-@media (min-width: 768px) {
+@media (min-width: 744px) {
   /* first row div */
   .block.teaser-cards > div,
   .block.teaser-cards.link-list-on-mobile > div {
@@ -181,8 +180,8 @@
     position: absolute;
     inset: 0;
     background-color: black;
-    content: "";
-    opacity: .15;
+    content: '';
+    opacity: 0.15;
   }
 
   .teaser-cards-1 .block.teaser-cards p.image img {

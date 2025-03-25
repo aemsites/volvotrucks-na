@@ -61,7 +61,7 @@
 }
 
 .v2-content-carousel__heading {
-  font: var(--f-heading-5-font-size)/var(--f-heading-5-line-height) var(--ff-volvo-novum-medium);
+  font: var(--f-heading-5-font-size) / var(--f-heading-5-line-height) var(--ff-volvo-novum-medium);
   letter-spacing: 0.25px;
 }
 
@@ -90,7 +90,7 @@
 }
 
 .v2-content-carousel__figure-text {
-  font: var(--f-overline-font-size)/var(--f-overline-line-height) var(--font-family-body);
+  font: var(--f-overline-font-size) / var(--f-overline-line-height) var(--font-family-body);
   letter-spacing: var(--f-overline-letter-spacing);
 }
 
@@ -140,7 +140,7 @@ ul.v2-content-carousel__arrowcontrols {
     --content-carousel-list-gap: 20px;
     --content-carousel-col-gap: 24px;
     --content-carousel-container-margin: 32px;
-    --static-content-card-width: clamp(506px, 68%, calc((100% - var(--content-carousel-list-gap))/1.25));
+    --static-content-card-width: clamp(506px, 68%, calc((100% - var(--content-carousel-list-gap)) / 1.25));
   }
 
   .v2-content-carousel__images-list-col {
@@ -166,7 +166,7 @@ ul.v2-content-carousel__arrowcontrols {
   .v2-content-carousel {
     --content-carousel-row-gap: 72px;
     --content-carousel-container-margin: 20px;
-    --static-content-card-width: calc((100% - var(--content-carousel-list-gap))/1.80);
+    --static-content-card-width: calc((100% - var(--content-carousel-list-gap)) / 1.8);
   }
 
   .v2-content-carousel__col {
@@ -187,7 +187,7 @@ ul.v2-content-carousel__arrowcontrols {
   }
 
   .v2-content-carousel__figure-text {
-    font: var(--f-body-font-size)/var(--f-body-line-height) var(--font-family-body);
+    font: var(--f-body-font-size) / var(--f-body-line-height) var(--font-family-body);
     letter-spacing: var(--f-body-letter-spacing);
   }
 

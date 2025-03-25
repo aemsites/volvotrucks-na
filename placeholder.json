@@ -394,6 +394,30 @@
     {
       "Key": "V2CustomForm:ErrorSubmissionText",
       "Text": "Information not sent. Please, try again later."
+    },
+    {
+      "Key": "charts:bottom-label",
+      "Text": "Revolutions Per Minute"
+    },
+    {
+      "Key": "charts:label-tq",
+      "Text": "Peak Torque"
+    },
+    {
+      "Key": "charts:label-hp",
+      "Text": "Peak Power"
+    },
+    {
+      "Key": "charts:unit-tq",
+      "Text": "lb-ft"
+    },
+    {
+      "Key": "charts:unit-hp",
+      "Text": "HP"
+    },
+    {
+      "Key": "charts:subtitle",
+      "Text": "Engine Ratings"
     }
   ],
   ":type": "sheet"

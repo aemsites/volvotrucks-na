@@ -1,72 +1,72 @@
 .columns > div {
-    display: flex;
-    flex-direction: column;
-    gap: 32px;
-    margin: 48px 0;
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  margin: 48px 0;
 }
 
 .columns.nhtsa > div {
-    margin-top: 0;
-    margin-bottom: 0;
+  margin-top: 0;
+  margin-bottom: 0;
 }
 
 .columns.revese-odd-rows-on-mobile > div:nth-of-type(odd),
 .columns.reverse-odd-rows-on-mobile > div:nth-of-type(odd) {
-    flex-direction: column-reverse;
+  flex-direction: column-reverse;
 }
 
 .columns.reverse-even-rows-on-mobile > div:nth-of-type(even) {
-    flex-direction: column-reverse;
+  flex-direction: column-reverse;
 }
 
 .columns img {
-    width: 100%;
+  width: 100%;
 }
 
 .columns.center {
-    text-align: center;
+  text-align: center;
 }
 
 @media (min-width: 900px) {
-    .columns > div {
-        display: flex;
-        flex-direction: unset !important;
-    }
+  .columns > div {
+    display: flex;
+    flex-direction: unset !important;
+  }
 
-    .columns > div > div {
-        flex: 1;
-    }
+  .columns > div > div {
+    flex: 1;
+  }
 
-    .columns ul.cta-list {
-        justify-content: unset;
-    }
+  .columns ul.cta-list {
+    justify-content: unset;
+  }
 
-    .columns ul.cta-list li {
-        flex: 1 0 auto;
-        min-width: 242px;
-        padding-left: 0;
-        text-align: left;
-    }
+  .columns ul.cta-list li {
+    flex: 1 0 auto;
+    min-width: 242px;
+    padding-left: 0;
+    text-align: left;
+  }
 
-    .columns ul.cta-list.inline li {
-        min-width: unset;
-        flex: 0;
-        padding-right: 10px;
-    }
+  .columns ul.cta-list.inline li {
+    min-width: unset;
+    flex: 0;
+    padding-right: 10px;
+  }
 }
 
 /* styling for nhtsa */
 .columns.nhtsa p {
-    margin-bottom: 0;
+  margin-bottom: 0;
 }
 
 .columns.nhtsa a.button.primary {
-    padding: 0;
-    background-color: transparent;
-    color: var( --c-cta-blue-default);
-    height: auto;
+  padding: 0;
+  background-color: transparent;
+  color: var(--c-cta-blue-default);
+  height: auto;
 }
 
 .columns.nhtsa a.button.primary:hover {
-    color: var(--c-cta-blue-hover);
+  color: var(--c-cta-blue-hover);
 }
