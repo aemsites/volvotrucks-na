@@ -87,10 +87,6 @@
   display: block;
 }
 
-.custom-dropdown__option {
-  padding: 10px 16px;
-}
-
 .custom-dropdown__option.option-current {
   pointer-events: none;
   outline: 2px solid var(--border-focus);
@@ -110,6 +106,11 @@
   position: absolute;
   right: 15px;
   top: 25%;
+}
+
+
+.custom-dropdown__option {
+  padding: 10px 16px;
 }
 
 .custom-dropdown__option:hover {

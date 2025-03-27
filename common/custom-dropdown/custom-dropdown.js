@@ -164,7 +164,7 @@ function maintainScrollVisibility(activeElement, scrollParent) {
  * Select Component
  * Accepts a clickable element and an array of string options
  */
-const Select = function (el, options = [], onChangeCallback) {
+const Select = function (el, options = [], placeholder, onChangeCallback) {
   // element refs
   this.el = el;
   this.labelEl = el.querySelector(`.${componentName}__label`);
@@ -173,6 +173,7 @@ const Select = function (el, options = [], onChangeCallback) {
 
   // data
   this.idBase = this.buttonEl.id || componentName;
+  this.placeholder = placeholder;
   this.options = options;
   this.onChangeCallback = onChangeCallback;
 
@@ -190,7 +191,7 @@ const Select = function (el, options = [], onChangeCallback) {
 
 Select.prototype.init = function init() {
   // select first option by default
-  this.buttonEl.innerHTML = getOptionLabel(this.options[0]);
+  this.buttonEl.innerHTML = getOptionLabel(this.placeholder || this.options[0]);
 
   // add event listeners
   this.buttonEl.addEventListener('blur', this.onButtonBlur.bind(this));
@@ -209,8 +210,14 @@ Select.prototype.createOption = function createOption(option, index) {
   const optionEl = createElement('div');
   optionEl.setAttribute('role', 'option');
   optionEl.id = `${this.idBase}-${index}`;
-  optionEl.className = index === 0 ? `${componentName}__option option-current` : `${componentName}__option`;
-  optionEl.setAttribute('aria-selected', `${index === 0}`);
+
+  if (this.placeholder) {
+    optionEl.className = `${componentName}__option`;
+  } else {
+    optionEl.className = index === 0 ? `${componentName}__option option-current` : `${componentName}__option`;
+    optionEl.setAttribute('aria-selected', `${index === 0}`);
+  }
+
   optionEl.innerText = getOptionLabel(option);
 
   optionEl.addEventListener('click', (event) => {
@@ -246,7 +253,6 @@ Select.prototype.onButtonBlur = function onButtonBlur(event) {
 
   // select current option and close
   if (this.open) {
-    this.selectOption(this.activeIndex);
     this.updateMenuState(false, false);
   }
 };
@@ -354,7 +360,7 @@ Select.prototype.selectOption = function selectOption(index) {
 
   // this updates the value of the select that gets inputed in the forms
   const selectHtml = this.el.closest(`.${componentName}`).querySelector('select');
-  selectHtml.selectedIndex = index;
+  selectHtml.selectedIndex = this.placeholder ? index + 1 : index;
 
   // update aria-selected
   const optionsElements = this.el.querySelectorAll('[role=option]');
@@ -400,17 +406,17 @@ Select.prototype.updateMenuState = function updateMenuState(open, callFocus = tr
  * @param {string|Object} option - The option data, which can be a string or an object with `value` and `label` properties.
  * @returns {string} The HTML markup for the option element.
  */
-const createOptionMarkup = (idx, option) => {
+const createOptionMarkup = (idx, option, hasPlaceholder) => {
   return `
       <option
         value="${getOptionValue(option)}"
-        ${idx === 0 ? 'selected' : ''}>
+        ${idx === 0 && !hasPlaceholder ? 'selected' : ''}>
           ${getOptionLabel(option)}
       </option>`;
 };
 
-const createSelectHtml = (list) => {
-  return list.map((item, idx) => createOptionMarkup(idx, item)).join('');
+const createSelectHtml = (list, hasPlaceholder) => {
+  return list.map((item, idx) => createOptionMarkup(idx, item, hasPlaceholder)).join('');
 };
 
 function getVariantClasses(options) {
@@ -482,13 +488,13 @@ export const getCustomDropdown = async (options = {}) => {
           autocomplete="off"
           ${mandatory ? 'required' : ''}>
           ${placeholder ? `<option value="" selected disabled>${placeholder}</option>` : ''}
-          ${createSelectHtml(optionList)}
+          ${createSelectHtml(optionList, !!placeholder)}
         </select>
     `;
 
     el.appendChild(document.createRange().createContextualFragment(innerContent));
 
-    new Select(el, optionList, options.onChangeCallback);
+    new Select(el, optionList, placeholder, options.onChangeCallback);
     return el;
   } catch (error) {
     console.error(`Failed to load CSS from ${dropdownCSS}:`, error);
