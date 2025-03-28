@@ -362,6 +362,10 @@ async function createCustomDropdown(fd) {
     mandatory: fd.Mandatory,
   };
   const customDropdown = await getCustomDropdown(configFd);
+  const select = customDropdown.querySelector('select');
+  // because this dropdown is async, this dropdown replaces a temporal select element
+  // so we need to set again the invalid listener
+  select.addEventListener('invalid', showError);
   return customDropdown;
 }
 
@@ -431,27 +435,31 @@ async function fetchForm(pathname) {
 }
 
 function showError(evnt) {
-  const field = evnt.target;
-  const fieldWrapper = field.parentNode;
+  let field = evnt.target;
+  const fieldWrapper = field.closest('.field-wrapper');
   fieldWrapper.classList.add('invalid');
   let errorSpan = fieldWrapper.querySelector('span.error');
   if (!errorSpan) {
-    errorSpan = document.createElement('span');
-    errorSpan.classList.add('error');
+    errorSpan = createElement('span', { classes: 'error' });
     fieldWrapper.append(errorSpan);
   }
   errorSpan.innerText = field.validationMessage;
+  if (fieldWrapper.classList.contains('form-custom-dropdown-wrapper')) {
+    field = fieldWrapper.querySelector('.custom-dropdown__button');
+  }
   field.addEventListener('blur', hideError);
 }
 
 function hideError(evnt) {
-  const field = evnt.target;
-  const fieldWrapper = field.parentNode;
+  const isCustomDropdown = evnt.target.classList.contains('custom-dropdown__button');
+  const field = isCustomDropdown ? evnt.target.parentNode.querySelector('select') : evnt.target;
+  const fieldWrapper = field.closest('.field-wrapper');
+  const isValid = field.checkValidity();
   // to avoid showing error messages on blur
-  if (field.checkValidity()) {
-    fieldWrapper.classList.remove('invalid');
-  } else {
-    fieldWrapper.classList.add('invalid');
+  fieldWrapper.classList.toggle('invalid', !isValid);
+  const errorSpan = fieldWrapper.querySelector('span.error');
+  if (errorSpan && isValid) {
+    errorSpan.remove();
   }
 }
 
