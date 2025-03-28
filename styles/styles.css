@@ -625,7 +625,8 @@ main input {
 }
 
 div:where([role='dialog']) input:hover,
-main input:hover {
+main input:hover,
+main textarea:hover  {
   outline: 2px solid var(--border-hover);
 }
 
@@ -1510,12 +1511,15 @@ main.blue-contract .section.section-with-title p {
 }
 
 .redesign-v2 div:where([role='dialog']) input:hover,
-.redesign-v2 main input:hover {
+.redesign-v2 main input:hover,
+.redesign-v2 main textarea:hover {
   border-color: var(--c-grey-2);
+  outline-offset: -1px;
 }
 
 .redesign-v2 div:where([role='dialog']) input:focus-visible,
-.redesign-v2 main input:focus-visible {
+.redesign-v2 main input:focus-visible,
+.redesign-v2 main textarea:focus-visible {
   outline: 2px solid var(--border-focus);
   outline-offset: 2px;
 }

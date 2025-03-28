@@ -44,6 +44,7 @@
 
 .custom-dropdown__button:hover {
   outline: 2px solid var(--border-focus);
+  outline-offset: -1px;
 }
 
 .custom-dropdown__button:focus {
