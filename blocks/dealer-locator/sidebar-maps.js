@@ -2415,7 +2415,6 @@ $.fn.setAddress2 = function () {
 
   address2 = $('#location2').val();
 
-
   if (!address2) {
     return null;
   }
@@ -2694,10 +2693,10 @@ $.fn.setLocation = function () {
         if (status == google.maps.GeocoderStatus.OK) {
 
           if (results[6]) {
-            address = results[0].formatted_address;
+            address = results[0]?.formatted_address || '';
           }
           else if (results[0]) {
-            address = results[5].formatted_address;
+            address = results[5]?.formatted_address || '';
           }
           else {
             console.log('no results found');

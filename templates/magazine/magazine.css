@@ -145,7 +145,6 @@ body.magazine > main .section.template.article-sidebar > div.subscribe > a > i {
   padding-bottom: 4px;
 }
 
-
 body.magazine > main div.default-content-wrapper > blockquote > p {
   quotes: none;
   text-align: center;
@@ -193,7 +192,7 @@ div.section.related-articles-container {
 }
 
 div.section.eloqua-form-container {
-  background-color: #D8D8D8;
+  background-color: #d8d8d8;
   position: relative;
   clear: right;
   width: 100%;

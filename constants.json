@@ -77,6 +77,10 @@
       {
         "name": "TIKTOK_PIXEL_ID",
         "value": "COGKTO3C77U0VOQQGM8G"
+      },
+      {
+        "name": "MNTN_PIXEL_ID",
+        "value": "39860"
       }
     ]
   },
@@ -115,7 +119,7 @@
       },
       {
         "name": "v2AllowedBlocks",
-        "value": "[\"embed\",\"footer\",\"fragment\",\"header\",\"iframe\",\"library-metadata\"]"
+        "value": "[\"embed\",\"footer\",\"fragment\",\"header\",\"iframe\",\"library-metadata\",\"section-metadata\",\"engine-specifications\",\"sub-nav\"]"
       }
     ]
   },
@@ -164,11 +168,11 @@
     "data": [
       {
         "name": "JS",
-        "value": "[\"https://truckbuilder-vtna-9023.onecx.prod.rapidimages.net/runtime~app.7a4ccc26.bundle.js\",\"https://truckbuilder-vtna-9023.onecx.prod.rapidimages.net/254.7a4ccc26.bundle.js\",\"https://truckbuilder-vtna-9023.onecx.prod.rapidimages.net/app.7a4ccc26.bundle.js\"]"
+        "value": "[\"https://truckbuilder-vtna-9023.onecx.prod.rapidimages.net/configurator.bundle.js\"]"
       },
       {
         "name": "CSS",
-        "value": "[\"https://truckbuilder-vtna-9023.onecx.prod.rapidimages.net/254.7a4ccc261017c53b42a4.css\",\"https://truckbuilder-vtna-9023.onecx.prod.rapidimages.net/app.7a4ccc261017c53b42a4.css\"]"
+        "value": "[\"https://truckbuilder-vtna-9023.onecx.prod.rapidimages.net/configurator.css\"]"
       }
     ]
   },

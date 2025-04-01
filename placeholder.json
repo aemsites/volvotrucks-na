@@ -228,6 +228,26 @@
       "Text": "Add event to calendar"
     },
     {
+      "Key": "event-notify:company",
+      "Text": "Company"
+    },
+    {
+      "Key": "event-notify:country",
+      "Text": "Country"
+    },
+    {
+      "Key": "event-notify:united-states",
+      "Text": "United States"
+    },
+    {
+      "Key": "event-notify:canada",
+      "Text": "Canada"
+    },
+    {
+      "Key": "event-notify:other",
+      "Text": "Other"
+    },
+    {
       "Key": "view all",
       "Text": "View all"
     },
@@ -358,6 +378,46 @@
     {
       "Key": "searchPlaceholder",
       "Text": "Search magazine"
+    },
+    {
+      "Key": "V2CustomForm:SuccessfulSubmissionTitle",
+      "Text": "THANK YOU!"
+    },
+    {
+      "Key": "V2CustomForm:SuccessfulSubmissionText",
+      "Text": "Your information has been submitted. Someone will be in touch with you shortly."
+    },
+    {
+      "Key": "V2CustomForm:ErrorSubmissionTitle",
+      "Text": "Error"
+    },
+    {
+      "Key": "V2CustomForm:ErrorSubmissionText",
+      "Text": "Information not sent. Please, try again later."
+    },
+    {
+      "Key": "charts:bottom-label",
+      "Text": "Revolutions Per Minute"
+    },
+    {
+      "Key": "charts:label-tq",
+      "Text": "Peak Torque"
+    },
+    {
+      "Key": "charts:label-hp",
+      "Text": "Peak Power"
+    },
+    {
+      "Key": "charts:unit-tq",
+      "Text": "lb-ft"
+    },
+    {
+      "Key": "charts:unit-hp",
+      "Text": "HP"
+    },
+    {
+      "Key": "charts:subtitle",
+      "Text": "Engine Ratings"
     }
   ],
   ":type": "sheet"

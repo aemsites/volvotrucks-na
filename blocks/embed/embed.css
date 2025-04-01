@@ -35,12 +35,12 @@
 }
 
 .embed .cookie-message__title {
-  font: var(--f-heading-5-font-size)/var(--f-heading-5-line-height) var(--ff-volvo-novum-medium);
+  font: var(--f-heading-5-font-size) / var(--f-heading-5-line-height) var(--ff-volvo-novum-medium);
   letter-spacing: var(--f-heading-5-letter-spacing);
 }
 
 .embed .cookie-message__text {
-  font: var(--f-body-font-size)/var(--f-body-line-height) var(--font-family-body);
+  font: var(--f-body-font-size) / var(--f-body-line-height) var(--font-family-body);
 }
 
 .embed .cookie-message__text a {
@@ -48,7 +48,7 @@
   text-decoration: underline;
 }
 
-@media screen and (min-width: 768px) {
+@media screen and (min-width: 744px) {
   .embed-video {
     width: 726px;
   }

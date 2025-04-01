@@ -56,12 +56,21 @@ const addForm = async (block) => {
   const displayValue = block.style.display;
   block.style.display = 'none';
 
+  let formContent;
   const formName = block.firstElementChild.innerText.trim();
   const formAction = block.firstElementChild.nextElementSibling.innerText.trim();
 
-  const formContent = await import(`./forms/${formName}.js`);
+  try {
+    formContent = await import(`./forms/${formName}.js`);
+  } catch (error) {
+    console.error(error);
+  }
 
-  const form = `
+  if (!formContent) {
+    return;
+  }
+
+  const form = document.createRange().createContextualFragment(`
     <form
       method="post"
       name="form-${formName}"
@@ -69,11 +78,11 @@ const addForm = async (block) => {
     >${formContent.default}
 
       <div style="position:absolute; left:-9999px; top: -9999px;" aria-hidden="true">
-        <label for="pardot_extra_field">Comments</label>
-        <input type="text" id="pardot_extra_field" name="pardot_extra_field" />
+        <label for="form_extra_field">Comments</label>
+        <input type="text" id="form_extra_field" name="form_extra_field" />
       </div>
     </form>
-  `;
+  `);
 
   if (formCache.get(formName)) {
     const cachedForm = formCache.get(formName);
@@ -83,13 +92,14 @@ const addForm = async (block) => {
   }
 
   const formWrapper = createElement('div', { classes: `${blockName}__container` });
-  formWrapper.innerHTML = form;
-  block.replaceWith(formWrapper);
+  formWrapper.append(form);
+  block.innerText = '';
+  block.append(formWrapper);
   formCache.set(formName, formWrapper);
 
   block.style.display = displayValue;
 
-  const formObj = document.querySelector('form');
+  const formObj = block.querySelector('form');
 
   formObj.addEventListener('submit', (e) => {
     if (formContent.onSubmit) {

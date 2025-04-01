@@ -1,6 +1,6 @@
 /* global videojs */
 import { isSocialAllowed, createElement, deepMerge, getTextLabel } from './common.js';
-import { getMetadata } from './aem.js';
+import { loadScript } from './aem.js';
 
 export const VIDEO_JS_SCRIPT = '/scripts/videojs/video.min.js';
 export const VIDEO_JS_CSS = '/scripts/videojs/video-js.min.css';
@@ -12,6 +12,9 @@ export const AEM_ASSETS = {
   videoURLRegex: /\/assets\/urn:aaid:aem:[\w-]+\/play/,
   videoIdRegex: /urn:aaid:aem:[0-9a-fA-F-]+/,
 };
+
+export const youtubeVideoRegex =
+  /^(?:(?:https?:)?\/\/)?(?:(?:(?:www|m(?:usic)?)\.)?youtu(?:\.be|be\.com)\/(?:shorts\/|live\/|v\/|e(?:mbed)?\/|watch(?:\/|\?(?:\S+=\S+&)*v=)|oembed\?url=https?%3A\/\/(?:www|m(?:usic)?)\.youtube\.com\/watch\?(?:\S+=\S+&)*v%3D|attribution_link\?(?:\S+=\S+&)*u=(?:\/|%2F)watch(?:\?|%3F)v(?:=|%3D))?|www\.youtube-nocookie\.com\/embed\/)([\w-]{11})[?&#]?\S*$/;
 
 const { aemCloudDomain, videoURLRegex } = AEM_ASSETS;
 
@@ -90,8 +93,8 @@ export async function setupPlayer(url, videoContainer, config, video) {
   const videojsConfig = {
     ...config,
     preload: config.poster && !config.autoplay ? 'none' : 'auto',
-    bigPlayButton: false,
-    controls: true,
+    bigPlayButton: config.controls ?? true,
+    controls: config.controls ?? false,
   };
 
   if (config.autoplay) {
@@ -99,8 +102,9 @@ export async function setupPlayer(url, videoContainer, config, video) {
     videojsConfig.autoplay = true;
   }
 
-  const videoHasSound = getMetadata('video-sound').toLowerCase() === 'on';
-  videojsConfig.muted = !videoHasSound;
+  if (config.muted) {
+    videojsConfig.muted = true;
+  }
 
   await waitForVideoJs();
 
@@ -145,6 +149,16 @@ export function isLowResolutionVideoUrl(url) {
 
 export function isAEMVideoUrl(url) {
   return videoURLRegex.test(url);
+}
+
+export function isYoutubeVideoUrl(url) {
+  return youtubeVideoRegex.test(url);
+}
+
+export function getYoutubeVideoId(url) {
+  const match = url.match(youtubeVideoRegex);
+
+  return match?.length >= 2 ? match[1] : '';
 }
 
 export function isVideoLink(link) {
@@ -340,7 +354,7 @@ export function wrapImageWithVideoLink(videoLink, image) {
   addPlayIcon(videoLink);
 }
 
-export function createIframe(url, { parentEl, classes = [] }) {
+export function createIframe(url, { parentEl, classes = [], props = {} }) {
   // iframe must be recreated every time otherwise the new history record would be created
   const iframe = createElement('iframe', {
     classes: Array.isArray(classes) ? classes : [classes],
@@ -348,6 +362,7 @@ export function createIframe(url, { parentEl, classes = [] }) {
       frameborder: '0',
       allowfullscreen: 'allowfullscreen',
       src: url,
+      ...props,
     },
   });
 
@@ -403,10 +418,20 @@ export function setPlaybackControls(container) {
   };
 
   const video = container.querySelector('video');
+  const poster = container.querySelector('picture');
   togglePlayPauseIcon(video.paused);
 
   const togglePlayPause = (el) => {
-    el[video.paused ? 'play' : 'pause']();
+    if (el.paused) {
+      if (poster) {
+        poster.remove();
+        video.parentElement.style.display = '';
+        video.style.display = '';
+      }
+      el.play();
+    } else {
+      el.pause();
+    }
   };
 
   playPauseButton.addEventListener('click', () => {
@@ -425,7 +450,7 @@ function createProgressivePlaybackVideo(src, className = '', props = {}) {
     classes: className,
   });
 
-  if (props.autoplay) {
+  if (props.muted || props.autoplay) {
     video.muted = true;
   }
 
@@ -455,7 +480,17 @@ function createProgressivePlaybackVideo(src, className = '', props = {}) {
         setTimeout(() => {
           if (video.paused) {
             console.warn('Failed to autoplay video, fallback code executed');
-            video.play();
+            // TODO: This is just a way of prevent the code to break due to the NotAllowedError error on iOS and Safari
+            // For this to work better needs further development and either way it will always be an hack can at any point can stop working
+            try {
+              video.play();
+            } catch (error) {
+              if (error.name === 'NotAllowedError') {
+                console.error('Playback was prevented by the browser:', error);
+              } else {
+                console.error('An error occurred while trying to play the video:', error);
+              }
+            }
           }
         }, 500);
       },
@@ -512,7 +547,7 @@ export function getDynamicVideoHeight(video) {
  * @return {HTMLElement} - The container element that holds the video and poster.
  */
 export function createVideoWithPoster(linkUrl, poster, className, videoConfig = {}) {
-  const deafultConfig = {
+  const defaultConfig = {
     muted: false,
     autoplay: false,
     loop: false,
@@ -521,35 +556,24 @@ export function createVideoWithPoster(linkUrl, poster, className, videoConfig = 
   };
 
   const config = {
-    ...deafultConfig,
+    ...defaultConfig,
     ...videoConfig,
   };
 
   const videoContainer = document.createElement('div');
   videoContainer.classList.add('video-wrapper', className);
-
-  let playButton;
-
-  const showVideo = (e) => {
-    const ele = e.target.closest('.v2-video__big-play-button');
-    const eleParent = ele.parentElement;
-    const picture = eleParent?.querySelector('picture');
-    const video = eleParent?.querySelector('.video-js') || eleParent?.querySelector('video');
-    if (eleParent && picture && video) {
-      ele.remove();
-      picture.remove();
-      video.style.display = '';
-
-      if (video.classList.contains('video-js')) {
-        video.querySelector('video').style.display = '';
-        video.player.play();
-      } else {
-        video.play();
-      }
-    }
-  };
-
   videoContainer.append(poster);
+
+  const loadAndSetupPlayer = async (videoUrl) => {
+    const playerSetupPromise = setupPlayer(videoUrl, videoContainer, {
+      fill: true,
+      ...config,
+    });
+
+    const video = videoContainer.querySelector('.video-js');
+    video.style.display = 'none';
+    return playerSetupPromise;
+  };
 
   if (isLowResolutionVideoUrl(linkUrl)) {
     const videoOrIframe = createProgressivePlaybackVideo(linkUrl, 'video-wrapper', config);
@@ -561,47 +585,28 @@ export function createVideoWithPoster(linkUrl, poster, className, videoConfig = 
     videoContainer.append(videoOrIframe);
   } else {
     const videoUrl = getDeviceSpecificVideoUrl(linkUrl);
-    const loadPlayer = async () => {
-      const playerSetupPromise = setupPlayer(videoUrl, videoContainer, {
-        fill: true,
-        ...config,
-      });
-
-      const video = videoContainer.querySelector('.video-js');
-      video.style.display = 'none';
-
-      const player = await playerSetupPromise;
-      if (config.autoplay) {
-        player.on('loadeddata', () => {
-          if (poster) {
-            video.style.display = '';
-            // Videojs copies all video element properties to it's wrapper
-            // remove display property that was set before loading videojs
-            if (video.parentElement.classList.contains('video-js')) {
-              video.parentElement.style.display = '';
-            }
-            poster.style.display = 'none';
-            if (!config.controls) {
-              setPlaybackControls(videoContainer);
-            }
-          }
-        });
-      }
-    };
-
     if (config.autoplay) {
-      loadPlayer();
+      (async () => {
+        const player = await loadAndSetupPlayer(videoUrl);
+        const video = videoContainer.querySelector('.video-js');
+        if (config.autoplay) {
+          player.on('loadeddata', () => {
+            if (poster) {
+              video.style.display = '';
+              if (video.parentElement.classList.contains('video-js')) {
+                video.parentElement.style.display = '';
+              }
+              poster.style.display = 'none';
+              if (!config.controls) {
+                setPlaybackControls(videoContainer);
+              }
+            }
+          });
+        }
+      })();
     } else {
-      playButton = createElement('button', {
-        props: { type: 'button', class: 'v2-video__big-play-button' },
-      });
-      addPlayIcon(playButton);
-
-      playButton.addEventListener('click', async (evt) => {
-        await loadPlayer();
-        showVideo(evt);
-      });
-      videoContainer.append(playButton);
+      loadAndSetupPlayer(videoUrl);
+      setPlaybackControls(videoContainer);
     }
   }
   return videoContainer;
@@ -611,17 +616,19 @@ export function createVideoWithPoster(linkUrl, poster, className, videoConfig = 
  * Creates a video element or videojs player, depending on whether the video is local
  * or not. Configures the element with specified classes, properties, and source.
  *
- * @param {HTMLAnchorElement | string} src The link that contains video url or the URL of the video.
- * @param {string} [className=''] Optional. CSS class names to apply to the video container.
- * @param {Object} [props={}] Optional. Properties for video player,
- *                            including attributes like 'muted', 'autoplay', 'title'.
- * @returns {HTMLElement} The created video element or player with specified configs.
+ * @param {HTMLAnchorElement | string} link - The link that contains the video URL or the URL of the video.
+ * @param {string} [className=''] - Optional. CSS class names to apply to the video container.
+ * @param {Object} [videoParams={}] - Optional. Properties for the video player, including attributes like 'muted', 'autoplay', 'title'.
+ * @param {Object} [configs={}] - Optional. Additional configurations such as 'usePosterAutoDetection' and 'checkVideoCookie'.
+ * @param {boolean} [configs.usePosterAutoDetection=false] - Whether to automatically detect and use a poster image.
+ * @param {boolean} [configs.checkVideoCookie=false] - Whether to check for video cookie settings.
+ * @returns {HTMLElement | null} - The created video element or player with specified configs, or null if the video link is invalid.
  */
-export const createVideo = (link, className = '', props = {}) => {
+export const createVideo = (link, className = '', videoParams = {}, configs = {}) => {
   let src;
   let poster;
 
-  const { usePosterAutoDetection, ...videoConfig } = props;
+  const { usePosterAutoDetection, checkVideoCookie } = configs;
   if (link instanceof HTMLAnchorElement) {
     const config = parseVideoLink(link, usePosterAutoDetection);
     if (!config) {
@@ -635,19 +642,19 @@ export const createVideo = (link, className = '', props = {}) => {
   }
 
   if (isLowResolutionVideoUrl(src)) {
-    return createProgressivePlaybackVideo(src, className, videoConfig);
+    return createProgressivePlaybackVideo(src, className, videoParams);
   }
 
   if (poster) {
-    return createVideoWithPoster(src, poster, className, videoConfig);
+    return createVideoWithPoster(src, poster, className, videoParams);
   }
 
   const container = document.createElement('div');
   container.classList.add(className);
 
   const videoUrl = getDeviceSpecificVideoUrl(src);
-  setupPlayer(videoUrl, container, videoConfig);
-  if (!videoConfig.controls) {
+  setupPlayer(videoUrl, container, videoParams, null, checkVideoCookie);
+  if (!videoParams.controls) {
     setPlaybackControls(container);
   }
 
@@ -726,10 +733,7 @@ export const addMuteControls = (section) => {
 };
 
 export function loadYouTubeIframeAPI() {
-  const tag = document.createElement('script');
-  tag.src = 'https://www.youtube.com/iframe_api';
-  const firstScriptTag = document.getElementsByTagName('script')[0];
-  firstScriptTag.parentNode.insertBefore(tag, firstScriptTag);
+  return loadScript('https://www.youtube.com/iframe_api');
 }
 
 const logVideoEvent = (eventName, videoId, timeStamp, blockName = 'video') => {

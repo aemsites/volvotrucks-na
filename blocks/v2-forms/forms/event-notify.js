@@ -1,26 +1,58 @@
 import { getTextLabel } from '../../../scripts/common.js';
+import { getCustomDropdown } from '../../../common/custom-dropdown/custom-dropdown.js';
 
+const COUNTRY_CODES = ['united-states', 'canada', 'other'];
 const formName = 'event-notify';
+const TYPES = {
+  firstName: 'first-name',
+  lastName: 'last-name',
+  zip: 'zip',
+  email: 'email',
+  country: 'country',
+  company: 'company',
+  agreement: 'agreement',
+  notify: 'notify',
+  addEvent: 'add-event',
+};
+
+const mapCountryCodesToLabels = (countryCodes = []) => {
+  return countryCodes.map((code) => getTextLabel(`event-notify:${code}`));
+};
+
+const getTypeKey = (type) => {
+  return `${formName}:${type}`;
+};
+
+const optionList = mapCountryCodesToLabels(COUNTRY_CODES);
+
 const formContent = `
   <div class="${formName}__wrapper">
     <div class="${formName}__field-wrapper">
-      <label for="${formName}-name">${getTextLabel('event-notify:first-name')}*</label>
+      <label for="${formName}-name">${getTextLabel(getTypeKey(TYPES.firstName))}*</label>
       <input type="text" id="${formName}-name" name="first_name" autocomplete="off" placeholder="" required />
       <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
     </div>
     <div class="${formName}__field-wrapper">
-      <label for="${formName}-last-name">${getTextLabel('event-notify:last-name')}*</label>
+      <label for="${formName}-last-name">${getTextLabel(getTypeKey(TYPES.lastName))}*</label>
       <input type="text" id="${formName}-last-name" name="last_name" autocomplete="off" placeholder="" required />
       <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
     </div>
     <div class="${formName}__field-wrapper">
-      <label for="${formName}-zip">${getTextLabel('event-notify:zip')}*</label>
+      <label for="${formName}-zip">${getTextLabel(getTypeKey(TYPES.zip))}*</label>
       <input type="text" id="${formName}-zip" name="zip" autocomplete="off" placeholder="" required />
       <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
     </div>
     <div class="${formName}__field-wrapper">
-      <label for="${formName}-email">${getTextLabel('event-notify:email')}*</label>
+      <label for="${formName}-email">${getTextLabel(getTypeKey(TYPES.email))}*</label>
       <input type="email" id="${formName}-email" name="email" autocomplete="off" placeholder="" required />
+      <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
+    </div>
+    <div class="${formName}__field-wrapper">
+      <div class="custom-dropdown"></div>
+    </div>
+    <div class="${formName}__field-wrapper">
+      <label for="${formName}-company">${getTextLabel(getTypeKey(TYPES.company))}*</label>
+      <input type="text" id="${formName}-company" name="company" autocomplete="off" placeholder="" required />
       <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
     </div>
   </div>
@@ -28,7 +60,7 @@ const formContent = `
     <div class="checkbox-with-label">
       <input type="checkbox" id="${formName}-agreement" name="marketing_consent" value="true" required/>
       <label for="${formName}-agreement">
-        ${getTextLabel('event-notify:agreement')}
+        ${getTextLabel(getTypeKey(TYPES.agreement))}
       </label>
       <span class="${formName}__error-message ${formName}__error-message--hidden"></span>
     </div>
@@ -37,8 +69,8 @@ const formContent = `
   </div>
 
   <div class="${formName}__buttons">
-    <button class="button primary" type="submit">${getTextLabel('event-notify:notify')}</button>
-    <a class="button secondary ${formName}__add-event-button">${getTextLabel('event-notify:add-event')}</a>
+    <button class="button primary" type="submit">${getTextLabel(getTypeKey(TYPES.notify))}</button>
+    <a class="button secondary ${formName}__add-event-button">${getTextLabel(getTypeKey(TYPES.addEvent))}</a>
   </div>
 `;
 
@@ -55,8 +87,21 @@ const checkFieldValidity = (field, useUserInvalid = true) => {
   }
 };
 
-export const postLoad = (form) => {
+export const postLoad = async (form) => {
   form.setAttribute('novalidate', 'novalidate');
+
+  const formHasCustomDropdown = form.querySelector('.custom-dropdown');
+  if (formHasCustomDropdown) {
+    const customDropDown = await getCustomDropdown({
+      formName,
+      label: getTypeKey(TYPES.country),
+      optionList,
+      name: TYPES.country,
+      mandatory: true,
+      variants: ['thick'],
+    });
+    formHasCustomDropdown.replaceWith(customDropDown);
+  }
 
   const fields = [...form.querySelectorAll('input')];
 
@@ -74,7 +119,7 @@ export const postLoad = (form) => {
 };
 
 export const onSubmit = async (form, handleSubmit) => {
-  const fields = [...form.querySelectorAll('input')];
+  const fields = [...form.querySelectorAll('input, select')];
 
   fields.forEach((el) => checkFieldValidity(el, false));
 
