@@ -6,7 +6,6 @@ const filterContainerClass = `${blockName}__filter-container`;
 const dropdownClass = `${blockName}__filter-dropdown`;
 const dropdownOpen = `${blockName}__filter-dropdown--open`;
 const filterListOpen = `${blockName}__filter-list-wrapper--open`;
-const filterActive = `${blockName}__filter-link--active`;
 const searchInputExpanded = `${blockName}__search-input--expanded`;
 const blockVariants = ['black', 'gray'];
 
@@ -18,7 +17,7 @@ const locale = getLocale();
 const language = locale.split('-')[0].toUpperCase();
 
 const currentURL = new URL(window.location.href);
-const magazinePath = '/news-and-stories/volvo-trucks-magazine/';
+const magazinePath = '/news-and-stories/volvo-trucks-stories/';
 const magazineParam = '?search=&category=&topic=&truck=';
 currentURL.pathname = magazinePath;
 currentURL.search = magazineParam;
@@ -86,22 +85,16 @@ const buildFilterElement = () =>
     <div class="${blockName}__filter-list-wrapper"></div>
   </div>
 `);
-
-// Capitalize the first letter of each word
-const formatValue = (item) => {
-  const { key, value } = item;
-  return key === 'truck' ? value.toUpperCase() : value.replace(/\b\w/g, (char) => char.toUpperCase());
-};
-
+// no need to format the list items as they are already formatted in BE
 const buildBulletList = (allTopics) =>
   allTopics
     .map((item) => {
-      const param = item.value.toLowerCase().replace(/\s/g, '-');
+      const param = item.value.replace(/\s/g, '-');
       currentURL.search = magazineParam;
       currentURL.searchParams.set(item.key, param);
       return `<li class="${blockName}__filter-item">
     <a href="${currentURL.href.replace('#', '')}"
-      class="${blockName}__filter-link">${formatValue(item)}</a>
+      class="${blockName}__filter-link">${item.value}</a>
   </li>`;
     })
     .join('');
@@ -122,30 +115,6 @@ const addDropdownHandler = (filter) => {
     const filterList = filterContainer.querySelector(`.${blockName}__filter-list-wrapper`);
     dropdown.classList.toggle(dropdownOpen);
     filterList.classList.toggle(filterListOpen);
-  });
-};
-
-const addFilterListHandler = (itemLink) => {
-  itemLink.addEventListener('click', (e) => {
-    if (e.target.tagName !== 'A') {
-      return;
-    }
-    const isActive = e.target.classList.contains(filterActive);
-    const filterList = e.target.closest(`.${blockName}__filter-list`);
-    const otherItems = [...filterList.querySelectorAll(`.${blockName}__filter-link`)].filter((item) => item !== e.target);
-    otherItems.forEach((item) => item.classList.remove(filterActive));
-    e.target.classList.toggle(filterActive);
-
-    // close the dropdown
-    if (isActive) {
-      e.preventDefault();
-      return;
-    }
-    const filterContainer = filterList.closest(`.${filterContainerClass}`);
-    const dropdown = filterContainer.querySelector(`.${dropdownClass}`);
-    const filterListWrapper = filterContainer.querySelector(`.${blockName}__filter-list-wrapper`);
-    dropdown.classList.remove(dropdownOpen);
-    filterListWrapper.classList.remove(filterListOpen);
   });
 };
 
@@ -224,7 +193,7 @@ const initializeSearchHandlers = (searchContainer) => {
     if (searchTerm) {
       currentURL.search = magazineParam;
       currentURL.searchParams.set('search', searchTerm);
-      window.open(currentURL.href, '_blank');
+      window.location.href = currentURL.href;
       collapseSearchContainer();
     }
   };
@@ -250,7 +219,6 @@ const decorateArticleSearch = async (block) => {
   filter.querySelector(`.${blockName}__filter-list-wrapper`).append(filterList);
   block.prepend(filter);
   addDropdownHandler(block.querySelector(`.${blockName}__filter-dropdown`));
-  addFilterListHandler(block.querySelector(`.${blockName}__filter-list`));
   addCloseHandler(block.querySelector('.icon-close'));
   const filterContainer = block.querySelector(`.${blockName}__filter-container`);
   if (filterContainer) {
