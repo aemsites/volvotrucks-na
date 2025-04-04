@@ -206,6 +206,15 @@
   margin-bottom: 8px;
 }
 
+.v2-media-with-text__media .video-js {
+  height: 100%;
+  width: 100%;
+}
+
+.v2-media-with-text__media .video-js video {
+  object-fit: cover;
+}
+
 @media (min-width: 744px) {
   /* Variant: default  */
   .v2-media-with-text__media-section .v2-media-with-text__media {

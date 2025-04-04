@@ -6,8 +6,9 @@ const blockName = 'v2-masonry-grid';
 
 export default function decorate(block) {
   const ul = createElement('ul', { classes: `${blockName}__items` });
+  const cells = [...block.querySelectorAll(':scope > div > div')];
 
-  [...block.querySelectorAll(':scope > div > div')].forEach((cell) => {
+  cells.forEach((cell) => {
     if (cell.childElementCount) {
       const links = cell.querySelectorAll('a');
       const videos = [...links].filter((link) => isVideoLink(link));
@@ -31,17 +32,18 @@ export default function decorate(block) {
             playsinline: true,
           });
           li.prepend(video);
-          videos[0].remove();
         }
 
         ul.append(li);
       }
     }
-    cell.remove();
   });
 
   block.append(ul);
 
-  // remove empty tags
-  removeEmptyTags(block);
+  requestAnimationFrame(() => {
+    cells.forEach((cell) => {
+      cell.parentElement.remove();
+    });
+  });
 }
