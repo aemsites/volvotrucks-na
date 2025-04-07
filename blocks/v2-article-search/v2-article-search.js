@@ -85,7 +85,7 @@ const buildFilterElement = () =>
     <div class="${blockName}__filter-list-wrapper"></div>
   </div>
 `);
-// no need to format the list items as they are already formatted in BE
+
 const buildBulletList = (allTopics) =>
   allTopics
     .map((item) => {
