@@ -37,6 +37,11 @@
   align-items: center;
 }
 
+.v2-custom-form-container :is(textarea, input, select, .custom-dropdown__button):is(:hover, :focus-visible) {
+  outline: 2px solid var(--border-focus);
+  outline-offset: -1px;
+}
+
 .v2-custom-form-container .form-select-wrapper {
   position: relative;
   font-size: var(--f-subtitle-2-font-size);
