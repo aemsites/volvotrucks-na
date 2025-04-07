@@ -363,8 +363,8 @@ async function createCustomDropdown(fd) {
   };
   const customDropdown = await getCustomDropdown(configFd);
   const select = customDropdown.querySelector('select');
-  // because this dropdown is async, this dropdown replaces a temporal select element
-  // so we need to set again the invalid listener
+  // Because this dropdown is asynchronous and replaces a temporary element,
+  // we need to reattach the invalid event listener
   select.addEventListener('invalid', showError);
   return customDropdown;
 }
