@@ -17,7 +17,10 @@ const locale = getLocale();
 const language = locale.split('-')[0].toUpperCase();
 
 const currentURL = new URL(window.location.href);
-const magazinePath = '/news-and-stories/volvo-trucks-stories/';
+const { pathname } = currentURL;
+const currentPath = pathname.split('/').filter((segment) => segment !== '');
+const [newsAndStories, mainStories] = currentPath;
+const magazinePath = `/${newsAndStories}/${mainStories}/`;
 const magazineParam = '?search=&category=&topic=&truck=';
 currentURL.pathname = magazinePath;
 currentURL.search = magazineParam;
