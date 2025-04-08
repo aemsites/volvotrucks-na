@@ -2,8 +2,8 @@
 import { isSocialAllowed, createElement, deepMerge, getTextLabel } from './common.js';
 import { loadScript } from './aem.js';
 
-export const VIDEO_JS_SCRIPT = `${window.hlx.aemassets?.codeBasePath ?? ''}/scripts/videojs/video.min.js`;
-export const VIDEO_JS_CSS = `${window.hlx.aemassets?.codeBasePath ?? ''}/scripts/videojs/video-js.min.css`;
+export const VIDEO_JS_SCRIPT = '/scripts/videojs/video.min.js';
+export const VIDEO_JS_CSS = '/scripts/videojs/video-js.min.css';
 
 // videoURLRegex: verify if a given string follows a specific pattern indicating it is a video URL
 // videoIdRegex: extract the video ID from the URL
