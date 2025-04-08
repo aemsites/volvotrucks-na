@@ -44,6 +44,7 @@
 
 .custom-dropdown__button:hover {
   outline: 2px solid var(--border-focus);
+  outline-offset: -1px;
 }
 
 .custom-dropdown__button:focus {
@@ -87,10 +88,6 @@
   display: block;
 }
 
-.custom-dropdown__option {
-  padding: 10px 16px;
-}
-
 .custom-dropdown__option.option-current {
   pointer-events: none;
   outline: 2px solid var(--border-focus);
@@ -110,6 +107,11 @@
   position: absolute;
   right: 15px;
   top: 25%;
+}
+
+
+.custom-dropdown__option {
+  padding: 10px 16px;
 }
 
 .custom-dropdown__option:hover {
