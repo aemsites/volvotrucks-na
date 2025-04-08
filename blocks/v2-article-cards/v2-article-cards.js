@@ -111,18 +111,16 @@ const filterDisplayedArticles = (articles) => {
   });
 };
 
-export default async function decorate(block) {
+const getFetchQueryOption = () => {
   const currentURL = new URL(window.location);
   const params = new URLSearchParams(currentURL.search);
-  const q = params.get('search');
+  const searchQuery = params.get('search');
   const filters = ['truck', 'category', 'topic'];
   const tags = {};
   const options = { limit: 100 };
-  let hasFilters = false;
 
-  if (q) {
-    options.q = q;
-    hasFilters = true;
+  if (searchQuery) {
+    options.q = searchQuery;
   }
 
   if (filters.some((filter) => params.get(filter))) {
@@ -134,8 +132,27 @@ export default async function decorate(block) {
     });
 
     options.tags = tags;
-    hasFilters = true;
   }
+
+  return options;
+};
+
+const queryHasFilters = () => {
+  const currentURL = new URL(window.location);
+  const params = new URLSearchParams(currentURL.search);
+  const searchQuery = params.get('search');
+  const filters = ['truck', 'category', 'topic'];
+
+  if (searchQuery || filters.some((filter) => params.get(filter))) {
+    return true;
+  }
+
+  return false;
+};
+
+export default async function decorate(block) {
+  const options = getFetchQueryOption();
+  const hasFilters = queryHasFilters();
 
   if (hasFilters) {
     block.innerText = '';
