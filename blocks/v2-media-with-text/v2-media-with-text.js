@@ -81,8 +81,10 @@ export default async function decorate(block) {
 
         if (videoLink) {
           if (picture) {
-            const videoWithPoster = createVideoWithPoster(videoLink.href, picture, `${blockName}--video-with-poster`, { controls: false });
-            mediaSection.append(videoWithPoster);
+            requestAnimationFrame(() => {
+              const videoWithPoster = createVideoWithPoster(videoLink.href, picture, `${blockName}--video-with-poster`, { controls: false });
+              mediaSection.append(videoWithPoster);
+            });
           } else {
             requestAnimationFrame(() => {
               mediaSection = addVideoToSection(blockName, mediaSection, videoLink);
