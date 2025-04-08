@@ -22,7 +22,7 @@ const currentURL = new URL(window.location.href);
 // Previously:
 // const magazinePath = '/news-and-stories/volvo-trucks-stories/';
 // TODO: One day define the magazine full path in some config so we don't have this hardcoded logic
-// Now we are grabing the first two parts of the path which will allow for translations if necessary
+// Now we are grabbing the first two parts of the path which will allow for translations if necessary
 // but this is still wrong since it has hardcoded paths, should be reviewed
 const { pathname } = currentURL;
 const currentPath = pathname.split('/').filter((segment) => segment !== '');

@@ -142,12 +142,7 @@ const queryHasFilters = () => {
   const params = new URLSearchParams(currentURL.search);
   const searchQuery = params.get('search');
   const filters = ['truck', 'category', 'topic'];
-
-  if (searchQuery || filters.some((filter) => params.get(filter))) {
-    return true;
-  }
-
-  return false;
+  return Boolean(searchQuery || filters.some((filter) => params.get(filter)));
 };
 
 export default async function decorate(block) {
