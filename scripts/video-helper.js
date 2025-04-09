@@ -605,8 +605,12 @@ export function createVideoWithPoster(linkUrl, poster, className, videoConfig = 
         }
       })();
     } else {
-      loadAndSetupPlayer(videoUrl);
-      setPlaybackControls(videoContainer);
+      async function initializePlayerWithControls() {
+        await loadAndSetupPlayer(videoUrl);
+        setPlaybackControls(videoContainer);
+      }
+
+      initializePlayerWithControls();
     }
   }
   return videoContainer;
@@ -653,10 +657,16 @@ export const createVideo = (link, className = '', videoParams = {}, configs = {}
   container.classList.add(className);
 
   const videoUrl = getDeviceSpecificVideoUrl(src);
-  setupPlayer(videoUrl, container, videoParams, null, checkVideoCookie);
-  if (!videoParams.controls) {
-    setPlaybackControls(container);
+
+  async function initializePlayerWithControls() {
+    await setupPlayer(videoUrl, container, videoParams, null, checkVideoCookie);
+
+    if (!videoParams.controls) {
+      setPlaybackControls(container);
+    }
   }
+
+  initializePlayerWithControls();
 
   return container;
 };
