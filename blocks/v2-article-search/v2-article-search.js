@@ -1,4 +1,12 @@
-import { decorateIcons, getPlaceholders, getTextLabel, getLocale, variantsClassesToBEM, getLanguagePath } from '../../scripts/common.js';
+import {
+  decorateIcons,
+  getPlaceholders,
+  getTextLabel,
+  getLocale,
+  variantsClassesToBEM,
+  getLanguagePath,
+  MAGAZINE_CONFIGS,
+} from '../../scripts/common.js';
 import { topicSearchQuery, fetchSearchData, TENANT } from '../../scripts/search-api.js';
 
 const blockName = 'v2-article-search';
@@ -16,22 +24,9 @@ const searchPlaceholder = getTextLabel('searchPlaceholder');
 const locale = getLocale();
 const language = locale.split('-')[0].toUpperCase();
 const languagePath = getLanguagePath();
-const hasLanguagePath = languagePath !== '/';
-
 const currentURL = new URL(window.location.href);
-// Previously:
-// const magazinePath = '/news-and-stories/volvo-trucks-stories/';
-// TODO: One day define the magazine full path in some config so we don't have this hardcoded logic
-// Now we are grabbing the first two parts of the path which will allow for translations if necessary
-// but this is still wrong since it has hardcoded paths, should be reviewed
-const { pathname } = currentURL;
-const currentPath = pathname.split('/').filter((segment) => segment !== '');
-if (hasLanguagePath) {
-  // If the language path exists, we need to remove it from the current path
-  currentPath.shift();
-}
-const [newsAndStories, mainStories] = currentPath;
-const magazinePath = `${languagePath}${newsAndStories}/${mainStories}/`;
+const { MAGAZINE_PATH } = MAGAZINE_CONFIGS;
+const magazinePath = `${languagePath}${MAGAZINE_PATH}`;
 const magazineParam = '?search=&category=&topic=&truck=';
 currentURL.pathname = magazinePath;
 currentURL.search = magazineParam;
