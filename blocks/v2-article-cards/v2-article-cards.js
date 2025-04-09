@@ -111,7 +111,7 @@ const filterDisplayedArticles = (articles) => {
   });
 };
 
-const getFetchQueryOption = () => {
+const getQueryOptionsFromURL = () => {
   const currentURL = new URL(window.location);
   const params = new URLSearchParams(currentURL.search);
   const searchQuery = params.get('search');
@@ -137,7 +137,7 @@ const getFetchQueryOption = () => {
   return options;
 };
 
-const queryHasFilters = () => {
+const hasQueryFilters = () => {
   const currentURL = new URL(window.location);
   const params = new URLSearchParams(currentURL.search);
   const searchQuery = params.get('search');
@@ -146,8 +146,8 @@ const queryHasFilters = () => {
 };
 
 export default async function decorate(block) {
-  const options = getFetchQueryOption();
-  const hasFilters = queryHasFilters();
+  const options = getQueryOptionsFromURL();
+  const hasFilters = hasQueryFilters();
 
   if (hasFilters) {
     block.innerText = '';
