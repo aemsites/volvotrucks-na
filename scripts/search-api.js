@@ -1,15 +1,14 @@
-import { isDevHost, SEARCH_CONFIGS } from './common.js';
+import { SEARCH_CONFIGS } from './common.js';
 
-export const { TENANT = false, SEARCH_URL_DEV = false, SEARCH_URL_PROD = false } = SEARCH_CONFIGS;
-const isProd = !isDevHost();
-const SEARCH_LINK = !isProd ? SEARCH_URL_DEV : SEARCH_URL_PROD;
+export const { TENANT = false, SEARCH_URL_PROD = false } = SEARCH_CONFIGS;
 
+// because the dev url has different items is better to use the prod one also in dev
 export async function fetchSearchData(queryObj) {
   try {
-    if (!SEARCH_LINK) {
+    if (!SEARCH_URL_PROD) {
       throw new Error('Search link not found');
     }
-    const response = await fetch(SEARCH_LINK, {
+    const response = await fetch(SEARCH_URL_PROD, {
       method: 'POST',
       headers: {
         Accept: 'application/json',

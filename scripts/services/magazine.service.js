@@ -2,9 +2,9 @@ import { getLocale } from '../common.js';
 import { fetchSearchData, magazineSearchQuery, TENANT } from '../search-api.js';
 
 /**
- * Extracts the articles that dont have an image field
+ * Extracts the articles that don't have an image field
  * @param {Array} articles - An array of articles
- * @returns {Array} - The same array of articles but without those that dont have an image field
+ * @returns {Array} - The same array of articles but without those that don't have an image field
  */
 export const removeArticlesWithNoImage = (articles) => {
   const filteredArray = [...articles.items];
@@ -99,7 +99,7 @@ export const sortArticlesByDateField = (articles, dateField) => {
  * @param {Object} options - Options for fetching magazine articles.
  * @param {number} options.limit - The maximum number of articles to fetch.
  * @param {number} [options.offset=0] - The starting point for fetching articles (pagination).
- * @param {Array<string>|null} [options.tags=null] - Tags to filter articles.
+ * @param {Object|null} [options.tags=null] - An object with keys "truck", "topic" and/or "category" to filter articles, or null.
  * @param {string} [options.q='truck'] - The query term to search for articles.
  * @param {string} [options.sort] - The sorting criteria for articles.
  * @param {string} [options.tenant=TENANT] - The tenant identifier.

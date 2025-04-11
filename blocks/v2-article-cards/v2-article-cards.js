@@ -111,8 +111,49 @@ const filterDisplayedArticles = (articles) => {
   });
 };
 
+const getQueryOptionsFromURL = () => {
+  const currentURL = new URL(window.location);
+  const params = new URLSearchParams(currentURL.search);
+  const searchQuery = params.get('search');
+  const filters = ['truck', 'category', 'topic'];
+  const tags = {};
+  const options = { limit: 100 };
+
+  if (searchQuery) {
+    options.q = searchQuery;
+  }
+
+  if (filters.some((filter) => params.get(filter))) {
+    filters.forEach((filter) => {
+      const filterParam = params.get(filter);
+      if (filterParam) {
+        tags[filter] = filterParam.split(',').map((item) => item.trim().replaceAll('-', ' '));
+      }
+    });
+
+    options.tags = tags;
+  }
+
+  return options;
+};
+
+const hasQueryFilters = () => {
+  const currentURL = new URL(window.location);
+  const params = new URLSearchParams(currentURL.search);
+  const searchQuery = params.get('search');
+  const filters = ['truck', 'category', 'topic'];
+  return Boolean(searchQuery || filters.some((filter) => params.get(filter)));
+};
+
 export default async function decorate(block) {
-  const allArticles = await fetchMagazineArticles({ limit: 100 });
+  const options = getQueryOptionsFromURL();
+  const hasFilters = hasQueryFilters();
+
+  if (hasFilters) {
+    block.innerText = '';
+  }
+
+  const allArticles = await fetchMagazineArticles(options);
   const articles = removeArticlesWithNoImage(allArticles);
 
   if (!articles) {
