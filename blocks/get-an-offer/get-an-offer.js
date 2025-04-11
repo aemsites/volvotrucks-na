@@ -1,4 +1,4 @@
-import { decorateSections, decorateBlocks, decorateButtons, loadBlocks, loadCSS } from '../../scripts/aem.js';
+import { decorateSections, decorateBlocks, decorateButtons, loadSections, loadCSS } from '../../scripts/aem.js';
 import { decorateIcons } from '../../scripts/common.js';
 
 export async function showOffer(a) {
@@ -41,7 +41,7 @@ export async function showOffer(a) {
       container.classList.remove('show-details');
     }
 
-    await loadBlocks(container);
+    await loadSections(container);
   }
 
   if (content.ok) {
