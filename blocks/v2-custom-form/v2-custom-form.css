@@ -20,7 +20,8 @@
 
 .v2-custom-form-container textarea,
 .v2-custom-form-container input,
-.v2-custom-form-container select {
+.v2-custom-form-container select,
+.v2-custom-form-container .custom-dropdown__button {
   background-color: var(--background-color);
   border: 1px solid var(--c-grey-2);
   border-radius: 4px;
@@ -29,6 +30,16 @@
   padding: 16px;
   margin-bottom: 16px;
   height: 40px;
+}
+
+.v2-custom-form-container .custom-dropdown__button {
+  padding: 0 16px;
+  align-items: center;
+}
+
+.v2-custom-form-container :is(textarea, input, select, .custom-dropdown__button):is(:hover, :focus-visible) {
+  outline: 2px solid var(--border-focus);
+  outline-offset: -1px;
 }
 
 .v2-custom-form-container .form-select-wrapper {
@@ -78,6 +89,17 @@
   content: ' *';
   color: var(--text-color);
 }
+
+.v2-custom-form-container .field-wrapper .error {
+  color: var(--c-error-red);
+}
+
+.v2-custom-form-container .field-wrapper:has(.error) input,
+.v2-custom-form-container .field-wrapper:has(.error) textarea,
+.v2-custom-form-container .field-wrapper:has(.error) .custom-dropdown__button {
+  border-color: var(--c-error-red);
+}
+
 
 .v2-custom-form-container.section-with-background.section {
   --text-color: var(--c-black);

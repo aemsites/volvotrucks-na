@@ -2,6 +2,8 @@
 *.md
 karma.config.js
 LICENSE
+constants.json
 package.json
 package-lock.json
+placeholder.json
 test/*
