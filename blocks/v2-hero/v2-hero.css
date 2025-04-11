@@ -65,6 +65,15 @@
   object-position: center right;
 }
 
+.v2-hero .video-js {
+  height: 100%;
+  width: 100%;
+}
+
+.v2-hero .video-js video {
+  object-fit: cover;
+}
+
 .v2-hero__content-wrapper {
   --padding-bottom-calc: calc((var(--v2-hero-padding) * 2) + var(--scroll-icon-height));
 

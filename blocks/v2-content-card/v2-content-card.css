@@ -37,12 +37,22 @@
 
 .v2-content-card__media {
   object-fit: cover;
+  height: 100%;
   width: 100%;
   display: block;
   aspect-ratio: 3/2;
 
   /* Safari needs to have set border-radius explicitly for videos */
   border-radius: var(--border-radius) var(--border-radius) 0 0;
+}
+
+.v2-content-card__media .video-js {
+  height: 100%;
+  width: 100%;
+}
+
+.v2-content-card__media .video-js video {
+  object-fit: cover;
 }
 
 /* Text styles */

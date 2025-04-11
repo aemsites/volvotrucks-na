@@ -81,7 +81,7 @@ function decorate(block) {
     block.prepend(picture);
   }
 
-  const contentWrapper = block.querySelector(':scope > div');
+  const contentWrapper = block.querySelector(':scope > div:last-of-type');
   contentWrapper.classList.add(`${blockName}__content-wrapper`);
 
   const content = block.querySelector(':scope > div > div');

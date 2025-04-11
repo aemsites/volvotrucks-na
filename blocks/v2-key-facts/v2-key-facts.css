@@ -33,6 +33,15 @@
   max-height: 510px;
 }
 
+.v2-key-facts .video-js {
+  height: 100%;
+  width: 100%;
+}
+
+.v2-key-facts .video-js video {
+  object-fit: cover;
+}
+
 .v2-key-facts__key-item {
   display: flex;
   flex-direction: column;

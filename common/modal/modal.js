@@ -195,6 +195,7 @@ const createModal = () => {
             muted: false,
             playsinline: true,
             fill: true,
+            controls: true,
           },
           null,
         );
