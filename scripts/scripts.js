@@ -766,9 +766,9 @@ export function decorateMain(main, head) {
   // hopefully forward compatible button decoration
   decorateButtons(main);
   decorateIcons(main);
-  buildAutoBlocks(main, head);
   decorateSections(main);
   decorateBlocks(main);
+  buildAutoBlocks(main, head);
   decorateHyperlinkImages(main);
   decorateSectionBackgrounds(main);
   decorateLinks(main);
