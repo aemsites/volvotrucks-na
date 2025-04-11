@@ -331,6 +331,7 @@ function buildTruckLineupBlock(main) {
     0: '(min-width: 400px)',
     1: '(min-width: 1200px)',
   };
+  let inpageMeta;
 
   const mainChildren = [...main.querySelectorAll(':scope > div')];
   mainChildren.forEach((section, i) => {
@@ -342,6 +343,9 @@ function buildTruckLineupBlock(main) {
     // save carousel position
     nextElement = mainChildren[i + 1];
     const sectionMeta = section.dataset.truckCarousel;
+    if (!inpageMeta && section.dataset.inpage) {
+      inpageMeta = section.dataset.inpage.toLowerCase();
+    }
 
     const tabContent = createElement('div', { classes: 'v2-truck-lineup__content' });
     tabContent.dataset.truckCarousel = sectionMeta;
@@ -377,6 +381,11 @@ function buildTruckLineupBlock(main) {
 
   if (tabItems.length > 0) {
     const truckLineupSection = createTruckLineupSection(tabItems);
+
+    if (inpageMeta) {
+      truckLineupSection.setAttribute('data-inpageid', inpageMeta);
+    }
+
     if (nextElement) {
       // if we saved a position push the carousel in that position if not
       main.insertBefore(truckLineupSection, nextElement);

@@ -100,7 +100,6 @@
     --v2-article-cards-gutter: 20px;
 
     flex-flow: row wrap;
-    justify-content: space-between;
     max-width: var(--wrapper-width);
   }
 

@@ -158,6 +158,10 @@
       {
         "name": "DATE_OPTIONS_MOBILE",
         "value": "[\"month: 2-digit\",\"day: 2-digit\",\"year: numeric\"]"
+      },
+      {
+        "name": "MAGAZINE_PATH",
+        "value": "news-and-stories/volvo-trucks-stories/"
       }
     ]
   },

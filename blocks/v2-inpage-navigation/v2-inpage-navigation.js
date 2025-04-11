@@ -71,6 +71,7 @@ const gotoSection = (event) => {
   if (button) {
     const { id } = button.dataset;
 
+    updateActive(id);
     scrollToSection(id);
   }
 };
