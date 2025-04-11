@@ -218,7 +218,6 @@ export async function loadTemplate(doc, templateName) {
  * loads everything that doesn't need to be delayed.
  */
 export async function loadLazy(doc) {
-  loadCSS(`${window.hlx.codeBasePath}/styles/header-font.css`);
   const main = doc.querySelector('main');
   await loadSections(main);
 
@@ -247,9 +246,6 @@ export async function loadLazy(doc) {
   }
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
-  sampleRUM('lazy');
-  sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
-  sampleRUM.observe(main.querySelectorAll('picture > img'));
 }
 
 export const removeEmptyTags = (block, isRecursive) => {
