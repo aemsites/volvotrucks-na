@@ -1612,7 +1612,7 @@ main.blue-contract .section.section-with-title p {
 .v2-video__playback-button,
 .v2-video__mute-controls {
   position: absolute;
-  top: 18px;
+  bottom: 18px;
   right: 18px;
   background: transparent;
   width: 44px;
@@ -1624,7 +1624,7 @@ main.blue-contract .section.section-with-title p {
 }
 
 .v2-video__mute-controls {
-  top: 70px;
+  bottom: 70px;
 }
 
 .v2-video__playback-button .icon-play-video,
@@ -1684,13 +1684,6 @@ main.blue-contract .section.section-with-title p {
   object-fit: cover;
 }
 
-@media (max-width: 744px) {
-  .v2-content-card__item .v2-video__playback-button,
-  .v2-content-card__item .v2-video__mute-controls {
-    top: 18px !important;
-  }
-}
-
 @media (min-width: 744px) {
   :root {
     --carousel-gap: 20px;
@@ -1700,16 +1693,6 @@ main.blue-contract .section.section-with-title p {
     --section-padding: 40px 0 56px;
     --section-div-padding: 24px 32px;
     --text-block-max-width: 506px;
-  }
-
-  .v2-video__playback-button,
-  .v2-video__mute-controls {
-    bottom: 18px;
-    top: initial;
-  }
-
-  .v2-video__mute-controls {
-    bottom: 70px;
   }
 }
 
