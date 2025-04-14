@@ -1,8 +1,9 @@
 import { loadScript, sampleRUM } from '../../scripts/aem.js';
-import { getTextLabel, createElement } from '../../scripts/common.js';
+import { getTextLabel, createElement, variantsClassesToBEM } from '../../scripts/common.js';
 import { getCustomDropdown } from '../../../common/custom-dropdown/custom-dropdown.js';
 
 const blockName = 'v2-custom-form';
+const variantClasses = ['double-column'];
 
 const successMessage = (successTitle, successText) => `<h3 class='${blockName}__title ${blockName}__title--success'>${successTitle}</h3>
 <p class='${blockName}__text ${blockName}__text--success'>${successText}</p>
@@ -557,6 +558,7 @@ function decorateTitles(block) {
 }
 
 export default async function decorate(block) {
+  variantsClassesToBEM(block.classList, variantClasses, blockName);
   const formLink = block.querySelector('a[href$=".json"]');
   const thankYouPage = [...block.querySelectorAll('a')].filter((a) => a.href.includes('thank-you'));
 
