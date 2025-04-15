@@ -20,11 +20,11 @@ function loadFooter(footer) {
  * If the page is running in a iframe with srcdoc, the ancestor origin is returned.
  * @returns {String} The true origin
  */
-export function getOrigin() {
+function getOrigin() {
   return window.location.href === 'about:srcdoc' ? window.parent.location.origin : window.location.origin;
 }
 
-export function getHref() {
+function getHref() {
   if (window.location.href !== 'about:srcdoc') {
     return window.location.href;
   }
@@ -33,18 +33,18 @@ export function getHref() {
   return `${window.parent.location.origin}${urlParams.get('path')}`;
 }
 
-export const getLanguagePath = () => {
+const getLanguagePath = () => {
   const { pathname } = new URL(window.location.href);
   const langCodeMatch = pathname.match('^(/[a-z]{2}(-[a-z]{2})?/).*');
   return langCodeMatch ? langCodeMatch[1] : '/';
 };
 
-export async function getPlaceholders() {
+async function getPlaceholders() {
   const url = `${getLanguagePath()}placeholder.json`;
   placeholders = await fetch(url).then((resp) => resp.json());
 }
 
-export function getTextLabel(key) {
+function getTextLabel(key) {
   return placeholders?.data.find((el) => el.Key === key)?.Text || key;
 }
 
@@ -56,7 +56,7 @@ export function getTextLabel(key) {
  * @param {Object} [options.props={}] any other attributes to add to the element
  * @returns {HTMLElement} the element
  */
-export function createElement(tagName, options = {}) {
+function createElement(tagName, options = {}) {
   const { classes = [], props = {} } = options;
   const elem = document.createElement(tagName);
   const isString = typeof classes === 'string';
@@ -89,7 +89,7 @@ export function createElement(tagName, options = {}) {
  * @returns {HTMLElement} - Returns an HTML element representing
  *  the new section with appended cell.
  */
-export function createNewSection(blockName, sectionName, node) {
+function createNewSection(blockName, sectionName, node) {
   const section = createElement('div', { classes: `${blockName}__${sectionName}-section` });
   section.append(node);
   return section;
@@ -103,7 +103,7 @@ export function createNewSection(blockName, sectionName, node) {
  * @param {HTMLAnchorElement} link - Anchor link
  * @returns {HTMLElement} - Section with added video
  */
-export function addVideoToSection(blockName, section, link) {
+function addVideoToSection(blockName, section, link) {
   const isVideo = link ? isVideoLink(link) : false;
   if (isVideo) {
     const video = createVideo(link.getAttribute('href'), `${blockName}__video`, {
@@ -192,7 +192,7 @@ export async function decorateIcons(element) {
   });
 }
 
-export async function loadTemplate(doc, templateName) {
+async function loadTemplate(doc, templateName) {
   try {
     await loadCSS(`${window.hlx.codeBasePath}/templates/${templateName}/${templateName}.css`);
     const decorationComplete = new Promise((resolve) => {
@@ -217,7 +217,7 @@ export async function loadTemplate(doc, templateName) {
 /**
  * loads everything that doesn't need to be delayed.
  */
-export async function loadLazy(doc) {
+async function loadLazy(doc) {
   loadCSS(`${window.hlx.codeBasePath}/styles/header-font.css`);
   const main = doc.querySelector('main');
   await loadBlocks(main);
@@ -256,14 +256,14 @@ export async function loadLazy(doc) {
  * loads everything that happens a lot later, without impacting
  * the user experience.
  */
-export function loadDelayed() {
+function loadDelayed() {
   window.setTimeout(() => {
     import('./delayed.js');
   }, 3000);
   // load anything that can be postponed to the latest here
 }
 
-export const removeEmptyTags = (block, isRecursive) => {
+const removeEmptyTags = (block, isRecursive) => {
   const isEmpty = (node) => {
     const tagName = `</${node.tagName}>`;
 
@@ -296,7 +296,7 @@ export const removeEmptyTags = (block, isRecursive) => {
   });
 };
 
-export const unwrapDivs = (element, options = {}) => {
+const unwrapDivs = (element, options = {}) => {
   const stack = [element];
   const { ignoreDataAlign = false } = options;
 
@@ -327,7 +327,7 @@ export const unwrapDivs = (element, options = {}) => {
   }
 };
 
-export const variantsClassesToBEM = (blockClasses, expectedVariantsNames, blockName) => {
+const variantsClassesToBEM = (blockClasses, expectedVariantsNames, blockName) => {loadTemplate, loadLazy, loadDelayed, removeEmptyTags, unwrapDivs, variantsClassesToBEM
   expectedVariantsNames.forEach((variant) => {
     if (blockClasses.contains(variant)) {
       blockClasses.remove(variant);
@@ -343,7 +343,7 @@ export const variantsClassesToBEM = (blockClasses, expectedVariantsNames, blockN
  * @param {HTMLElement} child - The child HTML element.
  * @param {string} className - The name of the class to check and add.
  */
-export function addClassIfChildHasClass(child, className) {
+function addClassIfChildHasClass(child, className) {
   if (child.className.includes(className)) {
     child.parentElement.classList.add(className);
   }
@@ -355,7 +355,7 @@ export function addClassIfChildHasClass(child, className) {
  * @param {object} options - other options like variantsClasses
  * @returns
  */
-export async function loadAsBlock(blockName, blockContent, options = {}) {
+async function loadAsBlock(blockName, blockContent, options = {}) {
   const { variantsClasses = [] } = options;
   const blockEl = createElement('div', {
     classes: ['block', blockName, ...variantsClasses],
@@ -370,7 +370,7 @@ export async function loadAsBlock(blockName, blockContent, options = {}) {
   return blockEl;
 }
 
-export const adjustPretitle = (element) => {
+const adjustPretitle = (element) => {
   const headingSelector = 'h1, h2, h3, h4, h5, h6';
 
   [...element.querySelectorAll(headingSelector)].forEach((heading) => {
@@ -392,7 +392,7 @@ export const adjustPretitle = (element) => {
   });
 };
 
-export const slugify = (text) =>
+const slugify = (text) =>
   text
     .toString()
     .toLowerCase()
@@ -433,7 +433,7 @@ async function getConstantValues() {
  * @returns {Object} - Object with keys and values.
  * @throws {TypeError} - If an item in the array is not in the format 'key: value'.
  */
-export const extractObjectFromArray = (data) => {
+const extractObjectFromArray = (data) => {
   if (!Array.isArray(data)) {
     return {};
   }
@@ -476,7 +476,7 @@ export const TRUCK_CONFIGURATOR_URLS = formatValues(truckConfiguratorUrls?.data)
  * Check if one trust group is checked.
  * @param {String} groupName the one trust croup like: C0002
  */
-export function checkOneTrustGroup(groupName) {
+function checkOneTrustGroup(groupName) {
   if (typeof groupName !== 'string') {
     return false;
   }
@@ -486,15 +486,15 @@ export function checkOneTrustGroup(groupName) {
 
 const { PERFORMANCE_COOKIE = false, TARGETING_COOKIE = false, SOCIAL_COOKIE = false } = COOKIE_CONFIGS;
 
-export function isPerformanceAllowed() {
+function isPerformanceAllowed() {
   return checkOneTrustGroup(PERFORMANCE_COOKIE);
 }
 
-export function isTargetingAllowed() {
+function isTargetingAllowed() {
   return checkOneTrustGroup(TARGETING_COOKIE);
 }
 
-export function isSocialAllowed() {
+function isSocialAllowed() {
   return checkOneTrustGroup(SOCIAL_COOKIE);
 }
 
@@ -512,7 +512,7 @@ export function isSocialAllowed() {
  *                     original input.
  * @returns {Array} An empty array if the input is not a string
  */
-export const formatStringToArray = (inputString) => {
+const formatStringToArray = (inputString) => {
   if (typeof inputString !== 'string') {
     return [];
   }
@@ -529,7 +529,7 @@ export const formatStringToArray = (inputString) => {
 */
 let idValue = 0;
 
-export const generateId = (prefix = 'id') => {
+const generateId = (prefix = 'id') => {
   idValue += 1;
   return `${prefix}-${idValue}`;
 };
@@ -539,7 +539,7 @@ export const generateId = (prefix = 'id') => {
  * @param {function} func callback function
  * @param {number} timeout time to debouce in ms, default 200
  */
-export function debounce(func, timeout = 200) {
+function debounce(func, timeout = 200) {
   let timer;
   return (...args) => {
     clearTimeout(timer);
@@ -555,7 +555,7 @@ export function debounce(func, timeout = 200) {
  * @param {string} route get the Json data from the route
  * @returns {Object} the json data object
  */
-export const getJsonFromUrl = async (route) => {
+const getJsonFromUrl = async (route) => {
   try {
     const response = await fetch(route);
     if (!response.ok) {
@@ -569,7 +569,7 @@ export const getJsonFromUrl = async (route) => {
   return null;
 };
 
-export const deepMerge = (target, source) => {
+const deepMerge = (target, source) => {
   Object.keys(source).forEach((key) => {
     if (source[key] && typeof source[key] === 'object') {
       if (!target[key]) {
@@ -583,7 +583,7 @@ export const deepMerge = (target, source) => {
   return target;
 };
 
-export const isDevHost = () => {
+const isDevHost = () => {
   const devHosts = ['localhost', '127.0.0.1', 'aem.page', 'aem.live'];
   return devHosts.some((url) => window.location.host.includes(url));
 };
@@ -593,7 +593,7 @@ export const isDevHost = () => {
  * It defaults to 'en-us'
  * @returns {string} The locale string
  */
-export const getLocale = () => getMetadata('locale') || 'en-us';
+const getLocale = () => getMetadata('locale') || 'en-us';
 
 /**
  * Function that recieves a timestamp in seconds and returns a date
@@ -601,7 +601,7 @@ export const getLocale = () => getMetadata('locale') || 'en-us';
  * @param {string} timestamp The date in seconds as a string
  * @param {object} options The date options obj for a specific format
  */
-export const getDateFromTimestamp = (timestamp, options) => {
+const getDateFromTimestamp = (timestamp, options) => {
   const date = new Date(timestamp * 1000 + new Date().getTimezoneOffset() * 60000);
   const localeDate = Intl.DateTimeFormat(getLocale(), options).format(date);
 
@@ -616,7 +616,7 @@ export const getDateFromTimestamp = (timestamp, options) => {
  * @param {string[]|string} imageClass - Class for the image
  * @returns {HTMLElement} The created picture element
  */
-export function createResponsivePicture(images, eager, alt, imageClass) {
+function createResponsivePicture(images, eager, alt, imageClass) {
   const picture = document.createElement('picture');
   let fallbackWidth = '';
   let fallbackSrc = '';
@@ -678,3 +678,40 @@ export function createResponsivePicture(images, eager, alt, imageClass) {
 
   return picture;
 }
+
+
+
+export {
+  getOrigin,
+  getHref,
+  getLanguagePath,
+  getPlaceholders,
+  getTextLabel,
+  createElement,
+  createNewSection,
+  addVideoToSection,
+  loadTemplate,
+  loadLazy,
+  loadDelayed,
+  removeEmptyTags,
+  unwrapDivs,
+  variantsClassesToBEM,
+  addClassIfChildHasClass,
+  loadAsBlock,
+  adjustPretitle,
+  slugify,
+  extractObjectFromArray,
+  checkOneTrustGroup,
+  isDevHost,
+  isPerformanceAllowed,
+  isTargetingAllowed,
+  isSocialAllowed,
+  generateId,
+  debounce,
+  getJsonFromUrl,
+  deepMerge,
+  formatStringToArray,
+  getLocale,
+  getDateFromTimestamp,
+  createResponsivePicture
+};
