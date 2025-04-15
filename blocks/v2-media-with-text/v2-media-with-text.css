@@ -380,14 +380,3 @@
     display: none;
   }
 }
-
-@media (max-width: 1200px) {
-  .v2-media-with-text--mute-controls .v2-video__playback-button,
-  .v2-media-with-text--mute-controls .v2-video__mute-controls {
-    top: 18px;
-  }
-
-  .v2-media-with-text--mute-controls .v2-video__mute-controls {
-    top: 70px;
-  }
-}
