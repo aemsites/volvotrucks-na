@@ -10,6 +10,7 @@ import {
   loadSections,
   loadCSS,
   loadScript,
+  loadBlock,
 } from './aem.js';
 
 import {
@@ -637,11 +638,13 @@ function buildInpageNavigationBlock(main) {
       height: '48px',
       overflow: 'hidden',
     });
+    const inpageBlock = buildBlock(inpageClassName, { elems: items });
 
-    section.append(buildBlock(inpageClassName, { elems: items }));
+    section.append(inpageBlock);
     main.prepend(section);
 
     decorateBlock(section.querySelector(`.${inpageClassName}`));
+    loadBlock(inpageBlock);
   }
 }
 
