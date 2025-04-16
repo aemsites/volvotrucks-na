@@ -31,6 +31,8 @@ import { isVideoLink, isSoundcloudLink, isLowResolutionVideoUrl, addVideoShowHan
 
 import { validateCountries } from './validate-countries.js';
 
+let modal;
+
 function getCTAContainer(ctaLink) {
   return ['strong', 'em'].includes(ctaLink.parentElement.localName) ? ctaLink.parentElement.parentElement : ctaLink.parentElement;
 }
@@ -868,8 +870,6 @@ loadPage();
 moveClassToHtmlEl('redesign-v2');
 
 /* MODAL */
-let modal;
-
 async function loadModalScript() {
   if (!modal) {
     modal = await import('../common/modal/modal.js');
