@@ -225,10 +225,6 @@ function buildAutoBlocks(main, head) {
 
     buildTabbedBlock(main);
     buildCtaList(main);
-
-    // redesign
-    buildTruckLineupBlock(main);
-    buildInpageNavigationBlock(main);
   } catch (error) {
     console.error('Auto Blocking failed', error);
   }
@@ -771,9 +767,14 @@ export function decorateMain(main, head) {
   // hopefully forward compatible button decoration
   decorateButtons(main);
   decorateIcons(main);
+  buildAutoBlocks(main, head);
   decorateSections(main);
   decorateBlocks(main);
-  buildAutoBlocks(main, head);
+
+  // These autoblocks need to be built after the sections and blocks are decorated :(
+  buildTruckLineupBlock(main);
+  buildInpageNavigationBlock(main);
+
   decorateHyperlinkImages(main);
   decorateSectionBackgrounds(main);
   decorateLinks(main);
