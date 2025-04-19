@@ -6,7 +6,7 @@
 
 import { decorateMain } from '../../scripts/scripts.js';
 import { getLanguagePath } from '../../scripts/common.js';
-import { loadBlocks } from '../../scripts/aem.js';
+import { loadSections } from '../../scripts/aem.js';
 
 /**
  * Loads a fragment.
@@ -20,7 +20,7 @@ async function loadFragment(path) {
       const main = document.createElement('main');
       main.innerHTML = await resp.text();
       decorateMain(main, main);
-      await loadBlocks(main);
+      await loadSections(main);
       return main;
     }
   }

@@ -6,9 +6,11 @@ function buildTabNavigation(tabItems, clickHandler) {
       listItem.classList.add('active');
     }
     const button = document.createElement('button');
-    const tabContent = tabItem.querySelector(':scope > div');
-    button.addEventListener('click', () => clickHandler.call(this, tabContent, tabNavigation, listItem));
-    button.innerHTML = tabContent.dataset.accordion;
+    const tabContent = tabItem.querySelector(':scope > div, :scope > p > div');
+    if (tabContent) {
+      button.addEventListener('click', () => clickHandler.call(this, tabContent, tabNavigation, listItem));
+      button.innerHTML = tabContent.dataset.accordion;
+    }
     listItem.append(button);
     tabNavigation.append(listItem);
   });
@@ -17,7 +19,7 @@ function buildTabNavigation(tabItems, clickHandler) {
 }
 
 export default function decorate(block) {
-  const tabContainer = block.querySelector(':scope > div');
+  const tabContainer = block.querySelector(':scope > div, :scope > p > div');
   tabContainer.classList.add('accordion-container');
   const tabItems = block.querySelectorAll(':scope > div > div');
   const tabNavigation = buildTabNavigation(tabItems, (tabContent, nav, listItem) => {
@@ -35,7 +37,7 @@ export default function decorate(block) {
   });
   tabItems.forEach((tabItem, i) => {
     tabItem.classList.add('accordion-item');
-    const accordionContent = tabItem.querySelector(':scope > div');
+    const accordionContent = tabItem.querySelector(':scope > div, :scope > p > div');
     accordionContent.classList.add('accordion-collapse');
     const accordionHeader = document.createElement('div');
     accordionHeader.classList.add('accordion-header');
