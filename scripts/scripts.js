@@ -223,7 +223,6 @@ function buildAutoBlocks(main, head) {
     buildHeroBlock(main);
     buildSubNavigation(main, head);
 
-    buildTabbedBlock(main);
     buildCtaList(main);
   } catch (error) {
     console.error('Auto Blocking failed', error);
@@ -778,6 +777,7 @@ export function decorateMain(main, head) {
   decorateHyperlinkImages(main);
   decorateSectionBackgrounds(main);
   decorateLinks(main);
+  buildTabbedBlock(main);
   decorateOfferLinks(main);
   decorateConfigurator(main);
 }
