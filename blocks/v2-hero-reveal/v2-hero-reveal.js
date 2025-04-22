@@ -1,11 +1,7 @@
-import { loadBlock, loadBlocks } from '../../scripts/aem.js';
+import { loadBlock } from '../../scripts/aem.js';
 import { createElement } from '../../scripts/common.js';
 import { decorateLinks } from '../../scripts/scripts.js';
 import { variantClasses as heroVariantClasses } from '../v2-hero/v2-hero.js';
-
-function buildPreRevealCountdownHero(innerBlockCode, v2HeroRevealBlockClassList) {
-  return getV2HeroBlockCode(innerBlockCode, v2HeroRevealBlockClassList);
-}
 
 function buildRevealHero(innerBlockCode, v2HeroRevealBlockClassList) {
   return getV2HeroBlockCode(innerBlockCode, v2HeroRevealBlockClassList);
@@ -29,70 +25,87 @@ function getV2HeroBlockCode(innerBlockCode, v2HeroRevealBlockClassList) {
   return block;
 }
 
+function validateBlockConfiguration(blockRows) {
+  if (blockRows.length !== 2) {
+    console.warn('V2 Hero Reveal block: Block misconfigured, please provide Countdown and Reveal Hero blocks.');
+    return false;
+  }
+  return true;
+}
+
+function validateHeroBlocks(preRevealCountdownHeroBlock, revealHeroBlock) {
+  if (!preRevealCountdownHeroBlock || !revealHeroBlock) {
+    console.warn('V2 Hero Reveal block: Countdown and Reveal Hero blocks not provided.');
+    return false;
+  }
+  return true;
+}
+
+function validateRevealDate(revealEventTimeIso) {
+  if (!revealEventTimeIso) {
+    console.warn('V2 Hero Reveal block: Reveal date not provided in the Section Metadata.');
+    return false;
+  }
+
+  if (isNaN(new Date(revealEventTimeIso))) {
+    console.warn('V2 Hero Reveal block: Reveal date invalid.');
+    return false;
+  }
+  return true;
+}
+
+function initializeHeroBlock(preRevealCountdownHeroBlock, revealHeroBlock, eventTime, blockClassList) {
+  let v2HeroBlock;
+
+  if (isCountDownFinished(eventTime)) {
+    v2HeroBlock = buildRevealHero(revealHeroBlock, blockClassList);
+  } else {
+    v2HeroBlock = buildRevealHero(preRevealCountdownHeroBlock, blockClassList);
+
+    const intervalId = setInterval(() => {
+      if (isCountDownFinished(eventTime)) {
+        const newV2HeroBlock = buildRevealHero(revealHeroBlock, blockClassList);
+
+        v2HeroBlock.replaceWith(newV2HeroBlock);
+        loadBlock(newV2HeroBlock);
+        decorateLinks(newV2HeroBlock);
+        clearInterval(intervalId);
+      }
+    }, 500);
+  }
+
+  return v2HeroBlock;
+}
+
 function decorate(block) {
   const blockRows = block.querySelectorAll(':scope > div');
 
-  if (blockRows.length !== 2) {
-    console.warn('V2 Hero Reveal block: Block misconfigured, please provide Countdown and Reveal Hero blocks.');
+  if (!validateBlockConfiguration(blockRows)) {
     return;
   }
 
   const preRevealCountdownHeroBlock = blockRows[0]?.cloneNode(true);
   const revealHeroBlock = blockRows[1]?.cloneNode(true);
 
-  if (!preRevealCountdownHeroBlock || !revealHeroBlock) {
-    console.warn('V2 Hero Reveal block: Countdown and Reveal Hero blocks not provided.');
+  if (!validateHeroBlocks(preRevealCountdownHeroBlock, revealHeroBlock)) {
     return;
   }
 
   const blockSection = block.parentElement?.parentElement;
   const revealEventTimeIso = blockSection?.dataset?.revealDate;
-  const blockClassList = block.classList;
-  let v2HeroBlock;
-  let intervalId = null;
 
-  if (!revealEventTimeIso) {
-    console.warn('V2 Hero Reveal block: Reveal date not provided in the Section Metadata.');
+  if (!validateRevealDate(revealEventTimeIso)) {
     return;
   }
 
   const eventTime = new Date(revealEventTimeIso);
+  const blockClassList = block.classList;
 
-  if (!revealEventTimeIso) {
-    console.warn('V2 Hero Reveal block: Reveal date invalid.');
-    return;
-  }
-
-  if (isCountDownFinished(eventTime)) {
-    v2HeroBlock = buildRevealHero(revealHeroBlock, blockClassList);
-  } else {
-    v2HeroBlock = buildPreRevealCountdownHero(preRevealCountdownHeroBlock, blockClassList);
-
-    intervalId = setInterval(() => {
-      // Build the reveal hero and replace the current block
-      if (isCountDownFinished(eventTime)) {
-        const newV2HeroBlock = buildRevealHero(revealHeroBlock, blockClassList);
-
-        v2HeroBlock.replaceWith(newV2HeroBlock);
-
-        loadBlock(newV2HeroBlock);
-        decorateLinks(newV2HeroBlock);
-        clearInterval(intervalId);
-      }
-    }, 1000);
-  }
+  const v2HeroBlock = initializeHeroBlock(preRevealCountdownHeroBlock, revealHeroBlock, eventTime, blockClassList);
 
   decorateLinks(v2HeroBlock);
-
   block.replaceWith(v2HeroBlock);
-
-  const main = document.querySelector('main');
-
-  if (main) {
-    loadBlocks(main);
-  } else {
-    loadBlock(v2HeroBlock);
-  }
+  loadBlock(v2HeroBlock);
 }
 
 export default decorate;
