@@ -20,6 +20,15 @@
   width: 100%;
 }
 
+.v2-banner .video-js {
+  height: 100%;
+  width: 100%;
+}
+
+.v2-banner .video-js video {
+  object-fit: cover;
+}
+
 .v2-banner__content-wrapper {
   align-items: center;
   background: linear-gradient(180deg, rgb(255 255 255 / 50%) 0%, rgb(255 255 255 / 0%) 100%);

@@ -1,8 +1,9 @@
 import { loadScript, sampleRUM } from '../../scripts/aem.js';
-import { getTextLabel, createElement } from '../../scripts/common.js';
+import { getTextLabel, createElement, variantsClassesToBEM } from '../../scripts/common.js';
 import { getCustomDropdown } from '../../../common/custom-dropdown/custom-dropdown.js';
 
 const blockName = 'v2-custom-form';
+const variantClasses = ['double-column'];
 
 const successMessage = (successTitle, successText) => `<h3 class='${blockName}__title ${blockName}__title--success'>${successTitle}</h3>
 <p class='${blockName}__text ${blockName}__text--success'>${successText}</p>
@@ -362,6 +363,10 @@ async function createCustomDropdown(fd) {
     mandatory: fd.Mandatory,
   };
   const customDropdown = await getCustomDropdown(configFd);
+  const select = customDropdown.querySelector('select');
+  // Because this dropdown is asynchronous and replaces a temporary element,
+  // we need to reattach the invalid event listener
+  select.addEventListener('invalid', showError);
   return customDropdown;
 }
 
@@ -431,27 +436,31 @@ async function fetchForm(pathname) {
 }
 
 function showError(evnt) {
-  const field = evnt.target;
-  const fieldWrapper = field.parentNode;
+  let field = evnt.target;
+  const fieldWrapper = field.closest('.field-wrapper');
   fieldWrapper.classList.add('invalid');
   let errorSpan = fieldWrapper.querySelector('span.error');
   if (!errorSpan) {
-    errorSpan = document.createElement('span');
-    errorSpan.classList.add('error');
+    errorSpan = createElement('span', { classes: 'error' });
     fieldWrapper.append(errorSpan);
   }
   errorSpan.innerText = field.validationMessage;
+  if (fieldWrapper.classList.contains('form-custom-dropdown-wrapper')) {
+    field = fieldWrapper.querySelector('.custom-dropdown__button');
+  }
   field.addEventListener('blur', hideError);
 }
 
 function hideError(evnt) {
-  const field = evnt.target;
-  const fieldWrapper = field.parentNode;
+  const isCustomDropdown = evnt.target.classList.contains('custom-dropdown__button');
+  const field = isCustomDropdown ? evnt.target.parentNode.querySelector('select') : evnt.target;
+  const fieldWrapper = field.closest('.field-wrapper');
+  const isValid = field.checkValidity();
   // to avoid showing error messages on blur
-  if (field.checkValidity()) {
-    fieldWrapper.classList.remove('invalid');
-  } else {
-    fieldWrapper.classList.add('invalid');
+  fieldWrapper.classList.toggle('invalid', !isValid);
+  const errorSpan = fieldWrapper.querySelector('span.error');
+  if (errorSpan && isValid) {
+    errorSpan.remove();
   }
 }
 
@@ -549,6 +558,7 @@ function decorateTitles(block) {
 }
 
 export default async function decorate(block) {
+  variantsClassesToBEM(block.classList, variantClasses, blockName);
   const formLink = block.querySelector('a[href$=".json"]');
   const thankYouPage = [...block.querySelectorAll('a')].filter((a) => a.href.includes('thank-you'));
 

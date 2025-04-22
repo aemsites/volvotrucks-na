@@ -1,6 +1,6 @@
 /* global YT */
 import { createElement, decorateIcons, getTextLabel, isSocialAllowed } from '../../scripts/common.js';
-import { loadCSS, updateSectionsStatus } from '../../scripts/aem.js';
+import { loadCSS } from '../../scripts/aem.js';
 import {
   createIframe,
   isAEMVideoUrl,
@@ -70,16 +70,6 @@ const createModal = () => {
     modalBackground.querySelector('.modal-top-bar-heading').textContent = '';
   };
 
-  const handleVideoLoad = (videoElement) => {
-    videoElement.addEventListener(
-      'loadeddata',
-      () => {
-        updateSectionsStatus(modalContent);
-      },
-      { once: true },
-    );
-  };
-
   const handleNewContent = (newContent) => {
     clearModalContent();
     modalContent.scrollTo(0, 0);
@@ -103,9 +93,6 @@ const createModal = () => {
 
     modalContent.classList.add('modal-content--wide');
     modalContent.append(...newContent);
-
-    const videoElements = modalContent.querySelectorAll('video');
-    videoElements.forEach(handleVideoLoad);
   };
 
   async function addVideo(block, videoId) {
@@ -195,6 +182,7 @@ const createModal = () => {
             muted: false,
             playsinline: true,
             fill: true,
+            controls: true,
           },
           null,
         );

@@ -1,4 +1,4 @@
-import { sampleRUM, loadCSS, loadBlock, loadBlocks, loadHeader, buildBlock, decorateBlock, getMetadata } from './aem.js';
+import { sampleRUM, loadCSS, loadBlock, loadSections, loadHeader, buildBlock, decorateBlock, getMetadata } from './aem.js';
 import { createVideo, isVideoLink } from './video-helper.js';
 
 let placeholders = null;
@@ -218,9 +218,8 @@ export async function loadTemplate(doc, templateName) {
  * loads everything that doesn't need to be delayed.
  */
 export async function loadLazy(doc) {
-  loadCSS(`${window.hlx.codeBasePath}/styles/header-font.css`);
   const main = doc.querySelector('main');
-  await loadBlocks(main);
+  await loadSections(main);
 
   const { hash } = window.location;
   const element = hash ? doc.getElementById(hash.substring(1)) : false;
@@ -247,20 +246,6 @@ export async function loadLazy(doc) {
   }
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
-  sampleRUM('lazy');
-  sampleRUM.observe(main.querySelectorAll('div[data-block-name]'));
-  sampleRUM.observe(main.querySelectorAll('picture > img'));
-}
-
-/**
- * loads everything that happens a lot later, without impacting
- * the user experience.
- */
-export function loadDelayed() {
-  window.setTimeout(() => {
-    import('./delayed.js');
-  }, 3000);
-  // load anything that can be postponed to the latest here
 }
 
 export const removeEmptyTags = (block, isRecursive) => {
@@ -347,27 +332,6 @@ export function addClassIfChildHasClass(child, className) {
   if (child.className.includes(className)) {
     child.parentElement.classList.add(className);
   }
-}
-/**
- *
- * @param {string} blockName - block name with '-' instead of spaces
- * @param {string} blockContent - the content that will be set as block inner HTML
- * @param {object} options - other options like variantsClasses
- * @returns
- */
-export async function loadAsBlock(blockName, blockContent, options = {}) {
-  const { variantsClasses = [] } = options;
-  const blockEl = createElement('div', {
-    classes: ['block', blockName, ...variantsClasses],
-    props: { 'data-block-name': blockName },
-  });
-  const wrapperEl = createElement('div');
-  wrapperEl.append(blockEl);
-
-  blockEl.innerHTML = blockContent;
-  await loadBlocks(wrapperEl);
-
-  return blockEl;
 }
 
 export const adjustPretitle = (element) => {

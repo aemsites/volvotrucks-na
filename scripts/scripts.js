@@ -4,13 +4,13 @@ import {
   decorateBlocks,
   decorateBlock,
   decorateTemplateAndTheme,
-  waitForLCP,
   createOptimizedPicture,
   getMetadata,
   toClassName,
-  loadBlocks,
+  loadSections,
   loadCSS,
   loadScript,
+  loadBlock,
 } from './aem.js';
 
 import {
@@ -19,7 +19,6 @@ import {
   getPlaceholders,
   getTextLabel,
   loadLazy,
-  loadDelayed,
   loadTemplate,
   createElement,
   slugify,
@@ -33,8 +32,7 @@ import { isVideoLink, isSoundcloudLink, isLowResolutionVideoUrl, addVideoShowHan
 
 import { validateCountries } from './validate-countries.js';
 
-const LCP_BLOCKS = ['teaser-grid']; // add your LCP blocks to the list
-window.hlx.RUM_GENERATION = 'project-1'; // add your RUM generation information here
+let modal;
 
 function getCTAContainer(ctaLink) {
   return ['strong', 'em'].includes(ctaLink.parentElement.localName) ? ctaLink.parentElement.parentElement : ctaLink.parentElement;
@@ -224,6 +222,8 @@ function buildAutoBlocks(main, head) {
   try {
     buildHeroBlock(main);
     buildSubNavigation(main, head);
+
+    buildCtaList(main);
   } catch (error) {
     console.error('Auto Blocking failed', error);
   }
@@ -306,7 +306,7 @@ function buildTabbedBlock(main) {
   }
 
   async function triggerLoad() {
-    await loadBlocks(main);
+    await loadSections(main);
   }
 
   triggerLoad();
@@ -329,6 +329,7 @@ function buildTruckLineupBlock(main) {
     0: '(min-width: 400px)',
     1: '(min-width: 1200px)',
   };
+  let inpageMeta;
 
   const mainChildren = [...main.querySelectorAll(':scope > div')];
   mainChildren.forEach((section, i) => {
@@ -340,6 +341,9 @@ function buildTruckLineupBlock(main) {
     // save carousel position
     nextElement = mainChildren[i + 1];
     const sectionMeta = section.dataset.truckCarousel;
+    if (!inpageMeta && section.dataset.inpage) {
+      inpageMeta = section.dataset.inpage.toLowerCase();
+    }
 
     const tabContent = createElement('div', { classes: 'v2-truck-lineup__content' });
     tabContent.dataset.truckCarousel = sectionMeta;
@@ -375,6 +379,11 @@ function buildTruckLineupBlock(main) {
 
   if (tabItems.length > 0) {
     const truckLineupSection = createTruckLineupSection(tabItems);
+
+    if (inpageMeta) {
+      truckLineupSection.setAttribute('data-inpageid', inpageMeta);
+    }
+
     if (nextElement) {
       // if we saved a position push the carousel in that position if not
       main.insertBefore(truckLineupSection, nextElement);
@@ -441,33 +450,6 @@ function decorateHyperlinkImages(container) {
     });
 }
 
-let modal;
-
-async function loadModalScript() {
-  if (!modal) {
-    modal = await import('../common/modal/modal.js');
-  }
-
-  return modal;
-}
-
-document.addEventListener('open-modal', (event) => {
-  loadModalScript().then((modal) => {
-    const variantClasses = ['black', 'gray', 'reveal'];
-    const modalClasses = [...event.detail.target.closest('.section').classList].filter((el) => el.startsWith('modal-'));
-    // changing the modal variants classes to BEM naming
-    variantClasses.forEach((variant) => {
-      const index = modalClasses.findIndex((el) => el === `modal-${variant}`);
-
-      if (index >= 0) {
-        modalClasses[index] = modalClasses[index].replace('modal-', 'modal--');
-      }
-    });
-
-    modal.showModal(event.detail.content, { modalClasses, invokeContext: event.detail.target });
-  });
-});
-
 function handleFetchError(statusCode, mainElement) {
   const errorType = statusCode === 404 ? '404' : 'unknown';
   const errorMessage = document.createRange().createContextualFragment(`
@@ -494,7 +476,7 @@ function handleFetchError(statusCode, mainElement) {
   document.dispatchEvent(modalEvent, { bubbles: true });
 }
 
-const handleModalLinks = (link) => {
+function handleModalLinks(link) {
   if (!modal) {
     loadModalScript();
   }
@@ -508,7 +490,7 @@ const handleModalLinks = (link) => {
       main.innerHTML = await resp.text();
 
       decorateMain(main, main);
-      await loadBlocks(main);
+      await loadSections(main);
       const modalEvent = new CustomEvent('open-modal', {
         detail: {
           content: main.children,
@@ -520,7 +502,7 @@ const handleModalLinks = (link) => {
       handleFetchError(resp.status, main);
     }
   });
-};
+}
 
 export function decorateLinks(block) {
   [...block.querySelectorAll('a')]
@@ -586,7 +568,7 @@ function decorateOfferLinks(main) {
   });
 }
 
-const createInpageNavigation = (main) => {
+function createInpageNavigation(main) {
   const navItems = [];
   const tabItemsObj = [];
 
@@ -638,7 +620,7 @@ const createInpageNavigation = (main) => {
   });
 
   return navItems;
-};
+}
 
 function buildInpageNavigationBlock(main) {
   const inpageClassName = 'v2-inpage-navigation';
@@ -651,11 +633,13 @@ function buildInpageNavigationBlock(main) {
       height: '48px',
       overflow: 'hidden',
     });
+    const inpageBlock = buildBlock(inpageClassName, { elems: items });
 
-    section.append(buildBlock(inpageClassName, { elems: items }));
+    section.append(inpageBlock);
     main.prepend(section);
 
     decorateBlock(section.querySelector(`.${inpageClassName}`));
+    loadBlock(inpageBlock);
   }
 }
 
@@ -724,6 +708,48 @@ const decorateButtons = (element) => {
   });
 };
 
+function decorateConfigurator(main) {
+  moveClassToHtmlEl('truck-configurator');
+
+  const currentUrl = window.location.href;
+  const isConfiguratorPage = document.documentElement.classList.contains('truck-configurator') || currentUrl.includes('/summary?config=');
+
+  if (isConfiguratorPage) {
+    const allowedCountries = getMetadata('allowed-countries');
+    const errorPageUrl = getMetadata('redirect-url');
+    if (allowedCountries && errorPageUrl) {
+      validateCountries(allowedCountries, errorPageUrl);
+    }
+
+    const container = createElement('div', { props: { id: 'configurator' } });
+    main.innerHTML = '';
+    main.append(container);
+
+    const { JS = false, CSS = false } = TRUCK_CONFIGURATOR_URLS;
+    const cssUrls = formatStringToArray(CSS);
+    const jsUrls = formatStringToArray(JS);
+    if (jsUrls.length > 0 && currentUrl.includes('/summary?config=')) {
+      document.documentElement.classList.add('external-app');
+      const truckConfiguratorBaseUrl = new URL(jsUrls[0]).origin;
+      const currentUrlHash = new URL(currentUrl).hash;
+      jsUrls.unshift(`${truckConfiguratorBaseUrl}/${currentUrlHash}`);
+    }
+
+    // if there are no css files, remove js files as well to avoid a weird animation
+    if (cssUrls.length === 0) {
+      jsUrls.length = 0;
+    }
+
+    jsUrls.forEach((url) => {
+      loadScript(url, { type: 'text/javascript', charset: 'UTF-8', defer: 'defer' });
+    });
+
+    cssUrls.forEach((url) => {
+      loadCSS(url);
+    });
+  }
+}
+
 /**
  * Decorates the main element.
  * @param {Element} main The main element
@@ -743,16 +769,17 @@ export function decorateMain(main, head) {
   buildAutoBlocks(main, head);
   decorateSections(main);
   decorateBlocks(main);
+
+  // These autoblocks need to be built after the sections and blocks are decorated :(
+  buildTruckLineupBlock(main);
+  buildInpageNavigationBlock(main);
+
   decorateHyperlinkImages(main);
   decorateSectionBackgrounds(main);
   decorateLinks(main);
   buildTabbedBlock(main);
   decorateOfferLinks(main);
-  buildCtaList(main);
-
-  // redesign
-  buildTruckLineupBlock(main);
-  buildInpageNavigationBlock(main);
+  decorateConfigurator(main);
 }
 
 /**
@@ -772,21 +799,12 @@ async function loadEager(doc) {
     if (templateName) {
       await loadTemplate(doc, templateName);
     }
-    await waitForLCP(LCP_BLOCKS);
   } else {
     document.documentElement.lang = 'en';
   }
 
   await getPlaceholders();
 }
-
-async function loadPage() {
-  await loadEager(document);
-  await loadLazy(document);
-  loadDelayed();
-}
-
-loadPage();
 
 export const MEDIA_BREAKPOINTS = {
   MOBILE: 'MOBILE',
@@ -833,47 +851,50 @@ const moveClassToHtmlEl = (className, elementSelector = 'main') => {
   }
 };
 
+/**
+ * Loads everything that happens a lot later,
+ * without impacting the user experience.
+ */
+function loadDelayed() {
+  window.setTimeout(() => {
+    import('./delayed.js');
+  }, 3000);
+  // load anything that can be postponed to the latest here
+}
+
+async function loadPage() {
+  await loadEager(document);
+  await loadLazy(document);
+  loadDelayed();
+}
+
+loadPage();
+
 /* REDESIGN CLASS CHECK */
 moveClassToHtmlEl('redesign-v2');
 
-/* EXTERNAL APP CLASS CHECK */
-moveClassToHtmlEl('truck-configurator');
-
-const currentUrl = window.location.href;
-const isConfiguratorPage = document.documentElement.classList.contains('truck-configurator') || currentUrl.includes('/summary?config=');
-
-if (isConfiguratorPage) {
-  const allowedCountries = getMetadata('allowed-countries');
-  const errorPageUrl = getMetadata('redirect-url');
-  if (allowedCountries && errorPageUrl) {
-    validateCountries(allowedCountries, errorPageUrl);
+/* MODAL */
+async function loadModalScript() {
+  if (!modal) {
+    modal = await import('../common/modal/modal.js');
   }
 
-  const container = createElement('div', { props: { id: 'configurator' } });
-  const main = document.querySelector('main');
-  main.innerHTML = '';
-  main.append(container);
-
-  const { JS = false, CSS = false } = TRUCK_CONFIGURATOR_URLS;
-  const cssUrls = formatStringToArray(CSS);
-  const jsUrls = formatStringToArray(JS);
-  if (jsUrls.length > 0 && currentUrl.includes('/summary?config=')) {
-    document.documentElement.classList.add('external-app');
-    const truckConfiguratorBaseUrl = new URL(jsUrls[0]).origin;
-    const currentUrlHash = new URL(currentUrl).hash;
-    jsUrls.unshift(`${truckConfiguratorBaseUrl}/${currentUrlHash}`);
-  }
-
-  // if there are no css files, remove js files as well to avoid a weird animation
-  if (cssUrls.length === 0) {
-    jsUrls.length = 0;
-  }
-
-  jsUrls.forEach((url) => {
-    loadScript(url, { type: 'text/javascript', charset: 'UTF-8', defer: 'defer' });
-  });
-
-  cssUrls.forEach((url) => {
-    loadCSS(url);
-  });
+  return modal;
 }
+
+document.addEventListener('open-modal', (event) => {
+  loadModalScript().then((modal) => {
+    const variantClasses = ['black', 'gray', 'reveal'];
+    const modalClasses = [...event.detail.target.closest('.section').classList].filter((el) => el.startsWith('modal-'));
+    // changing the modal variants classes to BEM naming
+    variantClasses.forEach((variant) => {
+      const index = modalClasses.findIndex((el) => el === `modal-${variant}`);
+
+      if (index >= 0) {
+        modalClasses[index] = modalClasses[index].replace('modal-', 'modal--');
+      }
+    });
+
+    modal.showModal(event.detail.content, { modalClasses, invokeContext: event.detail.target });
+  });
+});
