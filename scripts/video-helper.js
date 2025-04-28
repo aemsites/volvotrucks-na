@@ -56,6 +56,19 @@ async function waitForVideoJs() {
   });
 }
 
+let dashDependenciesLoaded = false;
+
+async function loadDashDependencies() {
+  if (dashDependenciesLoaded) {
+    return;
+  }
+
+  await loadScript('/scripts/videojs/dash.all.min.js');
+  await loadScript('/scripts/videojs/videojs-dash.min.js');
+
+  dashDependenciesLoaded = true;
+}
+
 function setupAutopause(videoElement, player) {
   const observer = new IntersectionObserver(
     (entries) => {
@@ -112,8 +125,22 @@ export async function setupPlayer(url, videoContainer, config, video) {
     throw new Error('Video.js is not loaded');
   }
 
+  const isMpd = typeof url === 'string' && /\.mpd(\?.*)?$/.test(url);
+
+  if (isMpd) {
+    await loadDashDependencies();
+  }
+
   const player = videojs(videoElement, videojsConfig);
-  player.src(url);
+
+  if (isMpd) {
+    player.src({
+      src: url,
+      type: 'application/dash+xml',
+    });
+  } else {
+    player.src(url);
+  }
 
   player.ready(() => {
     if (config.autoplay) {
@@ -129,9 +156,12 @@ export function getDeviceSpecificVideoUrl(videoUrl) {
   const isIOS = /iPad|iPhone|iPod/.test(userAgent);
   const isSafari =
     /Safari/i.test(userAgent) && !/Chrome/i.test(userAgent) && !/CriOs/i.test(userAgent) && !/Android/i.test(userAgent) && !/Edg/i.test(userAgent);
+  const isAemPlayUrl = typeof videoUrl === 'string' && videoUrl.includes('/play');
 
-  const manifest = isIOS || isSafari ? 'manifest.m3u8' : 'manifest.mpd';
-  return videoUrl.replace(/manifest\.mpd|manifest\.m3u8|play/, manifest);
+  if (isAemPlayUrl && (isIOS || isSafari)) {
+    return videoUrl.replace('/play', '/manifest.m3u8');
+  }
+  return videoUrl;
 }
 
 export const addVideoConfig = (videoId, props = {}) => {
