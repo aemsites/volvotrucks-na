@@ -163,10 +163,11 @@ export function getYoutubeVideoId(url) {
 
 export function isVideoLink(link) {
   const linkString = link.getAttribute('href');
-  return (
-    (linkString.includes('youtube.com/embed/') || videoURLRegex.test(linkString) || isLowResolutionVideoUrl(linkString)) &&
-    link.closest('.block.embed') === null
-  );
+  const isManifestUrl = /\.(m3u8|mpd)(\?.*)?$/.test(linkString);
+  const isYouTube = linkString.includes('youtube.com/embed/');
+  const isAEM = videoURLRegex.test(linkString);
+  const isMp4 = isLowResolutionVideoUrl(linkString);
+  return (isYouTube || isAEM || isMp4 || isManifestUrl) && link.closest('.block.embed') === null;
 }
 
 export function selectVideoLink(links, preferredType, videoType = videoTypes.both) {
