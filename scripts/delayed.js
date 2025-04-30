@@ -1,7 +1,6 @@
 /* global fbq */
-import { loadScript, loadCSS, sampleRUM } from './aem.js';
+import { loadScript, sampleRUM } from './aem.js';
 import { isPerformanceAllowed, isTargetingAllowed, isSocialAllowed, isDevHost, extractObjectFromArray, COOKIE_CONFIGS } from './common.js';
-import { VIDEO_JS_SCRIPT, VIDEO_JS_CSS } from './video-helper.js';
 
 // COOKIE ACCEPTANCE AND IDs default to false in case no ID is present
 const {
