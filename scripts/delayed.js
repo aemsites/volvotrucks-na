@@ -418,14 +418,3 @@ async function loadMNTNConversionPixel(orderId, orderAmount = '') {
     r.parentNode.insertBefore(y, r);
   })();
 }
-
-export async function loadVideoJs() {
-  await Promise.all([loadCSS(VIDEO_JS_CSS), loadScript(VIDEO_JS_SCRIPT)]);
-
-  const jsScript = document.querySelector(`head > script[src="${VIDEO_JS_SCRIPT}"]`);
-  const cssScript = document.querySelector(`head > link[href="${VIDEO_JS_CSS}"]`);
-
-  jsScript.dataset.loaded = true;
-  cssScript.dataset.loaded = true;
-  document.dispatchEvent(new Event('videojs-loaded'));
-}
