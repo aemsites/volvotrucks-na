@@ -419,7 +419,7 @@ async function loadMNTNConversionPixel(orderId, orderAmount = '') {
   })();
 }
 
-async function loadVideoJs() {
+export async function loadVideoJs() {
   await Promise.all([loadCSS(VIDEO_JS_CSS), loadScript(VIDEO_JS_SCRIPT)]);
 
   const jsScript = document.querySelector(`head > script[src="${VIDEO_JS_SCRIPT}"]`);
@@ -428,14 +428,4 @@ async function loadVideoJs() {
   jsScript.dataset.loaded = true;
   cssScript.dataset.loaded = true;
   document.dispatchEvent(new Event('videojs-loaded'));
-}
-
-const hasVideo =
-  document.querySelector('.video-js') ||
-  document.querySelector('.link-with-video') ||
-  document.querySelector('.text-link-with-video') ||
-  document.querySelector('.v2-video__big-play-button') ||
-  document.querySelector('.v2-resource-gallery__video-list-item .icon-play-video');
-if (hasVideo) {
-  loadVideoJs();
 }

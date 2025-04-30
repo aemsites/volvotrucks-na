@@ -862,10 +862,41 @@ function loadDelayed() {
   // load anything that can be postponed to the latest here
 }
 
+/**
+ * Determines whether the page contains any video-related elements.
+ * @returns {boolean} True if a video block is present on the page.
+ */
+function hasVideoOnPage() {
+  return !!(
+    document.querySelector('.video-js') ||
+    document.querySelector('.link-with-video') ||
+    document.querySelector('.text-link-with-video') ||
+    document.querySelector('.v2-video__big-play-button') ||
+    document.querySelector('.v2-resource-gallery__video-list-item .icon-play-video')
+  );
+}
+
+/**
+ * Loads the delayed module and initializes Video.js.
+ */
+async function loadVideoSupport() {
+  const delayedModule = await import('./delayed.js');
+  await delayedModule.loadVideoJs();
+}
+
+/**
+ * Main page initialization logic.
+ * Loads eager/lazy resources and conditionally loads video support.
+ */
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
-  loadDelayed();
+
+  if (hasVideoOnPage()) {
+    await loadVideoSupport();
+  } else {
+    loadDelayed();
+  }
 }
 
 loadPage();
