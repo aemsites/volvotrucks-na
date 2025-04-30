@@ -878,10 +878,10 @@ async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
 
+  loadDelayed();
+
   if (hasVideoOnPage()) {
     await loadVideoJs();
-  } else {
-    loadDelayed();
   }
 }
 
