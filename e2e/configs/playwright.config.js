@@ -1,6 +1,20 @@
 // @ts-check
 import { defineConfig, devices } from '@playwright/test';
 
+function getbaseUrl(env) {
+  const branch = 'https://main--volvotrucks-us--volvogroup.aem.page';
+
+  if (env.BRANCH) {
+    return `https://${env.BRANCH}--volvotrucks-us--volvogroup.aem.page`;
+  }
+
+  if (env.LOCAL_DEV === 'TRUE') {
+    return 'http://localhost:3000';
+  }
+
+  return branch;
+}
+
 /**
  * Read environment variables from file.
  * https://github.com/motdotla/dotenv
@@ -8,7 +22,7 @@ import { defineConfig, devices } from '@playwright/test';
 // import dotenv from 'dotenv';
 // import path from 'path';
 // dotenv.config({ path: path.resolve(__dirname, '.env') });
-console.log('Running tests with environment BRANCH:', process.env.BRANCH);
+
 /**
  * @see https://playwright.dev/docs/test-configuration
  */
@@ -32,7 +46,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: process.env.BRANCH ? `https://${process.env.BRANCH}--volvotrucks-us--volvogroup.aem.page` : 'https://main--volvotrucks-us--volvogroup.aem.page',
+    baseURL: getbaseUrl(process.env),
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
