@@ -157,7 +157,7 @@ export function getYoutubeVideoId(url) {
 
 export function isVideoLink(link) {
   const linkString = link.getAttribute('href');
-  const isManifestUrl = /\.(m3u8|mpd)(\?.*)?$/.test(linkString);
+  const isManifestUrl = /\.m3u8(\?.*)?$/.test(linkString);
   const isYouTube = linkString.includes('youtube.com/embed/');
   const isAEM = videoURLRegex.test(linkString);
   const isMp4 = isLowResolutionVideoUrl(linkString);
