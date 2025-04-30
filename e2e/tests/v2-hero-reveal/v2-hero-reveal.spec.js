@@ -38,7 +38,7 @@ function interceptRequest(page, url, customSectionMetadataValues = null) {
 }
 
 test.beforeEach(async ({ page }) => {
-  const pageUrl = 'https://main--volvotrucks-us--volvogroup.aem.page/e2e/v2-hero-reveal/v2-hero-reveal';
+  const pageUrl = '/e2e/v2-hero-reveal/v2-hero-reveal';
   await page.clock.install({ time: new Date('2030-01-01T09:00:00-00:00') });
 
   // Define your custom values
