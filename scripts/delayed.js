@@ -1,7 +1,6 @@
 /* global fbq */
-import { loadScript, loadCSS, sampleRUM } from './aem.js';
+import { loadScript, sampleRUM } from './aem.js';
 import { isPerformanceAllowed, isTargetingAllowed, isSocialAllowed, isDevHost, extractObjectFromArray, COOKIE_CONFIGS } from './common.js';
-import { VIDEO_JS_SCRIPT, VIDEO_JS_CSS } from './video-helper.js';
 
 // COOKIE ACCEPTANCE AND IDs default to false in case no ID is present
 const {
@@ -417,25 +416,4 @@ async function loadMNTNConversionPixel(orderId, orderAmount = '') {
     y.src = ('https:' === document.location.protocol ? 'https://' : 'http://') + w;
     r.parentNode.insertBefore(y, r);
   })();
-}
-
-async function loadVideoJs() {
-  await Promise.all([loadCSS(VIDEO_JS_CSS), loadScript(VIDEO_JS_SCRIPT)]);
-
-  const jsScript = document.querySelector(`head > script[src="${VIDEO_JS_SCRIPT}"]`);
-  const cssScript = document.querySelector(`head > link[href="${VIDEO_JS_CSS}"]`);
-
-  jsScript.dataset.loaded = true;
-  cssScript.dataset.loaded = true;
-  document.dispatchEvent(new Event('videojs-loaded'));
-}
-
-const hasVideo =
-  document.querySelector('.video-js') ||
-  document.querySelector('.link-with-video') ||
-  document.querySelector('.text-link-with-video') ||
-  document.querySelector('.v2-video__big-play-button') ||
-  document.querySelector('.v2-resource-gallery__video-list-item .icon-play-video');
-if (hasVideo) {
-  loadVideoJs();
 }

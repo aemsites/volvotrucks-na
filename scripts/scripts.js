@@ -28,7 +28,15 @@ import {
   getLocale,
 } from './common.js';
 
-import { isVideoLink, isSoundcloudLink, isLowResolutionVideoUrl, addVideoShowHandler, addSoundcloudShowHandler } from './video-helper.js';
+import {
+  isVideoLink,
+  isSoundcloudLink,
+  isLowResolutionVideoUrl,
+  addVideoShowHandler,
+  addSoundcloudShowHandler,
+  hasVideoOnPage,
+  loadVideoJs,
+} from './video-helper.js';
 
 import { validateCountries } from './validate-countries.js';
 
@@ -862,10 +870,18 @@ function loadDelayed() {
   // load anything that can be postponed to the latest here
 }
 
+/**
+ * Main page initialization logic.
+ * Loads eager/lazy resources and conditionally loads video support.
+ */
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
   loadDelayed();
+
+  if (hasVideoOnPage()) {
+    await loadVideoJs();
+  }
 }
 
 loadPage();
