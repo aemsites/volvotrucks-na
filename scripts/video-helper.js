@@ -10,7 +10,7 @@ export const VIDEO_JS_CSS = '/scripts/videojs/video-js.min.css';
 export const AEM_ASSETS = {
   aemCloudDomain: '.adobeaemcloud.com',
   videoURLRegex: /\/assets\/urn:aaid:aem:[\w-]+\/play/,
-  videoIdRegex: /urn:aaid:aem:[0-9a-fA-F-]+/,
+  videoIdRegex: /(urn:aaid:aem:[0-9a-fA-F-]+|https?:\/\/[^\s]+\.m3u8)/,
 };
 
 export const youtubeVideoRegex =
@@ -149,6 +149,10 @@ export function isYoutubeVideoUrl(url) {
   return youtubeVideoRegex.test(url);
 }
 
+export function isHlsVideoUrl(url) {
+  return typeof url === 'string' && url.split('?')[0].endsWith('.m3u8');
+}
+
 export function getYoutubeVideoId(url) {
   const match = url.match(youtubeVideoRegex);
 
@@ -174,6 +178,7 @@ export function selectVideoLink(links, preferredType, videoType = videoTypes.bot
 
   const aemVideoLink = findLinkByCondition((href) => videoURLRegex.test(href));
   const youTubeLink = findLinkByCondition((href) => href.includes('youtube.com/embed/'));
+  const hlsLink = findLinkByCondition((href) => href.split('?')[0].endsWith('.m3u8'));
   const localMediaLink = findLinkByCondition((href) => href.split('?')[0].endsWith('.mp4'));
 
   if (aemVideoLink) {
@@ -181,6 +186,9 @@ export function selectVideoLink(links, preferredType, videoType = videoTypes.bot
   }
   if (prefersYouTube && youTubeLink) {
     return youTubeLink;
+  }
+  if (hlsLink) {
+    return hlsLink;
   }
   return localMediaLink;
 }
