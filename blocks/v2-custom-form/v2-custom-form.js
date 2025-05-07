@@ -557,6 +557,23 @@ function decorateTitles(block) {
   }
 }
 
+function createHoneypotField() {
+  const temp = document.createElement('template');
+  temp.innerHTML = `
+    <div class="visually-hidden" aria-hidden="true">
+      <label for="pardot_extra_field">Comments</label>
+      <input
+        type="text"
+        id="pardot_extra_field"
+        name="pardot_extra_field"
+        tabindex="-1"
+        autocomplete="off"
+      >
+    </div>
+  `.trim();
+  return temp.content.firstElementChild;
+}
+
 export default async function decorate(block) {
   variantsClassesToBEM(block.classList, variantClasses, blockName);
   const formLink = block.querySelector('a[href$=".json"]');
@@ -569,6 +586,7 @@ export default async function decorate(block) {
       form.dataset.customMessage = `${thankYouPage[0].href}.plain.html`;
       block.lastElementChild.remove();
     }
+    form.append(createHoneypotField());
     // clean the content block before appending the form
     block.innerText = '';
     block.append(form);
