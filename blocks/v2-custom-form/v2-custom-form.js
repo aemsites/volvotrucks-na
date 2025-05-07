@@ -3,7 +3,7 @@ import { getTextLabel, createElement, variantsClassesToBEM } from '../../scripts
 import { getCustomDropdown } from '../../../common/custom-dropdown/custom-dropdown.js';
 
 const blockName = 'v2-custom-form';
-const variantClasses = ['double-column'];
+const variantClasses = ['double-column', 'centered'];
 
 const successMessage = (successTitle, successText) => `<h3 class='${blockName}__title ${blockName}__title--success'>${successTitle}</h3>
 <p class='${blockName}__text ${blockName}__text--success'>${successText}</p>
@@ -37,6 +37,7 @@ const SUBMIT_ACTION = '';
  * @returns {String} the custom message from the thank you page fragment
  */
 async function getCustomMessage(url) {
+  console.log(url);
   try {
     const resp = await fetch(url);
     if (resp.ok) {
@@ -81,6 +82,7 @@ async function submissionFailure() {
 
 // callback
 window.showResult = function showResult(json) {
+  console.log(json);
   if (json.result === 'success') {
     submissionSuccess();
   } else if (json.result === 'error') {
@@ -98,6 +100,7 @@ function generateUnique() {
 }
 
 function constructPayload(form) {
+  console.log(form);
   const payload = { __id__: generateUnique() };
   [...form.elements].forEach((fe) => {
     if (fe.name) {
@@ -111,6 +114,7 @@ function constructPayload(form) {
     }
   });
   payload.callback = 'showResult';
+  console.log(payload);
   return { payload };
 }
 
@@ -119,6 +123,7 @@ async function prepareRequest(form) {
   const url = form.dataset.action;
 
   const serializedData = serialize(payload);
+  console.warn(`${url}?${serializedData}`);
   loadScript(`${url}?${serializedData}`, { type: 'text/javascript', charset: 'UTF-8' });
 }
 
