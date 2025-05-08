@@ -558,8 +558,7 @@ function decorateTitles(block) {
 }
 
 function createHoneypotField() {
-  const temp = document.createElement('template');
-  temp.innerHTML = `
+  const fragment = document.createRange().createContextualFragment(`
     <div class="visually-hidden" aria-hidden="true">
       <label for="pardot_extra_field">Comments</label>
       <input
@@ -570,8 +569,8 @@ function createHoneypotField() {
         autocomplete="off"
       >
     </div>
-  `.trim();
-  return temp.content.firstElementChild;
+  `);
+  return fragment.firstElementChild;
 }
 
 export default async function decorate(block) {
