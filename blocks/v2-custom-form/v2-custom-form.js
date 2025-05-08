@@ -136,9 +136,10 @@ function setPlaceholder(element, fd) {
 }
 
 const constraintsDef = Object.entries({
-  'email|text': [
+  'email|text|textarea': [
     ['Max', 'maxlength'],
     ['Min', 'minlength'],
+    ['Pattern', 'pattern'],
   ],
   'number|range|date': ['Max', 'Min', 'Step'],
   file: ['Accept', 'Multiple'],
@@ -153,7 +154,7 @@ function setConstraints(element, fd) {
     constraints
       .filter(([nm]) => fd[nm])
       .forEach(([nm, htmlNm]) => {
-        element.setAttribute(htmlNm, fd[nm]);
+        element.setAttribute(htmlNm, htmlNm === 'pattern' ? fd[nm].replace(/^\/|\/$/g, '') : fd[nm]);
       });
   }
 }
@@ -257,6 +258,7 @@ const withFieldWrapper = (element) => (fd) => {
 
 const createTextArea = withFieldWrapper((fd) => {
   const textArea = createElement('textarea');
+  setConstraints(textArea, fd);
   setPlaceholder(textArea, fd);
   return textArea;
 });
