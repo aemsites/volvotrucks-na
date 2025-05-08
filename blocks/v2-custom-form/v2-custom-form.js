@@ -37,7 +37,6 @@ const SUBMIT_ACTION = '';
  * @returns {String} the custom message from the thank you page fragment
  */
 async function getCustomMessage(url) {
-  console.log(url);
   try {
     const resp = await fetch(url);
     if (resp.ok) {
@@ -82,7 +81,6 @@ async function submissionFailure() {
 
 // callback
 window.showResult = function showResult(json) {
-  console.log(json);
   if (json.result === 'success') {
     submissionSuccess();
   } else if (json.result === 'error') {
@@ -100,7 +98,6 @@ function generateUnique() {
 }
 
 function constructPayload(form) {
-  console.log(form);
   const payload = { __id__: generateUnique() };
   [...form.elements].forEach((fe) => {
     if (fe.name) {
@@ -114,7 +111,6 @@ function constructPayload(form) {
     }
   });
   payload.callback = 'showResult';
-  console.log(payload);
   return { payload };
 }
 
@@ -123,7 +119,6 @@ async function prepareRequest(form) {
   const url = form.dataset.action;
 
   const serializedData = serialize(payload);
-  console.warn(`${url}?${serializedData}`);
   loadScript(`${url}?${serializedData}`, { type: 'text/javascript', charset: 'UTF-8' });
 }
 
