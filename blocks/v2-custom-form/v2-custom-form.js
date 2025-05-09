@@ -570,7 +570,7 @@ function createHoneypotField() {
 
   const label = createElement('label', {
     props: {
-      for: 'pardot_extra_field',
+      for: 'form_extra_field',
     },
   });
   label.textContent = 'Comments';
@@ -578,8 +578,8 @@ function createHoneypotField() {
   const input = createElement('input', {
     props: {
       type: 'text',
-      id: 'pardot_extra_field',
-      name: 'pardot_extra_field',
+      id: 'form_extra_field',
+      name: 'form_extra_field',
       tabindex: '-1',
       autocomplete: 'off',
     },
