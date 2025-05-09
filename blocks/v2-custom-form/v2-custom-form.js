@@ -535,6 +535,13 @@ async function createForm(formURL) {
     // after been submitted, the form needs to clean the error messages if the fields are valid
     cleanErrorMessages(form);
     e.preventDefault();
+
+    const honeypot = form.querySelector('input[name="form_extra_field"]');
+    if (honeypot && honeypot.value) {
+      console.warn('Bot detected — honeypot filled.');
+      return;
+    }
+
     if (isValid) {
       e.submitter.setAttribute('disabled', '');
       form.dataset.action = e.submitter.formAction || SUBMIT_ACTION || pathname.split('.json')[0];
