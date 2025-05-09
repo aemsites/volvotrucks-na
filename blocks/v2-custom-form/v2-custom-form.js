@@ -538,7 +538,7 @@ async function createForm(formURL) {
 
     const honeypot = form.querySelector('input[name="form_extra_field"]');
     if (honeypot && honeypot.value) {
-      console.warn('Bot detected — honeypot filled.');
+      console.warn('Form submission blocked: honeypot field was filled (possible bot).');
       return;
     }
 
