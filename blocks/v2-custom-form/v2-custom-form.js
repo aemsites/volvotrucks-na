@@ -3,7 +3,7 @@ import { getTextLabel, createElement, variantsClassesToBEM } from '../../scripts
 import { getCustomDropdown } from '../../../common/custom-dropdown/custom-dropdown.js';
 
 const blockName = 'v2-custom-form';
-const variantClasses = ['double-column'];
+const variantClasses = ['double-column', 'centered'];
 
 const successMessage = (successTitle, successText) => `<h3 class='${blockName}__title ${blockName}__title--success'>${successTitle}</h3>
 <p class='${blockName}__text ${blockName}__text--success'>${successText}</p>
