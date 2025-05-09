@@ -801,8 +801,9 @@ async function loadEager(doc) {
   if (main) {
     decorateMain(main, head);
     document.body.classList.add('appear');
-    const language = getLocale();
-    document.documentElement.lang = language;
+    const meta_i18n = doc.querySelector('meta[name="i18n"]');
+    const meta_locale = doc.querySelector('meta[name="locale"]');
+    document.documentElement.lang = (meta_i18n && meta_i18n.content) || (meta_locale && meta_locale.content.toLowerCase()) || 'en';
     const templateName = getMetadata('template');
     if (templateName) {
       await loadTemplate(doc, templateName);
