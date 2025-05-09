@@ -187,7 +187,10 @@ function createHelpText(fd) {
 }
 
 function kebabName(name) {
-  return name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+  return name
+    .replace(/\s+/g, '-')
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .toLowerCase();
 }
 
 function createFieldWrapper(fd, tagName = 'div') {
@@ -558,19 +561,32 @@ function decorateTitles(block) {
 }
 
 function createHoneypotField() {
-  const fragment = document.createRange().createContextualFragment(`
-    <div class="visually-hidden" aria-hidden="true">
-      <label for="pardot_extra_field">Comments</label>
-      <input
-        type="text"
-        id="pardot_extra_field"
-        name="pardot_extra_field"
-        tabindex="-1"
-        autocomplete="off"
-      >
-    </div>
-  `);
-  return fragment.firstElementChild;
+  const wrapper = createElement('div', {
+    classes: ['field-wrapper', 'visually-hidden'],
+    props: {
+      'aria-hidden': 'true',
+    },
+  });
+
+  const label = createElement('label', {
+    props: {
+      for: 'pardot_extra_field',
+    },
+  });
+  label.textContent = 'Comments';
+
+  const input = createElement('input', {
+    props: {
+      type: 'text',
+      id: 'pardot_extra_field',
+      name: 'pardot_extra_field',
+      tabindex: '-1',
+      autocomplete: 'off',
+    },
+  });
+
+  wrapper.append(label, input);
+  return wrapper;
 }
 
 export default async function decorate(block) {
