@@ -187,7 +187,10 @@ function createHelpText(fd) {
 }
 
 function kebabName(name) {
-  return name.replace(/([a-z0-9])([A-Z])/g, '$1-$2').toLowerCase();
+  return name
+    .replace(/\s+/g, '-')
+    .replace(/([a-z0-9])([A-Z])/g, '$1-$2')
+    .toLowerCase();
 }
 
 function createFieldWrapper(fd, tagName = 'div') {
@@ -557,6 +560,22 @@ function decorateTitles(block) {
   }
 }
 
+function createHoneypotField() {
+  const fragment = document.createRange().createContextualFragment(`
+    <div class="field-wrapper visually-hidden" aria-hidden="true">
+      <label for="form_extra_field">Comments</label>
+      <input
+        type="text"
+        id="form_extra_field"
+        name="form_extra_field"
+        tabindex="-1"
+        autocomplete="off"
+      >
+    </div>
+  `);
+  return fragment.firstElementChild;
+}
+
 export default async function decorate(block) {
   variantsClassesToBEM(block.classList, variantClasses, blockName);
   const formLink = block.querySelector('a[href$=".json"]');
@@ -569,6 +588,7 @@ export default async function decorate(block) {
       form.dataset.customMessage = `${thankYouPage[0].href}.plain.html`;
       block.lastElementChild.remove();
     }
+    form.append(createHoneypotField());
     // clean the content block before appending the form
     block.innerText = '';
     block.append(form);
