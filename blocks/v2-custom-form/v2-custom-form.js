@@ -560,35 +560,6 @@ function decorateTitles(block) {
   }
 }
 
-function createHoneypotField() {
-  const wrapper = createElement('div', {
-    classes: ['field-wrapper', 'visually-hidden'],
-    props: {
-      'aria-hidden': 'true',
-    },
-  });
-
-  const label = createElement('label', {
-    props: {
-      for: 'pardot_extra_field',
-    },
-  });
-  label.textContent = 'Comments';
-
-  const input = createElement('input', {
-    props: {
-      type: 'text',
-      id: 'pardot_extra_field',
-      name: 'pardot_extra_field',
-      tabindex: '-1',
-      autocomplete: 'off',
-    },
-  });
-
-  wrapper.append(label, input);
-  return wrapper;
-}
-
 export default async function decorate(block) {
   variantsClassesToBEM(block.classList, variantClasses, blockName);
   const formLink = block.querySelector('a[href$=".json"]');
@@ -601,7 +572,6 @@ export default async function decorate(block) {
       form.dataset.customMessage = `${thankYouPage[0].href}.plain.html`;
       block.lastElementChild.remove();
     }
-    form.append(createHoneypotField());
     // clean the content block before appending the form
     block.innerText = '';
     block.append(form);
