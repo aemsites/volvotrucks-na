@@ -5,8 +5,8 @@ const autoSuggestClass = 'autosuggest-results-item-highlighted';
 
 export function fetchAutosuggest(term, autosuggestEle, rowEle, func) {
   const fragmentRange = document.createRange();
-  const language = getLocale();
-  const locale = language.split('-')[0].toUpperCase();
+  const locale = getLocale();
+  const language = locale.split('-')[0].toUpperCase();
 
   if (!TENANT) {
     console.error('%cTenant %cis not defined', 'color: red', 'color: default');
@@ -18,7 +18,7 @@ export function fetchAutosuggest(term, autosuggestEle, rowEle, func) {
     variables: {
       tenant: TENANT,
       term,
-      locale,
+      language,
       sizeSuggestions: 5,
     },
   }).then(({ errors, data }) => {
