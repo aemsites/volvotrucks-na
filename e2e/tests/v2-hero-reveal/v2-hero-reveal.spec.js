@@ -53,7 +53,7 @@ test.beforeEach(async ({ page }) => {
   // Intercept request
   interceptRequest(page, pageUrl, customSectionMetadataValues);
 
-  page.goto(pageUrl);
+  await page.goto(pageUrl);
 });
 
 test.describe('V2 Hero Reveal', () => {
