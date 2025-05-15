@@ -10,6 +10,7 @@ import {
   setupPlayer,
   getDeviceSpecificVideoUrl,
   loadYouTubeIframeAPI,
+  isHlsVideoUrl,
 } from '../../scripts/video-helper.js';
 
 const HIDE_MODAL_CLASS = 'modal-hidden';
@@ -167,7 +168,7 @@ const createModal = () => {
         videoOrIframe.classList.add('modal-video');
         modalBackground.classList.add('modal--video');
         modalContent.append(videoOrIframe);
-      } else if (isAEMVideoUrl(newContent)) {
+      } else if (isAEMVideoUrl(newContent) || isHlsVideoUrl(newContent)) {
         videoOrIframe = document.createElement('div');
         videoOrIframe.classList.add('modal-video');
 
