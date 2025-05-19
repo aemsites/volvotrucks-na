@@ -33,14 +33,25 @@
   "homepage": "https://github.com/adobe/helix-project-boilerplate#readme",
   "devDependencies": {
     "copyfiles": "^2.4.1",
+    "css-loader": "^7.1.2",
     "eslint": "^9.24.0",
     "eslint-config-prettier": "^9.1.0",
     "eslint-plugin-prettier": "^5.2.6",
+    "glob": "^11.0.1",
     "globals": "^15.13.0",
     "husky": "^9.1.7",
     "lint-staged": "^15.2.7",
+    "mini-css-extract-plugin": "^2.9.2",
     "stylelint": "16.12.0",
     "stylelint-config-standard": "36.0.1",
-    "video.js": "8.17.3"
+    "terser-webpack-plugin": "^5.3.11",
+    "video.js": "8.17.3",
+    "webpack": "^5.99.8",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "@volvo/vcdk": "^9.12.1",
+    "@volvo/vcdk-assets": "1.1.0",
+    "@volvo/vcdk-tokens": "1.1.0"
   }
 }

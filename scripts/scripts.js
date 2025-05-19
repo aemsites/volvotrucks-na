@@ -25,7 +25,6 @@ import {
   variantsClassesToBEM,
   formatStringToArray,
   TRUCK_CONFIGURATOR_URLS,
-  getLocale,
 } from './common.js';
 
 import {
@@ -884,7 +883,7 @@ async function loadPage() {
     await loadVideoJs();
   }
 }
-
+console.log('Loading page');
 loadPage();
 
 /* REDESIGN CLASS CHECK */
