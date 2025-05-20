@@ -10,7 +10,7 @@ export const VIDEO_JS_CSS = '/scripts/videojs/video-js.min.css';
 export const AEM_ASSETS = {
   aemCloudDomain: '.adobeaemcloud.com',
   videoURLRegex: /\/assets\/urn:aaid:aem:[\w-]+\/play/,
-  videoIdRegex: /urn:aaid:aem:[0-9a-fA-F-]+/,
+  videoIdRegex: /(urn:aaid:aem:[0-9a-fA-F-]+|https?:\/\/[^\s]+\.m3u8)/,
 };
 
 export const youtubeVideoRegex =
@@ -125,13 +125,7 @@ export async function setupPlayer(url, videoContainer, config, video) {
 }
 
 export function getDeviceSpecificVideoUrl(videoUrl) {
-  const { userAgent } = navigator;
-  const isIOS = /iPad|iPhone|iPod/.test(userAgent);
-  const isSafari =
-    /Safari/i.test(userAgent) && !/Chrome/i.test(userAgent) && !/CriOs/i.test(userAgent) && !/Android/i.test(userAgent) && !/Edg/i.test(userAgent);
-
-  const manifest = isIOS || isSafari ? 'manifest.m3u8' : 'manifest.mpd';
-  return videoUrl.replace(/manifest\.mpd|manifest\.m3u8|play/, manifest);
+  return videoUrl.replace(/manifest\.mpd|manifest\.m3u8|play/, 'manifest.m3u8');
 }
 
 export const addVideoConfig = (videoId, props = {}) => {
@@ -155,6 +149,10 @@ export function isYoutubeVideoUrl(url) {
   return youtubeVideoRegex.test(url);
 }
 
+export function isHlsVideoUrl(url) {
+  return typeof url === 'string' && url.split('?')[0].endsWith('.m3u8');
+}
+
 export function getYoutubeVideoId(url) {
   const match = url.match(youtubeVideoRegex);
 
@@ -163,10 +161,11 @@ export function getYoutubeVideoId(url) {
 
 export function isVideoLink(link) {
   const linkString = link.getAttribute('href');
-  return (
-    (linkString.includes('youtube.com/embed/') || videoURLRegex.test(linkString) || isLowResolutionVideoUrl(linkString)) &&
-    link.closest('.block.embed') === null
-  );
+  const isManifestUrl = /\.m3u8(\?.*)?$/.test(linkString);
+  const isYouTube = linkString.includes('youtube.com/embed/');
+  const isAEM = videoURLRegex.test(linkString);
+  const isMp4 = isLowResolutionVideoUrl(linkString);
+  return (isYouTube || isAEM || isMp4 || isManifestUrl) && link.closest('.block.embed') === null;
 }
 
 export function selectVideoLink(links, preferredType, videoType = videoTypes.both) {
@@ -179,6 +178,7 @@ export function selectVideoLink(links, preferredType, videoType = videoTypes.bot
 
   const aemVideoLink = findLinkByCondition((href) => videoURLRegex.test(href));
   const youTubeLink = findLinkByCondition((href) => href.includes('youtube.com/embed/'));
+  const hlsLink = findLinkByCondition((href) => href.split('?')[0].endsWith('.m3u8'));
   const localMediaLink = findLinkByCondition((href) => href.split('?')[0].endsWith('.mp4'));
 
   if (aemVideoLink) {
@@ -186,6 +186,9 @@ export function selectVideoLink(links, preferredType, videoType = videoTypes.bot
   }
   if (prefersYouTube && youTubeLink) {
     return youTubeLink;
+  }
+  if (hlsLink) {
+    return hlsLink;
   }
   return localMediaLink;
 }
