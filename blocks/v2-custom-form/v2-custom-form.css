@@ -18,6 +18,10 @@
   width: min(100%, 470px);
 }
 
+.v2-custom-form.v2-custom-form--centered form {
+  margin: 0 auto;
+}
+
 .v2-custom-form-container textarea,
 .v2-custom-form-container input,
 .v2-custom-form-container select,
@@ -137,7 +141,6 @@
     gap: 16px 32px;
     max-width: 980px;
     width: 100%;
-    margin: 0 auto;
   }
 
   .v2-custom-form-container :is(.form-textarea-wrapper, .form-submit-wrapper) {

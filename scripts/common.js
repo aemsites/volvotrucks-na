@@ -30,6 +30,7 @@ export function getHref() {
   }
 
   const urlParams = new URLSearchParams(window.parent.location.search);
+
   return `${window.parent.location.origin}${urlParams.get('path')}`;
 }
 
