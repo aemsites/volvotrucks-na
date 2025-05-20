@@ -32,9 +32,12 @@ npm tst
 
 ## Local development
 
-1. Create a new repository based on the `helix-project-boilerplate` template and add a mountpoint in the `fstab.yaml`
-2. Add the [helix-bot](https://github.com/apps/helix-bot) to the repository
-3. Install the [Helix CLI](https://github.com/adobe/helix-cli): `npm install -g @adobe/aem-cli`
+1. Configure your local environmen to be able to install the Volvo Design System packages.
+Follow the guide [here](https://developer.designsystem.volvogroup.com/?path=/docs/web-getting-started-installation--docs)
+*NOTE:* If on Mac, when requested to install the package `vsts-npm-auth`, please install instead the [better-vsts-npm-auth](https://www.npmjs.com/package/better-vsts-npm-auth)
+
+
+1. Install the [Helix CLI](https://github.com/adobe/helix-cli): `npm install -g @adobe/aem-cli`
 4. Start AEM Proxy: `aem up` (opens your browser at http://localhost:3000)
 5. Open the `{repo}` directory in your favorite IDE and start coding :)
 
