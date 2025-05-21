@@ -41,22 +41,55 @@ export const extractLimitFromBlock = (block) => {
 };
 
 /**
+ * Extracts the last folder from a URL.
+ *
+ * @param {string} url - The URL from which to extract the last folder.
+ * @returns {string} The last folder in the URL.
+ *
+ * @example
+ * // Example usage:
+ * const url = 'https://example.com/folder1/folder2';
+ * const lastFolder = getLastURLFolder(url);
+ * console.log(lastFolder); // Output: 'folder2'
+ *
+ * @description
+ * This function splits the URL by '/' and filters out any empty segments.
+ * It then returns the last non-empty segment, which represents the last folder in the URL.
+ * */
+const getLastURLFolder = (url) =>
+  url
+    .split('/')
+    .filter((item) => item.trim() !== '')
+    .pop();
+
+/**
  * Filters out the current article from the list of articles.
  *
  * @param {Array<Object>} articles - The list of articles to filter.
  * @returns {Array<Object>} - The filtered list of articles excluding the current article.
+ *
+ * @example
+ * // Example usage:
+ * const articles = [
+ *  { metadata: { url: 'https://example.com/article1' } },
+ *  { metadata: { url: 'https://example.com/article2' } },
+ *  { metadata: { url: 'https://example.com/article3' } },
+ * ];
+ * const filteredArticles = clearCurrentArticle(articles);
+ * console.log(filteredArticles);
+ * // Output: [{ metadata: { url: 'https://example.com/article1' } }, { metadata: { url: 'https://example.com/article2' } }]
+ *
+ * @description
+ * This function filters out the current article from the list of articles based on the URL.
+ * It compares the last folder of the current URL with the last folder of each article's URL.
+ * If they match, the article is excluded from the filtered list.
+ * The function returns a new array containing only the articles that do not match the current article's URL.
  */
 export const clearCurrentArticle = (articles) =>
   articles.filter((article) => {
-    const currentArticlePath = window.location.href.split('/').pop();
-    const lastElementInUrl = article.metadata.url
-      .split('/')
-      .filter((item) => item.trim() !== '')
-      .pop();
-    if (lastElementInUrl !== currentArticlePath) {
-      return article;
-    }
-    return null;
+    const currentArticlePath = getLastURLFolder(window.location.href);
+    const lastElementInUrl = getLastURLFolder(article.metadata.url);
+    return lastElementInUrl !== currentArticlePath ? article : null;
   });
 
 /**
@@ -114,9 +147,9 @@ export const sortArticlesByDateField = (articles, dateField) => {
  * @throws {Error} Logs errors to the console and returns null if the fetch fails.
  */
 export const fetchMagazineArticles = async ({
-  limit,
+  limit = 100,
   offset = 0,
-  tags = null,
+  tags = {},
   q = 'truck',
   sort,
   tenant = TENANT,
@@ -129,11 +162,11 @@ export const fetchMagazineArticles = async ({
     language,
     q,
     category,
-    limit: limit ?? null,
+    limit,
     offset,
     facets,
     sort,
-    article: tags || {},
+    article: tags,
   };
 
   try {
