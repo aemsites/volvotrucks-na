@@ -1,5 +1,4 @@
 :root {
-  --text-color: var(--c-black);
   --fields-font-size: var(--f-body-font-size);
   --fields-line-height: var(--f-body-line-height);
   --field-focus-color: var(--border-focus);
@@ -18,11 +17,18 @@
 }
 
 .section-with-background.v2-custom-form-container {
+  --text-color: var(--c-black);
+
   background-color: unset;
 }
 
 .section.section-with-background.v2-custom-form-container img {
   width: 100%;
+}
+
+.v2-custom-form-container .v2-custom-form__title {
+  margin: 0 auto;
+  width: min(100%, 600px);
 }
 
 .v2-custom-form-container form {
@@ -245,7 +251,7 @@
 
 @media (hover: hover) {
   .form-radio-option:hover .form-radio-label::before {
-    border-color: var(--field-focus-color);
+    border-color: var(--field-border-color);
     background-color: var(--field-circle-bg-color);
   }
 }
@@ -261,21 +267,21 @@
   border: 3px solid var(--field-focus-color);
   z-index: 0;
   display: block;
+  border-radius: 4px;
 }
 
 .form-radio-input:checked + .form-radio-label::before {
   background-color: var(--field-radio-checked-bg-color);
   border-color: var(--field-radio-checked-color);
   box-shadow: inset 0 0 0 3px var(--c-white);
-  box-shadow: inset 0 0 0 3px red;
 }
 
 .form-radio-wrapper.invalid .form-radio-label::before {
-  border-color: #E30000; /* TODO: change to error color */
+  border-color: var(--field-error-color);
 }
 
 .form-radio-option:hover .form-radio-input:checked + .form-radio-label::before {
-  border-color: #87754E; /* TODO: change to hover color */
+  border-color: var(--field-radio-checked-color);
 }
 
 .form-radio-circle {
@@ -313,7 +319,7 @@
   cursor: pointer;
   display: inline-block;
   padding-bottom: 0;
-  color: #141414;
+  color: var(--text-color);
   z-index: 1;
 }
 
