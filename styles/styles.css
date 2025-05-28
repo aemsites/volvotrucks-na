@@ -1509,7 +1509,7 @@ main.blue-contract .section.section-with-title p {
 }
 
 .redesign-v2 div:where([role='dialog']) input,
-.redesign-v2 main input {
+.redesign-v2 main :is(input, textarea, select, .custom-dropdown__button) {
   color: var(--c-grey-4);
   padding: 16px;
   border-radius: 4px;
