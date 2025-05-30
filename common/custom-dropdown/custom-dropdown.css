@@ -1,3 +1,7 @@
+:root {
+  --dropdown-check-icon: url('/icons/check-thin.svg');
+}
+
 .native-select {
   visibility: hidden;
   position: absolute;
@@ -12,60 +16,47 @@
 .custom-dropdown {
   display: block;
   position: relative;
-  margin-bottom: 16px;
+  font-size: 14px;
 }
 
-.custom-dropdown--variant-adjust-width-to-content {
-  display: inline-block;
+.custom-dropdown::placeholder {
+  color: var(--c-placeholder-text);
+  font-size: var(--body-font-size-s);
 }
 
-.custom-dropdown.open::after {
-  transform: rotate(180deg);
-}
-
-.custom-dropdown__button {
-  display: flex;
-  justify-content: space-between;
-  position: relative;
-  background: var(--c-white);
-  letter-spacing: var(--f-body-letter-spacing);
-  line-height: var(--body-regular-line-height);
-  text-align: left;
-  color: var(--c-grey-4);
-  padding: 8px 50px 8px 16px;
-  border-radius: 4px;
-  border: 1px solid var(--c-grey-2);
-  cursor: pointer;
-}
-
-.custom-dropdown--variant-thick .custom-dropdown__button {
-  padding: 16px 50px 16px 16px;
-}
-
-.custom-dropdown__button:hover {
-  outline: 2px solid var(--border-focus);
-  outline-offset: -1px;
-}
-
-.custom-dropdown__button:focus {
-  outline: 2px solid var(--border-focus);
-  outline-offset: 2px;
-}
-
-.custom-dropdown .custom-dropdown__button::after {
+.custom-dropdown::after {
   display: block;
   content: url('../../icons/chevron-down.svg');
   position: absolute;
-  bottom: 4px;
+  top: 0;
   right: 10px;
   height: 32px;
   width: 32px;
   pointer-events: none;
-  padding: 4px;
+  padding: 8px;
 }
 
-.custom-dropdown--variant-thick .custom-dropdown__button::after {
-  bottom: 12px;
+.custom-dropdown.open::after {
+  transform: rotate(180deg);
+  top: 5px;
+  right: 5px;
+  padding: 6px;
+}
+
+.custom-dropdown__button {
+  color: var(--text-color);
+  background-color: var(--background-color);
+  border: var(--field-border);
+  width: 100%;
+  max-width: 100%;
+  padding: 10px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+}
+
+.custom-dropdown__button.placeholder-state {
+  color: var(--c-placeholder-text);
 }
 
 .custom-dropdown__option-list {
@@ -75,17 +66,38 @@
   position: absolute;
   top: calc(100% + 8px);
   width: 100%;
-  background-color: var(--c-white);
-  border-radius: var(--border-radius-small);
+  background-color: var(--background-color);
   box-shadow:
     0 0.3px 2px 0 var(--color-bg-shadow, var(--color-bg-shadow)),
     0 3px 8px 0 var(--color-bg-shadow, var(--color-bg-shadow));
   z-index: 1;
   padding: 4px 0;
+
+  /*
+    This is a workaround for the issue with the dropdown being too long
+    this value can be adjusted
+  */
+  max-height: 250px;
+  overflow-y: scroll;
+
 }
 
 .open .custom-dropdown__option-list {
   display: block;
+  z-index: 2;
+}
+
+.custom-dropdown__option {
+  color: var(--c-black);
+  line-height: 16px;
+  padding: 10px 16px;
+}
+
+.custom-dropdown__button,
+.custom-dropdown__option {
+  font-weight: 500;
+  letter-spacing: var(--form-letter-spacing);
+  line-height: var(--form-line-height);
 }
 
 .custom-dropdown__option.option-current {
@@ -101,7 +113,7 @@
 }
 
 .custom-dropdown__option[aria-selected='true']::after {
-  content: url('/icons/check-thin.svg');
+  content: var(--dropdown-check-icon);
   height: 24px;
   width: 24px;
   position: absolute;
@@ -109,13 +121,19 @@
   top: 25%;
 }
 
-
-.custom-dropdown__option {
-  padding: 10px 16px;
-}
-
 .custom-dropdown__option:hover {
   background-color: var(--c-grey-50);
+  cursor: pointer;
+}
+
+.custom-dropdown__button:focus {
+  outline: var(--form-focus-border);
+  outline-offset: -1px;
+}
+
+.custom-dropdown__button:hover {
+  outline: var(--form-hover-border);
+  outline-offset: -1px;
   cursor: pointer;
 }
 
@@ -125,6 +143,11 @@
   }
 
   .custom-dropdown__option-list {
-    top: calc(100% + 8px);
+    top: 100%;
   }
+}
+
+.section-with-background .custom-dropdown__button,
+.section-with-background .custom-dropdown__option {
+  color: var(--c-black);
 }
