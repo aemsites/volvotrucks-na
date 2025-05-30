@@ -1500,7 +1500,8 @@ main.blue-contract .section.section-with-title p {
 
 /* common elements */
 .redesign-v2 div:where([role='dialog']) label,
-.redesign-v2 main label {
+.redesign-v2 main label,
+.redesign-v2 main .form-radio-legend {
   color: var(--c-grey-4);
   font-family: var(--font-family-heading);
   font-size: var(--f-subtitle-2-font-size);

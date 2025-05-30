@@ -1,3 +1,7 @@
+:root {
+  --dropdown-check-icon: url('/icons/check-thin.svg');
+}
+
 .native-select {
   visibility: hidden;
   position: absolute;
@@ -29,13 +33,14 @@
   height: 32px;
   width: 32px;
   pointer-events: none;
-  padding: 6px;
+  padding: 8px;
 }
 
 .custom-dropdown.open::after {
   transform: rotate(180deg);
   top: 5px;
   right: 5px;
+  padding: 6px;
 }
 
 .custom-dropdown__button {
@@ -108,7 +113,7 @@
 }
 
 .custom-dropdown__option[aria-selected='true']::after {
-  content: url('/icons/tick.svg');
+  content: var(--dropdown-check-icon);
   height: 24px;
   width: 24px;
   position: absolute;

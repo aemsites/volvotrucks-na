@@ -7,6 +7,8 @@
   --form-border-color: var(--c-grey-2);
   --form-hover-border: 1px solid var(--field-focus-color);
   --form-focus-border: 2px solid var(--field-focus-color);
+  --form-letter-spacing: var(--f-body-letter-spacing);
+  --form-line-height: var(--f-body-line-height);
   --field-circle-bg-color: #2121210d;
   --field-border-color: var(--c-grey-400);
   --field-checkbox-checked-bg-color: var(--c-grey-950);
@@ -92,10 +94,9 @@
   position: relative;
   margin-bottom: 0;
   z-index: 0;
-}
-
-.form-checkbox-wrapper input[type='checkbox']:checked + label {
   color: var(--field-checkbox-checked-color);
+  font-size: var(--fields-font-size);
+  font-family: var(--font-family-body);
 }
 
 .v2-custom-form-container .form-checkbox-wrapper input[type='checkbox'] + label:focus-visible {
@@ -319,6 +320,8 @@
   cursor: pointer;
   display: inline-block;
   padding-bottom: 0;
+  font-size: var(--fields-font-size);
+  font-family: var(--font-family-body);
   color: var(--text-color);
   z-index: 1;
 }
