@@ -1,5 +1,15 @@
+function getOrigin() {
+  return window.location.href === 'about:srcdoc' ? window.parent.location.origin : window.location.origin;
+}
+
+function getLanguagePath() {
+  const { pathname } = new URL(window.location.href);
+  const langCodeMatch = pathname.match('^(/[a-z]{2}(-[a-z]{2})?/).*');
+  return langCodeMatch ? langCodeMatch[1] : '/';
+}
+
 async function getConstantValues() {
-  const url = '/constants.json';
+  const url = new URL(`${getLanguagePath()}constants.json`, getOrigin());
   let constants;
   try {
     const response = await fetch(url).then((resp) => resp.json());
