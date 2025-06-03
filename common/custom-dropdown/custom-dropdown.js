@@ -72,7 +72,7 @@ function filterOptions(options = [], filter, exclude = []) {
  */
 function getActionFromKey(event, menuOpen) {
   const { key, altKey, ctrlKey, metaKey } = event;
-  // all keys that will do the default open action
+  // all keys that will trigger the default open action
   const openKeys = ['ArrowDown', 'ArrowUp', 'Enter', ' '];
   // handle opening when closed
   if (!menuOpen && openKeys.includes(key)) {
@@ -247,6 +247,7 @@ const Select = function (el, options = [], placeholder, onChangeCallback) {
   this.labelEl = el.querySelector(`.${componentName}__label`);
   this.buttonEl = el.querySelector(`[role=${componentName}-button]`);
   this.listEl = el.querySelector(`[role=${componentName}-option-list]`);
+  this.initialState = true;
 
   // data
   this.idBase = this.buttonEl.id || componentName;
@@ -516,6 +517,11 @@ Select.prototype.updateMenuState = function updateMenuState(open, callFocus = tr
     return;
   }
 
+  // change placeholder text color
+  if (this.placeholder !== this.buttonEl.textContent) {
+    this.buttonEl.classList.remove('placeholder-state');
+  }
+
   // update state
   this.open = open;
 
@@ -620,7 +626,7 @@ export const getCustomDropdown = async (options = {}) => {
           aria-controls="options"
           aria-expanded="false"
           aria-haspopup="${componentName}"
-          class="${componentName}__button"
+          class="${componentName}__button placeholder-state"
           role="${componentName}-button"
           tabindex="0"
         ></div>
