@@ -42,11 +42,7 @@ const filterArticles = (articles, filterTags, thisArticleTitle) => {
   });
 
   const sortedArticles = sortArticlesByDateField(articles, 'publishDate');
-
-  const filteredArticles = sortedArticles
-    .filter((article) => article.metadata.title !== thisArticleTitle)
-    .filter((article) => article.filterTag.some((tag) => filterTags.includes(tag)))
-    .slice(0, 3);
+  const filteredArticles = sortedArticles.filter((article) => article.metadata.title !== thisArticleTitle).slice(0, 3);
 
   return filteredArticles;
 };
