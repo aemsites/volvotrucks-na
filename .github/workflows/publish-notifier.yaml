@@ -1,6 +1,6 @@
 name: Search Connector - Upsert
 
-on: 
+on:
   repository_dispatch:
     types:
       - resource-published
@@ -26,5 +26,12 @@ jobs:
         BODY='{ "paths": [ "'$PAGE_PATH'" ] }'
         BODY="$(echo "$BODY" | jq -c)"
         response=$(curl -s -H "x-api-key: ${{ secrets.API_KEY }}" -X POST "$URI" -d "$BODY")
+
+        # Send email notification if enabled
+        if [ "${{ vars.SEND_EMAIL_NOTIFICATION }}" = "true" ]; then
+          echo "Sending email notification..."
+          echo -e "Subject: Search Connector Update\nTo: ${{ vars.EMAIL_RECIPIENT }}\n\nPage updated: $PAGE_PATH\nWebsite: $WEBSITE_NAME\nResponse: $response" | sendmail "${{ vars.EMAIL_RECIPIENT }}"
+        fi
+
         echo "response: $response"
       shell: bash
