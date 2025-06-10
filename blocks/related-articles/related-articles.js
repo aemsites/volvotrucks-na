@@ -74,7 +74,7 @@ const createRelatedMagazineArticles = async (mainEl, magazineArticles) => {
 };
 
 export default async function decorate(block) {
-  const allArticles = await fetchMagazineArticles({ sort: 'LAST_MODIFIED_DESC' });
+  const allArticles = await fetchMagazineArticles({ sort: 'PUBLISH_DATE_DESC' });
   const articles = removeArticlesWithNoImage(allArticles);
 
   createRelatedMagazineArticles(block, articles);
