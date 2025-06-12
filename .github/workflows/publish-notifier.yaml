@@ -7,19 +7,14 @@ on:
 jobs:
   check-event-status:
     runs-on: ubuntu-latest
-    env:
-      STATUS: ${{ github.event.client_payload.status }}
-      SITE: ${{ github.event.client_payload.site }}
-      ORG: ${{ github.event.client_payload.org }}
-      PATH: ${{ github.event.client_payload.path }}
     steps:
     - run: |
-        echo "Status: $STATUS"
-        echo "Site: $SITE"
-        echo "Org: $ORG"
-        echo "Path: $PATH"
+        echo "Status: ${{ github.event.client_payload.status }}"
+        echo "Site: ${{ github.event.client_payload.site }}"
+        echo "Org: ${{ github.event.client_payload.org }}"
+        echo "Path: ${{ github.event.client_payload.path }}"
   notify-connector:
-    if: ($STATUS == 200 || $STATUS == 204) && endsWith($PATH, '.md')
+    if: (github.event.client_payload.status == 200 || github.event.client_payload.status == 204) && endsWith(github.event.client_payload.path, '.md')
     runs-on: ubuntu-latest
     steps:
     - name: Notify upsert endpoint
@@ -60,7 +55,7 @@ jobs:
             # Send email notification via Brevo (Sendinblue) if enabled
             if [[ "$SEND_EMAIL_NOTIFICATION" == "true" ]]; then
               response=$(curl -s -X POST \
-                '$EMAIL_HANDLER' \
+                "$EMAIL_HANDLER" \
                 -H "accept: application/json" \
                 -H "api-key: $BREVO_API_KEY" \
                 -H "content-type: application/json" \
