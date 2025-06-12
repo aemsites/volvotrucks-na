@@ -70,8 +70,8 @@ $facets: [EdsFieldEnum], $sort: EdsSortOptionsEnum, $article: ArticleFilter, $ca
 `;
 
 export const autosuggestQuery = () => `
-query edssuggest($term: String!, $tenant: String!, $language: EdsLocaleEnum!, $sizeSuggestions: Int = 8) {
-  edssuggest(term: $term, tenant: $tenant, language: $language, sizeSuggestions: $sizeSuggestions) {
+query EdsWordPhraseSuggest($term: String!, $tenant: String!, $language: EdsLocaleEnum!, $sizeSuggestions: Int) {
+  edsWordPhraseSuggest(term: $term, tenant: $tenant, language: $language, sizeSuggestions: $sizeSuggestions) {
     terms
   }
 }
