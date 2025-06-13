@@ -18,20 +18,56 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Notify upsert endpoint
+      env:
+        CONNECTOR_DOMAIN: ${{ vars.CONNECTOR_DOMAIN }}
+        API_KEY: ${{ secrets.API_KEY }}
+        PATH: ${{ github.event.client_payload.path }}
+        SITE: ${{ github.event.client_payload.site }}
       run: |
         sleep 45s
-        PAGE_PATH=$(echo "${{ github.event.client_payload.path }}" | awk '{sub("index.md$", ""); sub(".md$", ""); print}')
-        WEBSITE_NAME="${{ github.event.client_payload.site }}"
-        URI=$(echo "${{ vars.CONNECTOR_DOMAIN }}/$WEBSITE_NAME")
+        PAGE_PATH=$(echo "$PATH" | awk '{sub("index.md$", ""); sub(".md$", ""); print}')
+        WEBSITE_NAME="$SITE"
+        URI=$(echo "$CONNECTOR_DOMAIN/$WEBSITE_NAME")
         BODY='{ "paths": [ "'$PAGE_PATH'" ] }'
         BODY="$(echo "$BODY" | jq -c)"
-        response=$(curl -s -H "x-api-key: ${{ secrets.API_KEY }}" -X POST "$URI" -d "$BODY")
-
-        # Send email notification if enabled
-        if [ "${{ vars.SEND_EMAIL_NOTIFICATION }}" = "true" ]; then
-          echo "Sending email notification..."
-          echo -e "Subject: Search Connector Update\nTo: ${{ vars.EMAIL_RECIPIENT }}\n\nPage updated: $PAGE_PATH\nWebsite: $WEBSITE_NAME\nResponse: $response" | sendmail "${{ vars.EMAIL_RECIPIENT }}"
-        fi
-
+        response=$(curl -s -H "x-api-key: $API_KEY" -X POST "$URI" -d "$BODY")
         echo "response: $response"
       shell: bash
+  check-status:
+    needs: notify-connector
+    runs-on: ubuntu-latest
+    if: always()
+    steps:
+      - name: Check notify-connector status
+        env:
+          SEND_EMAIL_NOTIFICATION: ${{ vars.SEND_EMAIL_NOTIFICATION }}
+          EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
+          EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
+          BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+          JOB_RESULT: ${{ needs.notify-connector.result }}
+          REPO: ${{ github.repository }}
+          PATH: ${{ github.event.client_payload.path }}
+          SITE: ${{ github.event.client_payload.site }}
+          EMAIL_HANDLER: ${{ secrets.EMAIL_HANDLER }}
+        run: |
+          if [[ "$JOB_RESULT" == "failure" ]]; then
+            echo "notify-connector job failed."
+            # Send email notification via Brevo (Sendinblue) if enabled
+            if [[ "$SEND_EMAIL_NOTIFICATION" == "true" ]]; then
+              response=$(curl -s -X POST \
+                "$EMAIL_HANDLER" \
+                -H "accept: application/json" \
+                -H "api-key: $BREVO_API_KEY" \
+                -H "content-type: application/json" \
+                -d '{
+                  "sender": { "email": "'"$EMAIL_SENDER"'" },
+                  "to": [ { "email": "'"$EMAIL_RECIPIENT"'" } ],
+                  "subject": "notify-connector job FAILED",
+                  "textContent": "The notify-connector job has FAILED.\nRepository: $REPO\nPath: $PATH\nSite: $SITE\n\nPlease check the job logs for more details."
+                }')
+              echo "Brevo email sent. Response: $response"
+            fi
+            exit 1
+          else
+            echo "notify-connector job succeeded."
+          fi
