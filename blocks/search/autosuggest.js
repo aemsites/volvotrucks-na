@@ -25,7 +25,7 @@ export function fetchAutosuggest(term, autosuggestEle, rowEle, func) {
     if (errors) {
       console.log('%cSomething went wrong', { errors });
     } else {
-      const { edssuggest: { terms } = {} } = data;
+      const { edsWordPhraseSuggest: { terms } = {} } = data;
       autosuggestEle.textContent = '';
       autosuggestEle.classList.remove('show');
 
