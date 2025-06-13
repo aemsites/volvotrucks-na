@@ -1,6 +1,6 @@
 import { SEARCH_CONFIGS } from './common.js';
 
-export const { TENANT = false, SEARCH_URL_PROD = false } = SEARCH_CONFIGS;
+export const { TENANT = false, SEARCH_URL_PROD = false, SEARCH_URL_DEV = false } = SEARCH_CONFIGS;
 
 // because the dev url has different items is better to use the prod one also in dev
 export async function fetchSearchData(queryObj) {
