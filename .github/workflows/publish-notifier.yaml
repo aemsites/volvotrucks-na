@@ -18,19 +18,14 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - name: Notify upsert endpoint
-      env:
-        CONNECTOR_DOMAIN: ${{ vars.CONNECTOR_DOMAIN }}
-        API_KEY: ${{ secrets.API_KEY }}
-        PATH: ${{ github.event.client_payload.path }}
-        SITE: ${{ github.event.client_payload.site }}
       run: |
         sleep 45s
-        PAGE_PATH=$(echo "$PATH" | awk '{sub("index.md$", ""); sub(".md$", ""); print}')
-        WEBSITE_NAME="$SITE"
-        URI=$(echo "$CONNECTOR_DOMAIN/$WEBSITE_NAME")
+        PAGE_PATH=$(echo "${{ github.event.client_payload.path }}" | awk '{sub("index.md$", ""); sub(".md$", ""); print}')
+        WEBSITE_NAME="${{ github.event.client_payload.site }}"
+        URI=$(echo "${{ vars.CONNECTOR_DOMAIN }}/$WEBSITE_NAME")
         BODY='{ "paths": [ "'$PAGE_PATH'" ] }'
         BODY="$(echo "$BODY" | jq -c)"
-        response=$(curl -s -H "x-api-key: $API_KEY" -X POST "$URI" -d "$BODY")
+        response=$(curl -s -H "x-api-key: ${{ secrets.API_KEY }}" -X POST "$URI" -d "$BODY")
         echo "response: $response"
       shell: bash
   check-status:
