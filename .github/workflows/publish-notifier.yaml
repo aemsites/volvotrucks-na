@@ -28,14 +28,12 @@ jobs:
         response=$(curl -s -H "x-api-key: ${{ secrets.API_KEY }}" -X POST "$URI" -d "$BODY")
         echo "response: $response"
       shell: bash
-
   status-checker:
     needs: notify-connector
     runs-on: ubuntu-latest
     if: always()
     env:
       SUBJECT: Notify Connector Job Failed
-      BODY: The notify-connector job has failed for path: ${{ github.event.client_payload.path }}.
       SEND_EMAIL_NOTIFICATION: ${{ vars.SEND_EMAIL_NOTIFICATION }}
       EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
       EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
@@ -53,6 +51,9 @@ jobs:
                 { "email": "'"$EMAIL_RECIPIENT"'", "name": "'"$EMAIL_RECIPIENT"'" }
               ],
               "subject": "'"$SUBJECT"'",
-              "htmlContent": "<html><body><p>'"$BODY"'</p></body></html>"
+              "htmlContent": "<html><body><p>
+                The notify-connector job has failed for path: <strong>'"${{ github.event.client_payload.path }}"'</strong>.<br>
+                Please check the workflow logs for more details.<br>
+              </p></body></html>"
             }' "$EMAIL_HANDLER"
 
