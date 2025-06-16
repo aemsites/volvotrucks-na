@@ -28,3 +28,34 @@ jobs:
         response=$(curl -s -H "x-api-key: ${{ secrets.API_KEY }}" -X POST "$URI" -d "$BODY")
         echo "response: $response"
       shell: bash
+  status-checker:
+    needs: notify-connector
+    runs-on: ubuntu-latest
+    if: always()
+    env:
+      SUBJECT: Notify Connector Job Failed
+      BODY: The notify-connector job has failed for path: ${{ github.event.client_payload.path }}.
+      SEND_EMAIL_NOTIFICATION: ${{ vars.SEND_EMAIL_NOTIFICATION }}
+      EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
+      EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
+      BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
+      EMAIL_HANDLER: ${{ secrets.EMAIL_HANDLER }}
+    steps:
+    - name: Check notify-connector status and send email if needed
+      if: needs.notify-connector.result != 'success' && env.SEND_EMAIL_NOTIFICATION == 'true'
+      run: |
+      curl -H "api-key: $BREVO_API_KEY" \
+        -H "Content-Type: application/json" \
+        -X POST -d '{
+            "name": "Search Connector Upsert Notification",
+            "subject": "'"$SUBJECT"'",
+            "sender": { "name": "'"$EMAIL_SENDER"'", "email": "'"$EMAIL_SENDER"'" },
+            "type": "transactional",
+            "htmlContent": "<html><body><p>'"$BODY"'</p></body></html>"
+            "recipients": {
+              "to": [
+                { "email": "'"$EMAIL_RECIPIENT"'", "name": "'"$EMAIL_RECIPIENT"'" }
+              ]
+            }
+          }'
+          '$EMAIL_HANDLER'
