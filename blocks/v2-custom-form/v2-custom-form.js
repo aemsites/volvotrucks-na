@@ -118,7 +118,7 @@ function constructPayload(form) {
         payload[fe.name] = fe.value;
       } else if (fe.type === 'checkbox' && fe.checked) {
         payload[fe.name] = payload[fe.name] ? `${payload[fe.name]},${fe.value}` : fe.value;
-      } else if (fe.type !== 'file') {
+      } else if (fe.type !== 'file' && fe.type !== 'checkbox') {
         payload[fe.name] = fe.value;
       }
     }
