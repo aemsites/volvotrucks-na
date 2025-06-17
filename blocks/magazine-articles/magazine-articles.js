@@ -202,7 +202,7 @@ async function createLatestMagazineArticles(mainEl, magazineArticles) {
 export default async function decorate(block) {
   const latest = block.classList.contains('latest');
   const limit = latest ? 3 : undefined;
-  const magazineArticles = await processMagazineArticles({ limit, sort: 'BEST_MATCH' });
+  const magazineArticles = await processMagazineArticles({ limit, sort: 'PUBLISH_DATE_DESC' });
   if (latest) {
     createLatestMagazineArticles(block, magazineArticles);
   } else {
