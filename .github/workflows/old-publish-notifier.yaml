@@ -1,6 +1,6 @@
 name: Old Search Connector - Upsert
 
-on: 
+on:
   repository_dispatch:
     types:
       - resource-published
@@ -23,8 +23,17 @@ jobs:
         URI=$(echo "${{ vars.OLD_CONNECTOR_DOMAIN }}/$WEBSITE_NAME")
         BODY='{ "paths": [ "'$PAGE_PATH'" ] }'
         BODY="$(echo "$BODY" | jq -c)"
-        response=$(curl -s -H "x-api-key: ${{ secrets.OLD_API_KEY }}" -X POST "$URI" -d "$BODY")
-        echo "response: $response"
+        # Capture both response and HTTP status code
+        response=$(curl -s -w "%{http_code}" -o response_body.txt -H "x-api-key: ${{ secrets.OLD_API_KEY }}" -X POST "$URI" -d "$BODY")
+        http_code="${response: -3}"
+        body=$(cat response_body.txt)
+        echo "HTTP status: $http_code"
+        echo "response: $body"
+        # Accept any 2xx HTTP status code as success
+        if [[ ! "$http_code" =~ ^2[0-9][0-9]$ ]]; then
+          echo "API call failed with status $http_code"
+          exit 1
+        fi
       shell: bash
   status-checker:
     needs: notify-connector
