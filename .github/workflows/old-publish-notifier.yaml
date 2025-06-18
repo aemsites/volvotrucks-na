@@ -51,19 +51,23 @@ jobs:
       if: ${{ needs.notify-connector.result != 'success' && env.SEND_EMAIL_NOTIFICATION == 'true' }}
       run: |
         echo "Notify connector job failed for path: ${{ github.event.client_payload.path }}. Sending email notification."
-        curl -H "api-key: $BREVO_API_KEY" \
-            -H "Content-Type: application/json" \
-            -X POST -d '{
-              "sender": { "name": "Search Connector Upsert", "email": "'"$EMAIL_SENDER"'" },
+        curl -s -X POST "$EMAIL_HANDLER" \
+          -H "accept: application/json" \
+          -H "api-key: $BREVO_API_KEY" \
+          -H "content-type: application/json" \
+          -d @- <<EOF
+            {
+              "sender": { "name": "Search Connector Upsert", "email": "$EMAIL_SENDER" },
               "to": [
-                { "email": "'"$EMAIL_RECIPIENT"'", "name": "'"$EMAIL_RECIPIENT"'" }
+                { "email": "$EMAIL_RECIPIENT", "name": "$EMAIL_RECIPIENT" }
               ],
-              "subject": "'"$SUBJECT"'",
+              "subject": "$SUBJECT",
               "htmlContent": "<html><body><p>
-                The notify-connector job has failed for path: <strong>'"${{ github.event.client_payload.path }}"'</strong>.<br>
+                The notify-connector job has failed for path: <strong>${{ github.event.client_payload.path }}</strong>.<br>
                 Please check the workflow logs for more details.<br>
               </p></body></html>"
-            }' "$EMAIL_HANDLER"
+            }
+            EOF
     - name: Notify connector job succeeded or no email notification is required
       if: ${{ needs.notify-connector.result == 'success' || env.SEND_EMAIL_NOTIFICATION != 'true' }}
       run: |
