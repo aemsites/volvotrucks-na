@@ -37,8 +37,8 @@ export const getMainTemplate = (PLACEHOLDERS) => {
             <label for="sort-by" class="ml-4 mr-2">${PLACEHOLDERS.sortBy}</label>
             <select id="order-by" class="custom-select-searchstudio-js">
               <option value="BEST_MATCH">${relevance}</option>
-              <option value="PUBLISH_DATE_ASC">${newest}</option>
-              <option value="PUBLISH_DATE_DESC">${oldest}</option>
+              <option value="PUBLISH_DATE_DESC">${newest}</option>
+              <option value="PUBLISH_DATE_ASC">${oldest}</option>
             </select>
           </div>
         </div>
