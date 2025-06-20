@@ -130,9 +130,14 @@ export default async function decorate(block) {
     }
     const baseURL = window.location.origin;
     await loadCSS(`${baseURL}/common/pagination/pagination.css`);
-    createPagination(chunkedPressReleases, block, 
-      isFeatured? createFeaturedPressReleaseList : isLatest ? createLatestPressReleases : createAllPressReleases,
-      contentArea, 0);
+    createPagination(
+      chunkedPressReleases,
+      block,
+      // eslint-disable-next-line no-nested-ternary
+      isFeatured ? createFeaturedPressReleaseList : isLatest ? createLatestPressReleases : createAllPressReleases,
+      contentArea,
+      0,
+    );
   } else {
     console.error('No chunked items created.');
   }
