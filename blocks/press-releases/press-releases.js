@@ -1,7 +1,8 @@
-import { getLanguagePath, getOrigin, getDateFromTimestamp } from '../../scripts/common.js';
+import { createElement, getLanguagePath, getOrigin, getDateFromTimestamp } from '../../scripts/common.js';
 import { ffetch } from '../../scripts/lib-ffetch.js';
 import { createList, splitTags } from '../../scripts/magazine-press.js';
-import { createOptimizedPicture, readBlockConfig, toClassName } from '../../scripts/aem.js';
+import { createOptimizedPicture, readBlockConfig, toClassName, loadCSS } from '../../scripts/aem.js';
+import createPagination from '../../common/pagination/pagination.js';
 
 const stopWords = ['a', 'an', 'the', 'and', 'to', 'for', 'i', 'of', 'on', 'into'];
 
@@ -88,26 +89,51 @@ function createLatestPressReleases(block, pressReleases) {
   createPressReleaseList(block, pressReleases, { filterFactory: null });
 }
 
+function createAllPressReleases(block, pressReleases) {
+  createPressReleaseList(block, pressReleases, { limit: 10 });
+}
+
 export default async function decorate(block) {
   const isFeatured = block.classList.contains('featured');
   const isLatest = !isFeatured && block.classList.contains('latest');
+  const limitAmount = 10;
+  let pressReleases;
 
   if (isFeatured) {
     const links = [...block.firstElementChild.querySelectorAll('a')]
       .map(({ href }) => (href ? new URL(href).pathname : null))
       .filter((pathname) => !!pathname);
-    const pressReleases = await getPressReleases(links.length, ({ path }) => links.indexOf(path) >= 0);
-    createFeaturedPressReleaseList(block, pressReleases);
-    return;
-  }
-
-  if (isLatest) {
+    pressReleases = await getPressReleases(links.length, ({ path }) => links.indexOf(path) >= 0);
+  } else if (isLatest) {
     const cfg = readBlockConfig(block);
     const filter = cfg.tags && createPressReleaseFilterFunction({ tags: toClassName(cfg.tags) });
-    const pressReleases = await getPressReleases(3, filter);
-    createLatestPressReleases(block, pressReleases);
+    pressReleases = await getPressReleases(3, filter);
   } else {
-    const pressReleases = await getPressReleases();
-    createPressReleaseList(block, pressReleases, { limit: 10 });
+    pressReleases = await getPressReleases();
+  }
+
+  // Set the chunks of the array for future pagination
+  const chunkedPressReleases = pressReleases?.reduce((resultArray, item, index) => {
+    const chunkIndex = Math.floor(index / limitAmount);
+    if (!resultArray[chunkIndex]) {
+      resultArray[chunkIndex] = [];
+    }
+    resultArray[chunkIndex].push(item);
+    return resultArray;
+  }, []);
+
+  if (chunkedPressReleases && chunkedPressReleases.length > 0) {
+    let contentArea = block.querySelector('.pagination-content');
+    if (!contentArea) {
+      contentArea = createElement('div', { classes: ['pagination-content'] });
+      block.appendChild(contentArea);
+    }
+    const baseURL = window.location.origin;
+    await loadCSS(`${baseURL}/common/pagination/pagination.css`);
+    createPagination(chunkedPressReleases, block, 
+      isFeatured? createFeaturedPressReleaseList : isLatest ? createLatestPressReleases : createAllPressReleases,
+      contentArea, 0);
+  } else {
+    console.error('No chunked items created.');
   }
 }
