@@ -1,89 +1,27 @@
 name: Old Search Connector - Upsert
-
 on: 
   repository_dispatch:
     types:
       - resource-published
-
 jobs:
   check-event-status:
     runs-on: ubuntu-latest
     steps:
-      - run: |
-          echo "Status: ${{ github.event.client_payload.status }}"
-          echo "Path: ${{ github.event.client_payload.path }}"
-
+    - run: |
+        echo "Status: ${{ github.event.client_payload.status }}"
+        echo "Path: ${{ github.event.client_payload.path }}"
   notify-connector:
     if: (github.event.client_payload.status == 200 || github.event.client_payload.status == 204) && endsWith(github.event.client_payload.path, '.md')
     runs-on: ubuntu-latest
-    env:
-      OLD_CONNECTOR_DOMAIN: ${{ vars.OLD_CONNECTOR_DOMAIN }}
-      WEBSITE_NAME: ${{ vars.WEBSITE_NAME }}
-      OLD_API_KEY: ${{ secrets.OLD_API_KEY }}
     steps:
-      - name: Notify upsert endpoint
-        run: |
-          sleep 1s
-          PAGE_PATH=$(echo "${{ github.event.client_payload.path }}" | sed 's/\.md$//g')
-          WEBSITE_NAME="$WEBSITE_NAME"
-          URI="${OLD_CONNECTOR_DOMAIN}/$WEBSITE_NAME"
-          BODY='{ "paths": [ "'$PAGE_PATH'" ] }'
-          BODY="$(echo "$BODY" | jq -c)"
-          # Capture both response and HTTP status code
-          response=$(curl -s -w "%{http_code}" -o response_body.txt -H "x-api-key: $OLD_API_KEY" -X POST "$URI" -d "$BODY")
-          http_code="${response: -3}"
-          body=$(cat response_body.txt)
-          echo "HTTP status: $http_code"
-          echo "response: $body"
-          # Accept any 2xx HTTP status code as success
-          if [[ ! "$http_code" =~ ^2[0-9][0-9]$ ]]; then
-            echo "API call failed with status $http_code"
-            exit 1
-          fi
-        shell: bash
-
-  status-checker:
-    needs: notify-connector
-    runs-on: ubuntu-latest
-    if: always()
-    env:
-      SUBJECT: Notify Connector Job Failed
-      SEND_EMAIL_NOTIFICATION: ${{ vars.SEND_EMAIL_NOTIFICATION }}
-      EMAIL_SENDER: ${{ secrets.EMAIL_SENDER }}
-      EMAIL_RECIPIENT: ${{ secrets.EMAIL_RECIPIENT }}
-      BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
-      EMAIL_HANDLER: https://api.brevo.com/v3/smtp/email
-    steps:
-      - name: Check notify-connector status and send email if the connector job failed
-        if: ${{ needs.notify-connector.result != 'success' && env.SEND_EMAIL_NOTIFICATION == 'true' }}
-        run: |
-          # Construct the JSON payload safely using jq
-          path="${{ github.event.client_payload.path }}"
-          subject="$SUBJECT"
-          sender="$EMAIL_SENDER"
-          recipient="$EMAIL_RECIPIENT"
-          htmlContent="<html><body><p>The notify-connector job has failed for path: <strong>${path}</strong>.<br>Please check the workflow logs for more details.<br></p></body></html>"
-          payload=$(jq -n \
-            --arg sender "$sender" \
-            --arg recipient "$recipient" \
-            --arg subject "$subject" \
-            --arg htmlContent "$htmlContent" \
-            '{
-              sender: { name: "Search Connector Upsert", email: $sender },
-              to: [ { email: $recipient, name: $recipient } ],
-              subject: $subject,
-              htmlContent: $htmlContent
-            }')
-          echo "DEBUG: Email payload is:"
-          echo "$payload"
-          curl -s -X POST "$EMAIL_HANDLER" \
-            -H "accept: application/json" \
-            -H "api-key: $BREVO_API_KEY" \
-            -H "content-type: application/json" \
-            -d "$payload"
-      - name: Notify connector job succeeded or no email notification is required
-        if: ${{ needs.notify-connector.result == 'success' || env.SEND_EMAIL_NOTIFICATION != 'true' }}
-        run: |
-          echo "Notify connector job succeeded or no email notification is required."
-          echo "Path: ${{ github.event.client_payload.path }}"
-          echo "Status: ${{ needs.notify-connector.result }}"
+    - name: Notify upsert endpoint
+      run: |
+        sleep 1s
+        PAGE_PATH=$(echo "${{ github.event.client_payload.path }}" | sed 's/\.md$//g')
+        WEBSITE_NAME="${{ vars.WEBSITE_NAME }}"
+        URI=$(echo "${{ vars.OLD_CONNECTOR_DOMAIN }}/$WEBSITE_NAME")
+        BODY='{ "paths": [ "'$PAGE_PATH'" ] }'
+        BODY="$(echo "$BODY" | jq -c)"
+        response=$(curl -s -H "x-api-key: ${{ secrets.OLD_API_KEY }}" -X POST "$URI" -d "$BODY")
+        echo "response: $response"
+      shell: bash
