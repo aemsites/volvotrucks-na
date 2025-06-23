@@ -4,37 +4,47 @@ on:
   repository_dispatch:
     types:
       - resource-published
+
 jobs:
   check-event-status:
     runs-on: ubuntu-latest
     steps:
-    - run: |
-        echo "Status: ${{ github.event.client_payload.status }}"
-        echo "Path: ${{ github.event.client_payload.path }}"
+      - run: |
+          echo "Status: ${{ github.event.client_payload.status }}"
+          echo "Path: ${{ github.event.client_payload.path }}"
+
   notify-connector:
     if: (github.event.client_payload.status == 200 || github.event.client_payload.status == 204) && endsWith(github.event.client_payload.path, '.md')
     runs-on: ubuntu-latest
+    env:
+      OLD_CONNECTOR_DOMAIN: ${{ vars.OLD_CONNECTOR_DOMAIN }}
+      WEBSITE_NAME: ${{ vars.WEBSITE_NAME }}
+      OLD_API_KEY: ${{ secrets.OLD_API_KEY }}
     steps:
-    - name: Notify upsert endpoint
-      run: |
-        sleep 1s
-        PAGE_PATH=$(echo "${{ github.event.client_payload.path }}" | sed 's/\.md$//g')
-        WEBSITE_NAME="${{ vars.WEBSITE_NAME }}"
-        URI=$(echo "${{ vars.OLD_CONNECTOR_DOMAIN }}/$WEBSITE_NAME")
-        BODY='{ "paths": [ "'$PAGE_PATH'" ] }'
-        BODY="$(echo "$BODY" | jq -c)"
-        # Capture both response and HTTP status code
-        response=$(curl -s -w "%{http_code}" -o response_body.txt -H "x-api-key: ${{ secrets.OLD_API_KEY }}" -X POST "$URI" -d "$BODY")
-        http_code="${response: -3}"
-        body=$(cat response_body.txt)
-        echo "HTTP status: $http_code"
-        echo "response: $body"
-        # Accept any 2xx HTTP status code as success
-        if [[ ! "$http_code" =~ ^2[0-9][0-9]$ ]]; then
-          echo "API call failed with status $http_code"
-          exit 1
-        fi
-      shell: bash
+      - name: Notify upsert endpoint (with debugging)
+        run: |
+          sleep 1s
+          PAGE_PATH=$(echo "${{ github.event.client_payload.path }}" | sed 's/\.md$//g')
+          echo "DEBUG: PAGE_PATH: $PAGE_PATH"
+          echo "DEBUG: OLD_CONNECTOR_DOMAIN: $OLD_CONNECTOR_DOMAIN"
+          echo "DEBUG: WEBSITE_NAME: $WEBSITE_NAME"
+          URI="${OLD_CONNECTOR_DOMAIN}/$WEBSITE_NAME"
+          echo "DEBUG: Posting to URI: $URI"
+          BODY='{ "paths": [ "'$PAGE_PATH'" ] }'
+          BODY="$(echo "$BODY" | jq -c)"
+          echo "DEBUG: Request body: $BODY"
+          response=$(curl -s -w "%{http_code}" -o response_body.txt -H "x-api-key: $OLD_API_KEY" -X POST "$URI" -d "$BODY")
+          http_code="${response: -3}"
+          body=$(cat response_body.txt)
+          echo "DEBUG: HTTP status: $http_code"
+          echo "DEBUG: Response: $body"
+          # Accept any 2xx HTTP status code as success
+          if [[ ! "$http_code" =~ ^2[0-9][0-9]$ ]]; then
+            echo "API call failed with status $http_code"
+            exit 1
+          fi
+        shell: bash
+
   status-checker:
     needs: notify-connector
     runs-on: ubuntu-latest
@@ -47,30 +57,26 @@ jobs:
       BREVO_API_KEY: ${{ secrets.BREVO_API_KEY }}
       EMAIL_HANDLER: https://api.brevo.com/v3/smtp/email
     steps:
-    - name: Check notify-connector status and send email if the connector job failed
-      if: ${{ needs.notify-connector.result != 'success' && env.SEND_EMAIL_NOTIFICATION == 'true' }}
-      run: |
-        echo "Notify connector job failed for path: ${{ github.event.client_payload.path }}. Sending email notification."
-        curl -s -X POST "$EMAIL_HANDLER" \
-          -H "accept: application/json" \
-          -H "api-key: $BREVO_API_KEY" \
-          -H "content-type: application/json" \
-          -d @- <<EOF
-            {
-              "sender": { "name": "Search Connector Upsert", "email": "$EMAIL_SENDER" },
-              "to": [
-                { "email": "$EMAIL_RECIPIENT", "name": "$EMAIL_RECIPIENT" }
-              ],
-              "subject": "$SUBJECT",
-              "htmlContent": "<html><body><p>
-                The notify-connector job has failed for path: <strong>${{ github.event.client_payload.path }}</strong>.<br>
-                Please check the workflow logs for more details.<br>
-              </p></body></html>"
-            }
-            EOF
-    - name: Notify connector job succeeded or no email notification is required
-      if: ${{ needs.notify-connector.result == 'success' || env.SEND_EMAIL_NOTIFICATION != 'true' }}
-      run: |
-        echo "Notify connector job succeeded or no email notification is required."
-        echo "Path: ${{ github.event.client_payload.path }}"
-        echo "Status: ${{ needs.notify-connector.result }}"
+      - name: Check notify-connector status and send email if the connector job failed
+        if: ${{ needs.notify-connector.result != 'success' && env.SEND_EMAIL_NOTIFICATION == 'true' }}
+        run: |
+          echo "Notify connector job failed for path: ${{ github.event.client_payload.path }}. Sending email notification."
+          curl -H "api-key: $BREVO_API_KEY" \
+              -H "Content-Type: application/json" \
+              -X POST -d '{
+                "sender": { "name": "Search Connector Upsert", "email": "'"$EMAIL_SENDER"'" },
+                "to": [
+                  { "email": "'"$EMAIL_RECIPIENT"'", "name": "'"$EMAIL_RECIPIENT"'" }
+                ],
+                "subject": "'"$SUBJECT"'",
+                "htmlContent": "<html><body><p>
+                  The notify-connector job has failed for path: <strong>'"${{ github.event.client_payload.path }}"'</strong>.<br>
+                  Please check the workflow logs for more details.<br>
+                </p></body></html>"
+              }' "$EMAIL_HANDLER"
+      - name: Notify connector job succeeded or no email notification is required
+        if: ${{ needs.notify-connector.result == 'success' || env.SEND_EMAIL_NOTIFICATION != 'true' }}
+        run: |
+          echo "Notify connector job succeeded or no email notification is required."
+          echo "Path: ${{ github.event.client_payload.path }}"
+          echo "Status: ${{ needs.notify-connector.result }}"
