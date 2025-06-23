@@ -93,6 +93,17 @@ function createAllPressReleases(block, pressReleases) {
   createPressReleaseList(block, pressReleases, { limit: 10 });
 }
 
+function reducePressReleaseList(pressReleases, limit) {
+  return pressReleases?.reduce((resultArray, item, index) => {
+    const chunkIndex = Math.floor(index / limit);
+    if (!resultArray[chunkIndex]) {
+      resultArray[chunkIndex] = [];
+    }
+    resultArray[chunkIndex].push(item);
+    return resultArray;
+  }, []);
+}
+
 export default async function decorate(block) {
   const isFeatured = block.classList.contains('featured');
   const isLatest = !isFeatured && block.classList.contains('latest');
@@ -113,14 +124,7 @@ export default async function decorate(block) {
   }
 
   // Set the chunks of the array for future pagination
-  const chunkedPressReleases = pressReleases?.reduce((resultArray, item, index) => {
-    const chunkIndex = Math.floor(index / limitAmount);
-    if (!resultArray[chunkIndex]) {
-      resultArray[chunkIndex] = [];
-    }
-    resultArray[chunkIndex].push(item);
-    return resultArray;
-  }, []);
+  const chunkedPressReleases = reducePressReleaseList(pressReleases, limitAmount);
 
   if (chunkedPressReleases && chunkedPressReleases.length > 0) {
     let contentArea = block.querySelector('.pagination-content');
@@ -130,14 +134,13 @@ export default async function decorate(block) {
     }
     const baseURL = window.location.origin;
     await loadCSS(`${baseURL}/common/pagination/pagination.css`);
-    createPagination(
-      chunkedPressReleases,
-      block,
-      // eslint-disable-next-line no-nested-ternary
-      isFeatured ? createFeaturedPressReleaseList : isLatest ? createLatestPressReleases : createAllPressReleases,
-      contentArea,
-      0,
-    );
+    if (isFeatured) {
+      createPagination(chunkedPressReleases, block, createFeaturedPressReleaseList, contentArea, 0);
+    } else if (isLatest) {
+      createPagination(chunkedPressReleases, block, createLatestPressReleases, contentArea, 0);
+    } else {
+      createPagination(chunkedPressReleases, block, createAllPressReleases, contentArea, 0);
+    }
   } else {
     console.error('No chunked items created.');
   }
