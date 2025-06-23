@@ -1,6 +1,6 @@
 name: Old Search Connector - Upsert
 
-on:
+on: 
   repository_dispatch:
     types:
       - resource-published
@@ -22,8 +22,13 @@ jobs:
       OLD_API_KEY: ${{ secrets.OLD_API_KEY }}
     steps:
       - name: Notify upsert endpoint (with debugging)
+        shell: bash {0}
         run: |
-          sleep 1s
+          set +e
+          set -x
+          echo "NETWORK DEBUG:"
+          ping -c 2 6gf5bn87nf.execute-api.eu-west-1.amazonaws.com || echo "ping failed"
+          nslookup 6gf5bn87nf.execute-api.eu-west-1.amazonaws.com || echo "nslookup failed"
           PAGE_PATH=$(echo "${{ github.event.client_payload.path }}" | sed 's/\.md$//g')
           echo "DEBUG: PAGE_PATH: $PAGE_PATH"
           echo "DEBUG: OLD_CONNECTOR_DOMAIN: $OLD_CONNECTOR_DOMAIN"
@@ -33,17 +38,17 @@ jobs:
           BODY='{ "paths": [ "'$PAGE_PATH'" ] }'
           BODY="$(echo "$BODY" | jq -c)"
           echo "DEBUG: Request body: $BODY"
-          response=$(curl -s -w "%{http_code}" -o response_body.txt -H "x-api-key: $OLD_API_KEY" -X POST "$URI" -d "$BODY")
+          response=$(curl -v -s -w "%{http_code}" -o response_body.txt -H "x-api-key: $OLD_API_KEY" -X POST "$URI" -d "$BODY")
+          curl_exit_code=$?
           http_code="${response: -3}"
           body=$(cat response_body.txt)
+          echo "curl exit code: $curl_exit_code"
           echo "DEBUG: HTTP status: $http_code"
           echo "DEBUG: Response: $body"
-          # Accept any 2xx HTTP status code as success
           if [[ ! "$http_code" =~ ^2[0-9][0-9]$ ]]; then
             echo "API call failed with status $http_code"
             exit 1
           fi
-        shell: bash
 
   status-checker:
     needs: notify-connector
