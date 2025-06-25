@@ -64,6 +64,16 @@
   color: var(--c-main-black);
 }
 
+.pagination-arrow .icon {
+  display: flex;
+}
+
+.pagination-arrow .icon svg {
+    fill: currentcolor;
+    height: 1em;
+    width: 1em;
+}
+
 .pagination-arrow.prev {
   margin-right: 11px;
 }
