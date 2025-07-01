@@ -26,8 +26,10 @@
 }
 
 /* Video  */
-.v2-media-with-text__media-section video.v2-media-with-text__media {
+.v2-media-with-text__media-section video.v2-media-with-text__media,
+.v2-media-with-text__media-section .v2-media-with-text__media:has(.video-js) {
   width: 100%;
+  aspect-ratio: 16/9;
 }
 
 .v2-media-with-text__content-section,
@@ -71,7 +73,6 @@
 
 .v2-media-with-text--full-width .v2-media-with-text__media-section .v2-media-with-text__media {
   width: 100%;
-  aspect-ratio: 16/9;
   border-radius: 0;
 }
 
