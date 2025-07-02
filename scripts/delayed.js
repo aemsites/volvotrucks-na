@@ -167,6 +167,7 @@ function loadGoogleTagManager1() {
   }
   gtag('js', new Date());
   gtag('config', 'G-4HJG91WCZF');
+  gtag('testing', 'test value');
 }
 
 async function loadFacebookPixel() {
