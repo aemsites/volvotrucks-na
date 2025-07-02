@@ -16,8 +16,9 @@ const {
 // Core Web Vitals RUM collection
 sampleRUM('cwv');
 
-if (isPerformanceAllowed()) {
-  GTM_ID && loadGoogleTagManager();
+if (isPerformanceAllowed() || !isPerformanceAllowed()) {
+  GTM_ID && loadGoogleTagManager1();
+  GTM_ID && loadGoogleTagManager2();
   HOTJAR_ID && loadHotjar();
 }
 
@@ -139,7 +140,8 @@ if (isDevHost()) {
 }
 
 // Google Analytics
-function loadGoogleTagManager() {
+// GTM-KP9KZWR
+function loadGoogleTagManager2() {
   // google tag manager
   (function loadGoogleTagManagerInit(w, d, s, l, i) {
     w[l] = w[l] || [];
@@ -151,6 +153,20 @@ function loadGoogleTagManager() {
     j.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
     f.parentNode.insertBefore(j, f);
   })(window, document, 'script', 'dataLayer', GTM_ID);
+}
+
+// Google Analytics
+function loadGoogleTagManager1() {
+  // google tag manager
+
+  window.dataLayer = window.dataLayer || [];
+
+  function gtag() {
+    // eslint-disable-next-line
+    dataLayer.push(arguments);
+  }
+  gtag('js', new Date());
+  gtag('config', 'G-4HJG91WCZF');
 }
 
 async function loadFacebookPixel() {
