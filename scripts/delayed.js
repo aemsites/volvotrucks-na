@@ -17,7 +17,7 @@ const {
 sampleRUM('cwv');
 
 if (isPerformanceAllowed()) {
-  GTM_ID && loadGoogleTagManager();
+  // GTM_ID && loadGoogleTagManager();
   HOTJAR_ID && loadHotjar();
 }
 
@@ -100,8 +100,9 @@ document.addEventListener('click', (e) => {
   }
 })();
 
+const test = 2;
 // OneTrust Cookies Consent Notice start for volvotrucks.us
-if (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc') && !isDevHost()) {
+if (2 === test || (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc') && !isDevHost())) {
   // when running on localhost in the block library host is empty but the path is srcdoc
   // on localhost/hlx.page/hlx.live the consent notice is displayed every time the page opens,
   // because the cookie is not persistent. To avoid this annoyance, disable unless on the
@@ -138,20 +139,20 @@ if (isDevHost()) {
   import('./validate-elements.js');
 }
 
-// Google Analytics
-async function loadGoogleTagManager() {
-  // google tag manager
-  (function loadGoogleTagManagerInit(w, d, s, l, i) {
-    w[l] = w[l] || [];
-    w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-    const f = d.getElementsByTagName(s)[0];
-    const j = d.createElement(s);
-    const dl = l !== 'dataLayer' ? `&l=${l}` : '';
-    j.async = true;
-    j.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
-    f.parentNode.insertBefore(j, f);
-  })(window, document, 'script', 'dataLayer', GTM_ID);
-}
+// // Google Analytics
+// async function loadGoogleTagManager() {
+//   // google tag manager
+//   (function loadGoogleTagManagerInit(w, d, s, l, i) {
+//     w[l] = w[l] || [];
+//     w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+//     const f = d.getElementsByTagName(s)[0];
+//     const j = d.createElement(s);
+//     const dl = l !== 'dataLayer' ? `&l=${l}` : '';
+//     j.async = true;
+//     j.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
+//     f.parentNode.insertBefore(j, f);
+//   })(window, document, 'script', 'dataLayer', GTM_ID);
+// }
 
 async function loadFacebookPixel() {
   // FaceBook Pixel
