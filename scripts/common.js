@@ -662,6 +662,25 @@ function loadGoogleTagManager() {
     j.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
     f.parentNode.insertBefore(j, f);
   })(window, document, 'script', 'dataLayer', GTM_ID);
+
+  function injectGtmNoscript() {
+    const body = document.body;
+    if (body) {
+      const noScriptElement = document.createElement('noscript');
+      const iframeElement = document.createElement('iframe');
+      iframeElement.src = 'https://www.googletagmanager.com/ns.html?id=GTM-KP9KZWR';
+      iframeElement.height = '0';
+      iframeElement.width = '0';
+      iframeElement.style.display = 'none';
+      iframeElement.style.visibility = 'hidden';
+      noScriptElement.appendChild(iframeElement);
+      body.insertBefore(noScriptElement, body.firstChild);
+      console.log('GTM noscript tag injected successfully!');
+    } else {
+      console.warn('Body element not found. GTM noscript tag not injected.');
+    }
+  }
+  document.addEventListener('DOMContentLoaded', injectGtmNoscript);
 }
 
 loadGoogleTagManager();
