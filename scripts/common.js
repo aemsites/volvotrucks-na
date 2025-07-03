@@ -646,8 +646,6 @@ export function createResponsivePicture(images, eager, alt, imageClass) {
 
 const { GTM_ID = false } = COOKIE_CONFIGS;
 
-console.log(GTM_ID);
-
 // Google Analytics
 function loadGoogleTagManager() {
   // google tag manager
