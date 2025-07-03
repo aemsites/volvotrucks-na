@@ -16,7 +16,7 @@ const {
 // Core Web Vitals RUM collection
 sampleRUM('cwv');
 
-if (isPerformanceAllowed()) {
+if (!isPerformanceAllowed()) {
   GTM_ID && loadGoogleTagManager();
   HOTJAR_ID && loadHotjar();
 }
