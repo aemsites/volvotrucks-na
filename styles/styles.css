@@ -1,9 +1,46 @@
 /* stylelint-disable number-max-precision */
 
 /*
-   Fonts
-   When using fonts, please see "best practices for fonts" in Readme
+  Fonts
+  When using fonts, please see "best practices for fonts" in Readme
 */
+
+/* Basic latin subsets Start */
+@font-face {
+  font-family: VolvoNovum;
+  src:
+    url('/fonts/VolvoNovum-Regular-basic.woff2') format('woff2'),
+    url('/fonts/VolvoNovum-Regular-basic.woff') format('woff');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-007F;
+}
+
+@font-face {
+  font-family: VolvoNovum-Medium;
+  src:
+    url('/fonts/VolvoNovum-Medium-basic.woff2') format('woff2'),
+    url('/fonts/VolvoNovum-Medium-basic.woff') format('woff');
+  font-weight: 500;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-007F;
+}
+
+@font-face {
+  font-family: VolvoBroadProDigital;
+  src:
+    url('/fonts/VolvoBroadProDigital-basic.woff2') format('woff2'),
+    url('/fonts/VolvoBroadProDigital-basic.woff') format('woff');
+  font-weight: 400;
+  font-style: normal;
+  font-display: swap;
+  unicode-range: U+0020-007F;
+}
+
+/* Basic latin subsets End */
+
 @font-face {
   font-family: 'VolvoNovum Fallback';
   src: local('Noto Sans');
@@ -22,17 +59,6 @@
   line-gap-override: normal;
 }
 
-@font-face {
-  font-family: VolvoBroadProDigital;
-  src:
-    url('/fonts/VolvoBroadProDigital.woff2') format('woff2'),
-    url('/fonts/volvobroadprodigital.woff') format('woff');
-  font-weight: 400;
-  font-style: normal;
-  font-display: swap;
-}
-
-/* previous fallback font was Arial Narrow */
 @font-face {
   font-family: 'VolvoBroadProDigital Fallback';
   src: local('Noto Sans');
