@@ -549,7 +549,7 @@ export const deepMerge = (target, source) => {
 };
 
 export const isDevHost = () => {
-  const devHosts = ['127.0.0.1'];
+  const devHosts = ['localhost', '127.0.0.1', 'aem.page', 'aem.live'];
   return devHosts.some((url) => window.location.host.includes(url));
 };
 
@@ -643,43 +643,3 @@ export function createResponsivePicture(images, eager, alt, imageClass) {
 
   return picture;
 }
-
-const { GTM_ID = false } = COOKIE_CONFIGS;
-
-// Google Analytics
-function loadGoogleTagManager() {
-  // google tag manager
-  (function (w, d, s, l, i) {
-    w[l] = w[l] || [];
-    w[l].push({
-      'gtm.start': new Date().getTime(),
-      event: 'gtm.js',
-    });
-    const f = d.getElementsByTagName(s)[0];
-    const j = d.createElement(s);
-    const dl = l != 'dataLayer' ? `&l=${l}` : '';
-    j.async = true;
-    j.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
-    f.parentNode.insertBefore(j, f);
-  })(window, document, 'script', 'dataLayer', GTM_ID);
-
-  function injectGtmNoscript() {
-    const body = document.body;
-    if (body) {
-      const noScriptElement = document.createElement('noscript');
-      const iframeElement = document.createElement('iframe');
-      iframeElement.src = `https://www.googletagmanager.com/ns.html?id=${GTM_ID}`;
-      iframeElement.height = '0';
-      iframeElement.width = '0';
-      iframeElement.style.display = 'none';
-      iframeElement.style.visibility = 'hidden';
-      noScriptElement.appendChild(iframeElement);
-      body.insertBefore(noScriptElement, body.firstChild);
-    } else {
-      console.warn('Body element not found. GTM noscript tag not injected.');
-    }
-  }
-  document.addEventListener('DOMContentLoaded', injectGtmNoscript);
-}
-
-loadGoogleTagManager();
