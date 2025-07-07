@@ -1,12 +1,12 @@
 /* global fbq */
 import { loadScript, sampleRUM } from './aem.js';
-import { isPerformanceAllowed, isTargetingAllowed, isSocialAllowed, extractObjectFromArray, COOKIE_CONFIGS } from './common.js';
+import { isPerformanceAllowed, isTargetingAllowed, isSocialAllowed, extractObjectFromArray, COOKIE_CONFIGS, isDevHost } from './common.js';
 
 // COOKIE ACCEPTANCE AND IDs default to false in case no ID is present
 const {
   FACEBOOK_PIXEL_ID = false,
   HOTJAR_ID = false,
-  // GTM_ID = false,
+  GTM_ID = false,
   DATA_DOMAIN_SCRIPT = false,
   ACC_ENG_TRACKING = false,
   TIKTOK_PIXEL_ID = false,
@@ -100,59 +100,24 @@ document.addEventListener('click', (e) => {
   }
 })();
 
-const test = 2;
-// OneTrust Cookies Consent Notice start for volvotrucks.us
-if (test >= 0 || (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc'))) {
-  // when running on localhost in the block library host is empty but the path is srcdoc
-  // on localhost/hlx.page/hlx.live the consent notice is displayed every time the page opens,
-  // because the cookie is not persistent. To avoid this annoyance, disable unless on the
-  // production page.
-  loadScript('https://cdn.cookielaw.org/scripttemplates/otSDKStub.js', {
-    type: 'text/javascript',
-    charset: 'UTF-8',
-    'data-domain-script': DATA_DOMAIN_SCRIPT,
-  });
-
-  window.OptanonWrapper = () => {
-    const currentOnetrustActiveGroups = window.OnetrustActiveGroups;
-
-    function isSameGroups(groups1, groups2) {
-      const s1 = JSON.stringify(groups1.split(','));
-      const s2 = JSON.stringify(groups2.split(','));
-
-      return s1 === s2;
-    }
-
-    window.OneTrust.OnConsentChanged(() => {
-      // reloading the page only when the active group has changed
-      if (window.isSingleVideo === true) {
-        return;
-      }
-      if (!isSameGroups(currentOnetrustActiveGroups, window.OnetrustActiveGroups) && window.isSingleVideo !== 'true') {
-        // window.location.reload();
-      }
-    });
-  };
+if (isDevHost()) {
+  import('./validate-elements.js');
 }
 
-// if (isDevHost()) {
-//   import('./validate-elements.js');
-// }
-
-// // Google Analytics
-// async function loadGoogleTagManager() {
-//   // google tag manager
-//   (function loadGoogleTagManagerInit(w, d, s, l, i) {
-//     w[l] = w[l] || [];
-//     w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-//     const f = d.getElementsByTagName(s)[0];
-//     const j = d.createElement(s);
-//     const dl = l !== 'dataLayer' ? `&l=${l}` : '';
-//     j.async = true;
-//     j.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
-//     f.parentNode.insertBefore(j, f);
-//   })(window, document, 'script', 'dataLayer', GTM_ID);
-// }
+// Google Analytics
+async function loadGoogleTagManager() {
+  // google tag manager
+  (function loadGoogleTagManagerInit(w, d, s, l, i) {
+    w[l] = w[l] || [];
+    w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+    const f = d.getElementsByTagName(s)[0];
+    const j = d.createElement(s);
+    const dl = l !== 'dataLayer' ? `&l=${l}` : '';
+    j.async = true;
+    j.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
+    f.parentNode.insertBefore(j, f);
+  })(window, document, 'script', 'dataLayer', GTM_ID);
+}
 
 async function loadFacebookPixel() {
   // FaceBook Pixel
@@ -417,4 +382,45 @@ async function loadMNTNConversionPixel(orderId, orderAmount = '') {
     y.src = ('https:' === document.location.protocol ? 'https://' : 'http://') + w;
     r.parentNode.insertBefore(y, r);
   })();
+}
+
+const test = 2;
+// OneTrust Cookies Consent Notice start for volvotrucks.us
+if (test >= 0 || (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc'))) {
+  // when running on localhost in the block library host is empty but the path is srcdoc
+  // on localhost/hlx.page/hlx.live the consent notice is displayed every time the page opens,
+  // because the cookie is not persistent. To avoid this annoyance, disable unless on the
+  // production page.
+  loadScript('https://cdn.cookielaw.org/scripttemplates/otSDKStub.js', {
+    type: 'text/javascript',
+    charset: 'UTF-8',
+    'data-domain-script': DATA_DOMAIN_SCRIPT,
+  });
+
+  window.OptanonWrapper = () => {
+    const currentOnetrustActiveGroups = window.OnetrustActiveGroups;
+
+    function isSameGroups(groups1, groups2) {
+      const s1 = JSON.stringify(groups1.split(','));
+      const s2 = JSON.stringify(groups2.split(','));
+
+      return s1 === s2;
+    }
+
+    window.OneTrust.OnConsentChanged(() => {
+      // reloading the page only when the active group has changed
+      if (window.isSingleVideo === true) {
+        return;
+      }
+      if (!isSameGroups(currentOnetrustActiveGroups, window.OnetrustActiveGroups) && window.isSingleVideo !== 'true') {
+        const testData = { obj: 'testing' };
+        sessionStorage.setItem('test', JSON.stringify(testData));
+
+        console.log('test');
+        setTimeout(() => {
+          window.location.reload();
+        }, 4000);
+      }
+    });
+  };
 }
