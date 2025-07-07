@@ -6,7 +6,7 @@ import { isPerformanceAllowed, isTargetingAllowed, isSocialAllowed, extractObjec
 const {
   FACEBOOK_PIXEL_ID = false,
   HOTJAR_ID = false,
-  GTM_ID = false,
+  // GTM_ID = false,
   DATA_DOMAIN_SCRIPT = false,
   ACC_ENG_TRACKING = false,
   TIKTOK_PIXEL_ID = false,
@@ -17,7 +17,7 @@ const {
 sampleRUM('cwv');
 
 if (isPerformanceAllowed()) {
-  GTM_ID && loadGoogleTagManager();
+  // GTM_ID && loadGoogleTagManager();
   HOTJAR_ID && loadHotjar();
 }
 
@@ -139,20 +139,20 @@ if (test >= 0 || (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcd
 //   import('./validate-elements.js');
 // }
 
-// Google Analytics
-async function loadGoogleTagManager() {
-  // google tag manager
-  (function loadGoogleTagManagerInit(w, d, s, l, i) {
-    w[l] = w[l] || [];
-    w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-    const f = d.getElementsByTagName(s)[0];
-    const j = d.createElement(s);
-    const dl = l !== 'dataLayer' ? `&l=${l}` : '';
-    j.async = true;
-    j.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
-    f.parentNode.insertBefore(j, f);
-  })(window, document, 'script', 'dataLayer', GTM_ID);
-}
+// // Google Analytics
+// async function loadGoogleTagManager() {
+//   // google tag manager
+//   (function loadGoogleTagManagerInit(w, d, s, l, i) {
+//     w[l] = w[l] || [];
+//     w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
+//     const f = d.getElementsByTagName(s)[0];
+//     const j = d.createElement(s);
+//     const dl = l !== 'dataLayer' ? `&l=${l}` : '';
+//     j.async = true;
+//     j.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
+//     f.parentNode.insertBefore(j, f);
+//   })(window, document, 'script', 'dataLayer', GTM_ID);
+// }
 
 async function loadFacebookPixel() {
   // FaceBook Pixel
