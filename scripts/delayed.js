@@ -129,7 +129,8 @@ if (2 === test || (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('src
         return;
       }
       if (!isSameGroups(currentOnetrustActiveGroups, window.OnetrustActiveGroups) && window.isSingleVideo !== 'true') {
-        window.location.reload();
+        // window.location.reload();
+        console.log(window.location);
       }
     });
   };
