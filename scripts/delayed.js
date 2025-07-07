@@ -100,6 +100,8 @@ document.addEventListener('click', (e) => {
   }
 })();
 
+let referrer;
+
 // OneTrust Cookies Consent Notice start for volvotrucks.us
 if (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc') && !isDevHost()) {
   // when running on localhost in the block library host is empty but the path is srcdoc
@@ -128,8 +130,9 @@ if (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc') && !isDev
         return;
       }
       if (!isSameGroups(currentOnetrustActiveGroups, window.OnetrustActiveGroups) && window.isSingleVideo !== 'true') {
-        // window.location.reload();
-        console.warn(window.location);
+        console.warn(document.referrer);
+        referrer = document.referrer;
+        window.location.reload();
       }
     });
   };
