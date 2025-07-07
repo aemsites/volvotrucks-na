@@ -114,14 +114,11 @@ if (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc') && !isDev
 
   window.OptanonWrapper = () => {
     const currentOnetrustActiveGroups = window.OnetrustActiveGroups;
-    console.log(currentOnetrustActiveGroups);
 
     function isSameGroups(groups1, groups2) {
       const s1 = JSON.stringify(groups1.split(','));
       const s2 = JSON.stringify(groups2.split(','));
 
-      console.log(s1);
-      console.log(s2);
       return s1 === s2;
     }
 
@@ -132,9 +129,6 @@ if (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc') && !isDev
       }
       if (!isSameGroups(currentOnetrustActiveGroups, window.OnetrustActiveGroups) && window.isSingleVideo !== 'true') {
         // window.location.reload();
-        console.warn(currentOnetrustActiveGroups);
-        console.warn(window.OnetrustActiveGroups);
-        console.warn(window.isSingleVideo !== true);
         console.warn(window.location);
       }
     });
