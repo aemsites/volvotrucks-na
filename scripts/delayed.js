@@ -100,10 +100,9 @@ document.addEventListener('click', (e) => {
   }
 })();
 
-let referrer;
 const test = 2;
 // OneTrust Cookies Consent Notice start for volvotrucks.us
-if (test === 2 || (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc'))) {
+if (test >= 0 || (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc'))) {
   // when running on localhost in the block library host is empty but the path is srcdoc
   // on localhost/hlx.page/hlx.live the consent notice is displayed every time the page opens,
   // because the cookie is not persistent. To avoid this annoyance, disable unless on the
@@ -130,8 +129,6 @@ if (test === 2 || (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('src
         return;
       }
       if (!isSameGroups(currentOnetrustActiveGroups, window.OnetrustActiveGroups) && window.isSingleVideo !== 'true') {
-        referrer = document.referrer;
-        console.warn(referrer);
         // window.location.reload();
       }
     });
