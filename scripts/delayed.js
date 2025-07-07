@@ -132,7 +132,7 @@ if (test === 2 || (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('src
       if (!isSameGroups(currentOnetrustActiveGroups, window.OnetrustActiveGroups) && window.isSingleVideo !== 'true') {
         referrer = document.referrer;
         console.warn(referrer);
-        window.location.reload();
+        // window.location.reload();
       }
     });
   };
