@@ -17,7 +17,7 @@ const {
 sampleRUM('cwv');
 
 // This functions runs once at the begining and whenever a change in the selected group of cookies change.
-function loadAllCookies() {
+function checkCookiesAndLoadAllScripts() {
   if (isPerformanceAllowed()) {
     GTM_ID && loadGoogleTagManager();
     HOTJAR_ID && loadHotjar();
@@ -33,7 +33,7 @@ function loadAllCookies() {
     MNTN_PIXEL_ID && loadMNTNTrackingPixel();
   }
 }
-loadAllCookies();
+checkCookiesAndLoadAllScripts();
 
 // add more delayed functionality here
 
@@ -133,7 +133,7 @@ if (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc') && !isDev
       }
       if (!isSameGroups(currentOnetrustActiveGroups, window.OnetrustActiveGroups) && window.isSingleVideo !== 'true') {
         // Run all cookie checks and their associated scripts
-        loadAllCookies();
+        checkCookiesAndLoadAllScripts();
       }
     });
   };
