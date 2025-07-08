@@ -1,6 +1,6 @@
 /* global fbq */
 import { loadScript, sampleRUM } from './aem.js';
-import { isPerformanceAllowed, isTargetingAllowed, isSocialAllowed, extractObjectFromArray, COOKIE_CONFIGS } from './common.js';
+import { isPerformanceAllowed, isTargetingAllowed, isSocialAllowed, isDevHost, extractObjectFromArray, COOKIE_CONFIGS } from './common.js';
 
 // COOKIE ACCEPTANCE AND IDs default to false in case no ID is present
 const {
@@ -17,18 +17,15 @@ const {
 sampleRUM('cwv');
 
 if (isPerformanceAllowed()) {
-  console.log('gtm hotjar', GTM_ID, HOTJAR_ID);
   GTM_ID && loadGoogleTagManager();
   HOTJAR_ID && loadHotjar();
 }
 
 if (isTargetingAllowed()) {
-  console.log('acc track', ACC_ENG_TRACKING);
   ACC_ENG_TRACKING && loadAccountEngagementTracking();
 }
 
 if (isSocialAllowed()) {
-  console.log('social', FACEBOOK_PIXEL_ID, TIKTOK_PIXEL_ID, MNTN_PIXEL_ID);
   FACEBOOK_PIXEL_ID && loadFacebookPixel();
   TIKTOK_PIXEL_ID && loadTiktokPixel();
   MNTN_PIXEL_ID && loadMNTNTrackingPixel();
@@ -102,9 +99,9 @@ document.addEventListener('click', (e) => {
     }
   }
 })();
-const isTrue = true;
+
 // OneTrust Cookies Consent Notice start for volvotrucks.us
-if (isTrue || (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc'))) {
+if (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc') && !isDevHost()) {
   // when running on localhost in the block library host is empty but the path is srcdoc
   // on localhost/hlx.page/hlx.live the consent notice is displayed every time the page opens,
   // because the cookie is not persistent. To avoid this annoyance, disable unless on the
@@ -130,39 +127,13 @@ if (isTrue || (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc'
       if (window.isSingleVideo === true) {
         return;
       }
-
-      if (!isSameGroups(currentOnetrustActiveGroups, window.OnetrustActiveGroups) && window.isSingleVideo !== 'true') {
-        setTimeout(() => {
-          console.log('cookies have change 1:', currentOnetrustActiveGroups);
-          console.log('cookies have change 2:', window.OnetrustActiveGroups);
-          // window.location.reload();
-        }, 5000);
-      }
-
-      if (isPerformanceAllowed()) {
-        console.log('gtm hotjar', GTM_ID, HOTJAR_ID);
-        GTM_ID && loadGoogleTagManager();
-        HOTJAR_ID && loadHotjar();
-      }
-
-      if (isTargetingAllowed()) {
-        console.log('acc track', ACC_ENG_TRACKING);
-        ACC_ENG_TRACKING && loadAccountEngagementTracking();
-      }
-
-      if (isSocialAllowed()) {
-        console.log('social', FACEBOOK_PIXEL_ID, TIKTOK_PIXEL_ID, MNTN_PIXEL_ID);
-        FACEBOOK_PIXEL_ID && loadFacebookPixel();
-        TIKTOK_PIXEL_ID && loadTiktokPixel();
-        MNTN_PIXEL_ID && loadMNTNTrackingPixel();
-      }
     });
   };
 }
 
-// if (isDevHost()) {
-//   import('./validate-elements.js');
-// }
+if (isDevHost()) {
+  import('./validate-elements.js');
+}
 
 // Google Analytics
 async function loadGoogleTagManager() {
@@ -172,7 +143,7 @@ async function loadGoogleTagManager() {
     w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
     const f = d.getElementsByTagName(s)[0];
     const j = d.createElement(s);
-    const dl = l !== 'dataLayer' ? `&l=${l}` : '';
+    const dl = l != 'dataLayer' ? `&l=${l}` : '';
     j.async = true;
     j.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
     f.parentNode.insertBefore(j, f);

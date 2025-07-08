@@ -549,7 +549,7 @@ export const deepMerge = (target, source) => {
 };
 
 export const isDevHost = () => {
-  const devHosts = ['127.0.0.1'];
+  const devHosts = ['localhost', '127.0.0.1', 'aem.page', 'aem.live'];
   return devHosts.some((url) => window.location.host.includes(url));
 };
 
