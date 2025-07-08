@@ -672,11 +672,7 @@ function toggleNovalidateOnInput(element, novalidate = true) {
   }
 }
 
-async function createForm(formURL = false) {
-  if (!formURL) {
-    console.error('Form %cURL %cis not provided during form creation', 'color: red;', 'color: inherit;');
-    return;
-  }
+async function createForm(formURL) {
   const { pathname } = new URL(formURL);
   const data = await fetchForm(pathname);
 
@@ -846,6 +842,14 @@ function createHoneypotField() {
   return fragment.firstElementChild;
 }
 
+function addUnknownHandler() {
+  // in case the form has any kind of error, the form will be replaced with the error message
+  window.addEventListener('unhandledrejection', ({ reason, error }) => {
+    console.error('Unhandled rejection. Error submitting form:', { reason, error });
+    submissionFailure();
+  });
+}
+
 export default async function decorate(block) {
   variantsClassesToBEM(block.classList, variantClasses, blockName);
   const formLink = block.querySelector('a[href$=".json"]'); // this is the form fields config file
@@ -857,30 +861,33 @@ export default async function decorate(block) {
     decorateTitles(block);
     const form = await createForm(formLink.href);
     if (!form) {
-      console.error('Form could not be created. No config %cJSON %cnor data fetched.', 'color: red;', 'color: inherit;');
+      console.error('%cForm%c could not be created. No form data found.', 'color:red', 'color:inherit', { formLink, form });
+      // remove the setup rows from the block if the form could not be created
+      block.innerText = '';
+      return;
     }
     if (thankYouPage.length > 0) {
-      if (form) {
-        form.dataset.customMessage = `${thankYouPage[0].href}.plain.html`;
-      }
+      form.dataset.customMessage = `${thankYouPage[0].href}.plain.html`;
       block.lastElementChild.remove();
     }
-    if (form) {
-      form.append(createHoneypotField());
-    }
+
+    form.append(createHoneypotField());
+
     // clean the content block before appending the form
     block.innerText = '';
     if (formTitleContainer && !isFormLinkInsideTitleContainer) {
       addTitleText(formTitleContainer, block);
     }
-    if (form) {
-      block.append(form);
-    }
+
+    block.append(form);
 
     // in case the form has any kind of error, the form will be replaced with the error message
     window.addEventListener('unhandledrejection', ({ reason, error }) => {
       console.error('Unhandled rejection. Error submitting form:', { reason, error });
       submissionFailure();
     });
+  } else {
+    console.error('%cForm link%c is missing or does not end with .json', 'color:red', 'color:inherit', { formLink });
+    block.innerText = '';
   }
 }
