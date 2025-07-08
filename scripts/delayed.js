@@ -413,13 +413,10 @@ if (test >= 0 || (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcd
         return;
       }
       if (!isSameGroups(currentOnetrustActiveGroups, window.OnetrustActiveGroups) && window.isSingleVideo !== 'true') {
-        const testData = { obj: 'testing' };
-        sessionStorage.setItem('test', JSON.stringify(testData));
-
         console.log('test');
         setTimeout(() => {
           window.location.reload();
-        }, 4000);
+        }, 8000);
       }
     });
   };

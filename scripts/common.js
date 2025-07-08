@@ -549,7 +549,7 @@ export const deepMerge = (target, source) => {
 };
 
 export const isDevHost = () => {
-  const devHosts = ['127.0.0.1'];
+  const devHosts = ['localhost', '127.0.0.1', 'aem.page', 'aem.live'];
   return devHosts.some((url) => window.location.host.includes(url));
 };
 
@@ -643,15 +643,3 @@ export function createResponsivePicture(images, eager, alt, imageClass) {
 
   return picture;
 }
-// const { GTM_ID } = COOKIE_CONFIGS;
-
-// (function (w, d, s, l, i) {
-//   w[l] = w[l] || [];
-//   w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
-//   const f = d.getElementsByTagName(s)[0];
-//   const j = d.createElement(s);
-//   const dl = l !== 'dataLayer' ? `&l=${l}` : '';
-//   j.async = true;
-//   j.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
-//   f.parentNode.insertBefore(j, f);
-// })(window, document, 'script', 'dataLayer', GTM_ID);
