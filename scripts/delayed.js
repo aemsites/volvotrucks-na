@@ -126,6 +126,19 @@ if (isTrue || (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc'
     }
 
     window.OneTrust.OnConsentChanged(() => {
+      // reloading the page only when the active group has changed
+      if (window.isSingleVideo === true) {
+        return;
+      }
+
+      if (!isSameGroups(currentOnetrustActiveGroups, window.OnetrustActiveGroups) && window.isSingleVideo !== 'true') {
+        setTimeout(() => {
+          console.log('cookies have change 1:', currentOnetrustActiveGroups);
+          console.log('cookies have change 2:', window.OnetrustActiveGroups);
+          // window.location.reload();
+        }, 5000);
+      }
+
       if (isPerformanceAllowed()) {
         console.log('gtm hotjar', GTM_ID, HOTJAR_ID);
         GTM_ID && loadGoogleTagManager();
@@ -142,17 +155,6 @@ if (isTrue || (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc'
         FACEBOOK_PIXEL_ID && loadFacebookPixel();
         TIKTOK_PIXEL_ID && loadTiktokPixel();
         MNTN_PIXEL_ID && loadMNTNTrackingPixel();
-      }
-      // reloading the page only when the active group has changed
-      if (window.isSingleVideo === true) {
-        return;
-      }
-      if (!isSameGroups(currentOnetrustActiveGroups, window.OnetrustActiveGroups) && window.isSingleVideo !== 'true') {
-        setTimeout(() => {
-          console.log('cookies have change 1:', currentOnetrustActiveGroups);
-          console.log('cookies have change 2:', window.OnetrustActiveGroups);
-          // window.location.reload();
-        }, 5000);
       }
     });
   };
