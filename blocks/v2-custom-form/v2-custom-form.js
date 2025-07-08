@@ -687,15 +687,20 @@ async function createForm(formURL = false) {
     });
   } else {
     let hasAction = true;
+    let hasSubmit = false;
     data.forEach((fd) => {
       if (fd.Type === 'submit') {
+        hasSubmit = true;
         if (!fd.Action || fd.Action.trim() === '') {
           console.warn('%cSubmit button%c is missing an action attribute.', 'color: red;', 'color: inherit;');
           hasAction = false;
         }
       }
     });
-    if (!hasAction) {
+    if (!hasSubmit) {
+      console.warn('Form is missing a %csubmit button.%c No submit Type has been found', 'color: red;', 'color: inherit;');
+    }
+    if (!hasSubmit || !hasAction) {
       return;
     }
   }
