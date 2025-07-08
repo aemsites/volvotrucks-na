@@ -16,6 +16,24 @@ const {
 // Core Web Vitals RUM collection
 sampleRUM('cwv');
 
+if (isPerformanceAllowed()) {
+  console.log('gtm hotjar', GTM_ID, HOTJAR_ID);
+  GTM_ID && loadGoogleTagManager();
+  HOTJAR_ID && loadHotjar();
+}
+
+if (isTargetingAllowed()) {
+  console.log('acc track', ACC_ENG_TRACKING);
+  ACC_ENG_TRACKING && loadAccountEngagementTracking();
+}
+
+if (isSocialAllowed()) {
+  console.log('social', FACEBOOK_PIXEL_ID, TIKTOK_PIXEL_ID, MNTN_PIXEL_ID);
+  FACEBOOK_PIXEL_ID && loadFacebookPixel();
+  TIKTOK_PIXEL_ID && loadTiktokPixel();
+  MNTN_PIXEL_ID && loadMNTNTrackingPixel();
+}
+
 // add more delayed functionality here
 
 document.addEventListener('click', (e) => {
@@ -109,15 +127,18 @@ if (isTrue || (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc'
 
     window.OneTrust.OnConsentChanged(() => {
       if (isPerformanceAllowed()) {
+        console.log('gtm hotjar', GTM_ID, HOTJAR_ID);
         GTM_ID && loadGoogleTagManager();
         HOTJAR_ID && loadHotjar();
       }
 
       if (isTargetingAllowed()) {
+        console.log('acc track', ACC_ENG_TRACKING);
         ACC_ENG_TRACKING && loadAccountEngagementTracking();
       }
 
       if (isSocialAllowed()) {
+        console.log('social', FACEBOOK_PIXEL_ID, TIKTOK_PIXEL_ID, MNTN_PIXEL_ID);
         FACEBOOK_PIXEL_ID && loadFacebookPixel();
         TIKTOK_PIXEL_ID && loadTiktokPixel();
         MNTN_PIXEL_ID && loadMNTNTrackingPixel();
@@ -127,9 +148,11 @@ if (isTrue || (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc'
         return;
       }
       if (!isSameGroups(currentOnetrustActiveGroups, window.OnetrustActiveGroups) && window.isSingleVideo !== 'true') {
-        console.log('cookies have change 1:', currentOnetrustActiveGroups);
-        console.log('cookies have change 2:', window.OnetrustActiveGroups);
-        // window.location.reload();
+        setTimeout(() => {
+          console.log('cookies have change 1:', currentOnetrustActiveGroups);
+          console.log('cookies have change 2:', window.OnetrustActiveGroups);
+          // window.location.reload();
+        }, 5000);
       }
     });
   };
