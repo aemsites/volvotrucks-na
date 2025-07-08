@@ -16,6 +16,25 @@ const {
 // Core Web Vitals RUM collection
 sampleRUM('cwv');
 
+// This functions runs once at the begining and whenever a change in the selected group of cookies change.
+function loadAllCookies() {
+  if (isPerformanceAllowed()) {
+    GTM_ID && loadGoogleTagManager();
+    HOTJAR_ID && loadHotjar();
+  }
+
+  if (isTargetingAllowed()) {
+    ACC_ENG_TRACKING && loadAccountEngagementTracking();
+  }
+
+  if (isSocialAllowed()) {
+    FACEBOOK_PIXEL_ID && loadFacebookPixel();
+    TIKTOK_PIXEL_ID && loadTiktokPixel();
+    MNTN_PIXEL_ID && loadMNTNTrackingPixel();
+  }
+}
+loadAllCookies();
+
 // add more delayed functionality here
 
 document.addEventListener('click', (e) => {
@@ -113,20 +132,8 @@ if (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc') && !isDev
         return;
       }
       if (!isSameGroups(currentOnetrustActiveGroups, window.OnetrustActiveGroups) && window.isSingleVideo !== 'true') {
-        if (isPerformanceAllowed()) {
-          GTM_ID && loadGoogleTagManager();
-          HOTJAR_ID && loadHotjar();
-        }
-
-        if (isTargetingAllowed()) {
-          ACC_ENG_TRACKING && loadAccountEngagementTracking();
-        }
-
-        if (isSocialAllowed()) {
-          FACEBOOK_PIXEL_ID && loadFacebookPixel();
-          TIKTOK_PIXEL_ID && loadTiktokPixel();
-          MNTN_PIXEL_ID && loadMNTNTrackingPixel();
-        }
+        // Run all cookie checks and their associated scripts
+        loadAllCookies();
       }
     });
   };
