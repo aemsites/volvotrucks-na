@@ -1,6 +1,6 @@
 /* global fbq */
 import { loadScript, sampleRUM } from './aem.js';
-import { isPerformanceAllowed, isTargetingAllowed, isSocialAllowed, extractObjectFromArray, COOKIE_CONFIGS, isDevHost } from './common.js';
+import { isPerformanceAllowed, isTargetingAllowed, isSocialAllowed, isDevHost, extractObjectFromArray, COOKIE_CONFIGS } from './common.js';
 
 // COOKIE ACCEPTANCE AND IDs default to false in case no ID is present
 const {
@@ -17,7 +17,7 @@ const {
 sampleRUM('cwv');
 
 if (isPerformanceAllowed()) {
-  // GTM_ID && loadGoogleTagManager();
+  GTM_ID && loadGoogleTagManager();
   HOTJAR_ID && loadHotjar();
 }
 
@@ -99,6 +99,42 @@ document.addEventListener('click', (e) => {
     }
   }
 })();
+
+// OneTrust Cookies Consent Notice start for volvotrucks.us
+if (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc') && !isDevHost()) {
+  // when running on localhost in the block library host is empty but the path is srcdoc
+  // on localhost/hlx.page/hlx.live the consent notice is displayed every time the page opens,
+  // because the cookie is not persistent. To avoid this annoyance, disable unless on the
+  // production page.
+  loadScript('https://cdn.cookielaw.org/scripttemplates/otSDKStub.js', {
+    type: 'text/javascript',
+    charset: 'UTF-8',
+    'data-domain-script': DATA_DOMAIN_SCRIPT,
+  });
+
+  window.OptanonWrapper = () => {
+    const currentOnetrustActiveGroups = window.OnetrustActiveGroups;
+
+    function isSameGroups(groups1, groups2) {
+      const s1 = JSON.stringify(groups1.split(','));
+      const s2 = JSON.stringify(groups2.split(','));
+
+      return s1 === s2;
+    }
+
+    window.OneTrust.OnConsentChanged(() => {
+      // reloading the page only when the active group has changed
+      if (window.isSingleVideo === true) {
+        return;
+      }
+      if (!isSameGroups(currentOnetrustActiveGroups, window.OnetrustActiveGroups) && window.isSingleVideo !== 'true') {
+        console.log('cookies have change 1:', currentOnetrustActiveGroups);
+        console.log('cookies have change 2:', window.OnetrustActiveGroups);
+        // window.location.reload();
+      }
+    });
+  };
+}
 
 if (isDevHost()) {
   import('./validate-elements.js');
@@ -382,41 +418,4 @@ async function loadMNTNConversionPixel(orderId, orderAmount = '') {
     y.src = ('https:' === document.location.protocol ? 'https://' : 'http://') + w;
     r.parentNode.insertBefore(y, r);
   })();
-}
-
-// OneTrust Cookies Consent Notice start for volvotrucks.us
-if (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc') && !isDevHost()) {
-  // when running on localhost in the block library host is empty but the path is srcdoc
-  // on localhost/hlx.page/hlx.live the consent notice is displayed every time the page opens,
-  // because the cookie is not persistent. To avoid this annoyance, disable unless on the
-  // production page.
-  loadScript('https://cdn.cookielaw.org/scripttemplates/otSDKStub.js', {
-    type: 'text/javascript',
-    charset: 'UTF-8',
-    'data-domain-script': DATA_DOMAIN_SCRIPT,
-  });
-
-  window.OptanonWrapper = () => {
-    const currentOnetrustActiveGroups = window.OnetrustActiveGroups;
-
-    function isSameGroups(groups1, groups2) {
-      const s1 = JSON.stringify(groups1.split(','));
-      const s2 = JSON.stringify(groups2.split(','));
-
-      return s1 === s2;
-    }
-
-    window.OneTrust.OnConsentChanged(() => {
-      // reloading the page only when the active group has changed
-      if (window.isSingleVideo === true) {
-        return;
-      }
-      if (!isSameGroups(currentOnetrustActiveGroups, window.OnetrustActiveGroups) && window.isSingleVideo !== 'true') {
-        console.log('test');
-        setTimeout(() => {
-          window.location.reload();
-        }, 8000);
-      }
-    });
-  };
 }
