@@ -672,7 +672,11 @@ function toggleNovalidateOnInput(element, novalidate = true) {
   }
 }
 
-async function createForm(formURL) {
+async function createForm(formURL = false) {
+  if (!formURL) {
+    console.error('Form %cURL %cis not provided during form creation', 'color: red;', 'color: inherit;');
+    return;
+  }
   const { pathname } = new URL(formURL);
   const data = await fetchForm(pathname);
 
@@ -681,7 +685,21 @@ async function createForm(formURL) {
       classes: 'custom-form__error',
       content: 'Error fetching form data',
     });
+  } else {
+    let hasAction = true;
+    data.forEach((fd) => {
+      if (fd.Type === 'submit') {
+        if (!fd.Action || fd.Action.trim() === '') {
+          console.warn('%cSubmit button%c is missing an action attribute.', 'color: red;', 'color: inherit;');
+          hasAction = false;
+        }
+      }
+    });
+    if (!hasAction) {
+      return;
+    }
   }
+
   const form = createElement('form');
   const customDropdowns = [];
   const dependencies = []; // these will be used to show/hide the fields based on the dependencies
@@ -825,7 +843,7 @@ function createHoneypotField() {
 
 export default async function decorate(block) {
   variantsClassesToBEM(block.classList, variantClasses, blockName);
-  const formLink = block.querySelector('a[href$=".json"]');
+  const formLink = block.querySelector('a[href$=".json"]'); // this is the form fields config file
   const thankYouPage = [...block.querySelectorAll('a')].filter((a) => a.href.includes('thank-you'));
   const formTitleContainer = block.querySelector(':scope > div:first-child > div');
   const isFormLinkInsideTitleContainer = formLink && formTitleContainer.contains(formLink);
@@ -833,17 +851,26 @@ export default async function decorate(block) {
   if (formLink) {
     decorateTitles(block);
     const form = await createForm(formLink.href);
+    if (!form) {
+      console.error('Form could not be created. No config %cJSON %cnor data fetched.', 'color: red;', 'color: inherit;');
+    }
     if (thankYouPage.length > 0) {
-      form.dataset.customMessage = `${thankYouPage[0].href}.plain.html`;
+      if (form) {
+        form.dataset.customMessage = `${thankYouPage[0].href}.plain.html`;
+      }
       block.lastElementChild.remove();
     }
-    form.append(createHoneypotField());
+    if (form) {
+      form.append(createHoneypotField());
+    }
     // clean the content block before appending the form
     block.innerText = '';
     if (formTitleContainer && !isFormLinkInsideTitleContainer) {
       addTitleText(formTitleContainer, block);
     }
-    block.append(form);
+    if (form) {
+      block.append(form);
+    }
 
     // in case the form has any kind of error, the form will be replaced with the error message
     window.addEventListener('unhandledrejection', ({ reason, error }) => {
