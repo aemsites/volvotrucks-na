@@ -55,7 +55,7 @@ jobs:
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
     steps:
-      - name: Notify on specific connector failures in Slack (generalized)
+      - name: Notify on specific connector failures in Slack
         if: ${{ needs.notify-connector.result != 'success' }}
         run: |
           path="${{ github.event.client_payload.path }}"
