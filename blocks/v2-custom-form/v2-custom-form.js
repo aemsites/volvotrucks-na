@@ -842,14 +842,6 @@ function createHoneypotField() {
   return fragment.firstElementChild;
 }
 
-function addUnknownHandler() {
-  // in case the form has any kind of error, the form will be replaced with the error message
-  window.addEventListener('unhandledrejection', ({ reason, error }) => {
-    console.error('Unhandled rejection. Error submitting form:', { reason, error });
-    submissionFailure();
-  });
-}
-
 export default async function decorate(block) {
   variantsClassesToBEM(block.classList, variantClasses, blockName);
   const formLink = block.querySelector('a[href$=".json"]'); // this is the form fields config file
