@@ -16,15 +16,98 @@ jobs:
   notify-connector:
     if: (github.event.client_payload.status == 200 || github.event.client_payload.status == 204) && endsWith(github.event.client_payload.path, '.md')
     runs-on: ubuntu-latest
+    env:
+      CONNECTOR_DOMAIN: ${{ vars.CONNECTOR_DOMAIN }}
+      API_KEY: ${{ secrets.API_KEY }}
+    outputs:
+      http_code: ${{ steps.notify.outputs.http_code }}
+      body: ${{ steps.notify.outputs.body }}
     steps:
-    - name: Notify upsert endpoint
-      run: |
-        sleep 45s
-        PAGE_PATH=$(echo "${{ github.event.client_payload.path }}" | awk '{sub("index.md$", ""); sub(".md$", ""); print}')
-        WEBSITE_NAME="${{ github.event.client_payload.site }}"
-        URI=$(echo "${{ vars.CONNECTOR_DOMAIN }}/$WEBSITE_NAME")
-        BODY='{ "paths": [ "'$PAGE_PATH'" ] }'
-        BODY="$(echo "$BODY" | jq -c)"
-        response=$(curl -s -H "x-api-key: ${{ secrets.API_KEY }}" -X POST "$URI" -d "$BODY")
-        echo "response: $response"
-      shell: bash
+      - name: Notify upsert endpoint
+        id: notify
+        run: |
+          sleep 45s
+          PAGE_PATH=$(echo "${{ github.event.client_payload.path }}" | awk '{sub("index.md$", ""); sub(".md$", ""); print}')
+          WEBSITE_NAME="${{ github.event.client_payload.site }}"
+          URI="${CONNECTOR_DOMAIN}/$WEBSITE_NAME"
+          BODY='{ "paths": [ "'$PAGE_PATH'" ] }'
+          BODY="$(echo "$BODY" | jq -c)"
+          # Capture both response and HTTP status code
+          response=$(curl -s -w "%{http_code}" -o response_body.txt -H "x-api-key: $API_KEY" -X POST "$URI" -d "$BODY")
+          http_code="${response: -3}"
+          body=$(cat response_body.txt)
+          echo "HTTP status: $http_code"
+          echo "response: $body"
+          echo "http_code=$http_code" >> $GITHUB_OUTPUT
+          printf "body<<EOF\n%s\nEOF\n" "$body" >> $GITHUB_OUTPUT
+          # Accept any 2xx HTTP status code as success
+          if [[ ! "$http_code" =~ ^2[0-9][0-9]$ ]]; then
+            echo "API call failed with status $http_code"
+            exit 1
+          fi
+        shell: bash
+
+  status-checker:
+    needs: notify-connector
+    runs-on: ubuntu-latest
+    if: always()
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      BODY: ${{ needs.notify-connector.outputs.body }}
+      HTTP_CODE: ${{ needs.notify-connector.outputs.http_code }}
+    steps:
+      - name: Notify on specific connector failures in Slack (generalized)
+        if: ${{ needs.notify-connector.result != 'success' }}
+        run: |
+          path="${{ github.event.client_payload.path }}"
+          site="${{ github.event.client_payload.site }}"
+          repo="${{ github.repository }}"
+          run_url="https://github.com/${repo}/actions/runs/${{ github.run_id }}"
+          body="$BODY"
+          http_code="$HTTP_CODE"
+          actor="${{ github.actor }}"
+          timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+          
+          # Define error patterns (add/remove here)
+          declare -a errors=(
+            "No Valid Documents to Ingest"
+            "Documents not ingested"
+            "Internal Server Error"
+            "Document not found in OpenSearch"
+          )
+
+          send_message=false
+          reason="Unknown error"
+
+          # Match body against error patterns
+          for err in "${errors[@]}"; do
+            if [[ "$body" == *"$err"* ]]; then
+              reason="$err"
+              send_message=true
+              break
+            fi
+          done
+
+          if [ "$send_message" = true ]; then
+            payload="{
+              \"blocks\": [
+                {
+                  \"type\": \"section\",
+                  \"text\": {
+                    \"type\": \"mrkdwn\",
+                    \"text\": \":x: *Search Connector FAILED: $reason*\n*Site:* $site\n*Path:* \`$path\`\n*HTTP Status:* $http_code\n*Triggered by:* $actor\n*Time (UTC):* $timestamp\n<${run_url}|View Workflow Run>\"
+                  }
+                }
+              ]
+            }"
+            curl -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"
+          else
+            echo "No matching error, no Slack notification sent."
+          fi
+
+      - name: Connector job succeeded or no Slack notification required
+        if: ${{ needs.notify-connector.result == 'success' }}
+        run: |
+          echo "Notify connector job succeeded. No Slack notification sent."
+          echo "Path: ${{ github.event.client_payload.path }}"
+          echo "Status: ${{ needs.notify-connector.result }}"
