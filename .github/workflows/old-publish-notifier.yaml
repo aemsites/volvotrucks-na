@@ -39,8 +39,8 @@ jobs:
           body=$(cat response_body.txt)
           echo "HTTP status: $http_code"
           echo "response: $body"
-          echo "::set-output name=http_code::$http_code"
-          echo "::set-output name=body::$body"
+          echo "http_code=$http_code" >> $GITHUB_OUTPUT
+          printf "body<<EOF\n%s\nEOF\n" "$body" >> $GITHUB_OUTPUT
           # Accept any 2xx HTTP status code as success
           if [[ ! "$http_code" =~ ^2[0-9][0-9]$ ]]; then
             echo "API call failed with status $http_code"
@@ -54,16 +54,18 @@ jobs:
     if: always()
     env:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      BODY: ${{ needs.notify-connector.outputs.body }}
+      HTTP_CODE: ${{ needs.notify-connector.outputs.http_code }}
     steps:
-      - name: Notify on specific connector failures in Slack
+      - name: Notify on specific connector failures in Slack (generalized)
         if: ${{ needs.notify-connector.result != 'success' }}
         run: |
           path="${{ github.event.client_payload.path }}"
           site="${{ github.event.client_payload.site }}"
           repo="${{ github.repository }}"
           run_url="https://github.com/${repo}/actions/runs/${{ github.run_id }}"
-          body='${{ needs.notify-connector.outputs.body }}'
-          http_code='${{ needs.notify-connector.outputs.http_code }}'
+          body="$BODY"
+          http_code="$HTTP_CODE"
           actor="${{ github.actor }}"
           timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
           
