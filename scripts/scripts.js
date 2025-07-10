@@ -25,7 +25,6 @@ import {
   variantsClassesToBEM,
   formatStringToArray,
   TRUCK_CONFIGURATOR_URLS,
-  getLocale,
 } from './common.js';
 
 import {
@@ -39,6 +38,11 @@ import {
 } from './video-helper.js';
 
 import { validateCountries } from './validate-countries.js';
+import { loadAllFonts } from './font-loader.js';
+
+if ('FontFace' in window && window.localStorage) {
+  loadAllFonts();
+}
 
 let modal;
 
