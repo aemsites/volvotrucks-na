@@ -3,6 +3,7 @@ const path = require('path');
 
 const TerserPlugin = require('terser-webpack-plugin'); // TODO: Re-implement this back again and test
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
 // List of files to ignore
@@ -46,6 +47,9 @@ module.exports = {
   },
 
   plugins: [
+    new HtmlWebpackPlugin({
+      template: './head.html',
+    }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
     }),
