@@ -41,53 +41,13 @@
 
 /* Basic latin subsets End */
 
-@font-face {
-  font-family: 'VolvoNovum Fallback';
-  src: local('Noto Sans');
-  size-adjust: 102%;
-  ascent-override: 95%;
-  descent-override: normal;
-  line-gap-override: normal;
-}
-
-@font-face {
-  font-family: 'VolvoNovum-Medium Fallback';
-  src: local('Noto Sans');
-  size-adjust: 103%;
-  ascent-override: 92%;
-  descent-override: normal;
-  line-gap-override: normal;
-}
-
-@font-face {
-  font-family: 'VolvoBroadProDigital Fallback';
-  src: local('Noto Sans');
-  font-style: normal;
-  font-weight: 400;
-  ascent-override: 100%;
-  descent-override: 25%;
-  line-gap-override: 0%;
-  size-adjust: 84%;
-}
-
-@font-face {
-  font-family: 'fontawesome Fallback';
-  font-style: normal;
-  font-weight: 400;
-  src: local('Noto Sans');
-  ascent-override: 93.75%;
-  descent-override: 6.25%;
-  line-gap-override: 0%;
-  size-adjust: 100%;
-}
-
 :root {
   /* fonts */
-  --ff-fallback-default: 'Noto Sans', sans-serif;
-  --ff-volvo-novum-medium: 'VolvoNovum-Medium', 'VolvoNovum-Medium Fallback', var(--ff-fallback-default);
-  --ff-volvo-novum: 'VolvoNovum', 'VolvoNovum Fallback', var(--ff-fallback-default);
-  --ff-volvo-broadprodigital: 'VolvoBroadProDigital', 'VolvoBroadProDigital Fallback', var(--ff-fallback-default);
-  --ff-fontawesome: 'fontawesome', 'fontawesome Fallback';
+  --ff-fallback-default: sans-serif;
+  --ff-volvo-novum-medium: 'VolvoNovum-Medium', var(--ff-fallback-default);
+  --ff-volvo-novum: 'VolvoNovum', var(--ff-fallback-default);
+  --ff-volvo-broadprodigital: 'VolvoBroadProDigital', var(--ff-fallback-default);
+  --ff-fontawesome: 'fontawesome';
   --font-family-body: var(--ff-volvo-novum);
   --font-family-heading: var(--ff-volvo-novum-medium);
   --font-family-fixed: 'Roboto Mono', menlo, consolas, 'Liberation Mono', monospace;
