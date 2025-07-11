@@ -83,6 +83,7 @@ export default async function decorate(block) {
           if (picture) {
             requestAnimationFrame(() => {
               const videoWithPoster = createVideoWithPoster(videoLink.href, picture, `${blockName}--video-with-poster`, { controls: false });
+              videoWithPoster.classList.add(`${blockName}__media`);
               mediaSection.append(videoWithPoster);
             });
           } else {
@@ -99,6 +100,7 @@ export default async function decorate(block) {
                 loop: true,
                 playsinline: true,
               });
+              videoEl.classList.add(`${blockName}__media`);
               container.appendChild(videoEl);
 
               if (block.classList.contains(`${blockName}--mute-controls`)) {
@@ -132,18 +134,6 @@ export default async function decorate(block) {
 
   const medias = block.querySelectorAll(['img', 'video', 'iframe']);
   medias.forEach((media) => media.classList.add(`${blockName}__media`));
-
-  requestAnimationFrame(() => {
-    const renderedVideos = block.querySelectorAll(['video']);
-
-    renderedVideos.forEach((video) => {
-      if (video.classList.contains('video-js')) {
-        video.parentElement.classList.add(`${blockName}__media`);
-      } else {
-        video.classList.add(`${blockName}__media`);
-      }
-    });
-  });
 
   videoLinks.forEach((videoLink) => videoLink.remove());
   unwrapDivs(block, { ignoreDataAlign: true });
