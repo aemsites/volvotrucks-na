@@ -69,7 +69,7 @@ export default async function decorate(block) {
         heading.classList.add(`${blockName}__${hasPretitle && idx < 1 ? 'pretitle' : 'heading'}`);
       });
     } else {
-      mediaSection = createNewSection(blockName, 'media', cell);
+      mediaSection = createNewSection(blockName, 'media-section', cell);
       if (block.classList.contains(`${blockName}--media-gallery`)) {
         buildMediaGallery(mediaSection);
       }
@@ -83,6 +83,7 @@ export default async function decorate(block) {
           if (picture) {
             requestAnimationFrame(() => {
               const videoWithPoster = createVideoWithPoster(videoLink.href, picture, `${blockName}--video-with-poster`, { controls: false });
+              videoWithPoster.classList.add(`${blockName}__media`);
               mediaSection.append(videoWithPoster);
             });
           } else {
@@ -99,6 +100,7 @@ export default async function decorate(block) {
                 loop: true,
                 playsinline: true,
               });
+              videoEl.classList.add(`${blockName}__media`);
               container.appendChild(videoEl);
 
               if (block.classList.contains(`${blockName}--mute-controls`)) {
@@ -110,7 +112,7 @@ export default async function decorate(block) {
       }
     }
 
-    // If cell number is odd(i.e. a 'media' cell) and not the last cell
+    // If cell number is odd (i.e., a 'media' cell) and not the last cell
     if (!isLastCell && !isCellNumberEven) {
       // Wrap with a row if the number of cells is more than 2.
       if (cells.length > 2) {
@@ -130,22 +132,9 @@ export default async function decorate(block) {
     }
   });
 
-  const medias = block.querySelectorAll(['img', 'video', 'iframe']);
-  medias.forEach((media) => media.classList.add(`${blockName}__media`));
-
-  requestAnimationFrame(() => {
-    const renderedVideos = block.querySelectorAll(['video']);
-
-    renderedVideos.forEach((video) => {
-      if (video.classList.contains('video-js')) {
-        video.parentElement.classList.add(`${blockName}__media`);
-      } else {
-        video.classList.add(`${blockName}__media`);
-      }
-    });
-  });
-
-  videoLinks.forEach((videoLink) => videoLink.remove());
+  if (videoLinks) {
+    videoLinks.forEach((videoLink) => videoLink.remove());
+  }
   unwrapDivs(block, { ignoreDataAlign: true });
   removeEmptyTags(block);
 }
