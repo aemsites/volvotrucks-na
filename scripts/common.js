@@ -99,7 +99,7 @@ export function createNewSection(blockName, sectionName, node) {
  * Waits for a descendant matching selector to exist within parent AND be in the DOM,
  * then calls callback(element).
  */
-export function waitForElementInDom(parent, selector, callback) {
+export function waitForElementInDOM(parent, selector, callback) {
   const el = parent.querySelector(selector);
   if (el && document.body.contains(el)) {
     callback(el);

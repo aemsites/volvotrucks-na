@@ -5,7 +5,7 @@ import {
   removeEmptyTags,
   unwrapDivs,
   variantsClassesToBEM,
-  waitForElementInDom,
+  waitForElementInDOM,
 } from '../../scripts/common.js';
 import { addMuteControls, createVideoWithPoster, isVideoLink, selectVideoLink, createVideo } from '../../scripts/video-helper.js';
 
@@ -83,11 +83,14 @@ export default async function decorate(block) {
           if (picture) {
             requestAnimationFrame(() => {
               const videoWithPoster = createVideoWithPoster(videoLink.href, picture, `${blockName}--video-with-poster`, { controls: false });
-              videoWithPoster.classList.add(`${blockName}__media`);
+              const videoEl = videoWithPoster.querySelector('video');
+              if (videoEl) {
+                videoEl.classList.add(`${blockName}__media`);
+              }
               mediaSection.append(videoWithPoster);
             });
           } else {
-            waitForElementInDom(block, `.${blockName}__media-section`, (mediaSection) => {
+            waitForElementInDOM(block, `.${blockName}__media-section`, (mediaSection) => {
               let container = mediaSection.querySelector(`.${blockName}__video`);
               if (!container) {
                 container = document.createElement('div');
