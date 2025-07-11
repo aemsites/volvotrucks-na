@@ -93,8 +93,7 @@ export default async function decorate(block) {
             waitForElementInDOM(block, `.${blockName}__media-section`, (mediaSection) => {
               let container = mediaSection.querySelector(`.${blockName}__video`);
               if (!container) {
-                container = document.createElement('div');
-                container.classList.add(`${blockName}__video`);
+                container = createElement('div', { classes: `${blockName}__video` });
                 mediaSection.append(container);
               }
               const videoEl = createVideo(videoLink.getAttribute('href'), `${blockName}__video`, {
