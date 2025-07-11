@@ -1,13 +1,13 @@
 import {
   addClassIfChildHasClass,
-  addVideoToSection,
   createElement,
   createNewSection,
   removeEmptyTags,
   unwrapDivs,
   variantsClassesToBEM,
+  waitForElementInDom,
 } from '../../scripts/common.js';
-import { addMuteControls, createVideoWithPoster, isVideoLink, selectVideoLink } from '../../scripts/video-helper.js';
+import { addMuteControls, createVideoWithPoster, isVideoLink, selectVideoLink, createVideo } from '../../scripts/video-helper.js';
 
 const blockName = 'v2-media-with-text';
 const variantClasses = [
@@ -86,10 +86,23 @@ export default async function decorate(block) {
               mediaSection.append(videoWithPoster);
             });
           } else {
-            requestAnimationFrame(() => {
-              mediaSection = addVideoToSection(blockName, mediaSection, videoLink);
+            waitForElementInDom(block, `.${blockName}__media-section`, (mediaSection) => {
+              let container = mediaSection.querySelector(`.${blockName}__video`);
+              if (!container) {
+                container = document.createElement('div');
+                container.classList.add(`${blockName}__video`);
+                mediaSection.append(container);
+              }
+              const videoEl = createVideo(videoLink.getAttribute('href'), `${blockName}__video`, {
+                muted: true,
+                autoplay: true,
+                loop: true,
+                playsinline: true,
+              });
+              container.appendChild(videoEl);
+
               if (block.classList.contains(`${blockName}--mute-controls`)) {
-                addMuteControls(mediaSection);
+                addMuteControls(container);
               }
             });
           }
