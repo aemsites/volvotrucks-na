@@ -672,6 +672,24 @@ function toggleNovalidateOnInput(element, novalidate = true) {
   }
 }
 
+function validateSubmitButton(data) {
+  let hasAction = true;
+  let hasSubmit = false;
+  data.forEach((fd) => {
+    if (fd.Type === 'submit') {
+      hasSubmit = true;
+      if (!fd.Action || fd.Action.trim() === '') {
+        console.warn('%cSubmit button%c is missing an action attribute.', 'color: red;', 'color: inherit;');
+        hasAction = false;
+      }
+    }
+  });
+  if (!hasSubmit) {
+    console.warn('Form is missing a %csubmit button.%c No submit Type has been found', 'color: red;', 'color: inherit;');
+  }
+  return hasSubmit && hasAction;
+}
+
 async function createForm(formURL) {
   const { pathname } = new URL(formURL);
   const data = await fetchForm(pathname);
@@ -681,7 +699,10 @@ async function createForm(formURL) {
       classes: 'custom-form__error',
       content: 'Error fetching form data',
     });
+  } else if (!validateSubmitButton(data)) {
+    return;
   }
+
   const form = createElement('form');
   const customDropdowns = [];
   const dependencies = []; // these will be used to show/hide the fields based on the dependencies
@@ -825,7 +846,7 @@ function createHoneypotField() {
 
 export default async function decorate(block) {
   variantsClassesToBEM(block.classList, variantClasses, blockName);
-  const formLink = block.querySelector('a[href$=".json"]');
+  const formLink = block.querySelector('a[href$=".json"]'); // this is the form fields config file
   const thankYouPage = [...block.querySelectorAll('a')].filter((a) => a.href.includes('thank-you'));
   const formTitleContainer = block.querySelector(':scope > div:first-child > div');
   const isFormLinkInsideTitleContainer = formLink && formTitleContainer.contains(formLink);
@@ -833,16 +854,25 @@ export default async function decorate(block) {
   if (formLink) {
     decorateTitles(block);
     const form = await createForm(formLink.href);
+    if (!form) {
+      console.error('%cForm%c could not be created. No form data found.', 'color:red', 'color:inherit', { formLink, form });
+      // remove the setup rows from the block if the form could not be created
+      block.innerText = '';
+      return;
+    }
     if (thankYouPage.length > 0) {
       form.dataset.customMessage = `${thankYouPage[0].href}.plain.html`;
       block.lastElementChild.remove();
     }
+
     form.append(createHoneypotField());
+
     // clean the content block before appending the form
     block.innerText = '';
     if (formTitleContainer && !isFormLinkInsideTitleContainer) {
       addTitleText(formTitleContainer, block);
     }
+
     block.append(form);
 
     // in case the form has any kind of error, the form will be replaced with the error message
@@ -850,5 +880,8 @@ export default async function decorate(block) {
       console.error('Unhandled rejection. Error submitting form:', { reason, error });
       submissionFailure();
     });
+  } else {
+    console.error('%cForm link%c is missing or does not end with .json', 'color:red', 'color:inherit', { formLink });
+    block.innerText = '';
   }
 }
