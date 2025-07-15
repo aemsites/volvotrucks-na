@@ -48,7 +48,7 @@ module.exports = {
 
   plugins: [
     new HtmlWebpackPlugin({
-      template: './head.html',
+      title: 'Volvo NA',
     }),
     new MiniCssExtractPlugin({
       filename: '[name].css',
@@ -98,6 +98,7 @@ module.exports = {
       },
     },
     minimize: true,
+    minimizer: [new TerserPlugin()],
   },
 
   // Ignore files during watch mode

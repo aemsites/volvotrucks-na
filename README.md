@@ -32,8 +32,10 @@ npm tst
 
 ## Local development
 
-1. Configure your local environmen to be able to install the Volvo Design System packages.
+1. Configure your local environment to be able to install the Volvo Design System packages.
 Follow the guide [here](https://developer.designsystem.volvogroup.com/?path=/docs/web-getting-started-installation--docs)
+2. Set the PAT token and accessible email in user level `.npmrc` not project `.npmrc` to avoid authentication issues. Please check [here](https://developer.designsystem.volvogroup.com/?path=/docs/web-discover-more-authentication-azure-devops--docs) for more details
+
 *NOTE:* If on Mac, when requested to install the package `vsts-npm-auth`, please install instead the [better-vsts-npm-auth](https://www.npmjs.com/package/better-vsts-npm-auth)
 
 
