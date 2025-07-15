@@ -6,7 +6,7 @@
 .v2-text__sub-title {
   font: var(--f-heading-5-font-size) / var(--f-heading-5-line-height) var(--ff-volvo-novum-medium);
   letter-spacing: 0.25px;
-  margin: 0;
+  margin-bottom: 8px;
 }
 
 .v2-text__sub-title {
@@ -70,6 +70,7 @@
   .v2-text__title,
   .v2-text__sub-title {
     font-size: var(--f-heading-4-font-size);
+    margin-bottom: 16px;
   }
 
   .v2-text--double {
