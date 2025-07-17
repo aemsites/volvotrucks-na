@@ -3,6 +3,7 @@ import { ffetch } from '../../scripts/lib-ffetch.js';
 import { createList, splitTags } from '../../scripts/magazine-press.js';
 import { createOptimizedPicture, readBlockConfig, toClassName, loadCSS } from '../../scripts/aem.js';
 import createPagination from '../../common/pagination/pagination.js';
+import { fetchPressReleases } from '../../scripts/services/press-release.service.js';
 
 const stopWords = ['a', 'an', 'the', 'and', 'to', 'for', 'i', 'of', 'on', 'into'];
 
@@ -43,16 +44,67 @@ function createFilter(pressReleases, activeFilters, createDropdown, createFullTe
   return [fullText, tagFilter];
 }
 
+const parsePressRelease = (item) => {
+  const isImageLink = (link) => `${link}`.split('?')[0].match(/\.(jpeg|jpg|gif|png|svg|bmp|webp)$/) !== null;
+
+  const getDefaultImage = () => {
+    const logoImageURL = '/media/logo/media_10a115d2f3d50f3a22ecd2075307b4f4dcaedb366.jpeg';
+    return getOrigin() + logoImageURL;
+  };
+
+  const { image } = item.metadata;
+
+  return {
+    ...item.metadata,
+    image: isImageLink(image) ? getOrigin() + image : getDefaultImage(),
+    path: item.metadata?.url,
+    isDefaultImage: !isImageLink(image),
+  };
+};
+
+let passes = 1;
+let temporaryOffset = 0;
+
+const processPressReleases = async (params = {}) => {
+  const rawData = await fetchPressReleases(params);
+
+  if (!rawData) {
+    console.error('No data returned from fetchPressReleases');
+    return [];
+  }
+  const { items, count } = rawData;
+
+  if (!items || items.length === 0) {
+    console.error('No items returned in raw data:', rawData);
+    return [];
+  }
+
+  const pressReleases = items.map((item) => parsePressRelease(item));
+
+  if (pressReleases.length < count) {
+    temporaryOffset = temporaryOffset < count ? 100 * passes : count - temporaryOffset;
+    passes = passes + 1;
+
+    const morePressReleases = await processPressReleases({
+      ...params,
+      offset: temporaryOffset,
+    });
+    return pressReleases.concat(morePressReleases);
+  }
+
+  return pressReleases;
+};
+
 function getPressReleases(limit, filter) {
-  const indexUrl = new URL(`${getLanguagePath()}press-releases.json`, getOrigin());
-  let pressReleases = ffetch(indexUrl);
+  const params = { sort: 'PUBLISH_DATE_DESC' };
+  let pressReleases = processPressReleases(params);
   if (filter) {
     pressReleases = pressReleases.filter(filter);
   }
   if (limit) {
     pressReleases = pressReleases.limit(limit);
   }
-  return pressReleases.all();
+  return pressReleases;
 }
 
 function buildPressReleaseArticle(entry) {
@@ -122,7 +174,7 @@ export default async function decorate(block) {
   } else {
     pressReleases = await getPressReleases();
   }
-
+  console.log(pressReleases);
   // Set the chunks of the array for future pagination
   const chunkedPressReleases = reducePressReleaseList(pressReleases, limitAmount);
 
