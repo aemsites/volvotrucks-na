@@ -362,6 +362,10 @@ body:has(.modal--reveal[aria-hidden='false']) :where(._hj-widget-container, .ot-
   padding-top: 64px;
 }
 
+.modal-content .v2-text-wrapper:first-child .v2-text__title {
+  font-size: 32px;
+}
+
 @media screen and (min-width: 1200px) {
   /* stylelint-disable-next-line selector-not-notation */
   .modal-content .v2-text-wrapper:not(:has(.v2-text--double, .v2-text--title-small)):not(:first-child) {
@@ -370,5 +374,9 @@ body:has(.modal--reveal[aria-hidden='false']) :where(._hj-widget-container, .ot-
 
   .modal-content .v2-text .v2-text__title {
     margin-bottom: 16px;
+  }
+  
+  .modal-content .v2-text-wrapper:first-child .v2-text__title {
+    font-size: 48px;
   }
 }
