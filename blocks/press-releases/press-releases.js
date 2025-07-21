@@ -1,4 +1,4 @@
-import { createElement, getOrigin, getDateFromTimestamp } from '../../scripts/common.js';
+import { createElement, getOrigin, getDateFromTimestamp, getTextLabel } from '../../scripts/common.js';
 import { createList, splitTags } from '../../scripts/magazine-press.js';
 import { createOptimizedPicture, loadCSS } from '../../scripts/aem.js';
 import createPagination from '../../common/pagination/pagination.js';
@@ -28,14 +28,8 @@ function filterPressReleases(pressReleases, activeFilters) {
 }
 
 function createFilter(pressReleases, activeFilters, createDropdown, createFullText) {
-  const tags = Array.from(new Set(pressReleases.flatMap((n) => n.filterTag).sort()));
-  const fullText = createFullText('search', activeFilters.search, 'type here to search');
-  const tagFilter = createDropdown(tags, activeFilters.tags, 'tags', 'All', 'filter by tags');
-  const tagSelection = tagFilter.querySelector('select');
-  tagSelection.addEventListener('change', (e) => {
-    e.target.form.submit();
-  });
-  return [fullText, tagFilter];
+  const fullText = createFullText('search', activeFilters.search, getTextLabel('PressReleases:SearchPlaceholder'));
+  return [fullText];
 }
 
 const parsePressRelease = (item) => {

@@ -418,6 +418,10 @@
     {
       "Key": "charts:subtitle",
       "Text": "Engine Ratings"
+    },
+    {
+      "Key": "PressReleases:SearchPlaceholder",
+      "Text": "Type here to search"
     }
   ],
   ":type": "sheet"
