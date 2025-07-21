@@ -208,6 +208,12 @@ const initializeSearchHandlers = (searchContainer) => {
 
   const showAutoSuggestions = (e) => {
     const term = e.target.value;
+
+    if (term.trim().length < 2) {
+      listEl.textContent = '';
+      return;
+    }
+
     const list = listEl.getElementsByTagName('li');
     if (e.key === 'Enter') {
       submitSearchTerm();
