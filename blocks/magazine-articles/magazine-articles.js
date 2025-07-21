@@ -61,6 +61,8 @@ const processMagazineArticles = async (params = {}) => {
 
   const articles = items.map((item) => parseArticleData(item));
 
+  // TODO: fix this since it wont bring all articles if count > 100
+  // OpenSearch limit is 100 items. See press.releases.service.js
   if (!params.limit && articles.length < count) {
     const moreArticles = await processMagazineArticles({
       ...params,
