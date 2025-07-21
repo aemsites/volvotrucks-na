@@ -3,7 +3,7 @@ import { autosuggestQuery, fetchSearchData, TENANT } from '../../scripts/search-
 
 const autoSuggestClass = 'autosuggest-results-item-highlighted';
 
-export function fetchAutosuggest(term, autosuggestEle, rowEle, func) {
+export function fetchAutosuggest(term, autosuggestEle, rowEle, func, showSearchIcon) {
   const fragmentRange = document.createRange();
   const locale = getLocale();
   const language = locale.split('-')[0].toUpperCase();
@@ -32,9 +32,18 @@ export function fetchAutosuggest(term, autosuggestEle, rowEle, func) {
       if (terms.length) {
         terms.forEach((val) => {
           const row = createElement(rowEle.tag, { classes: rowEle.class, props: rowEle.props });
-          const suggestFragment = fragmentRange.createContextualFragment(`<b>
-            ${val}
-          </b>`);
+          let suggestionContent = `<b>${val}</b>`;
+          if (showSearchIcon) {
+            suggestionContent = `
+              <span class="icon icon-search-icon">
+                <svg xmlns="http://www.w3.org/2000/svg">
+                  <use href="#icons-sprite-search-icon"></use>
+                </svg>
+              </span>
+              <span>${val}</span>
+            `;
+          }
+          const suggestFragment = fragmentRange.createContextualFragment(suggestionContent);
           row.appendChild(suggestFragment);
 
           row.onclick = () => func(val);

@@ -1,4 +1,5 @@
 import {
+  debounce,
   decorateIcons,
   getPlaceholders,
   getTextLabel,
@@ -8,6 +9,7 @@ import {
   MAGAZINE_CONFIGS,
 } from '../../scripts/common.js';
 import { topicSearchQuery, fetchSearchData, TENANT } from '../../scripts/search-api.js';
+import { fetchAutosuggest, handleArrowDown, handleArrowUp } from '../search/autosuggest.js';
 
 const blockName = 'v2-article-search';
 const filterContainerClass = `${blockName}__filter-container`;
@@ -83,11 +85,21 @@ const buildFilterElement = () =>
           </span>
         </div>
         <div class="${blockName}__filter-input">
-          <span class="icon icon-search-icon"></span>
-          <input type="text" id="search" name="search" placeholder="${searchPlaceholder}" />
-          <label for="search" class="${blockName}__input-label">${searchPlaceholder}</label>
-          <button type="button" class="${blockName}__clear-button">clear</button>
-          <span class="icon icon-close"></span>
+          <div aria-expanded="false" aria-haspopup="  "
+              aria-owns="autosuggest-autosuggest__results" class="${blockName}__input-container">
+            <span class="icon icon-search-icon"></span>
+            <input autocomplete="off" aria-autocomplete="list" autofocus="autofocus" 
+              aria-controls="autosuggest-autosuggest__results" type="text" id="search"
+              name="search" placeholder="${searchPlaceholder}" />
+            <label for="search" class="${blockName}__input-label">${searchPlaceholder}</label>
+            <button type="button" class="${blockName}__clear-button">clear</button>
+            <span class="icon icon-close"></span>
+          </div>
+          <div id="autosuggest-autosuggest__results" class="autosuggest__results-container">
+            <div aria-labelledby="autosuggest" class="autosuggest__results"> 
+              <ul role="listbox"></ul>
+            </div>
+          </div>
         </div>
       </fieldset>
     </form>
@@ -166,21 +178,82 @@ const initializeSearchHandlers = (searchContainer) => {
   const searchInput = searchContainer.querySelector('input[type="text"]');
   const clearButton = searchContainer.querySelector(`.${blockName}__clear-button`);
   const formElement = searchContainer.querySelector('form');
+  const listEl = searchContainer.querySelector('.autosuggest__results-container ul');
+  const input = document.getElementById('search');
 
   const toggleClearButton = () => {
     clearButton.classList.toggle('active', !!searchInput.value);
+  };
+
+  let liSelected;
+  let next;
+  let index = -1;
+
+  const delayFetchData = debounce((term) =>
+    fetchAutosuggest(
+      term,
+      listEl,
+      {
+        tag: 'li',
+        class: 'autosuggest__results-item',
+        props: {
+          role: 'option',
+          'data-section-name': 'default',
+        },
+      },
+      searchArticles,
+      true,
+    ),
+  );
+
+  const showAutoSuggestions = (e) => {
+    const term = e.target.value;
+    const list = listEl.getElementsByTagName('li');
+    if (e.key === 'Enter') {
+      submitSearchTerm();
+    } else if (e.key === 'Escape') {
+      listEl.textContent = '';
+    } else if (['ArrowUp', 'ArrowDown'].includes(e.key)) {
+      let returnObj;
+
+      if (e.key === 'ArrowUp') {
+        returnObj = handleArrowUp({
+          list,
+          liSelected,
+          index,
+          next,
+        });
+      } else {
+        returnObj = handleArrowDown({
+          list,
+          liSelected,
+          index,
+          next,
+        });
+      }
+
+      liSelected = returnObj.liSelected;
+      index = returnObj.index;
+      next = returnObj.next;
+      input.value = liSelected.firstElementChild.textContent.replace(/[ ]{2,}/g, '');
+    } else {
+      delayFetchData(term);
+    }
   };
 
   const clearInput = () => {
     searchInput.value = '';
     toggleClearButton();
     searchInput.focus();
+    listEl.textContent = '';
   };
 
   const handleOutsideClick = (event) => {
     if (!searchContainer.contains(event.target)) {
       collapseSearchContainer();
     }
+
+    listEl.textContent = '';
   };
 
   const collapseSearchContainer = () => {
@@ -196,20 +269,25 @@ const initializeSearchHandlers = (searchContainer) => {
     document.addEventListener('click', handleOutsideClick, { capture: true });
   };
 
+  const searchArticles = (term) => {
+    currentURL.search = magazineParam;
+    currentURL.searchParams.set('search', term);
+    window.location.href = currentURL.href;
+    collapseSearchContainer();
+  };
+
   const submitSearchTerm = (event) => {
     event.preventDefault();
     const searchTerm = searchInput.value.trim();
     if (searchTerm) {
-      currentURL.search = magazineParam;
-      currentURL.searchParams.set('search', searchTerm);
-      window.location.href = currentURL.href;
-      collapseSearchContainer();
+      searchArticles(searchTerm);
     }
   };
 
   if (searchInputWrapper && searchInput && clearButton && formElement) {
     searchInputWrapper.addEventListener('click', expandSearchContainer);
     searchInput.addEventListener('input', toggleClearButton);
+    searchInput.addEventListener('keyup', showAutoSuggestions);
     clearButton.addEventListener('click', clearInput);
     formElement.addEventListener('submit', submitSearchTerm);
 
