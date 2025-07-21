@@ -313,6 +313,11 @@ a.v2-article-search__filter-link:hover {
   padding-inline: 16px;
 }
 
+.autosuggest__results-container .autosuggest__results ul li:hover {
+  background-color: #f2f2f2;
+  color: var(--text-color);
+}
+
 .v2-article-search__filter-input .autosuggest__results-container .autosuggest__results .autosuggest__results-item .icon {
   display: contents;
 }

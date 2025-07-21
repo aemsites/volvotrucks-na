@@ -235,7 +235,7 @@ const initializeSearchHandlers = (searchContainer) => {
       liSelected = returnObj.liSelected;
       index = returnObj.index;
       next = returnObj.next;
-      input.value = liSelected.firstElementChild.textContent.replace(/[ ]{2,}/g, '');
+      input.value = liSelected.textContent.replace(/[ ]{2,}/g, '');
     } else {
       delayFetchData(term);
     }

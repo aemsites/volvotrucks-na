@@ -40,7 +40,7 @@ export function fetchAutosuggest(term, autosuggestEle, rowEle, func, showSearchI
                   <use href="#icons-sprite-search-icon"></use>
                 </svg>
               </span>
-              <span>${val}</span>
+              <span>${val.replaceAll(term, `<b>${term}</b>`)}</span>
             `;
           }
           const suggestFragment = fragmentRange.createContextualFragment(suggestionContent);
