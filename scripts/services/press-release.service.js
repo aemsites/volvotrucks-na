@@ -2,35 +2,6 @@ import { getLocale } from '../common.js';
 import { fetchSearchData, pressReleaseQuery, TENANT } from '../search-api.js';
 
 /**
- * Sorts an array of articles by a specified date field within the `metadata` object.
- * @param {Array<Object>} articles - The array of article objects to be sorted.
- * Each article must have a `metadata` property.
- * @param {string} dateField - The name of the date field within the `metadata` object to sort by
- * (e.g., "lastModified" or "publishDate").
- * @returns {Array<Object>} A new array of articles sorted in descending order by the specified
- * date field. Articles with invalid or missing date fields are excluded from the result.
- */
-export const sortArticlesByDateField = (articles, dateField) => {
-  const articlesWithTimestamps = articles.map((article) => {
-    const rawTimestamp = article.metadata?.[dateField];
-    const timestamp = rawTimestamp ? new Date(rawTimestamp * 1000).getTime() : null;
-
-    if (timestamp === null) {
-      console.warn(`Date field "${dateField}" not found or invalid in metadata for article`, article);
-    }
-
-    return {
-      ...article,
-      timestamp,
-    };
-  });
-
-  const sortedArticles = articlesWithTimestamps.filter((article) => article.timestamp !== null).sort((a, b) => b.timestamp - a.timestamp);
-
-  return sortedArticles;
-};
-
-/**
  * Fetches magazine articles based on the provided criteria.
  *
  * @param {Object} options - Options for fetching magazine articles.

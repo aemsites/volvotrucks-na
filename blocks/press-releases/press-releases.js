@@ -1,7 +1,6 @@
-import { createElement, getLanguagePath, getOrigin, getDateFromTimestamp } from '../../scripts/common.js';
-import { ffetch } from '../../scripts/lib-ffetch.js';
+import { createElement, getOrigin, getDateFromTimestamp } from '../../scripts/common.js';
 import { createList, splitTags } from '../../scripts/magazine-press.js';
-import { createOptimizedPicture, readBlockConfig, toClassName, loadCSS } from '../../scripts/aem.js';
+import { createOptimizedPicture, loadCSS } from '../../scripts/aem.js';
 import createPagination from '../../common/pagination/pagination.js';
 import { fetchPressReleases } from '../../scripts/services/press-release.service.js';
 
@@ -9,18 +8,13 @@ const stopWords = ['a', 'an', 'the', 'and', 'to', 'for', 'i', 'of', 'on', 'into'
 
 function createPressReleaseFilterFunction(activeFilters) {
   return (pr) => {
-    if (activeFilters.tags) {
-      if (!toClassName(pr.tags).includes(activeFilters.tags)) {
-        return false;
-      }
-    }
     if (activeFilters.search) {
       const terms = activeFilters.search
         .toLowerCase()
         .split(' ')
         .map((e) => e.trim())
         .filter((e) => !!e);
-      const text = pr.content.toLowerCase();
+      const text = pr.title.toLowerCase();
       if (!terms.every((term) => !stopWords.includes(term) && text.includes(term))) {
         return false;
       }
@@ -95,15 +89,10 @@ const processPressReleases = async (params = {}) => {
   return pressReleases;
 };
 
-function getPressReleases(limit, filter) {
+function getPressReleases() {
   const params = { sort: 'PUBLISH_DATE_DESC' };
-  let pressReleases = processPressReleases(params);
-  if (filter) {
-    pressReleases = pressReleases.filter(filter);
-  }
-  if (limit) {
-    pressReleases = pressReleases.limit(limit);
-  }
+  const pressReleases = processPressReleases(params);
+
   return pressReleases;
 }
 
@@ -133,14 +122,6 @@ function createPressReleaseList(
   createList(pressReleases, filter, filterFactory, articleFactory, limit, block);
 }
 
-function createFeaturedPressReleaseList(block, pressReleases) {
-  createPressReleaseList(block, pressReleases, { filter: null, filterFactory: null });
-}
-
-function createLatestPressReleases(block, pressReleases) {
-  createPressReleaseList(block, pressReleases, { filterFactory: null });
-}
-
 function createAllPressReleases(block, pressReleases) {
   createPressReleaseList(block, pressReleases, { limit: 10 });
 }
@@ -157,27 +138,11 @@ function reducePressReleaseList(pressReleases, limit) {
 }
 
 export default async function decorate(block) {
-  const isFeatured = block.classList.contains('featured');
-  const isLatest = !isFeatured && block.classList.contains('latest');
   const limitAmount = 10;
-  let pressReleases;
+  const pressReleases = await getPressReleases();
 
-  if (isFeatured) {
-    const links = [...block.firstElementChild.querySelectorAll('a')]
-      .map(({ href }) => (href ? new URL(href).pathname : null))
-      .filter((pathname) => !!pathname);
-    pressReleases = await getPressReleases(links.length, ({ path }) => links.indexOf(path) >= 0);
-  } else if (isLatest) {
-    const cfg = readBlockConfig(block);
-    const filter = cfg.tags && createPressReleaseFilterFunction({ tags: toClassName(cfg.tags) });
-    pressReleases = await getPressReleases(3, filter);
-  } else {
-    pressReleases = await getPressReleases();
-  }
-  console.log(pressReleases);
   // Set the chunks of the array for future pagination
   const chunkedPressReleases = reducePressReleaseList(pressReleases, limitAmount);
-
   if (chunkedPressReleases && chunkedPressReleases.length > 0) {
     let contentArea = block.querySelector('.pagination-content');
     if (!contentArea) {
@@ -186,13 +151,7 @@ export default async function decorate(block) {
     }
     const baseURL = window.location.origin;
     await loadCSS(`${baseURL}/common/pagination/pagination.css`);
-    if (isFeatured) {
-      createPagination(chunkedPressReleases, block, createFeaturedPressReleaseList, contentArea, 0);
-    } else if (isLatest) {
-      createPagination(chunkedPressReleases, block, createLatestPressReleases, contentArea, 0);
-    } else {
-      createPagination(chunkedPressReleases, block, createAllPressReleases, contentArea, 0);
-    }
+    createPagination(chunkedPressReleases, block, createAllPressReleases, contentArea, 0);
   } else {
     console.error('No chunked items created.');
   }
