@@ -59,7 +59,7 @@
 .block.press-releases .search-field {
   display: grid;
   grid-template-columns: 1fr 2.5em;
-  margin-bottom: 0.75em;
+  height: 54px;
 }
 
 .block.press-releases .search-field input {
@@ -139,8 +139,10 @@
 @media screen and (min-width: 744px) {
   .block.press-releases .list-filter fieldset {
     display: flex;
-    justify-content: center;
+    justify-content: flex-start;
     gap: 30px;
+    padding: 0;
+    margin: 0 0 48px;
   }
 
   .block.press-releases .list-filter fieldset > div {
