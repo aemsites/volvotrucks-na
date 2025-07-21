@@ -206,11 +206,15 @@ const initializeSearchHandlers = (searchContainer) => {
     ),
   );
 
+  const clearAutosuggestions = () => {
+    listEl.textContent = '';
+  };
+
   const showAutoSuggestions = (e) => {
     const term = e.target.value;
 
     if (term.trim().length < 2) {
-      listEl.textContent = '';
+      clearAutosuggestions();
       return;
     }
 
@@ -251,15 +255,14 @@ const initializeSearchHandlers = (searchContainer) => {
     searchInput.value = '';
     toggleClearButton();
     searchInput.focus();
-    listEl.textContent = '';
+    clearAutosuggestions();
   };
 
   const handleOutsideClick = (event) => {
     if (!searchContainer.contains(event.target)) {
       collapseSearchContainer();
     }
-
-    listEl.textContent = '';
+    clearAutosuggestions();
   };
 
   const collapseSearchContainer = () => {
