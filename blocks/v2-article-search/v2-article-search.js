@@ -22,6 +22,7 @@ const blockVariants = ['black', 'gray'];
 await getPlaceholders();
 const filterDefault = getTextLabel('filterDefault');
 const searchPlaceholder = getTextLabel('searchPlaceholder');
+const clearPlaceholder = getTextLabel('clear');
 
 const locale = getLocale();
 const language = locale.split('-')[0].toUpperCase();
@@ -85,18 +86,17 @@ const buildFilterElement = () =>
           </span>
         </div>
         <div class="${blockName}__filter-input">
-          <div aria-expanded="false" aria-haspopup="  "
-              aria-owns="autosuggest-autosuggest__results" class="${blockName}__input-container">
+          <div id="autosuggest-magazine"  aria-expanded="false" class="${blockName}__input-container">
             <span class="icon icon-search-icon"></span>
-            <input autocomplete="off" aria-autocomplete="list" autofocus="autofocus" 
+            <input aria-haspopup="listbox" autocomplete="off" aria-autocomplete="list" 
               aria-controls="autosuggest-autosuggest__results" type="text" id="search"
               name="search" placeholder="${searchPlaceholder}" />
             <label for="search" class="${blockName}__input-label">${searchPlaceholder}</label>
-            <button type="button" class="${blockName}__clear-button">clear</button>
+            <button type="button" class="${blockName}__clear-button" aria-label="${clearPlaceholder}">${clearPlaceholder}</button>
             <span class="icon icon-close"></span>
           </div>
           <div id="autosuggest-autosuggest__results" class="autosuggest__results-container">
-            <div aria-labelledby="autosuggest" class="autosuggest__results"> 
+            <div aria-labelledby="autosuggest-magazine" class="autosuggest__results"> 
               <ul role="listbox"></ul>
             </div>
           </div>
@@ -212,17 +212,18 @@ const initializeSearchHandlers = (searchContainer) => {
 
   const showAutoSuggestions = (e) => {
     const term = e.target.value;
+    const MIN_SEARCH_LENGTH = 2;
 
-    if (term.trim().length < 2) {
+    if (term.trim().length < MIN_SEARCH_LENGTH) {
       clearAutosuggestions();
       return;
     }
 
     const list = listEl.getElementsByTagName('li');
     if (e.key === 'Enter') {
-      submitSearchTerm();
+      submitSearchTerm(e);
     } else if (e.key === 'Escape') {
-      listEl.textContent = '';
+      clearAutosuggestions();
     } else if (['ArrowUp', 'ArrowDown'].includes(e.key)) {
       let returnObj;
 

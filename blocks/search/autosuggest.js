@@ -1,4 +1,4 @@
-import { createElement, getLocale } from '../../scripts/common.js';
+import { createElement, decorateIcons, getLocale } from '../../scripts/common.js';
 import { autosuggestQuery, fetchSearchData, TENANT } from '../../scripts/search-api.js';
 
 const autoSuggestClass = 'autosuggest-results-item-highlighted';
@@ -35,19 +35,14 @@ export function fetchAutosuggest(term, autosuggestEle, rowEle, func, showSearchI
           let suggestionContent = `<b>${val}</b>`;
           if (showSearchIcon) {
             suggestionContent = `
-              <span class="icon icon-search-icon">
-                <svg xmlns="http://www.w3.org/2000/svg">
-                  <use href="#icons-sprite-search-icon"></use>
-                </svg>
-              </span>
+              <span class="icon icon-search-icon"></span>
               <span>${val.replaceAll(term, `<b>${term}</b>`)}</span>
             `;
           }
           const suggestFragment = fragmentRange.createContextualFragment(suggestionContent);
           row.appendChild(suggestFragment);
-
           row.onclick = () => func(val);
-
+          decorateIcons(row);
           autosuggestEle.appendChild(row);
           autosuggestEle.classList.add('show');
         });

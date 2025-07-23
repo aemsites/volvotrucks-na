@@ -418,6 +418,10 @@
     {
       "Key": "charts:subtitle",
       "Text": "Engine Ratings"
+    },
+    {
+      "Key": "clear",
+      "Text": "clear"
     }
   ],
   ":type": "sheet"
