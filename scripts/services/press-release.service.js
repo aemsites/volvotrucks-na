@@ -24,7 +24,7 @@ import { fetchSearchData, pressReleaseQuery, TENANT } from '../search-api.js';
 export const fetchPressReleases = async ({
   tenant = TENANT,
   language = getLocale().split('-')[0].toUpperCase(),
-  q = 'Press releases',
+  q = 'Volvo',
   limit = 100,
   offset = 0,
   category = 'Press releases',

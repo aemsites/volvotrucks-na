@@ -1,115 +1,67 @@
-.block.press-releases article img {
+.press-releases__article img {
   display: block;
   width: 100%;
   aspect-ratio: 16 / 9;
   object-fit: cover;
-  margin-bottom: 1em;
+  margin-bottom: 16px;
 }
 
-.block.press-releases article p {
-  margin-top: unset;
+.press-releases__article p {
   margin-bottom: 8px;
-  font-size: 1.3rem;
+  font-size: var(--body-font-size-xxs);
 }
 
-.block.press-releases article span.date {
-  line-height: 2.1rem;
-  font-size: 1.4rem;
+.press-releases__article span.date {
+  font-size: var(--body-font-size-xs);
+  line-height: 20px;
   color: var(--volvo-text-light-gray);
 }
 
-.block.press-releases article h3 {
-  font-size: 2.4rem;
-  line-height: 3.2rem;
-  margin-top: 0.5em;
-  margin-bottom: 0.75em;
+.press-releases__article h3 {
+  margin: 12px 0 18px;
 }
 
-.block.press-releases article h3 a {
-  color: var(--volvo-text-gray);
+.press-releases__search-bar {
+  display: flex;
+  margin-bottom: 48px;
 }
 
-.block.press-releases p.button-container a {
-  background-color: unset;
-  color: var(--volvo-text-gray);
-  border-radius: 0;
-  border: 2px solid var(--volvo-text-gray);
-}
-
-.block.press-releases p.button-container {
-  text-align: center;
-  margin-top: 3em;
-  margin-bottom: 3em;
-}
-
-.block.press-releases p.button-container a:hover {
-  background-color: var(--c-grey-1);
-}
-
-.block.press-releases .list-filter input,
-.block.press-releases .list-filter select {
-  font-family: var(--ff-volvo-novum);
-  font-size: 1.6rem;
-}
-
-.block.press-releases .list-filter fieldset {
-  border: 0;
-}
-
-.block.press-releases .search-field {
-  display: grid;
-  grid-template-columns: 1fr 2.5em;
-  height: 54px;
-}
-
-.block.press-releases .search-field input {
-  width: 100%;
-  padding: 15px;
-  max-width: unset;
-  border: 0;
+.press-releases__search-bar input {
+  font-size: 1.8rem;
   margin-bottom: unset;
-  background-color: var(--input-background-color);
+  max-width: unset;
+  height: 64px;
+  padding: 15px 30px;
+  border: 1px solid transparent;
+  background-color: var(--background-light-gray);
 }
 
-.block.press-releases .search-field button {
+.press-releases__search-bar input::placeholder {
+  text-transform: uppercase;
+  opacity: 0.5;
+}
+
+.press-releases__search-bar input:hover {
+  outline-offset: -2px;
+}
+
+.press-releases__search-bar input:focus {
+  box-shadow: none;
+  outline: 0;
+}
+
+.press-releases__search-bar button {
   background-color: var(--c-cta-blue-default);
   color: var(--c-white);
   border: 0;
+  font-size: 16px;
+  min-width: 64px;
 }
 
-.block.press-releases .tags-field {
-  display: grid;
-  position: relative;
-  grid-template-columns: 1fr 68%;
-  align-items: center;
-  margin-bottom: 0.75em;
-}
-
-.block.press-releases .tags-field::after {
-  font-family: var(--ff-fontawesome);
-  color: var(--c-white);
-  content: '\f107';
-  position: absolute;
-  display: inline-block;
-  right: 20px;
-  top: 50%;
-  margin-top: -1.2rem;
-  line-height: 2.4rem;
-  font-size: 2.4rem;
-  pointer-events: none;
-}
-
-.block.press-releases .tags-field label {
-  font-size: 1.4rem;
-  justify-self: center;
-}
-
-.block.press-releases .tags-field select {
-  width: 100%;
-  appearance: none;
-  background-color: var(--c-cta-blue-default);
-  color: var(--c-white);
-  padding: 15px 40px 15px 15px;
+.press-releases__no-results-message {
+  font-size: var(--body-font-size-m);
+  text-align: center;
+  text-transform: uppercase;
 }
 
 .block.press-releases .article-list {
@@ -123,55 +75,10 @@
   border-top: 1px solid var(--background-light-gray);
 }
 
-.block.press-releases.cards {
-  margin-top: 2.18em;
-  margin-bottom: 2.18em;
-}
-
-.block.press-releases.cards span.date {
-  line-height: 1.4rem;
-  font-size: 1.6rem;
-  margin-top: 16px;
-  margin-bottom: 8px;
-  color: var(--volvo-text-light-gray);
-}
-
 @media screen and (min-width: 744px) {
-  .block.press-releases .list-filter fieldset {
-    display: flex;
-    justify-content: flex-start;
-    gap: 30px;
-    padding: 0;
-    margin: 0 0 48px;
-  }
-
-  .block.press-releases .list-filter fieldset > div {
-    flex: 0 0 33.3334%;
-  }
-
-  .block.press-releases .tags-field label {
-    justify-self: right;
-    padding-right: 8px;
-  }
-
   .block.press-releases .article-list article {
     display: grid;
     grid-template-columns: 25% calc(75% - 30px);
     gap: 30px;
-  }
-
-  .block.press-releases.cards .article-list {
-    display: flex;
-    column-gap: 30px;
-  }
-
-  .block.press-releases.cards .article-list li {
-    flex: 0 1 33.3334%;
-  }
-
-  .block.press-releases.cards .article-list article {
-    display: block;
-    padding: 0;
-    border-top: 0;
   }
 }

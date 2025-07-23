@@ -421,7 +421,7 @@
     },
     {
       "Key": "PressReleases:SearchPlaceholder",
-      "Text": "Type here to search"
+      "Text": "Search for..."
     }
   ],
   ":type": "sheet"
