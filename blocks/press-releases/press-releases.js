@@ -75,7 +75,7 @@ const buildSearchBar = () => {
   const searchBar = createElement('div', { classes: `${blockName}__search-bar` });
   searchBar.innerHTML = `
     <input type="text" name="search" autocomplete="off" placeholder="${getTextLabel('PressReleases:SearchPlaceholder')}"/>
-    <button><i class="fa fa-search"></i></button>`;
+    <button type="submit"><i class="fa fa-search"></i></button>`;
   return searchBar;
 };
 
