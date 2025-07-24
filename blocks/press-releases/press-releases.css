@@ -27,7 +27,7 @@
 }
 
 .press-releases__search-bar input {
-  font-size: 1.8rem;
+  font-size: var(--body-font-size-xs);
   margin-bottom: unset;
   max-width: unset;
   height: 64px;
@@ -37,7 +37,6 @@
 }
 
 .press-releases__search-bar input::placeholder {
-  text-transform: uppercase;
   opacity: 0.5;
 }
 
