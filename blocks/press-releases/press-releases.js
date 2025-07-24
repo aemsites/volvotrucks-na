@@ -4,7 +4,7 @@ import createPagination from '../../common/pagination/pagination.js';
 import { fetchPressReleases } from '../../scripts/services/press-release.service.js';
 
 const blockName = 'press-releases';
-let passes = 1;
+let offsetMultiplier = 1;
 let temporaryOffset = 0;
 let isFirstLoad = true;
 
@@ -41,8 +41,8 @@ const processPressReleases = async (params = {}) => {
   }
 
   const pressReleases = items.map((item) => parsePressRelease(item));
-  temporaryOffset = temporaryOffset + 100 < count ? 100 * passes : count - temporaryOffset + temporaryOffset;
-  passes++;
+  temporaryOffset = temporaryOffset + 100 < count ? 100 * offsetMultiplier : count - temporaryOffset + temporaryOffset;
+  offsetMultiplier++;
 
   if (temporaryOffset < count) {
     const morePressReleases = await processPressReleases({
@@ -57,7 +57,7 @@ const processPressReleases = async (params = {}) => {
 
 const getPressReleases = (query) => {
   if (!isFirstLoad) {
-    passes = 1;
+    offsetMultiplier = 1;
     temporaryOffset = 0;
   }
 
