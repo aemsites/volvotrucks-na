@@ -7,6 +7,7 @@ const blockName = 'press-releases';
 let offsetMultiplier = 1;
 let temporaryOffset = 0;
 let isFirstLoad = true;
+const displayLimitAmount = 10;
 
 const parsePressRelease = (item) => {
   const isImageLink = (link) => `${link}`.split('?')[0].match(/\.(jpeg|jpg|gif|png|svg|bmp|webp)$/) !== null;
@@ -140,29 +141,20 @@ const loadChunkedArticles = async (block, pressReleases, displayLimitAmount) => 
   }
 };
 
-export default async function decorate(block) {
-  block.append(buildSearchBar());
-
-  const contentArea = createElement('div', { classes: ['pagination-content'] });
-  block.appendChild(contentArea);
-
-  const displayLimitAmount = 10;
-  let pressReleases = await getPressReleases();
-
-  loadChunkedArticles(block, pressReleases, displayLimitAmount);
-
+const addEventListeners = (block) => {
   const searchInput = block.querySelector(`.${blockName}__search-bar input`);
   const searchButton = block.querySelector(`.${blockName}__search-bar button`);
+  const contentArea = block.querySelector('.pagination-content');
 
   searchButton.addEventListener('click', async () => {
     const query = searchInput.value;
 
-    pressReleases = await getPressReleases(query);
+    const pressReleases = await getPressReleases(query);
     loadChunkedArticles(block, pressReleases, displayLimitAmount);
 
     if (pressReleases.length === 0) {
-      block.querySelector('.pagination-nav').innerHTML = '';
       contentArea.innerHTML = '';
+      block.querySelector('.pagination-nav').innerHTML = '';
       const noResultsMsg = createElement('p', { classes: `${blockName}__no-results-message` });
       noResultsMsg.textContent = getTextLabel('no results').replace('$0', `"${query}"`);
       contentArea.append(noResultsMsg);
@@ -174,4 +166,16 @@ export default async function decorate(block) {
       searchButton.click();
     }
   });
+};
+
+export default async function decorate(block) {
+  block.append(buildSearchBar());
+
+  const contentArea = createElement('div', { classes: ['pagination-content'] });
+  block.appendChild(contentArea);
+
+  const pressReleases = await getPressReleases();
+
+  loadChunkedArticles(block, pressReleases, displayLimitAmount);
+  addEventListeners(block);
 }
