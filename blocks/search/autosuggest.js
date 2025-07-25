@@ -1,9 +1,9 @@
-import { createElement, getLocale } from '../../scripts/common.js';
+import { createElement, decorateIcons, getLocale } from '../../scripts/common.js';
 import { autosuggestQuery, fetchSearchData, TENANT } from '../../scripts/search-api.js';
 
 const autoSuggestClass = 'autosuggest-results-item-highlighted';
 
-export function fetchAutosuggest(term, autosuggestEle, rowEle, func) {
+export function fetchAutosuggest(term, autosuggestEle, rowEle, func, showSearchIcon, maxSuggestions) {
   const fragmentRange = document.createRange();
   const locale = getLocale();
   const language = locale.split('-')[0].toUpperCase();
@@ -19,7 +19,7 @@ export function fetchAutosuggest(term, autosuggestEle, rowEle, func) {
       tenant: TENANT,
       term,
       language,
-      sizeSuggestions: 5,
+      sizeSuggestions: maxSuggestions || 5,
     },
   }).then(({ errors, data }) => {
     if (errors) {
@@ -32,13 +32,17 @@ export function fetchAutosuggest(term, autosuggestEle, rowEle, func) {
       if (terms.length) {
         terms.forEach((val) => {
           const row = createElement(rowEle.tag, { classes: rowEle.class, props: rowEle.props });
-          const suggestFragment = fragmentRange.createContextualFragment(`<b>
-            ${val}
-          </b>`);
+          let suggestionContent = `<b>${val}</b>`;
+          if (showSearchIcon) {
+            suggestionContent = `
+              <span class="icon icon-search-icon"></span>
+              <span>${val.replaceAll(term, `<b>${term}</b>`)}</span>
+            `;
+          }
+          const suggestFragment = fragmentRange.createContextualFragment(suggestionContent);
           row.appendChild(suggestFragment);
-
           row.onclick = () => func(val);
-
+          decorateIcons(row);
           autosuggestEle.appendChild(row);
           autosuggestEle.classList.add('show');
         });
