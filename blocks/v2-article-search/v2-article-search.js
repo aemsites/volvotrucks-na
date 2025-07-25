@@ -188,6 +188,7 @@ const initializeSearchHandlers = (searchContainer) => {
   let liSelected;
   let next;
   let index = -1;
+  const MAX_SUGGESTIONS = 6;
 
   const delayFetchData = debounce((term) =>
     fetchAutosuggest(
@@ -203,6 +204,7 @@ const initializeSearchHandlers = (searchContainer) => {
       },
       searchArticles,
       true,
+      MAX_SUGGESTIONS,
     ),
   );
 

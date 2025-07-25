@@ -3,7 +3,7 @@ import { autosuggestQuery, fetchSearchData, TENANT } from '../../scripts/search-
 
 const autoSuggestClass = 'autosuggest-results-item-highlighted';
 
-export function fetchAutosuggest(term, autosuggestEle, rowEle, func, showSearchIcon) {
+export function fetchAutosuggest(term, autosuggestEle, rowEle, func, showSearchIcon, maxSuggestions) {
   const fragmentRange = document.createRange();
   const locale = getLocale();
   const language = locale.split('-')[0].toUpperCase();
@@ -19,7 +19,7 @@ export function fetchAutosuggest(term, autosuggestEle, rowEle, func, showSearchI
       tenant: TENANT,
       term,
       language,
-      sizeSuggestions: 5,
+      sizeSuggestions: maxSuggestions || 5,
     },
   }).then(({ errors, data }) => {
     if (errors) {
