@@ -154,3 +154,25 @@ export const topicSearchQuery = () => `
     }
   }
 `;
+
+export const pressReleaseQuery = () => `
+ query Edssearch($tenant: String!, $language: EdsLocaleEnum!, $q: String, $limit: Int, $offset: Int,
+  $facets: [EdsFieldEnum], $sort: EdsSortOptionsEnum, $article: ArticleFilter, $category: [String]) {
+    edssearch(tenant: $tenant, language: $language, q: $q, limit: $limit, offset: $offset,
+    facets: $facets, sort: $sort, article: $article, category: $category) {
+      count
+      items {
+        uuid
+        metadata {
+          title
+          description
+          image
+          url
+          language
+          category
+          publishDate
+        }
+      }
+    }
+  } 
+`;
