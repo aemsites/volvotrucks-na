@@ -1,4 +1,5 @@
 import {
+  debounce,
   decorateIcons,
   getPlaceholders,
   getTextLabel,
@@ -8,6 +9,7 @@ import {
   MAGAZINE_CONFIGS,
 } from '../../scripts/common.js';
 import { topicSearchQuery, fetchSearchData, TENANT } from '../../scripts/search-api.js';
+import { fetchAutosuggest, handleArrowDown, handleArrowUp } from '../search/autosuggest.js';
 
 const blockName = 'v2-article-search';
 const filterContainerClass = `${blockName}__filter-container`;
@@ -20,6 +22,7 @@ const blockVariants = ['black', 'gray'];
 await getPlaceholders();
 const filterDefault = getTextLabel('filterDefault');
 const searchPlaceholder = getTextLabel('searchPlaceholder');
+const clearPlaceholder = getTextLabel('clear');
 
 const locale = getLocale();
 const language = locale.split('-')[0].toUpperCase();
@@ -83,11 +86,20 @@ const buildFilterElement = () =>
           </span>
         </div>
         <div class="${blockName}__filter-input">
-          <span class="icon icon-search-icon"></span>
-          <input type="text" id="search" name="search" placeholder="${searchPlaceholder}" />
-          <label for="search" class="${blockName}__input-label">${searchPlaceholder}</label>
-          <button type="button" class="${blockName}__clear-button">clear</button>
-          <span class="icon icon-close"></span>
+          <div id="autosuggest-magazine"  aria-expanded="false" class="${blockName}__input-container">
+            <span class="icon icon-search-icon"></span>
+            <input aria-haspopup="listbox" autocomplete="off" aria-autocomplete="list" 
+              aria-controls="autosuggest-autosuggest__results" type="text" id="search"
+              name="search" placeholder="${searchPlaceholder}" />
+            <label for="search" class="${blockName}__input-label">${searchPlaceholder}</label>
+            <button type="button" class="${blockName}__clear-button" aria-label="${clearPlaceholder}">${clearPlaceholder}</button>
+            <span class="icon icon-close"></span>
+          </div>
+          <div id="autosuggest-autosuggest__results" class="autosuggest__results-container">
+            <div aria-labelledby="autosuggest-magazine" class="autosuggest__results"> 
+              <ul role="listbox"></ul>
+            </div>
+          </div>
         </div>
       </fieldset>
     </form>
@@ -166,21 +178,94 @@ const initializeSearchHandlers = (searchContainer) => {
   const searchInput = searchContainer.querySelector('input[type="text"]');
   const clearButton = searchContainer.querySelector(`.${blockName}__clear-button`);
   const formElement = searchContainer.querySelector('form');
+  const listEl = searchContainer.querySelector('.autosuggest__results-container ul');
+  const input = document.getElementById('search');
 
   const toggleClearButton = () => {
     clearButton.classList.toggle('active', !!searchInput.value);
+  };
+
+  let liSelected;
+  let next;
+  let index = -1;
+  const MAX_SUGGESTIONS = 6;
+
+  const delayFetchData = debounce((term) =>
+    fetchAutosuggest(
+      term,
+      listEl,
+      {
+        tag: 'li',
+        class: 'autosuggest__results-item',
+        props: {
+          role: 'option',
+          'data-section-name': 'default',
+        },
+      },
+      searchArticles,
+      true,
+      MAX_SUGGESTIONS,
+    ),
+  );
+
+  const clearAutosuggestions = () => {
+    listEl.textContent = '';
+  };
+
+  const showAutoSuggestions = (e) => {
+    const term = e.target.value;
+    const MIN_SEARCH_LENGTH = 2;
+
+    if (term.trim().length < MIN_SEARCH_LENGTH) {
+      clearAutosuggestions();
+      return;
+    }
+
+    const list = listEl.getElementsByTagName('li');
+    if (e.key === 'Enter') {
+      submitSearchTerm(e);
+    } else if (e.key === 'Escape') {
+      clearAutosuggestions();
+    } else if (['ArrowUp', 'ArrowDown'].includes(e.key)) {
+      let returnObj;
+
+      if (e.key === 'ArrowUp') {
+        returnObj = handleArrowUp({
+          list,
+          liSelected,
+          index,
+          next,
+        });
+      } else {
+        returnObj = handleArrowDown({
+          list,
+          liSelected,
+          index,
+          next,
+        });
+      }
+
+      liSelected = returnObj.liSelected;
+      index = returnObj.index;
+      next = returnObj.next;
+      input.value = liSelected.textContent.replace(/[ ]{2,}/g, '');
+    } else {
+      delayFetchData(term);
+    }
   };
 
   const clearInput = () => {
     searchInput.value = '';
     toggleClearButton();
     searchInput.focus();
+    clearAutosuggestions();
   };
 
   const handleOutsideClick = (event) => {
     if (!searchContainer.contains(event.target)) {
       collapseSearchContainer();
     }
+    clearAutosuggestions();
   };
 
   const collapseSearchContainer = () => {
@@ -196,20 +281,25 @@ const initializeSearchHandlers = (searchContainer) => {
     document.addEventListener('click', handleOutsideClick, { capture: true });
   };
 
+  const searchArticles = (term) => {
+    currentURL.search = magazineParam;
+    currentURL.searchParams.set('search', term);
+    window.location.href = currentURL.href;
+    collapseSearchContainer();
+  };
+
   const submitSearchTerm = (event) => {
     event.preventDefault();
     const searchTerm = searchInput.value.trim();
     if (searchTerm) {
-      currentURL.search = magazineParam;
-      currentURL.searchParams.set('search', searchTerm);
-      window.location.href = currentURL.href;
-      collapseSearchContainer();
+      searchArticles(searchTerm);
     }
   };
 
   if (searchInputWrapper && searchInput && clearButton && formElement) {
     searchInputWrapper.addEventListener('click', expandSearchContainer);
     searchInput.addEventListener('input', toggleClearButton);
+    searchInput.addEventListener('keyup', showAutoSuggestions);
     clearButton.addEventListener('click', clearInput);
     formElement.addEventListener('submit', submitSearchTerm);
 
