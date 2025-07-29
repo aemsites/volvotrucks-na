@@ -360,15 +360,6 @@ export default function decorate(block) {
     const descriptions = tabContent.querySelectorAll('p:not(.button-container)');
     [...descriptions].forEach((description) => description.classList.add(`${blockName}__description`));
 
-    // Wrap text in container
-    const textContainer = createElement('div', { classes: `${blockName}__text` });
-    const text = tabContent.querySelector('.default-content-wrapper')?.querySelectorAll(':scope > *:not(.button-container)');
-    if (text) {
-      const parentTextContainer = text[0].parentNode;
-      textContainer.append(...text);
-      parentTextContainer.appendChild(textContainer);
-    }
-
     // Wrap links in container
     const buttonContainer = createElement('div', { classes: `${blockName}__buttons-container` });
     const buttons = tabContent.querySelectorAll('.button-container');

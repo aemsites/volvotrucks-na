@@ -119,12 +119,6 @@ body .section.v2-truck-lineup-container .v2-truck-lineup-wrapper {
   transition: opacity 0.5s var(--easing-entrance) var(--duration-medium);
 }
 
-.v2-truck-lineup__text {
-  margin: 0 auto;
-  max-width: 506px;
-  text-wrap: balance;
-}
-
 .v2-truck-lineup__title {
   margin-right: 5px;
 }
@@ -338,25 +332,11 @@ ul.v2-truck-lineup__color-switcher {
     max-width: var(--wrapper-width);
   }
 
-  .v2-truck-lineup__text {
-    max-width: 931px;
-  }
-
   div:where([role='dialog']):not(.truck-lineup-content-center) .v2-truck-lineup__content .default-content-wrapper,
   main:not(.truck-lineup-content-center) .v2-truck-lineup__content .default-content-wrapper {
     align-items: flex-start;
     display: grid;
     grid-template-columns: 1fr 567px 80px 430px 1fr;
-  }
-
-  div:where([role='dialog']):not(.truck-lineup-content-center) .v2-truck-lineup__text,
-  main:not(.truck-lineup-content-center) .v2-truck-lineup__text {
-    width: 567px;
-    max-width: none;
-    margin: 0;
-    text-align: left;
-    text-wrap: wrap;
-    grid-column: 2;
   }
 
   div:where([role='dialog']):not(.truck-lineup-content-center) .v2-truck-lineup__buttons-container,
