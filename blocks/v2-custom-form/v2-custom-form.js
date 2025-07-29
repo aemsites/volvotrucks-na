@@ -118,7 +118,7 @@ function constructPayload(form) {
         payload[fe.name] = fe.value;
       } else if (fe.type === 'checkbox' && fe.checked) {
         payload[fe.name] = payload[fe.name] ? `${payload[fe.name]},${fe.value}` : fe.value;
-      } else if (fe.type !== 'file' && fe.type !== 'checkbox') {
+      } else if (fe.type !== 'file' && fe.type !== 'checkbox' && fe.type !== 'radio') {
         payload[fe.name] = fe.value;
       }
     }
@@ -722,7 +722,11 @@ async function createForm(formURL) {
         formField.id = fd.Id;
       }
       formField.name = fd.Name;
-      formField.value = fd.Value;
+
+      if (fd.Type !== 'radio') {
+        formField.value = fd.Value;
+      }
+
       if (fd.Description) {
         formField.setAttribute('aria-describedby', `${fd.Id}-description`);
       }
