@@ -132,7 +132,6 @@ p.v2-truck-lineup__description {
 }
 
 .v2-truck-lineup__buttons-container {
-  margin-top: 16px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -140,7 +139,7 @@ p.v2-truck-lineup__description {
 }
 
 .v2-truck-lineup__buttons-container .button-container {
-  margin: 16px 0 0;
+  margin: 0;
 }
 
 /* Navigation */
@@ -155,7 +154,7 @@ ul.v2-truck-lineup__navigation {
   margin: 24px 0;
   order: 1;
   overflow: auto;
-  padding: 10px 32px;
+  padding: 0 32px;
   position: relative;
   scrollbar-width: none;
 }
@@ -326,6 +325,10 @@ ul.v2-truck-lineup__color-switcher {
 
   .v2-truck-lineup__image-item img {
     aspect-ratio: 16 / 9;
+  }
+
+  ul.v2-truck-lineup__navigation {
+    margin-block: 48px;
   }
 
   .v2-truck-lineup__content {
