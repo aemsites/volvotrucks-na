@@ -355,17 +355,6 @@ export default function decorate(block) {
       stripEmptyTags(tabContent, item);
     });
 
-    // Remove texts from container
-    const texts = tabContent.querySelector('.default-content-wrapper')?.querySelectorAll(':scope > *:not(.button-container)');
-    if (texts) {
-      const len = texts.length;
-      const parentTextContainer = texts[0].parentNode;
-
-      for (let t = 0; t < len; t++) {
-        parentTextContainer.removeChild(texts[t]);
-      }
-    }
-
     // Wrap links in container
     const buttonContainer = createElement('div', { classes: `${blockName}__buttons-container` });
     const buttons = tabContent.querySelectorAll('.button-container');

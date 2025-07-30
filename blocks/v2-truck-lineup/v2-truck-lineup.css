@@ -119,11 +119,6 @@ body .section.v2-truck-lineup-container .v2-truck-lineup-wrapper {
   transition: opacity 0.5s var(--easing-entrance) var(--duration-medium);
 }
 
-.v2-truck-lineup__title {
-  margin-right: 5px;
-}
-
-.v2-truck-lineup__title,
 p.v2-truck-lineup__description {
   color: var(--c-grey-800);
   display: inline;
