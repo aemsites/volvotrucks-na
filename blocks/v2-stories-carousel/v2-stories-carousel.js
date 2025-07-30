@@ -10,8 +10,8 @@ import {
 import { smoothScrollHorizontal } from '../../scripts/motion-helper.js';
 
 const blockName = 'v2-stories-carousel';
-const lowLimit = 3;
-const highLimit = 7;
+const LOW_LIMIT = 3;
+const HIGH_LIMIT = 7;
 
 const updateActiveClass = (elements, targetElement) => {
   elements.forEach((el) => {
@@ -218,8 +218,8 @@ const createStoriesCarousel = (block, stories) => {
 
 export default async function decorate(block) {
   const isRelatedArticles = block.classList.contains('related-articles');
-  let limit = parseFloat(block.textContent.trim()) || highLimit;
-  limit = Math.max(limit, lowLimit);
+  let limit = parseFloat(block.textContent.trim()) || HIGH_LIMIT;
+  limit = Math.max(limit, LOW_LIMIT);
 
   block.innerHTML = '';
   let stories;
@@ -251,6 +251,6 @@ export default async function decorate(block) {
         // Scroll to the second item
         setCarouselPosition(carousel, 1, arrowLeftButton, arrowRightButton);
       }
-    });
+    }, 500);
   });
 }
