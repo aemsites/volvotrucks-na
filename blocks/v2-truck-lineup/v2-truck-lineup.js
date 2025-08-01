@@ -330,8 +330,6 @@ export default function decorate(block) {
     const color = getTabColor(tabItem);
     tabItem.classList.add(`${blockName}__desc-item`);
     const tabContent = tabItem.querySelector(':scope > div');
-    const headings = tabContent.querySelectorAll('h1, h2, h3, h4, h5, h6');
-    [...headings].forEach((heading) => heading.classList.add(`${blockName}__title`));
 
     // Create div for image and append inside image div container
     const picture = tabItem.querySelector('picture');
@@ -356,18 +354,6 @@ export default function decorate(block) {
     tabContent.querySelectorAll('p, div').forEach((item) => {
       stripEmptyTags(tabContent, item);
     });
-
-    const descriptions = tabContent.querySelectorAll('p:not(.button-container)');
-    [...descriptions].forEach((description) => description.classList.add(`${blockName}__description`));
-
-    // Wrap text in container
-    const textContainer = createElement('div', { classes: `${blockName}__text` });
-    const text = tabContent.querySelector('.default-content-wrapper')?.querySelectorAll(':scope > *:not(.button-container)');
-    if (text) {
-      const parentTextContainer = text[0].parentNode;
-      textContainer.append(...text);
-      parentTextContainer.appendChild(textContainer);
-    }
 
     // Wrap links in container
     const buttonContainer = createElement('div', { classes: `${blockName}__buttons-container` });

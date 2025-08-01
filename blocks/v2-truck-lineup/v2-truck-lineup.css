@@ -119,17 +119,6 @@ body .section.v2-truck-lineup-container .v2-truck-lineup-wrapper {
   transition: opacity 0.5s var(--easing-entrance) var(--duration-medium);
 }
 
-.v2-truck-lineup__text {
-  margin: 0 auto;
-  max-width: 506px;
-  text-wrap: balance;
-}
-
-.v2-truck-lineup__title {
-  margin-right: 5px;
-}
-
-.v2-truck-lineup__title,
 p.v2-truck-lineup__description {
   color: var(--c-grey-800);
   display: inline;
@@ -138,7 +127,6 @@ p.v2-truck-lineup__description {
 }
 
 .v2-truck-lineup__buttons-container {
-  margin-top: 16px;
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
@@ -146,7 +134,7 @@ p.v2-truck-lineup__description {
 }
 
 .v2-truck-lineup__buttons-container .button-container {
-  margin: 16px 0 0;
+  margin: 0;
 }
 
 /* Navigation */
@@ -161,7 +149,7 @@ ul.v2-truck-lineup__navigation {
   margin: 24px 0;
   order: 1;
   overflow: auto;
-  padding: 10px 32px;
+  padding: 0 32px;
   position: relative;
   scrollbar-width: none;
 }
@@ -334,12 +322,12 @@ ul.v2-truck-lineup__color-switcher {
     aspect-ratio: 16 / 9;
   }
 
-  .v2-truck-lineup__content {
-    max-width: var(--wrapper-width);
+  ul.v2-truck-lineup__navigation {
+    margin-block: 48px;
   }
 
-  .v2-truck-lineup__text {
-    max-width: 931px;
+  .v2-truck-lineup__content {
+    max-width: var(--wrapper-width);
   }
 
   div:where([role='dialog']):not(.truck-lineup-content-center) .v2-truck-lineup__content .default-content-wrapper,
@@ -347,16 +335,6 @@ ul.v2-truck-lineup__color-switcher {
     align-items: flex-start;
     display: grid;
     grid-template-columns: 1fr 567px 80px 430px 1fr;
-  }
-
-  div:where([role='dialog']):not(.truck-lineup-content-center) .v2-truck-lineup__text,
-  main:not(.truck-lineup-content-center) .v2-truck-lineup__text {
-    width: 567px;
-    max-width: none;
-    margin: 0;
-    text-align: left;
-    text-wrap: wrap;
-    grid-column: 2;
   }
 
   div:where([role='dialog']):not(.truck-lineup-content-center) .v2-truck-lineup__buttons-container,
