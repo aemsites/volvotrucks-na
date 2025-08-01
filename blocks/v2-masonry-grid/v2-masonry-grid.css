@@ -6,7 +6,7 @@
   display: grid;
   gap: var(--v2-masonry-grid-gutter);
   grid-template-columns: repeat(2, 1fr);
-  grid-template-rows: repeat(10, 1fr);
+  grid-template-rows: repeat(9, 1fr);
   margin: 0;
   padding: 0;
   /* stylelint-disable-next-line declaration-block-no-redundant-longhand-properties */
