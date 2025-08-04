@@ -185,7 +185,7 @@ export const fetchMagazineArticles = async ({
   }
 };
 
-export const getRecommendedArticles = async ({
+export const fetchRecommendedArticles = async ({
   tenant = TENANT,
   language = getLocale().split('-')[0].toUpperCase(),
   limit = 7,

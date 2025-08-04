@@ -1,6 +1,6 @@
 import { createOptimizedPicture, getMetadata, decorateIcons } from '../../scripts/aem.js';
 import { createElement, getDateFromTimestamp, MAGAZINE_CONFIGS, extractObjectFromArray, getTextLabel } from '../../scripts/common.js';
-import { fetchMagazineArticles, getRecommendedArticles } from '../../scripts/services/magazine.service.js';
+import { fetchMagazineArticles, fetchRecommendedArticles } from '../../scripts/services/magazine.service.js';
 import { smoothScrollHorizontal } from '../../scripts/motion-helper.js';
 
 const blockName = 'v2-stories-carousel';
@@ -110,12 +110,12 @@ const createArrowControls = (carousel) => {
   return arrowControlsContainer;
 };
 
-const getMagazineArticles = async (limit = 5, tags = {}, useFetch = false) => {
-  if (useFetch) {
+const getMagazineArticles = async (limit = 5, tags = {}, useRecentArticles = false) => {
+  if (useRecentArticles) {
     return fetchMagazineArticles({ limit, sort: 'PUBLISH_DATE_DESC' });
   }
 
-  return await getRecommendedArticles({ limit, tags });
+  return await fetchRecommendedArticles({ limit, tags });
 };
 
 const buildStoryCard = (entry) => {
