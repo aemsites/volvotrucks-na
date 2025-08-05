@@ -1,5 +1,5 @@
 import { getLocale } from '../common.js';
-import { fetchSearchData, magazineSearchQuery, TENANT } from '../search-api.js';
+import { fetchSearchData, topicSearchQuery, magazineSearchQuery, TENANT } from '../search-api.js';
 
 /**
  * Extracts the articles that don't have an image field
@@ -181,6 +181,43 @@ export const fetchMagazineArticles = async ({
     return rawData?.data?.edssearch || null;
   } catch (error) {
     console.error('Error fetching magazine articles:', error);
+    return null;
+  }
+};
+
+export const fetchRecommendedArticles = async ({
+  tenant = TENANT,
+  language = getLocale().split('-')[0].toUpperCase(),
+  limit = 7,
+  offset = 0,
+  category = 'Magazine',
+  tags = {},
+  sort = 'PUBLISH_DATE_DESC',
+  facets = ['ARTICLE', 'TOPIC', 'TRUCK'],
+}) => {
+  const variables = {
+    tenant,
+    language,
+    limit,
+    offset,
+    category,
+    facets,
+    sort,
+    article: tags,
+  };
+
+  try {
+    if (!tenant) {
+      throw new Error('TENANT not defined');
+    }
+
+    const rawData = await fetchSearchData({
+      query: topicSearchQuery(),
+      variables,
+    });
+    return rawData?.data?.edsrecommend || null;
+  } catch (error) {
+    console.error('Error fetching recommended articles:', error);
     return null;
   }
 };

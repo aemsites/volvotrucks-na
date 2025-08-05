@@ -1,17 +1,11 @@
 import { createOptimizedPicture, getMetadata, decorateIcons } from '../../scripts/aem.js';
 import { createElement, getDateFromTimestamp, MAGAZINE_CONFIGS, extractObjectFromArray, getTextLabel } from '../../scripts/common.js';
-import {
-  clearCurrentArticle,
-  fetchMagazineArticles,
-  isMagazineTemplate,
-  removeArticlesWithNoImage,
-  sortArticlesByDateField,
-} from '../../scripts/services/magazine.service.js';
+import { fetchMagazineArticles, fetchRecommendedArticles } from '../../scripts/services/magazine.service.js';
 import { smoothScrollHorizontal } from '../../scripts/motion-helper.js';
 
 const blockName = 'v2-stories-carousel';
-const lowLimit = 3;
-const highLimit = 7;
+const LOW_LIMIT = 3;
+const HIGH_LIMIT = 7;
 
 const updateActiveClass = (elements, targetElement) => {
   elements.forEach((el) => {
@@ -116,43 +110,12 @@ const createArrowControls = (carousel) => {
   return arrowControlsContainer;
 };
 
-const getArticleTags = (metadata) => [
-  ...(metadata?.article?.category || []),
-  ...(metadata?.article?.topic || []),
-  ...(metadata?.article?.truck || []),
-];
-
-const getMagazineArticles = async (limit = 5, tags = []) => {
-  const allArticles = await fetchMagazineArticles({ sort: 'PUBLISH_DATE_DESC' });
-  const artsWithImage = removeArticlesWithNoImage(allArticles);
-  let articles = clearCurrentArticle(artsWithImage);
-
-  if (isMagazineTemplate) {
-    articles = clearCurrentArticle(articles);
+const getMagazineArticles = async (limit = 5, tags = {}, useRecentArticles = false) => {
+  if (useRecentArticles) {
+    return fetchMagazineArticles({ limit, sort: 'PUBLISH_DATE_DESC' });
   }
 
-  // If tags are present, filter the article list using the specified tags.
-  if (tags.length > 0) {
-    articles = articles.filter((article) => {
-      const articleTags = getArticleTags(article.metadata).map((tag) => tag.trim());
-      return articleTags.some((articleTag) => tags.includes(articleTag));
-    });
-  }
-
-  // If the number of articles is less than the limit, complete the list with additional articles.
-  if (articles.length < limit) {
-    const missingArticles = artsWithImage.filter((art) => {
-      const articleTags = getArticleTags(art.metadata).map((tag) => tag.trim());
-      return !tags.some((tag) => articleTags.includes(tag));
-    });
-    const sortedArticles = sortArticlesByDateField(missingArticles, 'publishDate');
-    const additionalArticles = sortedArticles.slice(0, limit - articles.length);
-    articles = [...articles, ...additionalArticles];
-  } else {
-    articles = sortArticlesByDateField(articles, 'publishDate');
-  }
-
-  return articles.slice(0, limit);
+  return await fetchRecommendedArticles({ limit, tags });
 };
 
 const buildStoryCard = (entry) => {
@@ -218,23 +181,30 @@ const createStoriesCarousel = (block, stories) => {
 
 export default async function decorate(block) {
   const isRelatedArticles = block.classList.contains('related-articles');
-  let limit = parseFloat(block.textContent.trim()) || highLimit;
-  limit = Math.max(limit, lowLimit);
+  let limit = parseFloat(block.textContent.trim()) || HIGH_LIMIT;
+  limit = Math.max(limit, LOW_LIMIT);
 
   block.innerHTML = '';
   let stories;
   if (isRelatedArticles) {
     const metadataTags = ['article-category', 'topic', 'truck'];
-    const tags = metadataTags.reduce((acc, metaTag) => {
+    const tags = metadataTags.reduce((acc, metaTag, idx) => {
       const metaContent = getMetadata(metaTag);
       if (metaContent) {
-        acc.push(...metaContent.split(',').map((tag) => tag.trim()));
+        acc[idx === 0 ? 'category' : metaTag] = metaContent.split(',').map((tag) => tag.trim());
       }
       return acc;
-    }, []);
-    stories = await getMagazineArticles(limit, tags);
+    }, {});
+    const articlesFetched = await getMagazineArticles(limit, tags);
+    stories = articlesFetched?.items || null;
   } else {
-    stories = await getMagazineArticles(limit);
+    const recentArticles = await getMagazineArticles(limit, {}, !isRelatedArticles);
+    stories = recentArticles?.items || null;
+  }
+
+  if (!stories || stories.length === 0) {
+    console.warn('No %cArticles%c found for the carousel.', 'color:red', 'color:inherit', { stories });
+    return;
   }
   createStoriesCarousel(block, stories);
 
@@ -251,6 +221,6 @@ export default async function decorate(block) {
         // Scroll to the second item
         setCarouselPosition(carousel, 1, arrowLeftButton, arrowRightButton);
       }
-    });
+    }, 500);
   });
 }
