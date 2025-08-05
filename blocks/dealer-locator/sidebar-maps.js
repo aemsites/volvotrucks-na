@@ -271,17 +271,6 @@ const colorGrey4 = getComputedStyle(document.documentElement).getPropertyValue('
     $directionsService = new google.maps.DirectionsService();
     $directionsDisplay = new google.maps.DirectionsRenderer();
 
-    google.maps.event.addListener(
-        $directionsDisplay,
-        'routeindex_changed',
-        function () {
-
-          //$.fn.directionsMessage();
-
-          //$.fn.willDealerBeOpen();
-        }
-    );
-
     if ($isAsist) {
       $('#filter-options').css('display', 'none');
       $brandOptionSelected = window.locatorConfig.selectedBrand;
@@ -329,7 +318,6 @@ $.fn.initGoogleMaps = function () {
       initMap();
     }
   });
-  // $('.legend-icon').attr('src', $.fn.drawPin('', 38, 38, '3F62A5'));
 };
 
 $.fn.getTimeZoneId = async function (dealer) {
@@ -1592,7 +1580,7 @@ $.fn.sortedPins = function () {
   for (var i = 0; i < $pinLength; i++) {
 
     $pins[i];
-    $pins[i].distance = $.fn.getDistanceInKm([$pins[i].MAIN_LATITUDE, $pins[i].MAIN_LONGITUDE]);
+    $pins[i].distance = $.fn.getDistanceInMiles([$pins[i].MAIN_LATITUDE, $pins[i].MAIN_LONGITUDE]);
 
   }
 
@@ -1822,14 +1810,14 @@ $.fn.tmpPins = function (tmpPinList) {
             url: "/blocks/dealer-locator/images/volvo-pin-uptime.svg",
             scaledSize: new google.maps.Size(58, 80), // scaled size
             origin: new google.maps.Point(0, 0), // origin
-            anchor: new google.maps.Point(0, 0)
+            anchor: new google.maps.Point(19, 57)
           }
           if ($electricDealer === true || (details.services && Object.values(details.services).includes('Volvo Certified EV Dealer'))) {
             var pinIcon = {
               url: "/blocks/dealer-locator/images/volvo-pin-uptime-electric.svg",
               scaledSize: new google.maps.Size(58, 80), // scaled size
               origin: new google.maps.Point(0, 0), // origin
-              anchor: new google.maps.Point(0, 0)
+              anchor: new google.maps.Point(19, 57)
             }
           }
         }
@@ -1838,7 +1826,7 @@ $.fn.tmpPins = function (tmpPinList) {
             url: "/blocks/dealer-locator/images/volvo-pin-dealer-electric.svg",
             scaledSize: new google.maps.Size(58, 80), // scaled size
             origin: new google.maps.Point(0, 0), // origin
-            anchor: new google.maps.Point(0, 0)
+            anchor: new google.maps.Point(19, 57)
           }
         }
         else {
@@ -1846,7 +1834,7 @@ $.fn.tmpPins = function (tmpPinList) {
             url: "/blocks/dealer-locator/images/volvo-pin-dealer.svg",
             scaledSize: new google.maps.Size(58, 80), // scaled size
             origin: new google.maps.Point(0, 0), // origin
-            anchor: new google.maps.Point(0, 0)
+            anchor: new google.maps.Point(19, 57)
           }
         }
 
@@ -2388,13 +2376,14 @@ $.fn.selectNearbyPins = function () {
 
 };
 
-$.fn.getDistanceInKm = function ($b) {
+$.fn.getDistanceInMiles = function ($b) {
 
   if (!$location) {
     return 0;
   }
 
-  $R = 6371; // Radius of the earth in km
+  // Radius of the earth in km divided by 0.621371 mi/km
+  $R = 6371 * 0.621371;
   $dLat = $.fn.deg2rad($b[0] - $location[0]);  // deg2rad below
   $dLon = $.fn.deg2rad($b[1] - $location[1]);
   $a =
@@ -2402,7 +2391,7 @@ $.fn.getDistanceInKm = function ($b) {
       Math.cos($.fn.deg2rad($location[0])) * Math.cos($.fn.deg2rad($b[0])) *
       Math.sin($dLon / 2) * Math.sin($dLon / 2);
   $c = 2 * Math.atan2(Math.sqrt($a), Math.sqrt(1 - $a));
-  $d = $R * $c; // Distance in km
+  $d = $R * $c; // Distance in miles
   return $d;
 };
 
