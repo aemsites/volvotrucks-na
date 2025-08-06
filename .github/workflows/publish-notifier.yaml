@@ -8,11 +8,12 @@ jobs:
   check-event-status:
     runs-on: ubuntu-latest
     steps:
-    - run: |
-        echo "Status: ${{ github.event.client_payload.status }}"
-        echo "Site: ${{ github.event.client_payload.site }}"
-        echo "Org: ${{ github.event.client_payload.org }}"
-        echo "Path: ${{ github.event.client_payload.path }}"
+      - run: |
+          echo "Status: ${{ github.event.client_payload.status }}"
+          echo "Site: ${{ github.event.client_payload.site }}"
+          echo "Org: ${{ github.event.client_payload.org }}"
+          echo "Path: ${{ github.event.client_payload.path }}"
+
   notify-connector:
     if: (github.event.client_payload.status == 200 || github.event.client_payload.status == 204) && endsWith(github.event.client_payload.path, '.md')
     runs-on: ubuntu-latest
@@ -22,25 +23,45 @@ jobs:
     outputs:
       http_code: ${{ steps.notify.outputs.http_code }}
       body: ${{ steps.notify.outputs.body }}
+      page_path: ${{ steps.notify.outputs.page_path }}
     steps:
       - name: Notify upsert endpoint
         id: notify
         run: |
           sleep 45s
-          PAGE_PATH=$(echo "${{ github.event.client_payload.path }}" | awk '{sub("index.md$", ""); sub(".md$", ""); print}')
+          RAW_PATH="${{ github.event.client_payload.path }}"
+
+          # Strip index.md or .md
+          if [[ "$RAW_PATH" == *"index.md" ]]; then
+            PAGE_PATH="${RAW_PATH%"index.md"}"
+          else
+            PAGE_PATH="${RAW_PATH%.md}"
+          fi
+
           WEBSITE_NAME="${{ github.event.client_payload.site }}"
           URI="${CONNECTOR_DOMAIN}/$WEBSITE_NAME"
+
+          echo "Original path: $RAW_PATH"
+          echo "Final upsert path: $PAGE_PATH"
+          echo "Posting to: $URI"
+
           BODY='{ "paths": [ "'$PAGE_PATH'" ] }'
           BODY="$(echo "$BODY" | jq -c)"
-          # Capture both response and HTTP status code
+
+          # Make API call and capture response and status code
           response=$(curl -s -w "%{http_code}" -o response_body.txt -H "x-api-key: $API_KEY" -X POST "$URI" -d "$BODY")
           http_code="${response: -3}"
           body=$(cat response_body.txt)
+
           echo "HTTP status: $http_code"
-          echo "response: $body"
+          echo "Response body: $body"
+
+          # Output values for downstream jobs
           echo "http_code=$http_code" >> $GITHUB_OUTPUT
           printf "body<<EOF\n%s\nEOF\n" "$body" >> $GITHUB_OUTPUT
-          # Accept any 2xx HTTP status code as success
+          echo "page_path=$PAGE_PATH" >> $GITHUB_OUTPUT
+
+          # Fail if non-2xx
           if [[ ! "$http_code" =~ ^2[0-9][0-9]$ ]]; then
             echo "API call failed with status $http_code"
             exit 1
@@ -59,7 +80,7 @@ jobs:
       - name: Notify on specific connector failures in Slack
         if: ${{ needs.notify-connector.result != 'success' }}
         run: |
-          path="${{ github.event.client_payload.path }}"
+          path="${{ needs.notify-connector.outputs.page_path }}"
           site="${{ github.event.client_payload.site }}"
           repo="${{ github.repository }}"
           run_url="https://github.com/${repo}/actions/runs/${{ github.run_id }}"
@@ -67,7 +88,7 @@ jobs:
           http_code="$HTTP_CODE"
           actor="${{ github.actor }}"
           timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
-          
+
           # Define error patterns
           declare -a errors=(
             "No Valid Documents to Ingest"
@@ -109,5 +130,6 @@ jobs:
         if: ${{ needs.notify-connector.result == 'success' }}
         run: |
           echo "Notify connector job succeeded. No Slack notification sent."
-          echo "Path: ${{ github.event.client_payload.path }}"
+          echo "Cleaned path used for upsert: ${{ needs.notify-connector.outputs.page_path }}"
+          echo "Original path from event: ${{ github.event.client_payload.path }}"
           echo "Status: ${{ needs.notify-connector.result }}"
