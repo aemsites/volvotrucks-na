@@ -6,7 +6,9 @@ import { fetchMagazineArticles } from '../../scripts/services/magazine.service.j
 const defaultAuthor = getTextLabel('defaultAuthor');
 const defaultReadTime = getTextLabel('defaultReadTime');
 const filterLists = { category: null, topic: null, truck: null };
-let firstLoad = true;
+let isFirstLoad = true;
+let offsetMultiplier = 1;
+let temporaryOffset = 0;
 
 const parseArticleData = (item) => {
   const isImageLink = (link) => `${link}`.split('?')[0].match(/\.(jpeg|jpg|gif|png|svg|bmp|webp)$/) !== null;
@@ -37,7 +39,7 @@ const extractFilters = (facets) => {
     const uniqueItems = new Set(
       facet.items.map((item) => {
         const value = item.value.trim();
-        return key === 'truck' ? value.toUpperCase() : value.charAt(0).toUpperCase() + value.slice(1);
+        return value;
       }),
     );
     filterLists[key] = [...uniqueItems];
@@ -60,20 +62,19 @@ const processMagazineArticles = async (params = {}) => {
   }
 
   const articles = items.map((item) => parseArticleData(item));
+  temporaryOffset = temporaryOffset + 100 < count ? 100 * offsetMultiplier : count - temporaryOffset + temporaryOffset;
+  offsetMultiplier++;
 
-  // TODO: fix this since it wont bring all articles if count > 100
-  // OpenSearch limit is 100 items. See press.releases.service.js
-  if (!params.limit && articles.length < count) {
+  if ((temporaryOffset < count) & !params.limit) {
     const moreArticles = await processMagazineArticles({
       ...params,
-      limit: count,
       offset: articles.length,
     });
     return articles.concat(moreArticles);
   }
 
-  if (firstLoad) {
-    firstLoad = false;
+  if (isFirstLoad) {
+    isFirstLoad = false;
     extractFilters(dataFacets);
   }
 
@@ -144,11 +145,9 @@ async function filterArticles(articles, activeFilters) {
   // otherwise do a query again with any of these filters
   const tags = {};
   Object.entries(filters).forEach(([key, value]) => {
-    if (value) {
-      // values stored as facets are separated by an space, so if the url filter has a dash
-      // it has to be replaced by a space
-      tags[key] = value.replaceAll('-', ' ');
-    }
+    // values stored as facets are separated by a space, so if the url filter has a dash
+    // it has to be replaced by a space
+    value && (tags[key] = [value.replaceAll('-', ' ')]);
   });
 
   const filterOptions = {
