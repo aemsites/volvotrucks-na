@@ -1,15 +1,14 @@
-import { createElement, unwrapDivs, getTextLabel, getDateFromTimestamp } from '../../scripts/common.js';
+import { createElement, unwrapDivs, getTextLabel, getDateFromTimestamp, getOrigin } from '../../scripts/common.js';
 import { createOptimizedPicture, loadCSS } from '../../scripts/aem.js';
-import { fetchMagazineArticles, removeArticlesWithNoImage, sortArticlesByDateField } from '../../scripts/services/magazine.service.js';
+import { fetchMagazineArticles } from '../../scripts/services/magazine.service.js';
 import createPagination from '../../common/pagination/pagination.js';
 
 const blockName = 'v2-article-cards';
+let offsetMultiplier = 1;
+let temporaryOffset = 0;
 
 const createCard = (article) => {
-  const {
-    metadata: { url, image, title, publishDate },
-    button = false,
-  } = article;
+  const { url, image, title, publishDate, button = false } = article;
 
   const shortTitle = title.split('|')[0];
   const card = createElement('a', { classes: `${blockName}__article-card`, props: { href: url } });
@@ -79,7 +78,7 @@ const getSelectedArticles = (articles, block) => {
     const buttonPath = buttonLink ? new URL(buttonLink).pathname : null;
 
     articles.forEach((article) => {
-      const articlePath = article?.metadata?.url ? new URL(article.metadata.url).pathname : null;
+      const articlePath = article?.url ? new URL(article.url).pathname : null;
       if (buttonPath === articlePath) {
         article.button = button;
         selectedArticles.push(article);
@@ -101,12 +100,12 @@ const filterDisplayedArticles = (articles) => {
     [...document.querySelectorAll(`h4.${blockName}__card-heading`)].map((heading) => heading.textContent.trim().toLowerCase()),
   );
 
-  return articles.filter(({ metadata }) => {
-    if (!metadata?.title) {
+  return articles.filter(({ title }) => {
+    if (!title) {
       return false;
     }
 
-    const normalizedTitle = metadata.title.split('|')[0].trim().toLowerCase();
+    const normalizedTitle = title.split('|')[0].trim().toLowerCase();
     return !existingArticleHeadings.has(normalizedTitle);
   });
 };
@@ -117,7 +116,7 @@ const getQueryOptionsFromURL = () => {
   const searchQuery = params.get('search');
   const filters = ['truck', 'category', 'topic'];
   const tags = {};
-  const options = { limit: 100 };
+  const options = { sort: 'PUBLISH_DATE_DESC' };
 
   if (searchQuery) {
     options.q = searchQuery;
@@ -145,6 +144,54 @@ const hasQueryFilters = () => {
   return Boolean(searchQuery || filters.some((filter) => params.get(filter)));
 };
 
+const parseMagazineArticle = (item) => {
+  const isImageLink = (link) => `${link}`.split('?')[0].match(/\.(jpeg|jpg|gif|png|svg|bmp|webp)$/) !== null;
+
+  const getDefaultImage = () => {
+    const logoImageURL = '/media/logo/media_10a115d2f3d50f3a22ecd2075307b4f4dcaedb366.jpeg';
+    return getOrigin() + logoImageURL;
+  };
+
+  const { image } = item.metadata;
+
+  return {
+    ...item.metadata,
+    image: isImageLink(image) ? getOrigin() + image : getDefaultImage(),
+    path: item.metadata?.url,
+    isDefaultImage: !isImageLink(image),
+  };
+};
+
+const processMagazineArticles = async (params) => {
+  const rawData = await fetchMagazineArticles(params);
+
+  if (!rawData) {
+    console.error('No data returned from fetchMagazineArticles');
+    return [];
+  }
+  const { items, count } = rawData;
+
+  if (!items || items.length === 0) {
+    console.error('No items returned in raw data:', rawData);
+    return [];
+  }
+
+  const magazineArticles = items.map((item) => parseMagazineArticle(item));
+
+  temporaryOffset = temporaryOffset + 100 < count ? 100 * offsetMultiplier : count - temporaryOffset + temporaryOffset;
+  offsetMultiplier++;
+
+  if (temporaryOffset < count) {
+    const moreMagazineArticles = await processMagazineArticles({
+      ...params,
+      offset: temporaryOffset,
+    });
+    return magazineArticles.concat(moreMagazineArticles);
+  }
+
+  return magazineArticles;
+};
+
 export default async function decorate(block) {
   const options = getQueryOptionsFromURL();
   const hasFilters = hasQueryFilters();
@@ -153,8 +200,7 @@ export default async function decorate(block) {
     block.innerText = '';
   }
 
-  const allArticles = await fetchMagazineArticles(options);
-  const articles = removeArticlesWithNoImage(allArticles);
+  const articles = await processMagazineArticles(options);
 
   if (!articles) {
     return;
@@ -172,17 +218,16 @@ export default async function decorate(block) {
     }
   });
 
-  const selectedArticles = amountOfLinks !== 0 ? getSelectedArticles(articles, block) : [];
+  const selectedArticles = amountOfLinks !== 0 ? await getSelectedArticles(articles, block) : [];
 
   if (selectedArticles.length > 0) {
     block.querySelector('.pagination-content')?.remove();
     createArticleCards(block, selectedArticles, amountOfLinks);
   }
 
-  const uniqueArticles = filterDisplayedArticles(articles);
-  const sortedArticles = sortArticlesByDateField(uniqueArticles, 'publishDate');
+  const uniqueArticles = await filterDisplayedArticles(articles);
   // After sorting articles by date, set the chunks of the array for future pagination
-  const chunkedArticles = sortedArticles?.reduce((resultArray, item, index) => {
+  const chunkedArticles = uniqueArticles?.reduce((resultArray, item, index) => {
     limitAmount = limitAmount || 9;
     const chunkIndex = Math.floor(index / limitAmount);
     if (!resultArray[chunkIndex]) {

@@ -168,7 +168,6 @@ export const fetchMagazineArticles = async ({
     sort,
     article: tags,
   };
-
   try {
     if (!tenant) {
       throw new Error('TENANT not defined');
