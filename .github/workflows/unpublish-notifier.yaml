@@ -9,21 +9,103 @@ jobs:
   check-event-status:
     runs-on: ubuntu-latest
     steps:
-    - run: |
-        echo "Status: ${{ github.event.client_payload.status }}"
-        echo "Site: ${{ github.event.client_payload.site }}"
-        echo "Org: ${{ github.event.client_payload.org }}"
-        echo "Path: ${{ github.event.client_payload.path }}"
-  notify-connector:
-    if: (github.event.client_payload.status == 200 || github.event.client_payload.status == 204) && endsWith(github.event.client_payload.path, '.md')
+      - run: |
+          echo "Status: ${{ github.event.client_payload.status }}"
+          echo "Site: ${{ github.event.client_payload.site }}"
+          echo "Org: ${{ github.event.client_payload.org }}"
+          echo "Path: ${{ github.event.client_payload.path }}"
+
+  notify-delete:
+    if: >
+      (github.event.client_payload.status == 200 || github.event.client_payload.status == 204)
+      && endsWith(github.event.client_payload.path, '.md')
+      && (
+        startsWith(github.event.client_payload.path, '/news-and-stories/')
+        || startsWith(github.event.client_payload.path, '/en-ca/news-and-stories/')
+        || startsWith(github.event.client_payload.path, '/fr-ca/news-and-stories/')
+      )
     runs-on: ubuntu-latest
+    env:
+      CONNECTOR_DOMAIN: ${{ vars.CONNECTOR_DOMAIN }}
+      API_KEY: ${{ secrets.API_KEY }}
+    outputs:
+      page_path: ${{ steps.delete.outputs.page_path }}
+      response: ${{ steps.delete.outputs.response }}
+      status_code: ${{ steps.delete.outputs.status_code }}
     steps:
-    - name: Notify delete endpoint
-      run: |
-        sleep 1s
-        PAGE_PATH=$(echo "${{ github.event.client_payload.path }}" | awk '{sub("/index.md$", ""); sub(".md$", ""); print}')
-        WEBSITE_NAME="${{ github.event.client_payload.site }}"      
-        URI=$(echo "${{ vars.CONNECTOR_DOMAIN }}/$WEBSITE_NAME?path=$PAGE_PATH")
-        response=$(curl -s -H "x-api-key: ${{ secrets.API_KEY }}" -X DELETE "$URI")
-        echo "response: $response"
-      shell: bash
+      - name: Notify delete endpoint
+        id: delete
+        run: |
+          sleep 1s
+          RAW_PATH="${{ github.event.client_payload.path }}"
+
+          # Strip index.md or .md
+          if [[ "$RAW_PATH" == *"index.md" ]]; then
+            PAGE_PATH="${RAW_PATH%"index.md"}"
+          else
+            PAGE_PATH="${RAW_PATH%.md}"
+          fi
+
+          WEBSITE_NAME="${{ github.event.client_payload.site }}"
+          URI="${CONNECTOR_DOMAIN}/$WEBSITE_NAME?path=$PAGE_PATH"
+
+          echo "Original path: $RAW_PATH"
+          echo "Final delete path: $PAGE_PATH"
+          echo "Calling DELETE: $URI"
+
+          response=$(curl -s -w "%{http_code}" -o response_body.txt -H "x-api-key: $API_KEY" -X DELETE "$URI")
+          http_code="${response: -3}"
+          body=$(cat response_body.txt)
+
+          echo "HTTP status: $http_code"
+          echo "Response body: $body"
+
+          echo "page_path=$PAGE_PATH" >> $GITHUB_OUTPUT
+          echo "status_code=$http_code" >> $GITHUB_OUTPUT
+          printf "response<<EOF\n%s\nEOF\n" "$body" >> $GITHUB_OUTPUT
+
+          if [[ ! "$http_code" =~ ^2[0-9][0-9]$ ]]; then
+            echo "Delete call failed with status $http_code"
+            exit 1
+          fi
+        shell: bash
+
+  status-checker:
+    needs: notify-delete
+    runs-on: ubuntu-latest
+    if: always()
+    env:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+      STATUS_CODE: ${{ needs.notify-delete.outputs.status_code }}
+      RESPONSE: ${{ needs.notify-delete.outputs.response }}
+    steps:
+      - name: Notify on delete failures in Slack
+        if: ${{ needs.notify-delete.result != 'success' }}
+        run: |
+          path="${{ needs.notify-delete.outputs.page_path }}"
+          site="${{ github.event.client_payload.site }}"
+          repo="${{ github.repository }}"
+          run_url="https://github.com/${repo}/actions/runs/${{ github.run_id }}"
+          http_code="$STATUS_CODE"
+          body="$RESPONSE"
+          actor="${{ github.actor }}"
+          timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
+
+          payload="{
+            \"blocks\": [
+              {
+                \"type\": \"section\",
+                \"text\": {
+                  \"type\": \"mrkdwn\",
+                  \"text\": \":x: *Search Connector DELETE FAILED*\n*Site:* $site\n*Path:* \`$path\`\n*HTTP Status:* $http_code\n*Triggered by:* $actor\n*Time (UTC):* $timestamp\n<${run_url}|View Workflow Run>\"
+                }
+              }
+            ]
+          }"
+          curl -X POST -H 'Content-type: application/json' --data "$payload" "$SLACK_WEBHOOK_URL"
+
+      - name: Delete succeeded or no Slack needed
+        if: ${{ needs.notify-delete.result == 'success' }}
+        run: |
+          echo "Delete call succeeded. No Slack notification sent."
+          echo "Path: ${{ needs.notify-delete.outputs.page_path }}"
