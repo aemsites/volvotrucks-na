@@ -211,7 +211,7 @@ export default async function decorate(block) {
   }
 
   const uniqueArticles = await filterDisplayedArticles(articles);
-  // After sorting articles by date, set the chunks of the array for future pagination
+  // After checking for repeated articles, set the chunks of the array for future pagination
   const chunkedArticles = uniqueArticles?.reduce((resultArray, item, index) => {
     limitAmount = limitAmount || 9;
     const chunkIndex = Math.floor(index / limitAmount);
