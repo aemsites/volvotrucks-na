@@ -15,7 +15,14 @@ jobs:
           echo "Path: ${{ github.event.client_payload.path }}"
 
   notify-connector:
-    if: (github.event.client_payload.status == 200 || github.event.client_payload.status == 204) && endsWith(github.event.client_payload.path, '.md')
+    if: >
+      (github.event.client_payload.status == 200 || github.event.client_payload.status == 204)
+      && endsWith(github.event.client_payload.path, '.md')
+      && (
+        startsWith(github.event.client_payload.path, '/news-and-stories/')
+        || startsWith(github.event.client_payload.path, '/en-ca/news-and-stories/')
+        || startsWith(github.event.client_payload.path, '/fr-ca/news-and-stories/')
+      )
     runs-on: ubuntu-latest
     env:
       CONNECTOR_DOMAIN: ${{ vars.CONNECTOR_DOMAIN }}
