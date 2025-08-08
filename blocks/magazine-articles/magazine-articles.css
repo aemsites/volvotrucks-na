@@ -155,6 +155,7 @@
   height: 100%;
   width: 100%;
   object-fit: cover;
+  aspect-ratio: 16 / 9;
 }
 
 .block.magazine-articles article picture.default-image img {
@@ -271,6 +272,12 @@
   .block.magazine-articles .truck-field::after {
     top: 15px;
   }
+
+  /* make sure the fields have the same width when stacked */
+  .block.magazine-articles .list-filter fieldset div:nth-of-type(odd),
+  .block.magazine-articles .list-filter fieldset div:nth-of-type(even) {
+    width: calc(50% - 30px);
+  }
 }
 
 @media screen and (min-width: 992px) {
@@ -306,20 +313,12 @@
   .block.magazine-articles .article-list article .content {
     padding-left: 15px;
   }
-
-  /* make sure the fields have the same width when stacked */
-  .block.magazine-articles .list-filter fieldset div:nth-of-type(odd) {
-    min-width: 396px;
-  }
-
-  .block.magazine-articles .list-filter fieldset div:nth-of-type(even) {
-    min-width: 341px;
-  }
 }
 
 @media screen and (min-width: 1300px) {
   .block.magazine-articles .list-filter fieldset div:nth-of-type(odd),
   .block.magazine-articles .list-filter fieldset div:nth-of-type(even) {
     min-width: unset;
+    max-width: calc(25% - 30px);
   }
 }

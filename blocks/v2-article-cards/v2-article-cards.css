@@ -35,6 +35,10 @@
   height: 14px;
 }
 
+.v2-article-cards__article-card:hover {
+  text-decoration: none; 
+}
+
 .v2-article-cards__article-card:hover .v2-article-cards__card-button a {
   text-decoration: underline;
 }

@@ -60,7 +60,7 @@ function createDropdown(options, selected, name, placeholder, label) {
   if (options) {
     options.forEach((option) => {
       const optionTag = createElement('option', {
-        props: { value: toClassName(option) },
+        props: { value: option },
       });
       optionTag.innerText = option;
       if (optionTag.value === selected) {

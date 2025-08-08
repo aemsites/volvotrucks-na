@@ -1,35 +1,14 @@
-import { getOrigin, getTextLabel, createElement, getDateFromTimestamp } from '../../scripts/common.js';
+import { getTextLabel, createElement, getDateFromTimestamp } from '../../scripts/common.js';
 import { createList } from '../../scripts/magazine-press.js';
 import { createOptimizedPicture } from '../../scripts/aem.js';
-import { fetchMagazineArticles } from '../../scripts/services/magazine.service.js';
+import { fetchMagazineArticles, parseArticleData } from '../../scripts/services/magazine.service.js';
 
-const defaultAuthor = getTextLabel('defaultAuthor');
-const defaultReadTime = getTextLabel('defaultReadTime');
 const filterLists = { category: null, topic: null, truck: null };
-let firstLoad = true;
-
-const parseArticleData = (item) => {
-  const isImageLink = (link) => `${link}`.split('?')[0].match(/\.(jpeg|jpg|gif|png|svg|bmp|webp)$/) !== null;
-
-  const getDefaultImage = () => {
-    const logoImageURL = '/media/logo/media_10a115d2f3d50f3a22ecd2075307b4f4dcaedb366.jpeg';
-    return getOrigin() + logoImageURL;
-  };
-
-  const { article, image } = item.metadata;
-  const filterTag = ['category', 'topic', 'truck'].map((key) => item.metadata.article[key]).filter(Boolean);
-
-  return {
-    ...item.metadata,
-    filterTag,
-    author: article.author || defaultAuthor,
-    image: isImageLink(image) ? getOrigin() + image : getDefaultImage(),
-    path: item.metadata?.url,
-    readingTime: /\d+/.test(article.readTime) ? article.readTime : defaultReadTime,
-    isDefaultImage: !isImageLink(image),
-    category: article.category,
-  };
-};
+let isFirstLoad = true;
+let offsetMultiplier = 1;
+let temporaryOffset = 0;
+// This value represents opensearch's article limit
+const searchLimit = 100;
 
 const extractFilters = (facets) => {
   facets.forEach((facet) => {
@@ -37,7 +16,7 @@ const extractFilters = (facets) => {
     const uniqueItems = new Set(
       facet.items.map((item) => {
         const value = item.value.trim();
-        return key === 'truck' ? value.toUpperCase() : value.charAt(0).toUpperCase() + value.slice(1);
+        return value;
       }),
     );
     filterLists[key] = [...uniqueItems];
@@ -59,21 +38,21 @@ const processMagazineArticles = async (params = {}) => {
     return [];
   }
 
-  const articles = items.map((item) => parseArticleData(item));
+  const articles = items.map((item) => parseArticleData(item)).filter(Boolean);
 
-  // TODO: fix this since it wont bring all articles if count > 100
-  // OpenSearch limit is 100 items. See press.releases.service.js
-  if (!params.limit && articles.length < count) {
+  temporaryOffset = temporaryOffset + searchLimit < count ? searchLimit * offsetMultiplier : count - temporaryOffset + temporaryOffset;
+  offsetMultiplier++;
+
+  if ((temporaryOffset < count) & !params.limit) {
     const moreArticles = await processMagazineArticles({
       ...params,
-      limit: count,
       offset: articles.length,
     });
     return articles.concat(moreArticles);
   }
 
-  if (firstLoad) {
-    firstLoad = false;
+  if (isFirstLoad) {
+    isFirstLoad = false;
     extractFilters(dataFacets);
   }
 
@@ -144,11 +123,9 @@ async function filterArticles(articles, activeFilters) {
   // otherwise do a query again with any of these filters
   const tags = {};
   Object.entries(filters).forEach(([key, value]) => {
-    if (value) {
-      // values stored as facets are separated by an space, so if the url filter has a dash
-      // it has to be replaced by a space
-      tags[key] = value.replaceAll('-', ' ');
-    }
+    // values stored as facets are separated by a space, so if the url filter has a dash
+    // it has to be replaced by a space
+    value && (tags[key] = [value.replaceAll('-', ' ')]);
   });
 
   const filterOptions = {
