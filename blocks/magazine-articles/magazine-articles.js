@@ -1,37 +1,14 @@
-import { getOrigin, getTextLabel, createElement, getDateFromTimestamp } from '../../scripts/common.js';
+import { getTextLabel, createElement, getDateFromTimestamp } from '../../scripts/common.js';
 import { createList } from '../../scripts/magazine-press.js';
 import { createOptimizedPicture } from '../../scripts/aem.js';
-import { fetchMagazineArticles } from '../../scripts/services/magazine.service.js';
+import { fetchMagazineArticles, parseArticleData } from '../../scripts/services/magazine.service.js';
 
-const defaultAuthor = getTextLabel('defaultAuthor');
-const defaultReadTime = getTextLabel('defaultReadTime');
 const filterLists = { category: null, topic: null, truck: null };
 let isFirstLoad = true;
 let offsetMultiplier = 1;
 let temporaryOffset = 0;
-
-const parseArticleData = (item) => {
-  const isImageLink = (link) => `${link}`.split('?')[0].match(/\.(jpeg|jpg|gif|png|svg|bmp|webp)$/) !== null;
-
-  const getDefaultImage = () => {
-    const logoImageURL = '/media/logo/media_10a115d2f3d50f3a22ecd2075307b4f4dcaedb366.jpeg';
-    return getOrigin() + logoImageURL;
-  };
-
-  const { article, image } = item.metadata;
-  const filterTag = ['category', 'topic', 'truck'].map((key) => item.metadata.article[key]).filter(Boolean);
-
-  return {
-    ...item.metadata,
-    filterTag,
-    author: article.author || defaultAuthor,
-    image: isImageLink(image) ? getOrigin() + image : getDefaultImage(),
-    path: item.metadata?.url,
-    readingTime: /\d+/.test(article.readTime) ? article.readTime : defaultReadTime,
-    isDefaultImage: !isImageLink(image),
-    category: article.category,
-  };
-};
+// This value represents opensearch's article limit
+const searchLimit = 100;
 
 const extractFilters = (facets) => {
   facets.forEach((facet) => {
@@ -61,8 +38,9 @@ const processMagazineArticles = async (params = {}) => {
     return [];
   }
 
-  const articles = items.map((item) => parseArticleData(item));
-  temporaryOffset = temporaryOffset + 100 < count ? 100 * offsetMultiplier : count - temporaryOffset + temporaryOffset;
+  const articles = items.map((item) => parseArticleData(item)).filter(Boolean);
+
+  temporaryOffset = temporaryOffset + searchLimit < count ? searchLimit * offsetMultiplier : count - temporaryOffset + temporaryOffset;
   offsetMultiplier++;
 
   if ((temporaryOffset < count) & !params.limit) {

@@ -1,11 +1,13 @@
-import { createElement, unwrapDivs, getTextLabel, getDateFromTimestamp, getOrigin } from '../../scripts/common.js';
+import { createElement, unwrapDivs, getTextLabel, getDateFromTimestamp } from '../../scripts/common.js';
 import { createOptimizedPicture, loadCSS } from '../../scripts/aem.js';
-import { fetchMagazineArticles } from '../../scripts/services/magazine.service.js';
+import { fetchMagazineArticles, parseArticleData } from '../../scripts/services/magazine.service.js';
 import createPagination from '../../common/pagination/pagination.js';
 
 const blockName = 'v2-article-cards';
 let offsetMultiplier = 1;
 let temporaryOffset = 0;
+// This value represents opensearch's article limit
+const searchLimit = 100;
 
 const createCard = (article) => {
   const { url, image, title, publishDate, button = false } = article;
@@ -144,24 +146,6 @@ const hasQueryFilters = () => {
   return Boolean(searchQuery || filters.some((filter) => params.get(filter)));
 };
 
-const parseMagazineArticle = (item) => {
-  const isImageLink = (link) => `${link}`.split('?')[0].match(/\.(jpeg|jpg|gif|png|svg|bmp|webp)$/) !== null;
-
-  const getDefaultImage = () => {
-    const logoImageURL = '/media/logo/media_10a115d2f3d50f3a22ecd2075307b4f4dcaedb366.jpeg';
-    return getOrigin() + logoImageURL;
-  };
-
-  const { image } = item.metadata;
-
-  return {
-    ...item.metadata,
-    image: isImageLink(image) ? getOrigin() + image : getDefaultImage(),
-    path: item.metadata?.url,
-    isDefaultImage: !isImageLink(image),
-  };
-};
-
 const processMagazineArticles = async (params) => {
   const rawData = await fetchMagazineArticles(params);
 
@@ -169,6 +153,7 @@ const processMagazineArticles = async (params) => {
     console.error('No data returned from fetchMagazineArticles');
     return [];
   }
+
   const { items, count } = rawData;
 
   if (!items || items.length === 0) {
@@ -176,9 +161,9 @@ const processMagazineArticles = async (params) => {
     return [];
   }
 
-  const magazineArticles = items.map((item) => parseMagazineArticle(item));
+  const magazineArticles = items.map((item) => parseArticleData(item)).filter(Boolean);
 
-  temporaryOffset = temporaryOffset + 100 < count ? 100 * offsetMultiplier : count - temporaryOffset + temporaryOffset;
+  temporaryOffset = temporaryOffset + searchLimit < count ? searchLimit * offsetMultiplier : count - temporaryOffset + temporaryOffset;
   offsetMultiplier++;
 
   if (temporaryOffset < count) {
