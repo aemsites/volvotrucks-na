@@ -91,23 +91,8 @@ jobs:
           actor="${{ github.actor }}"
           timestamp=$(date -u +"%Y-%m-%dT%H:%M:%SZ")
 
-          # Define known error patterns
-          declare -a errors=(
-            "Document not found in OpenSearch"
-          )
-
-          send_message=false
-          reason="Unknown error"
-
-          for err in "${errors[@]}"; do
-            if [[ "$body" == *"$err"* ]]; then
-              reason="$err"
-              send_message=true
-              break
-            fi
-          done
-
-          if [ "$send_message" = true ]; then
+          if [[ "$body" == *"Document not found in OpenSearch"* ]]; then
+            reason="Document not found in OpenSearch"
             payload="{
               \"blocks\": [
                 {
