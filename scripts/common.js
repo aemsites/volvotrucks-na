@@ -1,4 +1,4 @@
-import { loadCSS, loadBlock, loadSections, loadHeader, buildBlock, decorateBlock, getMetadata } from './aem.js';
+import { loadCSS, loadBlock, loadSections, buildBlock, decorateBlock, getMetadata } from './aem.js';
 
 let placeholders = null;
 
@@ -225,12 +225,7 @@ export async function loadLazy(doc) {
   }
   const header = doc.querySelector('header');
 
-  const disableHeader = getMetadata('disable-header').toLowerCase() === 'true';
   const disableFooter = getMetadata('disable-footer').toLowerCase() === 'true';
-
-  if (!disableHeader) {
-    loadHeader(header);
-  }
 
   if (!disableFooter) {
     loadFooter(doc.querySelector('footer'));
