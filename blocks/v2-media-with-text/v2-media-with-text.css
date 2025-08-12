@@ -39,6 +39,7 @@
 }
 
 .v2-media-with-text__content-section p {
+  color: var(--c-grey-4);
   margin-bottom: 0;
 }
 
@@ -353,4 +354,8 @@
   .v2-media-with-text--media-gallery .v2-media-with-text__media-section::after {
     display: none;
   }
+}
+
+.v2-media-with-text-container.section--black-background p {
+  color: var(--c-grey-2);
 }

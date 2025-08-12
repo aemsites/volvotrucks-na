@@ -1,5 +1,5 @@
-import { getLocale } from '../common.js';
-import { fetchSearchData, magazineSearchQuery, TENANT } from '../search-api.js';
+import { getLocale, getOrigin, getTextLabel } from '../common.js';
+import { fetchSearchData, topicSearchQuery, magazineSearchQuery, TENANT } from '../search-api.js';
 
 /**
  * Extracts the articles that don't have an image field
@@ -183,4 +183,77 @@ export const fetchMagazineArticles = async ({
     console.error('Error fetching magazine articles:', error);
     return null;
   }
+};
+
+export const fetchRecommendedArticles = async ({
+  tenant = TENANT,
+  language = getLocale().split('-')[0].toUpperCase(),
+  limit = 7,
+  offset = 0,
+  category = 'Magazine',
+  tags = {},
+  sort = 'PUBLISH_DATE_DESC',
+  facets = ['ARTICLE', 'TOPIC', 'TRUCK'],
+}) => {
+  const variables = {
+    tenant,
+    language,
+    limit,
+    offset,
+    category,
+    facets,
+    sort,
+    article: tags,
+  };
+
+  try {
+    if (!tenant) {
+      throw new Error('TENANT not defined');
+    }
+
+    const rawData = await fetchSearchData({
+      query: topicSearchQuery(),
+      variables,
+    });
+    return rawData?.data?.edsrecommend || null;
+  } catch (error) {
+    console.error('Error fetching recommended articles:', error);
+    return null;
+  }
+};
+
+const defaultAuthor = getTextLabel('defaultAuthor');
+const defaultReadTime = getTextLabel('defaultReadTime');
+/**
+ * Extract the classes of a block and in case there is a 'limit-X' set, extract it as a number
+ * @param {Object} item - The raw article item that comes from opensearch
+ * @returns {Object} - The parsed object without the metadata field and some other properties
+ */
+export const parseArticleData = (item) => {
+  // Add a check for item and item.metadata in case 'item' is falsy
+  if (!item || !item.metadata) {
+    console.warn('parseArticleData received invalid item or metadata:', item);
+    return;
+  }
+
+  const isImageLink = (link) => `${link}`.split('?')[0].match(/\.(jpeg|jpg|gif|png|svg|bmp|webp)$/) !== null;
+
+  const getDefaultImage = () => {
+    const logoImageURL = '/media/logo/media_10a115d2f3d50f3a22ecd2075307b4f4dcaedb366.jpeg';
+    return getOrigin() + logoImageURL;
+  };
+
+  const { article, image } = item.metadata;
+  const filterTag = ['category', 'topic', 'truck'].map((key) => item.metadata.article[key]).filter(Boolean);
+
+  return {
+    ...item.metadata,
+    filterTag,
+    author: article.author || defaultAuthor,
+    image: isImageLink(image) ? getOrigin() + image : getDefaultImage(),
+    path: item.metadata?.url,
+    readingTime: /\d+/.test(article.readTime) ? article.readTime : defaultReadTime,
+    isDefaultImage: !isImageLink(image),
+    category: article.category,
+  };
 };
