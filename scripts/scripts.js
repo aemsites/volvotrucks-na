@@ -11,6 +11,7 @@ import {
   loadCSS,
   loadScript,
   loadBlock,
+  loadHeader,
 } from './aem.js';
 
 import {
@@ -800,8 +801,15 @@ export function decorateMain(main, head) {
 async function loadEager(doc) {
   decorateTemplateAndTheme();
 
+  const disableHeader = getMetadata('disable-header').toLowerCase() === 'true';
   const main = doc.querySelector('main');
   const { head } = doc;
+
+  if (!disableHeader) {
+    const header = doc.querySelector('header');
+    header && loadHeader(header);
+  }
+
   if (main) {
     decorateMain(main, head);
     document.body.classList.add('appear');
