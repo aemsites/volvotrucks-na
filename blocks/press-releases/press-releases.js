@@ -4,10 +4,9 @@ import createPagination from '../../common/pagination/pagination.js';
 import { fetchPressReleases } from '../../scripts/services/press-release.service.js';
 
 const blockName = 'press-releases';
-let offsetMultiplier = 1;
-let temporaryOffset = 0;
-let isFirstLoad = true;
-const displayLimitAmount = 10;
+const PAGE_SIZE = 10;
+let paginationCssOnce;
+const pageDataCache = new Map();
 
 const parsePressRelease = (item) => {
   const isImageLink = (link) => `${link}`.split('?')[0].match(/\.(jpeg|jpg|gif|png|svg|bmp|webp)$/) !== null;
@@ -27,52 +26,7 @@ const parsePressRelease = (item) => {
   };
 };
 
-const processPressReleases = async (params = {}) => {
-  const rawData = await fetchPressReleases(params);
-
-  if (!rawData) {
-    console.error('No data returned from fetchPressReleases');
-    return [];
-  }
-  const { items, count } = rawData;
-
-  if (!items || items.length === 0) {
-    console.error('No items returned in raw data:', rawData);
-    return [];
-  }
-
-  const pressReleases = items.map((item) => parsePressRelease(item));
-  temporaryOffset = temporaryOffset + 100 < count ? 100 * offsetMultiplier : count - temporaryOffset + temporaryOffset;
-  offsetMultiplier++;
-
-  if (temporaryOffset < count) {
-    const morePressReleases = await processPressReleases({
-      ...params,
-      offset: temporaryOffset,
-    });
-    return pressReleases.concat(morePressReleases);
-  }
-
-  return pressReleases;
-};
-
-const getPressReleases = (query) => {
-  if (!isFirstLoad) {
-    offsetMultiplier = 1;
-    temporaryOffset = 0;
-  }
-
-  const params = { sort: 'PUBLISH_DATE_DESC' };
-  if (query) {
-    params.q = query;
-  }
-  const pressReleases = processPressReleases(params);
-  isFirstLoad = false;
-
-  return pressReleases;
-};
-
-const buildSearchBar = () => {
+const renderSearchBar = () => {
   const searchBar = createElement('div', { classes: `${blockName}__search-bar` });
   searchBar.innerHTML = `
     <input type="text" name="search" autocomplete="off" placeholder="${getTextLabel('PressReleases:SearchPlaceholder')}"/>
@@ -80,102 +34,164 @@ const buildSearchBar = () => {
   return searchBar;
 };
 
-const buildPressReleaseArticle = (entry) => {
+const renderPressReleaseCard = (entry) => {
   const { path, image, title, description, publishDate } = entry;
   const card = createElement('article', { classes: `${blockName}__article` });
   const picture = createOptimizedPicture(image, title, false, [{ width: '414' }]);
-  const pictureTag = picture.outerHTML;
   const formattedDate = getDateFromTimestamp(publishDate);
+
   card.innerHTML = `
     <a href="${path}">
-      ${pictureTag}
+      ${picture.outerHTML}
     </a>
     <div>
       <span class="date">${formattedDate}</span>
       <h3><a href="${path}">${title}</a></h3>
       <p>${description}</p>
     </div>`;
+
   return card;
 };
 
-const createAllPressReleases = (block, pressReleases) => {
-  const prList = createElement('ul', { classes: ['article-list'] });
+const renderPressReleaseList = (block, pressReleases) => {
+  const list = createElement('ul', { classes: ['article-list'] });
   pressReleases.forEach((pr) => {
-    prList.append(buildPressReleaseArticle(pr));
+    list.append(renderPressReleaseCard(pr));
   });
-  block.append(prList);
+  block.append(list);
 };
 
-const reducePressReleaseList = (pressReleases, limit) => {
-  return pressReleases?.reduce((resultArray, item, index) => {
-    const chunkIndex = Math.floor(index / limit);
-    if (!resultArray[chunkIndex]) {
-      resultArray[chunkIndex] = [];
-    }
-    resultArray[chunkIndex].push(item);
-    return resultArray;
-  }, []);
+/**
+ * Ensures a reusable pagination content area exists on the block.
+ *
+ * @param {HTMLElement} block
+ * @returns {HTMLElement}
+ */
+const getOrCreateContentArea = (block) => {
+  let contentArea = block.querySelector('.pagination-content');
+  if (!contentArea) {
+    contentArea = createElement('div', { classes: ['pagination-content'] });
+    block.appendChild(contentArea);
+  }
+  return contentArea;
 };
 
-const loadChunkedArticles = async (block, pressReleases, displayLimitAmount) => {
-  if (!isFirstLoad) {
-    const content = block.querySelector('.pagination-content');
-    if (content) {
-      content.innerHTML = '';
+/**
+ * Loads the pagination CSS exactly once.
+ */
+const loadPaginationCss = async () => {
+  if (!paginationCssOnce) {
+    const baseURL = window.location.origin;
+    paginationCssOnce = loadCSS(`${baseURL}/common/pagination/pagination.css`);
+  }
+  await paginationCssOnce;
+};
+
+/**
+ * Returns a per-page loader function bound to the provided base params,
+ * with a tiny in-memory cache to avoid refetching visited pages.
+ *
+ * @param {Object} baseParams
+ * @returns {(pageIndex:number) => Promise<Array>}
+ */
+const makePageLoader =
+  (baseParams = {}) =>
+  async (pageIndex) => {
+    if (pageDataCache.has(pageIndex)) {
+      return pageDataCache.get(pageIndex);
     }
+    const { items = [] } = await fetchPressReleases({
+      ...baseParams,
+      sort: 'PUBLISH_DATE_DESC',
+      limit: PAGE_SIZE,
+      offset: pageIndex * PAGE_SIZE,
+    });
+    const parsed = items.map((item) => parsePressRelease(item));
+    pageDataCache.set(pageIndex, parsed);
+    return parsed;
+  };
+
+/**
+ * Fetches the first page to compute totals and seed cache.
+ *
+ * @param {Object} baseParams
+ * @returns {{ total:number, totalPages:number }}
+ */
+const fetchCountAndPrimeCache = async (baseParams = {}) => {
+  const first = await fetchPressReleases({
+    ...baseParams,
+    sort: 'PUBLISH_DATE_DESC',
+    limit: PAGE_SIZE,
+    offset: 0,
+  });
+
+  const total = Number(first?.count || 0);
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
+  if (first?.items?.length) {
+    pageDataCache.set(
+      0,
+      first.items.map((i) => parsePressRelease(i)),
+    );
   }
 
-  // Set the chunks of the array for future pagination
-  const chunkedPressReleases = reducePressReleaseList(pressReleases, displayLimitAmount);
-  if (chunkedPressReleases && chunkedPressReleases.length > 0) {
-    let contentArea = block.querySelector('.pagination-content');
-    if (!contentArea) {
-      contentArea = createElement('div', { classes: ['pagination-content'] });
-      block.appendChild(contentArea);
-    }
-    const baseURL = window.location.origin;
-    await loadCSS(`${baseURL}/common/pagination/pagination.css`);
-    createPagination(chunkedPressReleases, block, createAllPressReleases, contentArea, 0);
-  } else {
-    console.error('No chunked items created.');
+  return { total, totalPages };
+};
+
+/**
+ * Initializes dynamic pagination with API-backed totalPages and per-page fetching.
+ *
+ * @param {HTMLElement} block
+ * @param {Object} baseParams
+ */
+const initPressReleasesPagination = async (block, baseParams = {}) => {
+  const contentArea = getOrCreateContentArea(block);
+  await loadPaginationCss();
+
+  pageDataCache.clear();
+
+  const { total, totalPages } = await fetchCountAndPrimeCache(baseParams);
+  const loadPageData = makePageLoader(baseParams);
+
+  createPagination({
+    block,
+    contentArea,
+    totalPages,
+    renderItems: renderPressReleaseList,
+    loadPageData,
+    initialPage: 0,
+  });
+
+  if (!total) {
+    contentArea.innerHTML = '';
+    const noResultsMsg = createElement('p', { classes: `${blockName}__no-results-message` });
+    const q = baseParams?.q || '';
+    noResultsMsg.textContent = getTextLabel('no results').replace('$0', `"${q}"`);
+    contentArea.append(noResultsMsg);
   }
 };
 
 const addEventListeners = (block) => {
   const searchInput = block.querySelector(`.${blockName}__search-bar input`);
   const searchButton = block.querySelector(`.${blockName}__search-bar button`);
-  const contentArea = block.querySelector('.pagination-content');
 
-  searchButton.addEventListener('click', async () => {
-    const query = searchInput.value;
+  const applySearch = async () => {
+    const query = searchInput.value?.trim();
+    block.querySelector('.pagination-content')?.remove();
+    block.querySelector('.pagination-nav')?.remove();
+    await initPressReleasesPagination(block, query ? { q: query } : {});
+  };
 
-    const pressReleases = await getPressReleases(query);
-    loadChunkedArticles(block, pressReleases, displayLimitAmount);
-
-    if (pressReleases.length === 0) {
-      contentArea.innerHTML = '';
-      block.querySelector('.pagination-nav').innerHTML = '';
-      const noResultsMsg = createElement('p', { classes: `${blockName}__no-results-message` });
-      noResultsMsg.textContent = getTextLabel('no results').replace('$0', `"${query}"`);
-      contentArea.append(noResultsMsg);
-    }
-  });
-
+  searchButton.addEventListener('click', applySearch);
   searchInput.addEventListener('keydown', (event) => {
     if (event.key === 'Enter') {
-      searchButton.click();
+      applySearch();
     }
   });
 };
 
 export default async function decorate(block) {
-  block.append(buildSearchBar());
-
-  const contentArea = createElement('div', { classes: ['pagination-content'] });
-  block.appendChild(contentArea);
-
-  const pressReleases = await getPressReleases();
-
-  loadChunkedArticles(block, pressReleases, displayLimitAmount);
+  block.append(renderSearchBar());
+  await initPressReleasesPagination(block);
   addEventListeners(block);
 }
