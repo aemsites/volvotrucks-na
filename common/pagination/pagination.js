@@ -209,26 +209,8 @@ const resetPaginationList = (paginationNav) => {
 };
 
 /**
- * Toggles loading state to reduce CLS and improve a11y.
- *
- * @param {HTMLElement} block - The block container.
- * @param {HTMLElement} contentArea - The content area where items render.
- * @param {boolean} isLoading - Whether we are loading a page.
- */
-const setLoadingState = (block, contentArea, isLoading) => {
-  if (isLoading) {
-    block.classList.add('is-loading');
-    contentArea.setAttribute('aria-busy', 'true');
-  } else {
-    block.classList.remove('is-loading');
-    contentArea.removeAttribute('aria-busy');
-  }
-};
-
-/**
  * Builds a renderPage(pageIndex) function bound to the provided context.
  *
- * @param {HTMLElement} block - The block container.
  * @param {HTMLElement} contentArea - The content area where items render.
  * @param {HTMLElement} paginationList - The <ul> container for controls.
  * @param {number} totalPages - Total number of pages.
@@ -238,24 +220,20 @@ const setLoadingState = (block, contentArea, isLoading) => {
  * @param {() => boolean} shouldFocus - Callback returning whether to focus active button.
  * @returns {Function} - async renderPage(pageIndex).
  */
-const makePageRenderer =
-  (block, contentArea, paginationList, totalPages, loadPageData, renderItems, changePage, shouldFocus) => async (pageIndex) => {
-    setLoadingState(block, contentArea, true);
-    try {
-      const items = await loadPageData(pageIndex);
-      contentArea.innerHTML = '';
-      renderItems(contentArea, items);
-      renderPaginationControls(paginationList, pageIndex, totalPages, changePage);
-      const newActiveButton = paginationList.querySelector('.pagination-button.active');
-      if (newActiveButton && shouldFocus && shouldFocus() === true) {
-        newActiveButton.focus();
-      }
-    } catch (e) {
-      console.error('pagination: failed to render page', e);
-    } finally {
-      setLoadingState(block, contentArea, false);
+const makePageRenderer = (contentArea, paginationList, totalPages, loadPageData, renderItems, changePage, shouldFocus) => async (pageIndex) => {
+  try {
+    const items = await loadPageData(pageIndex);
+    contentArea.innerHTML = '';
+    renderItems(contentArea, items);
+    renderPaginationControls(paginationList, pageIndex, totalPages, changePage);
+    const newActiveButton = paginationList.querySelector('.pagination-button.active');
+    if (newActiveButton && shouldFocus && shouldFocus() === true) {
+      newActiveButton.focus();
     }
-  };
+  } catch (e) {
+    console.error('pagination: failed to render page', e);
+  }
+};
 
 /**
  * Clamps page index into [0, total-1].
@@ -350,16 +328,7 @@ const initPaginationController = (config) => {
 
   const { proxy: pageChangeProxy, set: setPageChangeHandler } = makePageChangeProxy();
 
-  const renderPage = makePageRenderer(
-    block,
-    contentArea,
-    paginationList,
-    totalPagesSafe,
-    loadPageData,
-    renderItems,
-    pageChangeProxy,
-    () => shouldFocus,
-  );
+  const renderPage = makePageRenderer(contentArea, paginationList, totalPagesSafe, loadPageData, renderItems, pageChangeProxy, () => shouldFocus);
 
   const renderPageGuarded = makeGuardedRenderer(renderPage, (idx) => {
     activePage = clampPage(idx, totalPagesSafe);
