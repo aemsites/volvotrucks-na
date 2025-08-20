@@ -2,44 +2,71 @@
 
 /*
   Fonts
-  When using fonts, please see "best practices for fonts" in Readme
+  When using fonts, please see "Best practices using fonts" in Readme
+
+  Font Subset Strategy
+  --------------------
+  We split each font into two subsets to optimize performance while ensuring complete coverage
+  for English, French, and Spanish.  
+  Subsets are only created for the most important and frequently used fonts to keep build size
+  and complexity down — less critical fonts are loaded in full from lazy-styles.css.
+
+  1. Core subset (-core)
+     Unicode range:
+       - U+0020–007F   : Basic Latin (A–Z, a–z, digits, basic punctuation, space)
+       - U+00A0–00FF   : Latin-1 Supplement (accented letters for FR/ES, NBSP, ¡, ¿, etc.)
+       - U+2000–206F   : General Punctuation (– — ‘ ’ “ ” …, thin spaces)
+       - U+20A0–20CF   : Currency symbols (€ £ ¢, etc.)
+     Purpose:
+       - Supports all EN/FR/ES letters, punctuation, and common symbols.
+       - Defined in styles.css and preloaded for fastest above-the-fold rendering.
+
+  2. Extended subset (-extended)
+     Unicode range:
+       - U+0100–024F   : Latin Extended-A/B (extra diacritics for other European languages)
+       - U+0300–036F   : Combining Diacritical Marks
+       - U+1E00–1EFF   : Latin Extended Additional
+     Purpose:
+       - Provides rarer characters not required for EN/FR/ES.
+       - Defined in lazy-styles.css, loaded after first paint.
+
+  Notes:
+    - Both subsets use the same font-family name so browsers merge them seamlessly.
+    - Core and extended ranges are mutually exclusive to avoid duplicate downloads.
 */
 
-/* Basic latin subsets Start */
 @font-face {
   font-family: VolvoNovum;
   src:
-    url('/fonts/VolvoNovum-Regular-basic.woff2') format('woff2'),
-    url('/fonts/VolvoNovum-Regular-basic.woff') format('woff');
+    url('/fonts/VolvoNovum-Regular-core.woff2') format('woff2'),
+    url('/fonts/VolvoNovum-Regular-core.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
-  unicode-range: U+0020-007F;
+  unicode-range: U+0020-007F, U+00A0-00FF, U+2000-206F, U+20A0-20CF;
 }
 
 @font-face {
   font-family: VolvoNovum-Medium;
   src:
-    url('/fonts/VolvoNovum-Medium-basic.woff2') format('woff2'),
-    url('/fonts/VolvoNovum-Medium-basic.woff') format('woff');
+    url('/fonts/VolvoNovum-Medium-core.woff2') format('woff2'),
+    url('/fonts/VolvoNovum-Medium-core.woff') format('woff');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
-  unicode-range: U+0020-007F;
+  unicode-range: U+0020-007F, U+00A0-00FF, U+2000-206F, U+20A0-20CF;
 }
 
 @font-face {
   font-family: VolvoBroadProDigital;
   src:
-    url('/fonts/VolvoBroadProDigital-basic.woff2') format('woff2'),
-    url('/fonts/VolvoBroadProDigital-basic.woff') format('woff');
+    url('/fonts/VolvoBroadProDigital-core.woff2') format('woff2'),
+    url('/fonts/VolvoBroadProDigital-core.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-  unicode-range: U+0020-007F;
+  unicode-range: U+0020-007F, U+00A0-00FF, U+2000-206F, U+20A0-20CF;
 }
-
-/* Basic latin subsets End */
 
 :root {
   /* fonts */
@@ -50,7 +77,7 @@
   --ff-fontawesome: 'fontawesome';
   --font-family-body: var(--ff-volvo-novum);
   --font-family-heading: var(--ff-volvo-novum-medium);
-  --font-family-fixed: 'Roboto Mono', menlo, consolas, 'Liberation Mono', monospace;
+  --font-family-code: 'Roboto Mono', menlo, consolas, 'Liberation Mono', monospace;
 
   /* REDESIGN */
 
@@ -516,7 +543,7 @@ a:hover {
 code,
 pre,
 samp {
-  font-family: var(--font-family-fixed);
+  font-family: var(--font-family-code);
   font-size: var(--body-font-size-s);
 }
 

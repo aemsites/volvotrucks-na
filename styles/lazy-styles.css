@@ -1,7 +1,5 @@
 /* below the fold CSS goes here */
 
-
-/* Extended latin subsets Start */
 @font-face {
   font-family: VolvoNovum;
   src:
@@ -10,7 +8,7 @@
   font-weight: normal;
   font-style: normal;
   font-display: swap;
-  unicode-range: U+0080-FFFF;
+  unicode-range: U+0100-024F, U+0300-036F, U+1E00-1EFF;
 }
 
 @font-face {
@@ -21,7 +19,7 @@
   font-weight: 500;
   font-style: normal;
   font-display: swap;
-  unicode-range: U+0080-FFFF;
+  unicode-range: U+0100-024F, U+0300-036F, U+1E00-1EFF;
 }
 
 @font-face {
@@ -32,10 +30,8 @@
   font-weight: 400;
   font-style: normal;
   font-display: swap;
-  unicode-range: U+0080-FFFF;
+  unicode-range: U+0100-024F, U+0300-036F, U+1E00-1EFF;
 }
-
-/* Extended latin subsets End */
 
 @font-face {
   font-family: fontawesome;
