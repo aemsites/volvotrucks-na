@@ -1,4 +1,4 @@
-import { createElement, debounce, decorateIcons, getTextLabel } from '../../scripts/common.js';
+import { createElement, decorateIcons, getTextLabel } from '../../scripts/common.js';
 
 /**
  * Creates an icon element.
@@ -108,7 +108,7 @@ const createEllipsis = () => {
  * @param {number} currentPage - The current active page index.
  * @param {Function} changePage - The function to call when a page button is clicked.
  */
-const appendPages = (paginationList, pages, currentPage, changePage) => {
+const appendPageButtons = (paginationList, pages, currentPage, changePage) => {
   pages.forEach((page) => {
     const listItem = createElement('li', { classes: ['pagination-item'] });
     if (page === 'ellipsis') {
@@ -128,7 +128,7 @@ const appendPages = (paginationList, pages, currentPage, changePage) => {
  * @param {number} totalPages - The total number of pages.
  * @returns {Array<string|number>} - An array of page numbers and ellipses to be displayed.
  */
-const getPageRange = (currentPage, totalPages) => {
+const computeVisiblePages = (currentPage, totalPages) => {
   const pages = [];
   const addPageRange = (start, end) => {
     for (let i = start; i <= end; i += 1) {
@@ -164,13 +164,13 @@ const getPageRange = (currentPage, totalPages) => {
  * @param {number} totalPages - The total number of pages.
  * @param {Function} changePage - The function to call when changing the page.
  */
-const createPaginationControls = (paginationList, currentPage, totalPages, changePage) => {
+const renderPaginationControls = (paginationList, currentPage, totalPages, changePage) => {
   paginationList.innerHTML = '';
 
   paginationList.appendChild(createArrowButton('prev', currentPage === 0, () => changePage(currentPage - 1)));
 
-  const pages = getPageRange(currentPage, totalPages);
-  appendPages(paginationList, pages, currentPage, changePage);
+  const pages = computeVisiblePages(currentPage, totalPages);
+  appendPageButtons(paginationList, pages, currentPage, changePage);
 
   paginationList.appendChild(createArrowButton('next', currentPage === totalPages - 1, () => changePage(currentPage + 1)));
 
@@ -178,16 +178,13 @@ const createPaginationControls = (paginationList, currentPage, totalPages, chang
 };
 
 /**
- * Creates and appends the pagination controls (arrows, page buttons, ellipses) to the block.
+ * Ensures a <nav class="pagination-nav"> element exists in the block.
+ * Creates and appends one if it does not already exist.
  *
- * @param {Array} chunkedItems - Array of paginated items (each entry is a page of items).
- * @param {HTMLElement} block - The container where items and pagination controls will be displayed.
- * @param {Function} renderItems - The function to call to render items for the given page.
- * @param {HTMLElement} contentArea - The content area where items are rendered.
- * @param {number} [currentPage=0] - The currently active page index (default is 0).
+ * @param {HTMLElement} block - Block container where pagination is rendered.
+ * @returns {HTMLElement}     - The <nav> element for pagination controls.
  */
-const createPagination = (chunkedItems, block, renderItems, contentArea, currentPage = 0) => {
-  const totalPages = chunkedItems.length;
+const ensurePaginationNav = (block) => {
   let paginationNav = block.querySelector('nav.pagination-nav');
   const paginationNavAriaLabel = getTextLabel('paginationNavAriaLabel');
 
@@ -195,27 +192,190 @@ const createPagination = (chunkedItems, block, renderItems, contentArea, current
     paginationNav = createElement('nav', { classes: ['pagination-nav'], props: { 'aria-label': paginationNavAriaLabel } });
     block.appendChild(paginationNav);
   }
+  return paginationNav;
+};
 
+/**
+ * Resets and returns a fresh <ul.pagination> inside the given nav.
+ *
+ * @param {HTMLElement} paginationNav - The nav container.
+ * @returns {HTMLElement} - The <ul> element for pagination controls.
+ */
+const resetPaginationList = (paginationNav) => {
   const paginationList = createElement('ul', { classes: ['pagination'] });
   paginationNav.innerHTML = '';
   paginationNav.appendChild(paginationList);
+  return paginationList;
+};
 
-  const changePage = debounce((newPage) => {
-    if (newPage < 0 || newPage >= totalPages) {
-      return;
-    }
+/**
+ * Builds a renderPage(pageIndex) function bound to the provided context.
+ *
+ * @param {HTMLElement} contentArea - The content area where items render.
+ * @param {HTMLElement} paginationList - The <ul> container for controls.
+ * @param {number} totalPages - Total number of pages.
+ * @param {Function} loadPageData - Data loader (pageIndex) => Promise<Array>.
+ * @param {Function} renderItems - Renderer (contentArea, items).
+ * @param {Function} changePage - Page change invoker (used by controls).
+ * @param {() => boolean} shouldFocus - Callback returning whether to focus active button.
+ * @returns {Function} - async renderPage(pageIndex).
+ */
+const makePageRenderer = (contentArea, paginationList, totalPages, loadPageData, renderItems, changePage, shouldFocus) => async (pageIndex) => {
+  try {
+    const items = await loadPageData(pageIndex);
     contentArea.innerHTML = '';
-    renderItems(contentArea, chunkedItems[newPage]);
-    createPaginationControls(paginationList, newPage, totalPages, changePage);
-
+    renderItems(contentArea, items);
+    renderPaginationControls(paginationList, pageIndex, totalPages, changePage);
     const newActiveButton = paginationList.querySelector('.pagination-button.active');
-    if (newActiveButton) {
+    if (newActiveButton && shouldFocus && shouldFocus() === true) {
       newActiveButton.focus();
     }
-  }, 200);
+  } catch (e) {
+    console.error('pagination: failed to render page', e);
+  }
+};
 
-  createPaginationControls(paginationList, currentPage, totalPages, changePage);
-  renderItems(contentArea, chunkedItems[currentPage]);
+/**
+ * Clamps page index into [0, total-1].
+ *
+ * @param {number} index - Target page index.
+ * @param {number} total - Total pages.
+ * @returns {number} - Clamped page index.
+ */
+const clampPage = (index, total) => Math.max(0, Math.min(index, Math.max(total - 1, 0)));
+
+/**
+ * Creates a changePage proxy so we can pass a stable function to controls
+ * and assign the real change handler later.
+ *
+ * @returns {{ proxy: (i:number)=>void, set: (fn: (i:number)=>void)=>void }}
+ */
+const makePageChangeProxy = () => {
+  const ref = { current: null };
+  const proxy = (i) => {
+    if (ref.current) {
+      ref.current(i);
+    }
+  };
+  const set = (fn) => {
+    ref.current = fn;
+  };
+  return { proxy, set };
+};
+
+/**
+ * Focuses the active pagination button if allowed (a11y without initial scroll).
+ *
+ * @param {HTMLElement} paginationList - The <ul> for pagination controls.
+ * @param {boolean} shouldFocus - Whether to focus the active button.
+ */
+const focusActiveButton = (paginationList, shouldFocus) => {
+  const btn = paginationList.querySelector('.pagination-button.active');
+  if (btn && shouldFocus) {
+    btn.focus();
+  }
+};
+
+/**
+ * Rebuilds controls for a target page (optimistic UI) and optionally focuses.
+ *
+ * @param {HTMLElement} paginationList - The <ul> for pagination controls.
+ * @param {number} page - Target page index.
+ * @param {number} total - Total pages.
+ * @param {(i:number)=>void} changeProxy - Stable change handler proxy.
+ * @param {boolean} allowFocus - Whether focus should be applied.
+ */
+const renderControlsOptimistic = (paginationList, page, total, changeProxy, allowFocus) => {
+  renderPaginationControls(paginationList, page, total, changeProxy);
+  focusActiveButton(paginationList, allowFocus);
+};
+
+/**
+ * Wraps a renderPage function with a sequence guard to ignore stale responses.
+ *
+ * @param {(i:number)=>Promise<void>} renderPage - The raw renderer.
+ * @param {(i:number)=>void} onSettled - Called after latest render completes.
+ * @returns {(i:number)=>Promise<void>} - Guarded renderer.
+ */
+const makeGuardedRenderer = (renderPage, onSettled) => {
+  let seq = 0;
+  return async (idx) => {
+    const ticket = ++seq;
+    await renderPage(idx);
+    if (ticket !== seq) {
+      return;
+    }
+    onSettled(idx);
+  };
+};
+
+/**
+ * Internal: wires up pagination state, handlers, optimistic UI, and initial render.
+ *
+ * @param {PaginationConfig} config - Configuration object.
+ * @returns {{ goTo: (pageIndex:number) => void }} Public controller.
+ */
+const initPaginationController = (config) => {
+  const { block, contentArea, totalPages, renderItems, loadPageData, initialPage = 0, onPageChange } = config;
+
+  const totalPagesSafe = Math.max(1, totalPages);
+  let activePage = clampPage(initialPage, totalPagesSafe);
+  let isLoading = false;
+  let shouldFocus = false;
+
+  const paginationNav = ensurePaginationNav(block);
+  const paginationList = resetPaginationList(paginationNav);
+
+  const { proxy: pageChangeProxy, set: setPageChangeHandler } = makePageChangeProxy();
+
+  const renderPage = makePageRenderer(contentArea, paginationList, totalPagesSafe, loadPageData, renderItems, pageChangeProxy, () => shouldFocus);
+
+  const renderPageGuarded = makeGuardedRenderer(renderPage, (idx) => {
+    activePage = clampPage(idx, totalPagesSafe);
+    isLoading = false;
+    shouldFocus = true;
+    if (typeof onPageChange === 'function') {
+      onPageChange(idx, totalPagesSafe);
+    }
+  });
+
+  /**
+   * changePage with optimistic UI:
+   * - updates controls immediately for visual feedback,
+   * - triggers async render,
+   * - guards against out-of-range and spamming.
+   */
+  const changePage = (newPage) => {
+    const next = clampPage(newPage, totalPagesSafe);
+    if (next === activePage && !isLoading) {
+      return;
+    }
+    renderControlsOptimistic(paginationList, next, totalPagesSafe, pageChangeProxy, shouldFocus);
+    isLoading = true;
+    renderPageGuarded(next);
+  };
+
+  setPageChangeHandler(changePage);
+  renderControlsOptimistic(paginationList, activePage, totalPagesSafe, pageChangeProxy, false);
+  renderPageGuarded(activePage);
+
+  return {
+    goTo: changePage,
+  };
+};
+
+/**
+ * Creates and initializes dynamic pagination (object signature only).
+ *
+ * @param {PaginationConfig} config - Configuration object.
+ */
+const createPagination = (config) => {
+  const cfg = config || {};
+  if (!cfg.block || !cfg.contentArea || !cfg.renderItems || !cfg.loadPageData || !Number.isInteger(cfg.totalPages)) {
+    console.error('pagination: invalid dynamic config');
+    return;
+  }
+  initPaginationController(cfg);
 };
 
 export default createPagination;
