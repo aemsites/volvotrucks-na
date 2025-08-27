@@ -4,6 +4,8 @@ import { smoothScrollHorizontal } from '../../scripts/motion-helper.js';
 const blockName = 'v2-content-carousel';
 
 const updateActiveClass = (elements, targetElement, carousel) => {
+  const isTablet = window.matchMedia('(min-width: 744px)');
+
   elements.forEach((el, index) => {
     if (el === targetElement) {
       el.classList.add('active');
@@ -19,7 +21,7 @@ const updateActiveClass = (elements, targetElement, carousel) => {
       } else if (index === el.parentNode.children.length - 1) {
         arrowControl = carousel.nextElementSibling.querySelector(`.${blockName}__button-next`);
       }
-      if (arrowControl) {
+      if (arrowControl && isTablet.matches) {
         arrowControl.disabled = true;
       }
     } else {
@@ -72,6 +74,8 @@ const navigate = (carousel, direction) => {
   const activeItem = carousel.querySelector(`.${blockName}__images-list-item.active`);
   let index = [...activeItem.parentNode.children].indexOf(activeItem);
 
+  const isMobile = window.matchMedia('(max-width: 743px)');
+
   if (direction === 'left') {
     index -= 1;
     if (index === -1) {
@@ -80,7 +84,7 @@ const navigate = (carousel, direction) => {
     }
   } else {
     index += 1;
-    if (index > carousel.childElementCount - 1) {
+    if (index > carousel.childElementCount - 1 || (isMobile.matches && index === carousel.childElementCount)) {
       index = 0; // Go to the first item if at the end
     }
   }
@@ -115,6 +119,8 @@ const createArrowControls = (carousel) => {
 
 export default function decorate(block) {
   const rows = [...block.querySelectorAll(':scope > div')];
+  const isInteractive = block.classList.contains('interactive');
+
   rows.forEach((row) => {
     row.classList.add(`${blockName}__row`);
   });
@@ -159,6 +165,19 @@ export default function decorate(block) {
         figCaption.appendChild(captionFragment);
         figure.appendChild(figCaption);
       }
+    }
+
+    if (isInteractive) {
+      const modalLink = figCaption.querySelector('a');
+      modalLink && el.appendChild(modalLink);
+      // modalLink.remove();
+
+      // const plusButton = document.createRange().createContextualFragment(`
+      // <span class="icon icon-plus">
+      //   <svg xmlns="http://www.w3.org/2000/svg" width="24" height="25" viewBox="0 0 24 25" fill="none">
+      //     <path d="M12 3.9502C12.2761 3.9502 12.5 4.17405 12.5 4.4502V12.4502H20.5C20.7761 12.4502 21 12.6741 21 12.9502C21 13.2263 20.7761 13.4502 20.5 13.4502H12.5V21.4502C12.5 21.7263 12.2761 21.9502 12 21.9502C11.7239 21.9502 11.5 21.7263 11.5 21.4502V13.4502H3.5C3.22386 13.4502 3 13.2263 3 12.9502C3 12.6741 3.22386 12.4502 3.5 12.4502H11.5V4.4502C11.5 4.17405 11.7239 3.9502 12 3.9502Z" fill="#141414"/>
+      //   </svg>
+      // </span>`);
     }
   });
 
