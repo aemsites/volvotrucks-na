@@ -637,10 +637,6 @@ function buildInpageNavigationBlock(main) {
 
   if (items.length > 0) {
     const section = createElement('div');
-    Object.assign(section.style, {
-      height: '48px',
-      overflow: 'hidden',
-    });
     const inpageBlock = buildBlock(inpageClassName, { elems: items });
 
     section.append(inpageBlock);

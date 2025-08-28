@@ -1,7 +1,17 @@
 import { isVideoLink, createVideo } from '../../scripts/video-helper.js';
 import { createElement, getTextLabel, removeEmptyTags, variantsClassesToBEM } from '../../scripts/common.js';
 
-const variantClasses = ['centered', 'left-center', 'center-bottom', 'dark', 'background-right', 'compact', 'background-transparent'];
+const variantClasses = [
+  'centered',
+  'left-center',
+  'center-bottom',
+  'left',
+  'dark',
+  'background-right',
+  'compact',
+  'background-transparent',
+  'marketing',
+];
 let intervalId = null;
 const blockName = 'v2-hero';
 
@@ -141,6 +151,10 @@ function decorate(block) {
   [...ctaButtons].forEach((b) => {
     if (block.classList.contains(`${blockName}--dark`)) {
       b.classList.add('dark');
+    }
+
+    if (block.classList.contains(`${blockName}--marketing`)) {
+      b.classList.add('marketing');
     }
 
     b.parentElement.remove();
