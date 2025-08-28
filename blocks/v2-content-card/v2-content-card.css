@@ -140,13 +140,14 @@
 }
 
 .v2-content-card--with-button .v2-content-card__content {
-  gap: 24px;
+  gap: 16px;
+  justify-content: space-between;
 }
 
 .v2-content-card--with-button .v2-content-card__title {
-    font-size: var(--f-heading-3-font-size);
-    line-height: var(--f-heading-3-line-height);
-    letter-spacing: var(--f-heading-3-letter-spacing);
+    font-size: var(--f-heading-4-font-size);
+    line-height: var(--f-heading-4-line-height);
+    letter-spacing: var(--f-heading-4-letter-spacing);
 }
 
 @media screen and (min-width: 744px) {
@@ -275,5 +276,15 @@
     font-size: var(--f-body-2-font-size);
     letter-spacing: var(--f-body-2-letter-spacing);
     line-height: var(--f-body-2-line-height);
+  }
+
+  .v2-content-card--with-button .v2-content-card__content {
+    gap: 24px;
+  }
+
+  .v2-content-card--with-button .v2-content-card__title {
+      font-size: var(--f-heading-3-font-size);
+      line-height: var(--f-heading-3-line-height);
+      letter-spacing: var(--f-heading-3-letter-spacing);
   }
 }
