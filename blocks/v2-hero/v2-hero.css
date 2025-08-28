@@ -239,6 +239,10 @@
 
 /* END - Countdown  */
 
+.bottom-sticky-cta .v2-hero__buttons-wrapper {
+  align-items: baseline;
+}
+
 @media (min-width: 744px) {
   .v2-hero {
     --v2-hero-padding: 50px;
