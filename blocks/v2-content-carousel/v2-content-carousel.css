@@ -158,7 +158,7 @@ ul.v2-content-carousel__arrowcontrols {
 }
 
 .v2-content-carousel.interactive .v2-content-carousel__images-list-item {
-  /* max-width: 304px; */
+  max-width: 304px;
   position: relative;
 }
 
@@ -275,9 +275,9 @@ ul.v2-content-carousel__arrowcontrols {
     font-size: var(--f-heading-3-font-size);
   }
 
-  /* .v2-content-carousel.interactive .v2-content-carousel__images-list-item {
+  .v2-content-carousel.interactive .v2-content-carousel__images-list-item {
     max-width: 377px;
-  } */
+  }
 
   .v2-content-carousel.interactive .v2-content-carousel__figure-text {
     font-size: var(--f-heading-4-font-size);
