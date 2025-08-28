@@ -139,6 +139,16 @@
   background-color: var(--c-grey-200);
 }
 
+.v2-content-card--with-button .v2-content-card__content {
+  gap: 24px;
+}
+
+.v2-content-card--with-button .v2-content-card__title {
+    font-size: var(--f-heading-3-font-size);
+    line-height: var(--f-heading-3-line-height);
+    letter-spacing: var(--f-heading-3-letter-spacing);
+}
+
 @media screen and (min-width: 744px) {
   :root {
     --v2-content-card-container-margin: 0px;
