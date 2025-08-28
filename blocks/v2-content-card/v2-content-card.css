@@ -139,6 +139,10 @@
   background-color: var(--c-grey-200);
 }
 
+.v2-content-card--with-button {
+  flex-wrap: nowrap;
+}
+
 .v2-content-card--with-button .v2-content-card__content {
   gap: 16px;
   justify-content: space-between;
