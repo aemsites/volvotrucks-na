@@ -92,6 +92,7 @@
   text-align: center;
 }
 
+.v2-hero--left .v2-hero__content-wrapper,
 .v2-hero--left-center .v2-hero__content-wrapper {
   justify-content: center;
 }
@@ -100,6 +101,21 @@
   align-items: center;
   justify-content: flex-end;
   text-align: center;
+}
+
+.v2-hero--marketing .v2-hero__content-wrapper {
+  color: var(--c-white);
+}
+
+.v2-hero--marketing .marketing.button.secondary {
+  border-color: var(--c-white);
+  background-color: transparent;
+  color: var(--c-white);
+}
+
+.v2-hero--marketing .marketing.button.secondary:hover {
+  background-color: var(--c-white);
+  color: var(--c-main-black);
 }
 
 .v2-hero--dark {
@@ -159,6 +175,10 @@
 
 .v2-hero__buttons-wrapper .button {
   width: max-content;
+}
+
+.v2-hero--left .v2-hero__buttons-wrapper {
+  align-items: baseline;
 }
 
 .v2-hero--compact {
@@ -238,10 +258,6 @@
 }
 
 /* END - Countdown  */
-
-.bottom-sticky-cta .v2-hero__buttons-wrapper {
-  align-items: baseline;
-}
 
 @media (min-width: 744px) {
   .v2-hero {
