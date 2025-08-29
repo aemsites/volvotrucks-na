@@ -205,9 +205,11 @@ ul.v2-content-carousel__arrowcontrols {
 
 .v2-content-carousel.interactive .icon-plus {
   color: var(--c-main-black);
+  height: 48px;
   position: absolute;
   right: 24px;
   top: 24px;
+  width: 48px;
 }
 
 .v2-content-carousel.interactive .icon-plus svg {
