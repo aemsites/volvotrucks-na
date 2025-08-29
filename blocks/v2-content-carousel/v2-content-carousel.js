@@ -4,6 +4,8 @@ import { smoothScrollHorizontal } from '../../scripts/motion-helper.js';
 const blockName = 'v2-content-carousel';
 
 const updateActiveClass = (elements, targetElement, carousel) => {
+  const isTablet = window.matchMedia('(min-width: 744px)');
+
   elements.forEach((el, index) => {
     if (el === targetElement) {
       el.classList.add('active');
@@ -19,7 +21,7 @@ const updateActiveClass = (elements, targetElement, carousel) => {
       } else if (index === el.parentNode.children.length - 1) {
         arrowControl = carousel.nextElementSibling.querySelector(`.${blockName}__button-next`);
       }
-      if (arrowControl) {
+      if (arrowControl && isTablet.matches) {
         arrowControl.disabled = true;
       }
     } else {
@@ -72,6 +74,8 @@ const navigate = (carousel, direction) => {
   const activeItem = carousel.querySelector(`.${blockName}__images-list-item.active`);
   let index = [...activeItem.parentNode.children].indexOf(activeItem);
 
+  const isMobile = window.matchMedia('(max-width: 743px)');
+
   if (direction === 'left') {
     index -= 1;
     if (index === -1) {
@@ -80,7 +84,7 @@ const navigate = (carousel, direction) => {
     }
   } else {
     index += 1;
-    if (index > carousel.childElementCount - 1) {
+    if (index > carousel.childElementCount - 1 || (isMobile.matches && index === carousel.childElementCount)) {
       index = 0; // Go to the first item if at the end
     }
   }
@@ -115,6 +119,8 @@ const createArrowControls = (carousel) => {
 
 export default function decorate(block) {
   const rows = [...block.querySelectorAll(':scope > div')];
+  const isInteractive = block.classList.contains('interactive');
+
   rows.forEach((row) => {
     row.classList.add(`${blockName}__row`);
   });
@@ -159,6 +165,11 @@ export default function decorate(block) {
         figCaption.appendChild(captionFragment);
         figure.appendChild(figCaption);
       }
+    }
+
+    if (isInteractive) {
+      const modalLink = figCaption.querySelector('a');
+      modalLink && el.appendChild(modalLink);
     }
   });
 
