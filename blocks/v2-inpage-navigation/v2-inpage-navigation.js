@@ -177,7 +177,7 @@ const updateNavFactor = (ctaButton = null) => {
 /**
  * Add scroll behavior to the bottom sticky CTA.
  */
-const addBottomScrollBehavior = () => {
+const addBottomScrollBehavior = (block) => {
   const primaryButton = getMetadata('inpage-primary-button');
   const primaryCta = document.querySelector(`.v2-hero a[title="${primaryButton}"]:not(.${blockName}__marketing`);
   const secondaryButton = getMetadata('inpage-secondary-button');
@@ -185,6 +185,24 @@ const addBottomScrollBehavior = () => {
   const ctaButton = secondaryCta || primaryCta;
 
   window.addEventListener('scroll', () => updateNavFactor(ctaButton), { passive: true });
+
+  // Add an intersection observer to not hide the footer
+  const footer = document.querySelector('footer');
+  if (footer && ctaButton) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          block.parentNode.classList.toggle(`${blockName}--hide`, entry.isIntersecting);
+        });
+      },
+      {
+        root: null,
+        threshold: 0.1,
+      },
+    );
+
+    observer.observe(footer);
+  }
 };
 
 /**
@@ -347,7 +365,7 @@ const decorateTwoButtons = (block) => {
     return;
   }
 
-  addBottomScrollBehavior();
+  addBottomScrollBehavior(block);
 };
 
 export default async function decorate(block) {

@@ -198,6 +198,10 @@ then we change it for the next section item in main */
   height: 0;
 }
 
+.bottom-sticky-cta .v2-inpage-navigation-wrapper.v2-inpage-navigation--hide {
+  display: none;
+}
+
 .bottom-sticky-cta .v2-inpage-navigation {
   background-color: var(--c-white);
   height: var(--inpage-navigation-bottom-height);
