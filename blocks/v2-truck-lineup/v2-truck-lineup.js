@@ -24,6 +24,51 @@ const moveNavigationLine = (navigationLine, activeTab, tabNavigation) => {
   });
 };
 
+function updateActiveButton(item) {
+  if (!(item instanceof Element)) {
+    return;
+  }
+  const parentList = item.parentElement;
+  const buttons = parentList && parentList.querySelectorAll('button');
+  const button = item.querySelector('button');
+  if (buttons) {
+    [...buttons].forEach((btn) => {
+      btn.classList.remove('primary');
+      btn.classList.add('secondary');
+    });
+  }
+  if (button) {
+    button.classList.remove('secondary');
+    button.classList.add('primary');
+  }
+}
+
+function buildButtonNavigation(tabItems) {
+  const buttonNavigation = createElement('ul', { classes: `${blockName}__navigation` });
+
+  [...tabItems]
+    .filter((buttonItem) => !buttonItem.classList.contains('hidden'))
+    .forEach((buttonItem, i) => {
+      const tabContent = buttonItem.querySelector(':scope > div');
+      const listItem = createElement('li', { classes: [`${blockName}__navigation-item`, ...(i === 0 ? ['active'] : [])] });
+      const button = createElement('button', {
+        classes: ['button', `${i === 0 ? 'primary' : 'secondary'}`],
+        props: { type: 'button', value: tabContent?.dataset?.truckCarousel || '' },
+      });
+      button.addEventListener('click', () => {
+        setCarouselPosition(document.querySelector(`.${blockName}__images-container`), i);
+      });
+
+      if (tabContent) {
+        button.innerText = tabContent.dataset.truckCarousel;
+        listItem.append(button);
+        buttonNavigation.append(listItem);
+      }
+    });
+
+  return buttonNavigation;
+}
+
 function buildTabNavigation(tabItems, clickHandler) {
   const tabNavigation = createElement('ul', { classes: `${blockName}__navigation` });
   const navigationLine = createElement('li', { classes: `${blockName}__navigation-line` });
@@ -94,7 +139,7 @@ function buildColorSwitcherList(colors, carousel, onColorChangeCallback) {
   return colorSwitcherList;
 }
 
-const updateActiveItem = (index) => {
+const updateActiveItem = (index, isButtonNavigation = false) => {
   const allImages = document.querySelector(`.${blockName}__images-container`);
   const currentImages = document.querySelectorAll(
     currentColor ? `.${blockName}__image-item[data-color="${currentColor}"]` : `.${blockName}__image-item`,
@@ -123,7 +168,11 @@ const updateActiveItem = (index) => {
   descriptions.children[index].querySelectorAll('a').forEach((link) => link.setAttribute('tabindex', '0'));
 
   const activeNavigationItem = navigation.children[index];
-  moveNavigationLine(navigationLine, activeNavigationItem, navigation);
+  if (isButtonNavigation) {
+    updateActiveButton(navigation.children[index]);
+  } else {
+    moveNavigationLine(navigationLine, activeNavigationItem, navigation);
+  }
 
   // Center navigation item
   const navigationActiveItem = navigation.querySelector('.active');
@@ -149,7 +198,7 @@ const updateActiveItem = (index) => {
   }, 50);
 };
 
-const listenScroll = (carousel) => {
+const listenScroll = (carousel, isButtonNavigation = false) => {
   const imageLoadPromises = Array.from(carousel.querySelectorAll('.v2-truck-lineup__image-item:not(.hidden) picture > img'))
     .filter((img) => !img.complete)
     .map(
@@ -171,7 +220,7 @@ const listenScroll = (carousel) => {
               return;
             }
             const currentIndex = Array.from(activeItem.parentNode.children).indexOf(activeItem);
-            updateActiveItem(currentIndex);
+            updateActiveItem(currentIndex, isButtonNavigation);
           }
         });
       },
@@ -263,6 +312,7 @@ const getTabColor = (tabItem) => {
 };
 
 export default function decorate(block) {
+  const buttonNavigation = block.closest('main').classList.contains('truck-lineup-buttons');
   const descriptionContainer = block.querySelector(':scope > div');
   const imagesWrapper = createElement('div', { classes: `${blockName}__slider-wrapper` });
   const imagesContainer = createElement('div', { classes: `${blockName}__images-container` });
@@ -315,9 +365,11 @@ export default function decorate(block) {
   descriptionContainer.parentNode.prepend(imagesWrapper);
   imagesWrapper.appendChild(imagesContainer);
 
-  const tabNavigation = buildTabNavigation(tabItems, (index) => {
-    setCarouselPosition(imagesContainer, index);
-  });
+  const tabNavigation = buttonNavigation
+    ? buildButtonNavigation(tabItems)
+    : buildTabNavigation(tabItems, (index) => {
+        setCarouselPosition(imagesContainer, index);
+      });
 
   // Arrows
   createArrowControls(imagesContainer);
@@ -367,7 +419,7 @@ export default function decorate(block) {
   });
 
   // Update the button indicator on scroll
-  listenScroll(imagesContainer);
+  listenScroll(imagesContainer, buttonNavigation);
 
   // Update text position + navigation line when page is resized
   window.addEventListener('resize', () => {
@@ -375,7 +427,7 @@ export default function decorate(block) {
 
     if (activeItem) {
       const index = [...activeItem.parentNode.children].indexOf(activeItem);
-      updateActiveItem(index);
+      updateActiveItem(index, buttonNavigation);
     }
   });
 }
