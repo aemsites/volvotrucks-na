@@ -1,5 +1,4 @@
-import { sampleRUM, loadCSS, loadBlock, loadSections, loadHeader, buildBlock, decorateBlock, getMetadata } from './aem.js';
-import { createVideo, isVideoLink } from './video-helper.js';
+import { loadCSS, loadBlock, loadSections, buildBlock, decorateBlock, getMetadata } from './aem.js';
 
 let placeholders = null;
 
@@ -30,6 +29,7 @@ export function getHref() {
   }
 
   const urlParams = new URLSearchParams(window.parent.location.search);
+
   return `${window.parent.location.origin}${urlParams.get('path')}`;
 }
 
@@ -96,26 +96,23 @@ export function createNewSection(blockName, sectionName, node) {
 }
 
 /**
- * Provides the functionality to add a video
- * to the provided section if the link corresponds to a video.
- * @param {string} blockName - Name of the block.
- * @param {HTMLElement} section - Represents the section to which the video should be added.
- * @param {HTMLAnchorElement} link - Anchor link
- * @returns {HTMLElement} - Section with added video
+ * Waits for a descendant matching selector to exist within parent AND be in the DOM,
+ * then calls callback(element).
  */
-export function addVideoToSection(blockName, section, link) {
-  const isVideo = link ? isVideoLink(link) : false;
-  if (isVideo) {
-    const video = createVideo(link.getAttribute('href'), `${blockName}__video`, {
-      muted: true,
-      autoplay: true,
-      loop: true,
-      playsinline: true,
-    });
-    link.remove();
-    section.append(video);
+export function waitForElementInDOM(parent, selector, callback) {
+  const el = parent.querySelector(selector);
+  if (el && document.body.contains(el)) {
+    callback(el);
+    return;
   }
-  return section;
+  const observer = new MutationObserver(() => {
+    const el = parent.querySelector(selector);
+    if (el && document.body.contains(el)) {
+      observer.disconnect();
+      callback(el);
+    }
+  });
+  observer.observe(parent, { childList: true, subtree: true });
 }
 
 const ICONS_CACHE = {};
@@ -228,12 +225,7 @@ export async function loadLazy(doc) {
   }
   const header = doc.querySelector('header');
 
-  const disableHeader = getMetadata('disable-header').toLowerCase() === 'true';
   const disableFooter = getMetadata('disable-footer').toLowerCase() === 'true';
-
-  if (!disableHeader) {
-    loadHeader(header);
-  }
 
   if (!disableFooter) {
     loadFooter(doc.querySelector('footer'));

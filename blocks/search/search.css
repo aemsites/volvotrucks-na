@@ -680,7 +680,7 @@
 
 .search-feedback-filters-custom strong {
   font-weight: 500;
-  font-family: var(--font-family-fixed);
+  font-family: var(--font-family-code);
 }
 
 @media (max-width: 1199px) {

@@ -3,31 +3,34 @@
 @font-face {
   font-family: VolvoNovum;
   src:
-    url('/fonts/VolvoNovum-Regular.woff2') format('woff2'),
-    url('/fonts/volvonovum-regular.woff') format('woff');
+    url('/fonts/VolvoNovum-Regular-extended.woff2') format('woff2'),
+    url('/fonts/VolvoNovum-Regular-extended.woff') format('woff');
   font-weight: normal;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+0100-024F, U+0300-036F, U+1E00-1EFF;
 }
 
 @font-face {
   font-family: VolvoNovum-Medium;
   src:
-    url('/fonts/VolvoNovum-Medium.woff2') format('woff2'),
-    url('/fonts/VolvoNovum-Medium.woff') format('woff');
+    url('/fonts/VolvoNovum-Medium-extended.woff2') format('woff2'),
+    url('/fonts/VolvoNovum-Medium-extended.woff') format('woff');
   font-weight: 500;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+0100-024F, U+0300-036F, U+1E00-1EFF;
 }
 
 @font-face {
   font-family: VolvoBroadProDigital;
   src:
-    url('/fonts/VolvoBroadProDigital.woff2') format('woff2'),
-    url('/fonts/volvobroadprodigital.woff') format('woff');
+    url('/fonts/VolvoBroadProDigital-extended.woff2') format('woff2'),
+    url('/fonts/VolvoBroadProDigital-extended.woff') format('woff');
   font-weight: 400;
   font-style: normal;
   font-display: swap;
+  unicode-range: U+0100-024F, U+0300-036F, U+1E00-1EFF;
 }
 
 @font-face {

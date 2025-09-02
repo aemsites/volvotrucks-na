@@ -1,113 +1,197 @@
-import { getLanguagePath, getOrigin, getDateFromTimestamp } from '../../scripts/common.js';
-import { ffetch } from '../../scripts/lib-ffetch.js';
-import { createList, splitTags } from '../../scripts/magazine-press.js';
-import { createOptimizedPicture, readBlockConfig, toClassName } from '../../scripts/aem.js';
+import { createElement, getOrigin, getDateFromTimestamp, getTextLabel } from '../../scripts/common.js';
+import { createOptimizedPicture, loadCSS } from '../../scripts/aem.js';
+import createPagination from '../../common/pagination/pagination.js';
+import { fetchPressReleases } from '../../scripts/services/press-release.service.js';
 
-const stopWords = ['a', 'an', 'the', 'and', 'to', 'for', 'i', 'of', 'on', 'into'];
+const blockName = 'press-releases';
+const PAGE_SIZE = 10;
+let paginationCssOnce;
+const pageDataCache = new Map();
 
-function createPressReleaseFilterFunction(activeFilters) {
-  return (pr) => {
-    if (activeFilters.tags) {
-      if (!toClassName(pr.tags).includes(activeFilters.tags)) {
-        return false;
-      }
-    }
-    if (activeFilters.search) {
-      const terms = activeFilters.search
-        .toLowerCase()
-        .split(' ')
-        .map((e) => e.trim())
-        .filter((e) => !!e);
-      const text = pr.content.toLowerCase();
-      if (!terms.every((term) => !stopWords.includes(term) && text.includes(term))) {
-        return false;
-      }
-    }
-    return true;
+const parsePressRelease = (item) => {
+  const isImageLink = (link) => `${link}`.split('?')[0].match(/\.(jpeg|jpg|gif|png|svg|bmp|webp)$/) !== null;
+
+  const getDefaultImage = () => {
+    const logoImageURL = '/media/logo/media_10a115d2f3d50f3a22ecd2075307b4f4dcaedb366.jpeg';
+    return getOrigin() + logoImageURL;
   };
-}
 
-function filterPressReleases(pressReleases, activeFilters) {
-  return pressReleases.filter(createPressReleaseFilterFunction(activeFilters));
-}
+  const { image } = item.metadata;
 
-function createFilter(pressReleases, activeFilters, createDropdown, createFullText) {
-  const tags = Array.from(new Set(pressReleases.flatMap((n) => n.filterTag).sort()));
-  const fullText = createFullText('search', activeFilters.search, 'type here to search');
-  const tagFilter = createDropdown(tags, activeFilters.tags, 'tags', 'All', 'filter by tags');
-  const tagSelection = tagFilter.querySelector('select');
-  tagSelection.addEventListener('change', (e) => {
-    e.target.form.submit();
-  });
-  return [fullText, tagFilter];
-}
+  return {
+    ...item.metadata,
+    image: isImageLink(image) ? getOrigin() + image : getDefaultImage(),
+    path: item.metadata?.url,
+    isDefaultImage: !isImageLink(image),
+  };
+};
 
-function getPressReleases(limit, filter) {
-  const indexUrl = new URL(`${getLanguagePath()}press-releases.json`, getOrigin());
-  let pressReleases = ffetch(indexUrl);
-  if (filter) {
-    pressReleases = pressReleases.filter(filter);
-  }
-  if (limit) {
-    pressReleases = pressReleases.limit(limit);
-  }
-  return pressReleases.all();
-}
+const renderSearchBar = () => {
+  const searchBar = createElement('div', { classes: `${blockName}__search-bar` });
+  searchBar.innerHTML = `
+    <input type="text" name="search" autocomplete="off" placeholder="${getTextLabel('PressReleases:SearchPlaceholder')}"/>
+    <button type="submit"><i class="fa fa-search"></i></button>`;
+  return searchBar;
+};
 
-function buildPressReleaseArticle(entry) {
+const renderPressReleaseCard = (entry) => {
   const { path, image, title, description, publishDate } = entry;
-  const card = document.createElement('article');
+  const card = createElement('article', { classes: `${blockName}__article` });
   const picture = createOptimizedPicture(image, title, false, [{ width: '414' }]);
-  const pictureTag = picture.outerHTML;
   const formattedDate = getDateFromTimestamp(publishDate);
-  card.innerHTML = `<a href="${path}">
-    ${pictureTag}
-  </a>
-  <div>
-    <span class="date">${formattedDate}</span>
-    <h3><a href="${path}">${title}</a></h3>
-    <p>${description}</p>
-  </div>`;
+
+  card.innerHTML = `
+    <a href="${path}">
+      ${picture.outerHTML}
+    </a>
+    <div>
+      <span class="date">${formattedDate}</span>
+      <h3><a href="${path}">${title}</a></h3>
+      <p>${description}</p>
+    </div>`;
+
   return card;
-}
+};
 
-function createPressReleaseList(
-  block,
-  pressReleases,
-  { filter = filterPressReleases, filterFactory = createFilter, articleFactory = buildPressReleaseArticle, limit },
-) {
-  pressReleases = pressReleases.map((pr) => ({ ...pr, filterTag: splitTags(pr.tags) }));
-  createList(pressReleases, filter, filterFactory, articleFactory, limit, block);
-}
+const renderPressReleaseList = (block, pressReleases) => {
+  const list = createElement('ul', { classes: ['article-list'] });
+  pressReleases.forEach((pr) => {
+    list.append(renderPressReleaseCard(pr));
+  });
+  block.append(list);
+};
 
-function createFeaturedPressReleaseList(block, pressReleases) {
-  createPressReleaseList(block, pressReleases, { filter: null, filterFactory: null });
-}
+/**
+ * Ensures a reusable pagination content area exists on the block.
+ *
+ * @param {HTMLElement} block
+ * @returns {HTMLElement}
+ */
+const getOrCreateContentArea = (block) => {
+  let contentArea = block.querySelector('.pagination-content');
+  if (!contentArea) {
+    contentArea = createElement('div', { classes: ['pagination-content'] });
+    block.appendChild(contentArea);
+  }
+  return contentArea;
+};
 
-function createLatestPressReleases(block, pressReleases) {
-  createPressReleaseList(block, pressReleases, { filterFactory: null });
-}
+/**
+ * Loads the pagination CSS exactly once.
+ */
+const loadPaginationCss = async () => {
+  if (!paginationCssOnce) {
+    const baseURL = window.location.origin;
+    paginationCssOnce = loadCSS(`${baseURL}/common/pagination/pagination.css`);
+  }
+  await paginationCssOnce;
+};
+
+/**
+ * Returns a per-page loader function bound to the provided base params,
+ * with a tiny in-memory cache to avoid refetching visited pages.
+ *
+ * @param {Object} baseParams
+ * @returns {(pageIndex:number) => Promise<Array>}
+ */
+const makePageLoader =
+  (baseParams = {}) =>
+  async (pageIndex) => {
+    if (pageDataCache.has(pageIndex)) {
+      return pageDataCache.get(pageIndex);
+    }
+    const { items = [] } = await fetchPressReleases({
+      ...baseParams,
+      sort: 'PUBLISH_DATE_DESC',
+      limit: PAGE_SIZE,
+      offset: pageIndex * PAGE_SIZE,
+    });
+    const parsed = items.map((item) => parsePressRelease(item));
+    pageDataCache.set(pageIndex, parsed);
+    return parsed;
+  };
+
+/**
+ * Fetches the first page to compute totals and seed cache.
+ *
+ * @param {Object} baseParams
+ * @returns {{ total:number, totalPages:number }}
+ */
+const fetchCountAndPrimeCache = async (baseParams = {}) => {
+  const first = await fetchPressReleases({
+    ...baseParams,
+    sort: 'PUBLISH_DATE_DESC',
+    limit: PAGE_SIZE,
+    offset: 0,
+  });
+
+  const total = Number(first?.count || 0);
+  const totalPages = Math.max(1, Math.ceil(total / PAGE_SIZE));
+
+  if (first?.items?.length) {
+    pageDataCache.set(
+      0,
+      first.items.map((i) => parsePressRelease(i)),
+    );
+  }
+
+  return { total, totalPages };
+};
+
+/**
+ * Initializes dynamic pagination with API-backed totalPages and per-page fetching.
+ *
+ * @param {HTMLElement} block
+ * @param {Object} baseParams
+ */
+const initPressReleasesPagination = async (block, baseParams = {}) => {
+  const contentArea = getOrCreateContentArea(block);
+  await loadPaginationCss();
+
+  pageDataCache.clear();
+
+  const { total, totalPages } = await fetchCountAndPrimeCache(baseParams);
+  const loadPageData = makePageLoader(baseParams);
+
+  createPagination({
+    block,
+    contentArea,
+    totalPages,
+    renderItems: renderPressReleaseList,
+    loadPageData,
+    initialPage: 0,
+  });
+
+  if (!total) {
+    contentArea.innerHTML = '';
+    const noResultsMsg = createElement('p', { classes: `${blockName}__no-results-message` });
+    const q = baseParams?.q || '';
+    noResultsMsg.textContent = getTextLabel('no results').replace('$0', `"${q}"`);
+    contentArea.append(noResultsMsg);
+  }
+};
+
+const addEventListeners = (block) => {
+  const searchInput = block.querySelector(`.${blockName}__search-bar input`);
+  const searchButton = block.querySelector(`.${blockName}__search-bar button`);
+
+  const applySearch = async () => {
+    const query = searchInput.value?.trim();
+    block.querySelector('.pagination-content')?.remove();
+    block.querySelector('.pagination-nav')?.remove();
+    await initPressReleasesPagination(block, query ? { q: query } : {});
+  };
+
+  searchButton.addEventListener('click', applySearch);
+  searchInput.addEventListener('keydown', (event) => {
+    if (event.key === 'Enter') {
+      applySearch();
+    }
+  });
+};
 
 export default async function decorate(block) {
-  const isFeatured = block.classList.contains('featured');
-  const isLatest = !isFeatured && block.classList.contains('latest');
-
-  if (isFeatured) {
-    const links = [...block.firstElementChild.querySelectorAll('a')]
-      .map(({ href }) => (href ? new URL(href).pathname : null))
-      .filter((pathname) => !!pathname);
-    const pressReleases = await getPressReleases(links.length, ({ path }) => links.indexOf(path) >= 0);
-    createFeaturedPressReleaseList(block, pressReleases);
-    return;
-  }
-
-  if (isLatest) {
-    const cfg = readBlockConfig(block);
-    const filter = cfg.tags && createPressReleaseFilterFunction({ tags: toClassName(cfg.tags) });
-    const pressReleases = await getPressReleases(3, filter);
-    createLatestPressReleases(block, pressReleases);
-  } else {
-    const pressReleases = await getPressReleases();
-    createPressReleaseList(block, pressReleases, { limit: 10 });
-  }
+  block.append(renderSearchBar());
+  await initPressReleasesPagination(block);
+  addEventListeners(block);
 }

@@ -1,13 +1,13 @@
 import {
   addClassIfChildHasClass,
-  addVideoToSection,
   createElement,
   createNewSection,
   removeEmptyTags,
   unwrapDivs,
   variantsClassesToBEM,
+  waitForElementInDOM,
 } from '../../scripts/common.js';
-import { addMuteControls, createVideoWithPoster, isVideoLink, selectVideoLink } from '../../scripts/video-helper.js';
+import { addMuteControls, createVideoWithPoster, isVideoLink, selectVideoLink, createVideo } from '../../scripts/video-helper.js';
 
 const blockName = 'v2-media-with-text';
 const variantClasses = [
@@ -83,13 +83,30 @@ export default async function decorate(block) {
           if (picture) {
             requestAnimationFrame(() => {
               const videoWithPoster = createVideoWithPoster(videoLink.href, picture, `${blockName}--video-with-poster`, { controls: false });
+              const videoEl = videoWithPoster.querySelector('video');
+              if (videoEl) {
+                videoEl.classList.add(`${blockName}__media`);
+              }
               mediaSection.append(videoWithPoster);
             });
           } else {
-            requestAnimationFrame(() => {
-              mediaSection = addVideoToSection(blockName, mediaSection, videoLink);
+            waitForElementInDOM(block, `.${blockName}__media-section`, (mediaSection) => {
+              let container = mediaSection.querySelector(`.${blockName}__video`);
+              if (!container) {
+                container = createElement('div', { classes: `${blockName}__video` });
+                mediaSection.append(container);
+              }
+              const videoEl = createVideo(videoLink.getAttribute('href'), `${blockName}__video`, {
+                muted: true,
+                autoplay: true,
+                loop: true,
+                playsinline: true,
+              });
+              videoEl.classList.add(`${blockName}__media`);
+              container.appendChild(videoEl);
+
               if (block.classList.contains(`${blockName}--mute-controls`)) {
-                addMuteControls(mediaSection);
+                addMuteControls(container);
               }
             });
           }
@@ -119,18 +136,6 @@ export default async function decorate(block) {
 
   const medias = block.querySelectorAll(['img', 'video', 'iframe']);
   medias.forEach((media) => media.classList.add(`${blockName}__media`));
-
-  requestAnimationFrame(() => {
-    const renderedVideos = block.querySelectorAll(['video']);
-
-    renderedVideos.forEach((video) => {
-      if (video.classList.contains('video-js')) {
-        video.parentElement.classList.add(`${blockName}__media`);
-      } else {
-        video.classList.add(`${blockName}__media`);
-      }
-    });
-  });
 
   videoLinks.forEach((videoLink) => videoLink.remove());
   unwrapDivs(block, { ignoreDataAlign: true });
