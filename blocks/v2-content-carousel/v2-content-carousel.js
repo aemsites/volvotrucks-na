@@ -1,95 +1,30 @@
-import { createElement, decorateIcons, adjustPretitle } from '../../scripts/common.js';
-import { smoothScrollHorizontal } from '../../scripts/motion-helper.js';
+import { createElement, decorateIcons, adjustPretitle, isMobileViewport } from '../../scripts/common.js';
 
 const blockName = 'v2-content-carousel';
 
-const updateActiveClass = (elements, targetElement, carousel) => {
-  const isTablet = window.matchMedia('(min-width: 744px)');
+function numberCardsToNavigate() {
+  const isMobile = isMobileViewport();
 
-  elements.forEach((el, index) => {
-    if (el === targetElement) {
-      el.classList.add('active');
-      let arrowControl = carousel.nextElementSibling.querySelector(`.${blockName}__button:disabled`);
+  if (isMobile) {
+    return 1;
+  }
 
-      if (arrowControl) {
-        arrowControl.disabled = false;
-        arrowControl = null;
-      }
-      // disable arrow buttons
-      if (index === 0) {
-        arrowControl = carousel.nextElementSibling.querySelector(`.${blockName}__button-prev`);
-      } else if (index === el.parentNode.children.length - 1) {
-        arrowControl = carousel.nextElementSibling.querySelector(`.${blockName}__button-next`);
-      }
-      if (arrowControl && isTablet.matches) {
-        arrowControl.disabled = true;
-      }
-    } else {
-      el.classList.remove('active');
-    }
-  });
-};
-
-const listenScroll = (carousel) => {
-  const elements = carousel.querySelectorAll(`.${blockName}__images-list-item`);
-  const io = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          updateActiveClass(elements, entry.target, carousel);
-        }
-      });
-    },
-    {
-      root: carousel,
-      threshold: 1,
-    },
-  );
-
-  elements.forEach((el) => {
-    io.observe(el);
-  });
-};
-
-const getScrollOffset = (carousel) => {
-  const first = carousel.firstElementChild;
-  const second = first.nextElementSibling;
-  return second.getBoundingClientRect().x - first.getBoundingClientRect().x;
-};
-
-const setCarouselPosition = (carousel, index) => {
-  const elements = carousel.querySelectorAll(':scope > *');
-  const scrollOffset = getScrollOffset(carousel);
-  const targetX = index * scrollOffset;
-
-  smoothScrollHorizontal(carousel, targetX, 500);
-  updateActiveClass(elements, elements[index], carousel);
-};
+  return 2;
+}
 
 const navigate = (carousel, direction) => {
-  if (carousel.classList.contains('is-animating')) {
-    return;
-  }
+  const numberCardsToNavigatePerClick = numberCardsToNavigate();
 
-  const activeItem = carousel.querySelector(`.${blockName}__images-list-item.active`);
-  let index = [...activeItem.parentNode.children].indexOf(activeItem);
-
-  const isMobile = window.matchMedia('(max-width: 743px)');
+  const scrollContainer = carousel;
+  const numberItems = carousel.querySelectorAll('.v2-content-carousel__images-list-item')?.length;
+  const scrollContainerScrollWidth = scrollContainer.scrollWidth;
+  const itemWidth = scrollContainerScrollWidth / numberItems;
 
   if (direction === 'left') {
-    index -= 1;
-    if (index === -1) {
-      // Go to the last item if at the start
-      index = carousel.childElementCount - 1;
-    }
+    scrollContainer.scrollLeft -= itemWidth * numberCardsToNavigatePerClick;
   } else {
-    index += 1;
-    if (index > carousel.childElementCount - 1 || (isMobile.matches && index === carousel.childElementCount)) {
-      index = 0; // Go to the first item if at the end
-    }
+    scrollContainer.scrollLeft += itemWidth * numberCardsToNavigatePerClick;
   }
-
-  setCarouselPosition(carousel, index);
 };
 
 const createArrowControls = (carousel) => {
@@ -185,5 +120,4 @@ export default function decorate(block) {
 
   const carousel = pictureCol.querySelector(`.${blockName}__images-list`);
   createArrowControls(carousel);
-  listenScroll(carousel);
 }
