@@ -312,6 +312,11 @@ ul.v2-truck-lineup__color-switcher {
 
 .truck-lineup-buttons .v2-truck-lineup__navigation-item.active button {
   color: var(--button-primary-color);
+  background-color: var(--button-primary-bg);
+}
+
+.truck-lineup-buttons .v2-truck-lineup__navigation-item.active button:hover {
+  background-color: var(--button-primary-bg-active);
 }
 
 @media screen and (min-width: 744px) {
