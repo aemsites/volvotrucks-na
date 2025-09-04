@@ -1,5 +1,5 @@
 import { getMetadata } from '../../scripts/aem.js';
-import { createElement, decorateIcons, getTextLabel, debounce } from '../../scripts/common.js';
+import { createElement, decorateIcons, getTextLabel, debounce, isMobileViewport } from '../../scripts/common.js';
 
 const blockName = 'v2-inpage-navigation';
 
@@ -343,7 +343,7 @@ const decorateSingleButton = (block) => {
  * @param {HTMLElement} block
  */
 const decorateTwoButtons = (block) => {
-  const isLargerThanMobile = window.matchMedia('(min-width: 744px)').matches;
+  const isLargerThanMobile = !isMobileViewport();
   const [primaryButton, secondaryButton] = inPageNavigationButtons();
   const wrapper = createElement('div', { classes: `${blockName}__wrapper` });
   block.innerText = '';

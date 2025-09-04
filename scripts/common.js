@@ -634,3 +634,14 @@ export function createResponsivePicture(images, eager, alt, imageClass) {
 
   return picture;
 }
+
+/**
+ * Checks if the current screen is mobile.
+ *
+ * @returns {boolean} true if it matched the media query
+ */
+export const isMobileViewport = () => {
+  const MQ = window.matchMedia('(max-width: 744px)');
+
+  return MQ.matches;
+};
