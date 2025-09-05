@@ -13,21 +13,47 @@ function numberCardsToNavigate() {
 }
 
 const navigate = (carousel, direction) => {
+  const isMobile = isMobileViewport();
   const numberCardsToNavigatePerClick = numberCardsToNavigate();
 
   const scrollContainer = carousel;
+  let newScrollLeft = 0;
   const numberItems = carousel.querySelectorAll('.v2-content-carousel__images-list-item')?.length;
   const scrollContainerScrollWidth = scrollContainer.scrollWidth;
   const itemWidth = scrollContainerScrollWidth / numberItems;
+  const style = window.getComputedStyle(scrollContainer);
+  const gap = parseFloat(style.gap) || 0;
+  const paddingLeft = parseFloat(style.paddingLeft);
+  const marginLeft = parseFloat(style.marginLeft);
 
   if (direction === 'left') {
-    scrollContainer.scrollLeft -= itemWidth * numberCardsToNavigatePerClick;
+    newScrollLeft = scrollContainer.scrollLeft - itemWidth * numberCardsToNavigatePerClick;
   } else {
-    scrollContainer.scrollLeft += itemWidth * numberCardsToNavigatePerClick;
+    newScrollLeft = scrollContainer.scrollLeft + itemWidth * numberCardsToNavigatePerClick;
+  }
+  scrollContainer.scrollLeft = newScrollLeft;
+
+  if (isMobile) {
+    // logic to loop the carousel
+  } else {
+    if (scrollContainer.clientWidth + newScrollLeft >= scrollContainerScrollWidth) {
+      // disable next button
+      carousel.nextElementSibling?.querySelector(`button.${blockName}__button-next`)?.setAttribute('disabled', 'true');
+    } else {
+      carousel.nextElementSibling?.querySelector(`button.${blockName}__button-next`)?.removeAttribute('disabled');
+    }
+
+    if (newScrollLeft <= paddingLeft + marginLeft + gap) {
+      // disable prev button
+      carousel.nextElementSibling?.querySelector(`button.${blockName}__button-prev`)?.setAttribute('disabled', 'true');
+    } else {
+      carousel.nextElementSibling?.querySelector(`button.${blockName}__button-prev`)?.removeAttribute('disabled');
+    }
   }
 };
 
 const createArrowControls = (carousel) => {
+  const isMobile = isMobileViewport();
   const arrowControls = createElement('ul', { classes: [`${blockName}__arrowcontrols`] });
   const arrows = document.createRange().createContextualFragment(`
     <li>
@@ -48,6 +74,11 @@ const createArrowControls = (carousel) => {
   const [prevButton, nextButton] = arrowControls.querySelectorAll(':scope button');
   prevButton.addEventListener('click', () => navigate(carousel, 'left'));
   nextButton.addEventListener('click', () => navigate(carousel, 'right'));
+
+  if (!isMobile) {
+    // disable prev button on load
+    prevButton.setAttribute('disabled', 'true');
+  }
 
   return arrowControls;
 };

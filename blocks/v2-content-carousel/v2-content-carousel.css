@@ -37,6 +37,7 @@
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   gap: var(--content-carousel-list-gap);
+  margin: 0;
 }
 
 .v2-content-carousel__images-list::before,
@@ -96,6 +97,7 @@
 }
 
 ul.v2-content-carousel__arrowcontrols {
+  margin: 0;
   margin-left: var(--content-carousel-container-margin);
   list-style-type: none;
   display: flex;
@@ -140,8 +142,8 @@ ul.v2-content-carousel__arrowcontrols {
 }
 
 .v2-content-carousel.interactive .v2-content-carousel__heading {
-  font-size: var(--f-heading-4-font-size);
-  font-weight: var(--f-heading-4-font-weight);
+  font-size: var(--f-heading-3-font-size);
+  font-weight: var(--f-heading-3-font-weight);
 }
 
 .v2-content-carousel.interactive .v2-content-carousel__row {
@@ -187,9 +189,9 @@ ul.v2-content-carousel__arrowcontrols {
 .v2-content-carousel.interactive .v2-content-carousel__figure-text {
   bottom: 0;
   color: var(--c-white);
-  font-size: var(--f-heading-5-font-size);
+  font-size: var(--f-heading-4-font-size);
   font-weight: var(--f-heading-4-font-weight);
-  line-height: var(--f-heading-5-line-height);
+  line-height: var(--f-heading-4-line-height);
   left: 0;
   letter-spacing: 0;
   padding: 24px;
@@ -215,6 +217,10 @@ ul.v2-content-carousel__arrowcontrols {
 .v2-content-carousel.interactive .icon-plus svg {
   width: 24px;
   height: 24px;
+}
+
+.v2-content-carousel.interactive .v2-content-carousel__arrowcontrols {
+  padding-left: 0;
 }
 
 @media screen and (min-width: 744px) {
@@ -292,7 +298,12 @@ ul.v2-content-carousel__arrowcontrols {
   }
 
   .v2-content-carousel.interactive  .v2-content-carousel__heading {
-    font-size: var(--f-heading-3-font-size);
+    font-size: var(--f-heading-1-font-size);
+    max-width: 60%;
+  }
+
+  .v2-content-carousel.interactive .v2-content-carousel__col {
+    width: 100%;
   }
 
   .v2-content-carousel.interactive .v2-content-carousel__images-list-item {
@@ -300,7 +311,7 @@ ul.v2-content-carousel__arrowcontrols {
   }
 
   .v2-content-carousel.interactive .v2-content-carousel__figure-text {
-    font-size: var(--f-heading-4-font-size);
+    font-size: var(--f-heading-3-font-size);
     padding: 40px;
   }
 
