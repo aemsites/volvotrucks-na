@@ -26,16 +26,30 @@ const navigate = (carousel, direction) => {
   const paddingLeft = parseFloat(style.paddingLeft);
   const marginLeft = parseFloat(style.marginLeft);
 
-  if (direction === 'left') {
-    newScrollLeft = scrollContainer.scrollLeft - itemWidth * numberCardsToNavigatePerClick;
-  } else {
-    newScrollLeft = scrollContainer.scrollLeft + itemWidth * numberCardsToNavigatePerClick;
-  }
-  scrollContainer.scrollLeft = newScrollLeft;
-
+  console.log('isMobile:', isMobile);
   if (isMobile) {
     // logic to loop the carousel
+
+    if (direction === 'left') {
+      if (newScrollLeft <= paddingLeft + marginLeft + gap) {
+        newScrollLeft = scrollContainerScrollWidth;
+      } else {
+        newScrollLeft = scrollContainer.scrollLeft - itemWidth * numberCardsToNavigatePerClick;
+      }
+    } else {
+      if (scrollContainer.clientWidth + scrollContainer.scrollLeft >= scrollContainerScrollWidth) {
+        newScrollLeft = 0;
+      } else {
+        newScrollLeft = scrollContainer.scrollLeft + itemWidth * numberCardsToNavigatePerClick;
+      }
+    }
   } else {
+    if (direction === 'left') {
+      newScrollLeft = scrollContainer.scrollLeft - itemWidth * numberCardsToNavigatePerClick;
+    } else {
+      newScrollLeft = scrollContainer.scrollLeft + itemWidth * numberCardsToNavigatePerClick;
+    }
+
     if (scrollContainer.clientWidth + newScrollLeft >= scrollContainerScrollWidth) {
       // disable next button
       carousel.nextElementSibling?.querySelector(`button.${blockName}__button-next`)?.setAttribute('disabled', 'true');
@@ -50,6 +64,8 @@ const navigate = (carousel, direction) => {
       carousel.nextElementSibling?.querySelector(`button.${blockName}__button-prev`)?.removeAttribute('disabled');
     }
   }
+
+  scrollContainer.scrollLeft = newScrollLeft;
 };
 
 const createArrowControls = (carousel) => {
