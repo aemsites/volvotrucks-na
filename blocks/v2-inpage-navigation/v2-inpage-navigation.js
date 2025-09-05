@@ -1,5 +1,5 @@
 import { getMetadata } from '../../scripts/aem.js';
-import { createElement, decorateIcons, getTextLabel, debounce } from '../../scripts/common.js';
+import { createElement, decorateIcons, getTextLabel, debounce, isMobileViewport } from '../../scripts/common.js';
 
 const blockName = 'v2-inpage-navigation';
 
@@ -22,11 +22,15 @@ const scrollToSection = (id) => {
   resizeObserver.observe(main);
 };
 
-const inpageNavigationButton = () => {
-  // if we have a button title & button link
-  if (getMetadata('inpage-button') && getMetadata('inpage-link')) {
-    const title = getMetadata('inpage-button');
-    const url = getMetadata('inpage-link');
+/**
+ * Creates an in-page navigation button element if both button title and link are provided.
+ *
+ * @param {string} title - The title of the button.
+ * @param {string} url - The URL the button should link to.
+ * @returns {HTMLElement|null} The anchor element representing the button, or null if required parameters are missing.
+ */
+const createInPageButton = (title, url, secondary = false) => {
+  if (title && url) {
     const link = createElement('a', {
       classes: ['button', 'marketing', `${blockName}__marketing`],
       props: {
@@ -34,12 +38,41 @@ const inpageNavigationButton = () => {
         title,
       },
     });
+    if (secondary) {
+      link.classList.add(`${blockName}__marketing--secondary`);
+    }
     link.textContent = title;
 
     return link;
   }
-
   return null;
+};
+
+/**
+ * Creates an in-page navigation button element if both button title and link metadata are available.
+ *
+ * @returns {HTMLElement|null} The anchor element representing the button, or null if required metadata is missing.
+ */
+const inPageNavigationButton = () => {
+  // if we have a button title & button link
+  const title = getMetadata('inpage-button');
+  const url = getMetadata('inpage-link');
+  return createInPageButton(title, url);
+};
+
+/**
+ * Creates an array of in-page navigation buttons based on metadata.
+ * Each item in the returned array can be an HTMLElement or null, depending on the presence of metadata.
+ *
+ * @returns {(HTMLElement|null)[]} An array containing up to two elements: each is either an HTMLElement or null.
+ */
+const inPageNavigationButtons = () => {
+  // if we have primary and secondary inpage buttons
+  const primaryButton = getMetadata('inpage-primary-button');
+  const primaryLink = getMetadata('inpage-primary-link');
+  const secondaryButton = getMetadata('inpage-secondary-button');
+  const secondaryLink = getMetadata('inpage-secondary-link');
+  return [createInPageButton(primaryButton, primaryLink), createInPageButton(secondaryButton, secondaryLink, true)];
 };
 
 // Retrieve an array of sections with its corresponding intersectionRatio
@@ -107,7 +140,7 @@ const updateActive = (id) => {
   }
 };
 
-const addHeaderScrollBehaviour = (header) => {
+const addHeaderScrollBehavior = (header) => {
   let prevPosition = 0;
 
   window.addEventListener('scroll', () => {
@@ -122,8 +155,62 @@ const addHeaderScrollBehaviour = (header) => {
   });
 };
 
-export default async function decorate(block) {
-  const ctaButton = inpageNavigationButton();
+/**
+ * Update the in-page navigation factor based on the visibility of the CTA button.
+ * @param {HTMLElement} ctaButton
+ */
+const updateNavFactor = (ctaButton = null) => {
+  if (!ctaButton) {
+    return;
+  }
+  const rect = ctaButton.getBoundingClientRect();
+  const docStyle = getComputedStyle(document.documentElement);
+  const navHeight = parseFloat(docStyle.getPropertyValue('--inpage-navigation-bottom-height')) || 0;
+
+  // Calculate visible height of CTA button within viewport
+  const visible = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
+  const factor = rect.height > 0 ? Math.max(0, Math.min(navHeight, (visible / rect.height) * navHeight)) : navHeight;
+
+  document.documentElement.style.setProperty('--inpage-navigation-factor', `${factor}px`);
+};
+
+/**
+ * Add scroll behavior to the bottom sticky CTA.
+ */
+const addBottomScrollBehavior = (block) => {
+  const primaryButton = getMetadata('inpage-primary-button');
+  const primaryCta = document.querySelector(`.v2-hero a[title="${primaryButton}"]:not(.${blockName}__marketing`);
+  const secondaryButton = getMetadata('inpage-secondary-button');
+  const secondaryCta = document.querySelector(`a[title="${secondaryButton}"]:not(.${blockName}__marketing)`);
+  const ctaButton = secondaryCta || primaryCta;
+
+  window.addEventListener('scroll', () => updateNavFactor(ctaButton), { passive: true });
+
+  // Add an intersection observer to not hide the footer
+  const footer = document.querySelector('footer');
+  if (footer && ctaButton) {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          block.parentNode.classList.toggle(`${blockName}--hide`, entry.isIntersecting);
+        });
+      },
+      {
+        root: null,
+        threshold: 0.1,
+      },
+    );
+
+    observer.observe(footer);
+  }
+};
+
+/**
+ * Decorate a single button within the in-page navigation.
+ * @param {HTMLElement} block
+ */
+const decorateSingleButton = (block) => {
+  const ctaButton = inPageNavigationButton();
 
   const wrapper = block.querySelector(':scope > div');
   wrapper.classList.add(`${blockName}__wrapper`);
@@ -138,8 +225,8 @@ export default async function decorate(block) {
   const dropdownTitle = createElement('span', { classes: `${blockName}__dropdown-title` });
 
   const sectionTitle = createElement('span', { classes: `${blockName}__title` });
-  const inpageTitle = getMetadata('inpage-title');
-  sectionTitle.innerText = inpageTitle;
+  const inPageTitle = getMetadata('inpage-title');
+  sectionTitle.innerText = inPageTitle;
 
   const listCloseButton = createElement('button', { classes: `${blockName}__items-close` });
   const closeIcon = createElement('span', { classes: ['icon', 'icon-close'] });
@@ -248,5 +335,47 @@ export default async function decorate(block) {
     }),
   );
 
-  addHeaderScrollBehaviour(block.parentNode);
+  addHeaderScrollBehavior(block.parentNode);
+};
+
+/**
+ * Decorate the two buttons within the in-page navigation.
+ * @param {HTMLElement} block
+ */
+const decorateTwoButtons = (block) => {
+  const isLargerThanMobile = !isMobileViewport();
+  const [primaryButton, secondaryButton] = inPageNavigationButtons();
+  const wrapper = createElement('div', { classes: `${blockName}__wrapper` });
+  block.innerText = '';
+
+  if (primaryButton) {
+    wrapper.appendChild(primaryButton);
+  }
+
+  if (secondaryButton) {
+    wrapper.appendChild(secondaryButton);
+  }
+
+  if (primaryButton || secondaryButton) {
+    block.appendChild(wrapper);
+  }
+
+  if (isLargerThanMobile) {
+    addHeaderScrollBehavior(block.parentNode);
+    return;
+  }
+
+  addBottomScrollBehavior(block);
+};
+
+export default async function decorate(block) {
+  // Check if the block is within a bottom sticky CTA variant set in metadata
+  const isBottomSticky = block.closest('main')?.classList.contains('bottom-sticky-cta');
+
+  if (isBottomSticky) {
+    decorateTwoButtons(block);
+    return;
+  }
+
+  decorateSingleButton(block);
 }
