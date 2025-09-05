@@ -13,7 +13,7 @@ function stripEmptyTags(main, child) {
 }
 
 const moveNavigationLine = (navigationLine, activeTab, tabNavigation) => {
-  if (!activeTab) {
+  if (!activeTab || !navigationLine || !tabNavigation) {
     return;
   }
   const { x: navigationX } = tabNavigation.getBoundingClientRect();
@@ -24,7 +24,33 @@ const moveNavigationLine = (navigationLine, activeTab, tabNavigation) => {
   });
 };
 
-function buildTabNavigation(tabItems, clickHandler) {
+function buildButtonNavigation(tabItems, block) {
+  const buttonNavigation = createElement('ul', { classes: `${blockName}__navigation` });
+
+  [...tabItems]
+    .filter((buttonItem) => !buttonItem.classList.contains('hidden'))
+    .forEach((buttonItem, i) => {
+      const tabContent = buttonItem.querySelector(':scope > div');
+      const listItem = createElement('li', { classes: [`${blockName}__navigation-item`, ...(i === 0 ? ['active'] : [])] });
+      const button = createElement('button', {
+        classes: ['button', 'secondary'],
+        props: { type: 'button', value: tabContent?.dataset?.truckCarousel || '' },
+      });
+      button.addEventListener('click', () => {
+        setCarouselPosition(block.querySelector(`.${blockName}__images-container`), i);
+      });
+
+      if (tabContent) {
+        button.innerText = tabContent.dataset.truckCarousel;
+        listItem.append(button);
+        buttonNavigation.append(listItem);
+      }
+    });
+
+  return buttonNavigation;
+}
+
+function buildTabNavigation(tabItems, clickHandler, block) {
   const tabNavigation = createElement('ul', { classes: `${blockName}__navigation` });
   const navigationLine = createElement('li', { classes: `${blockName}__navigation-line` });
   let timeout;
@@ -42,7 +68,7 @@ function buildTabNavigation(tabItems, clickHandler) {
 
       button.addEventListener('mouseout', () => {
         timeout = setTimeout(() => {
-          const activeItem = document.querySelector(`.${blockName}__navigation-item.active`);
+          const activeItem = block.querySelector(`.${blockName}__navigation-item.active`);
           moveNavigationLine(navigationLine, activeItem, tabNavigation);
         }, 600);
       });
@@ -94,14 +120,14 @@ function buildColorSwitcherList(colors, carousel, onColorChangeCallback) {
   return colorSwitcherList;
 }
 
-const updateActiveItem = (index) => {
-  const allImages = document.querySelector(`.${blockName}__images-container`);
-  const currentImages = document.querySelectorAll(
+const updateActiveItem = (index, block) => {
+  const allImages = block.querySelector(`.${blockName}__images-container`);
+  const currentImages = block.querySelectorAll(
     currentColor ? `.${blockName}__image-item[data-color="${currentColor}"]` : `.${blockName}__image-item`,
   );
-  const descriptions = document.querySelector(`.${blockName}__description-container`);
-  const navigation = document.querySelector(`.${blockName}__navigation`);
-  const navigationLine = document.querySelector(`.${blockName}__navigation-line`);
+  const descriptions = block.querySelector(`.${blockName}__description-container`);
+  const navigation = block.querySelector(`.${blockName}__navigation`);
+  const navigationLine = block.querySelector(`.${blockName}__navigation-line`);
 
   [allImages, descriptions, navigation].forEach((c) =>
     c.querySelectorAll('.active').forEach((i) => {
@@ -149,7 +175,7 @@ const updateActiveItem = (index) => {
   }, 50);
 };
 
-const listenScroll = (carousel) => {
+const listenScroll = (carousel, block) => {
   const imageLoadPromises = Array.from(carousel.querySelectorAll('.v2-truck-lineup__image-item:not(.hidden) picture > img'))
     .filter((img) => !img.complete)
     .map(
@@ -171,7 +197,7 @@ const listenScroll = (carousel) => {
               return;
             }
             const currentIndex = Array.from(activeItem.parentNode.children).indexOf(activeItem);
-            updateActiveItem(currentIndex);
+            updateActiveItem(currentIndex, block);
           }
         });
       },
@@ -198,12 +224,12 @@ const setCarouselPosition = (carousel, index) => {
   smoothScrollHorizontal(carousel, targetX, 1200);
 };
 
-const navigate = (carousel, direction) => {
+const navigate = (carousel, direction, block) => {
   if (carousel.classList.contains('is-animating')) {
     return;
   }
 
-  const currentImages = document.querySelectorAll(
+  const currentImages = block.querySelectorAll(
     currentColor ? `.${blockName}__image-item[data-color="${currentColor}"]` : `.${blockName}__image-item`,
   );
   const activeItem = carousel.querySelector(`.${blockName}__image-item.active`);
@@ -227,7 +253,7 @@ const navigate = (carousel, direction) => {
   setCarouselPosition(carousel, index);
 };
 
-const createArrowControls = (carousel) => {
+const createArrowControls = (carousel, block) => {
   const arrowControls = createElement('ul', { classes: [`${blockName}__arrow-controls`] });
   const arrows = document.createRange().createContextualFragment(`
     <li>
@@ -248,8 +274,8 @@ const createArrowControls = (carousel) => {
   arrowControls.append(...arrows.children);
   carousel.insertAdjacentElement('beforebegin', arrowControls);
   const [prevButton, nextButton] = arrowControls.querySelectorAll(':scope button');
-  prevButton.addEventListener('click', () => navigate(carousel, 'left'));
-  nextButton.addEventListener('click', () => navigate(carousel, 'right'));
+  prevButton.addEventListener('click', () => navigate(carousel, 'left', block));
+  nextButton.addEventListener('click', () => navigate(carousel, 'right', block));
 };
 
 const getTabColor = (tabItem) => {
@@ -263,6 +289,7 @@ const getTabColor = (tabItem) => {
 };
 
 export default function decorate(block) {
+  const buttonNavigation = block.closest('main').classList.contains('truck-lineup-buttons');
   const descriptionContainer = block.querySelector(':scope > div');
   const imagesWrapper = createElement('div', { classes: `${blockName}__slider-wrapper` });
   const imagesContainer = createElement('div', { classes: `${blockName}__images-container` });
@@ -307,7 +334,7 @@ export default function decorate(block) {
       newColorImageItems.forEach((element) => element.classList.remove('hidden'));
       imagesContainer.scrollLeft = 0;
 
-      updateActiveItem(0);
+      updateActiveItem(0, block);
     });
 
     descriptionContainer.parentNode.prepend(colorSwitcherList);
@@ -315,12 +342,18 @@ export default function decorate(block) {
   descriptionContainer.parentNode.prepend(imagesWrapper);
   imagesWrapper.appendChild(imagesContainer);
 
-  const tabNavigation = buildTabNavigation(tabItems, (index) => {
-    setCarouselPosition(imagesContainer, index);
-  });
+  const tabNavigation = buttonNavigation
+    ? buildButtonNavigation(tabItems, block)
+    : buildTabNavigation(
+        tabItems,
+        (index) => {
+          setCarouselPosition(imagesContainer, index);
+        },
+        block,
+      );
 
   // Arrows
-  createArrowControls(imagesContainer);
+  createArrowControls(imagesContainer, block);
 
   descriptionContainer.parentNode.prepend(tabNavigation);
 
@@ -367,7 +400,7 @@ export default function decorate(block) {
   });
 
   // Update the button indicator on scroll
-  listenScroll(imagesContainer);
+  listenScroll(imagesContainer, block);
 
   // Update text position + navigation line when page is resized
   window.addEventListener('resize', () => {
@@ -375,7 +408,7 @@ export default function decorate(block) {
 
     if (activeItem) {
       const index = [...activeItem.parentNode.children].indexOf(activeItem);
-      updateActiveItem(index);
+      updateActiveItem(index, block);
     }
   });
 }
