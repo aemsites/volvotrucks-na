@@ -26,7 +26,6 @@ const navigate = (carousel, direction) => {
   const paddingLeft = parseFloat(style.paddingLeft);
   const marginLeft = parseFloat(style.marginLeft);
 
-  console.log('isMobile:', isMobile);
   if (isMobile) {
     // logic to loop the carousel
 
