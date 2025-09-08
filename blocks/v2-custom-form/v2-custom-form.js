@@ -560,6 +560,10 @@ const fieldRenderers = {
 };
 
 function renderField(fd) {
+  if (!fd.Type) {
+    console.warn('Field %cType%c is missing. Please, review the config JSON file attached to the block', 'color: red;', 'color: inherit;', { fd });
+    return null;
+  }
   const renderer = fieldRenderers[fd.Type];
   let field;
   if (typeof renderer === 'function') {
@@ -708,6 +712,10 @@ async function createForm(formURL) {
   const dependencies = []; // these will be used to show/hide the fields based on the dependencies
   data.forEach(async (fd) => {
     const el = renderField(fd);
+
+    if (!el) {
+      return;
+    }
 
     if (fd.Type === 'custom-dropdown') {
       customDropdowns.push(fd);
