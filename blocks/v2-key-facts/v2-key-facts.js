@@ -12,7 +12,7 @@ const CLASSES = {
   key_item: `${blockName}__key-item`,
   item_title: `${blockName}__key-title`,
   item_subtitle: `${blockName}__key-subtitle`,
-  center_alignment: `${blockName}__center-alignment`,
+  centered: `${blockName}__centered`,
 };
 
 /**
@@ -90,7 +90,7 @@ export default function decorate(block) {
       buildTextsSection(col, hasMedia);
     });
     if (!hasMedia) {
-      row.classList.add(CLASSES.center_alignment);
+      row.classList.add(CLASSES.centered);
     }
   });
 }
