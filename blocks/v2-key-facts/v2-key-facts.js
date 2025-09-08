@@ -12,7 +12,7 @@ const CLASSES = {
   key_item: `${blockName}__key-item`,
   item_title: `${blockName}__key-title`,
   item_subtitle: `${blockName}__key-subtitle`,
-  single_row: `${blockName}__single-row`,
+  center_alignment: `${blockName}__center-alignment`,
 };
 
 /**
@@ -20,7 +20,7 @@ const CLASSES = {
  * @param {HTMLElement} el The element to check
  * @returns {boolean} True if the element has text nodes, false otherwise
  */
-const hasTextNodes = (el) => {
+const CheckForTextNodes = (el) => {
   let hasTextNodes = false;
   [...el.childNodes].forEach((node) => {
     if (node.nodeType === Node.TEXT_NODE && node.textContent.trim().length > 0) {
@@ -41,20 +41,19 @@ const buildTextsSection = (el, hasMedia) => {
     if (el.childNodes.length <= 1) {
       return;
     }
+    const hasTextNodes = CheckForTextNodes(el);
     [...el.childNodes].forEach((node) => {
-      if (!hasTextNodes(el) || node.nodeType === Node.TEXT_NODE || node.nodeType === Node.BR) {
+      if (!hasTextNodes || node.nodeType === Node.TEXT_NODE || node.nodeType === Node.BR) {
         return;
       }
       node.classList.add('small');
 
-      if (!hasMedia) {
-        return;
+      if (hasMedia) {
+        // wrap non-text nodes in a span to avoid variants compatibility issues if has media like video or image
+        const span = createElement('span', { classes: node.className });
+        span.innerHTML = node.innerHTML;
+        node.replaceWith(span);
       }
-
-      // wrap non-text nodes in a span to avoid variants compatibility issues if has media like video or image
-      const span = createElement('span', { classes: node.className });
-      span.innerHTML = node.innerHTML;
-      node.replaceWith(span);
     });
   });
 };
@@ -91,7 +90,7 @@ export default function decorate(block) {
       buildTextsSection(col, hasMedia);
     });
     if (!hasMedia) {
-      row.classList.add(CLASSES.single_row);
+      row.classList.add(CLASSES.center_alignment);
     }
   });
 }
