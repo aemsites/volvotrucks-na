@@ -30,13 +30,13 @@ const navigate = (carousel, direction) => {
     // logic to loop the carousel
 
     if (direction === 'left') {
-      if (newScrollLeft <= paddingLeft + marginLeft + gap) {
+      if (scrollContainer.scrollLeft <= paddingLeft + marginLeft + gap) {
         newScrollLeft = scrollContainerScrollWidth;
       } else {
         newScrollLeft = scrollContainer.scrollLeft - itemWidth * numberCardsToNavigatePerClick;
       }
     } else {
-      if (scrollContainer.clientWidth + scrollContainer.scrollLeft >= scrollContainerScrollWidth) {
+      if (Math.round(scrollContainer.clientWidth + scrollContainer.scrollLeft) >= scrollContainerScrollWidth) {
         newScrollLeft = 0;
       } else {
         newScrollLeft = scrollContainer.scrollLeft + itemWidth * numberCardsToNavigatePerClick;
