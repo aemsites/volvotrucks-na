@@ -1,94 +1,74 @@
-import { createElement, decorateIcons, adjustPretitle } from '../../scripts/common.js';
-import { smoothScrollHorizontal } from '../../scripts/motion-helper.js';
+import { createElement, decorateIcons, adjustPretitle, isMobileViewport } from '../../scripts/common.js';
 
 const blockName = 'v2-content-carousel';
 
-const updateActiveClass = (elements, targetElement, carousel) => {
-  elements.forEach((el, index) => {
-    if (el === targetElement) {
-      el.classList.add('active');
-      let arrowControl = carousel.nextElementSibling.querySelector(`.${blockName}__button:disabled`);
+function numberCardsToNavigate() {
+  const isMobile = isMobileViewport();
 
-      if (arrowControl) {
-        arrowControl.disabled = false;
-        arrowControl = null;
-      }
-      // disable arrow buttons
-      if (index === 0) {
-        arrowControl = carousel.nextElementSibling.querySelector(`.${blockName}__button-prev`);
-      } else if (index === el.parentNode.children.length - 1) {
-        arrowControl = carousel.nextElementSibling.querySelector(`.${blockName}__button-next`);
-      }
-      if (arrowControl) {
-        arrowControl.disabled = true;
-      }
-    } else {
-      el.classList.remove('active');
-    }
-  });
-};
+  if (isMobile) {
+    return 1;
+  }
 
-const listenScroll = (carousel) => {
-  const elements = carousel.querySelectorAll(`.${blockName}__images-list-item`);
-  const io = new IntersectionObserver(
-    (entries) => {
-      entries.forEach((entry) => {
-        if (entry.isIntersecting) {
-          updateActiveClass(elements, entry.target, carousel);
-        }
-      });
-    },
-    {
-      root: carousel,
-      threshold: 1,
-    },
-  );
-
-  elements.forEach((el) => {
-    io.observe(el);
-  });
-};
-
-const getScrollOffset = (carousel) => {
-  const first = carousel.firstElementChild;
-  const second = first.nextElementSibling;
-  return second.getBoundingClientRect().x - first.getBoundingClientRect().x;
-};
-
-const setCarouselPosition = (carousel, index) => {
-  const elements = carousel.querySelectorAll(':scope > *');
-  const scrollOffset = getScrollOffset(carousel);
-  const targetX = index * scrollOffset;
-
-  smoothScrollHorizontal(carousel, targetX, 500);
-  updateActiveClass(elements, elements[index], carousel);
-};
+  return 2;
+}
 
 const navigate = (carousel, direction) => {
-  if (carousel.classList.contains('is-animating')) {
-    return;
-  }
+  const isMobile = isMobileViewport();
+  const numberCardsToNavigatePerClick = numberCardsToNavigate();
 
-  const activeItem = carousel.querySelector(`.${blockName}__images-list-item.active`);
-  let index = [...activeItem.parentNode.children].indexOf(activeItem);
+  const scrollContainer = carousel;
+  let newScrollLeft = 0;
+  const numberItems = carousel.querySelectorAll('.v2-content-carousel__images-list-item')?.length;
+  const scrollContainerScrollWidth = scrollContainer.scrollWidth;
+  const itemWidth = scrollContainerScrollWidth / numberItems;
+  const style = window.getComputedStyle(scrollContainer);
+  const gap = parseFloat(style.gap) || 0;
+  const paddingLeft = parseFloat(style.paddingLeft);
+  const marginLeft = parseFloat(style.marginLeft);
 
-  if (direction === 'left') {
-    index -= 1;
-    if (index === -1) {
-      // Go to the last item if at the start
-      index = carousel.childElementCount - 1;
+  if (isMobile) {
+    // logic to loop the carousel
+
+    if (direction === 'left') {
+      if (scrollContainer.scrollLeft <= paddingLeft + marginLeft + gap) {
+        newScrollLeft = scrollContainerScrollWidth;
+      } else {
+        newScrollLeft = scrollContainer.scrollLeft - itemWidth * numberCardsToNavigatePerClick;
+      }
+    } else {
+      if (Math.round(scrollContainer.clientWidth + scrollContainer.scrollLeft) >= scrollContainerScrollWidth) {
+        newScrollLeft = 0;
+      } else {
+        newScrollLeft = scrollContainer.scrollLeft + itemWidth * numberCardsToNavigatePerClick;
+      }
     }
   } else {
-    index += 1;
-    if (index > carousel.childElementCount - 1) {
-      index = 0; // Go to the first item if at the end
+    if (direction === 'left') {
+      newScrollLeft = scrollContainer.scrollLeft - itemWidth * numberCardsToNavigatePerClick;
+    } else {
+      newScrollLeft = scrollContainer.scrollLeft + itemWidth * numberCardsToNavigatePerClick;
+    }
+
+    if (scrollContainer.clientWidth + newScrollLeft >= scrollContainerScrollWidth) {
+      // disable next button
+      carousel.nextElementSibling?.querySelector(`button.${blockName}__button-next`)?.setAttribute('disabled', 'true');
+    } else {
+      carousel.nextElementSibling?.querySelector(`button.${blockName}__button-next`)?.removeAttribute('disabled');
+    }
+
+    if (newScrollLeft <= paddingLeft + marginLeft + gap) {
+      // disable prev button
+      carousel.nextElementSibling?.querySelector(`button.${blockName}__button-prev`)?.setAttribute('disabled', 'true');
+    } else {
+      carousel.nextElementSibling?.querySelector(`button.${blockName}__button-prev`)?.removeAttribute('disabled');
     }
   }
 
-  setCarouselPosition(carousel, index);
+  scrollContainer.scrollLeft = newScrollLeft;
 };
 
 const createArrowControls = (carousel) => {
+  const isMobile = isMobileViewport();
   const arrowControls = createElement('ul', { classes: [`${blockName}__arrowcontrols`] });
   const arrows = document.createRange().createContextualFragment(`
     <li>
@@ -110,11 +90,18 @@ const createArrowControls = (carousel) => {
   prevButton.addEventListener('click', () => navigate(carousel, 'left'));
   nextButton.addEventListener('click', () => navigate(carousel, 'right'));
 
+  if (!isMobile) {
+    // disable prev button on load
+    prevButton.setAttribute('disabled', 'true');
+  }
+
   return arrowControls;
 };
 
 export default function decorate(block) {
   const rows = [...block.querySelectorAll(':scope > div')];
+  const isInteractive = block.classList.contains('interactive');
+
   rows.forEach((row) => {
     row.classList.add(`${blockName}__row`);
   });
@@ -160,6 +147,11 @@ export default function decorate(block) {
         figure.appendChild(figCaption);
       }
     }
+
+    if (isInteractive) {
+      const modalLink = figCaption.querySelector('a');
+      modalLink && el.appendChild(modalLink);
+    }
   });
 
   [...pictureCol.querySelectorAll('ul > li img')].forEach((el) => {
@@ -174,5 +166,4 @@ export default function decorate(block) {
 
   const carousel = pictureCol.querySelector(`.${blockName}__images-list`);
   createArrowControls(carousel);
-  listenScroll(carousel);
 }

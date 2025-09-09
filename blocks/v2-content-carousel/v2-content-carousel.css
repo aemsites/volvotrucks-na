@@ -4,6 +4,7 @@
   --content-carousel-col-gap: 16px;
   --content-carousel-container-margin: 16px;
   --static-content-card-width: 85%;
+  --content-carousel-interactive-gap: 40px;
 }
 
 .v2-content-carousel__row {
@@ -36,6 +37,7 @@
   scroll-snap-type: x mandatory;
   scrollbar-width: none;
   gap: var(--content-carousel-list-gap);
+  margin: 0;
 }
 
 .v2-content-carousel__images-list::before,
@@ -95,6 +97,7 @@
 }
 
 ul.v2-content-carousel__arrowcontrols {
+  margin: 0;
   margin-left: var(--content-carousel-container-margin);
   list-style-type: none;
   display: flex;
@@ -134,6 +137,92 @@ ul.v2-content-carousel__arrowcontrols {
   color: var(--c-grey-2);
 }
 
+.v2-content-carousel.interactive .v2-content-carousel__text {
+  display: none;
+}
+
+.v2-content-carousel.interactive .v2-content-carousel__heading {
+  font-size: var(--f-heading-3-font-size);
+  font-weight: var(--f-heading-3-font-weight);
+}
+
+.v2-content-carousel.interactive .v2-content-carousel__row {
+  flex-direction: column;
+  gap: var(--content-carousel-interactive-gap);
+}
+
+.v2-content-carousel.interactive .v2-content-carousel__col {
+  gap: var(--content-carousel-interactive-gap);
+}
+
+.v2-content-carousel.interactive .v2-content-carousel__text-col {
+  align-self: flex-start;
+}
+
+.v2-content-carousel.interactive .v2-content-carousel__images-list-item {
+  border-radius: var(--border-radius);
+  max-width: 304px;
+  overflow: hidden;
+  position: relative;
+}
+
+.v2-content-carousel.interactive .v2-content-carousel__images-list-item img {
+  transition: 300ms ease all;
+}
+
+.v2-content-carousel.interactive .v2-content-carousel__figure {
+  position: relative;
+}
+
+.v2-content-carousel.interactive .v2-content-carousel__figure picture {
+  aspect-ratio: 3 / 4;
+  background: var(--c-grey-50);
+  margin: 0;
+}
+
+.v2-content-carousel.interactive .v2-content-carousel__images-list-item:hover img,
+.v2-content-carousel.interactive .v2-content-carousel__images-list-item:focus img {
+  transform: scale(1.05);
+}
+
+
+.v2-content-carousel.interactive .v2-content-carousel__figure-text {
+  bottom: 0;
+  color: var(--c-white);
+  font-size: var(--f-heading-4-font-size);
+  font-weight: var(--f-heading-4-font-weight);
+  line-height: var(--f-heading-4-line-height);
+  left: 0;
+  letter-spacing: 0;
+  padding: 24px;
+  position: absolute;
+  transition: padding 300ms;
+  width: 100%;
+}
+
+.v2-content-carousel.interactive .v2-content-carousel__images-list-item:hover .v2-content-carousel__figure-text,
+.v2-content-carousel.interactive .v2-content-carousel__images-list-item:focus .v2-content-carousel__figure-text {
+  padding-bottom: 32px;
+}
+
+.v2-content-carousel.interactive .icon-plus {
+  color: var(--c-main-black);
+  height: 48px;
+  position: absolute;
+  right: 24px;
+  top: 24px;
+  width: 48px;
+}
+
+.v2-content-carousel.interactive .icon-plus svg {
+  width: 24px;
+  height: 24px;
+}
+
+.v2-content-carousel.interactive .v2-content-carousel__arrowcontrols {
+  padding-left: 0;
+}
+
 @media screen and (min-width: 744px) {
   .v2-content-carousel {
     --content-carousel-row-gap: 32px;
@@ -141,6 +230,7 @@ ul.v2-content-carousel__arrowcontrols {
     --content-carousel-col-gap: 24px;
     --content-carousel-container-margin: 32px;
     --static-content-card-width: clamp(506px, 68%, calc((100% - var(--content-carousel-list-gap)) / 1.25));
+  --content-carousel-interactive-gap: 48px;
   }
 
   .v2-content-carousel__images-list-col {
@@ -167,6 +257,7 @@ ul.v2-content-carousel__arrowcontrols {
     --content-carousel-row-gap: 72px;
     --content-carousel-container-margin: 20px;
     --static-content-card-width: calc((100% - var(--content-carousel-list-gap)) / 1.8);
+  --content-carousel-interactive-gap: 80px;
   }
 
   .v2-content-carousel__col {
@@ -204,5 +295,28 @@ ul.v2-content-carousel__arrowcontrols {
     height: 100%;
     width: var(--content-carousel-container-margin);
     background: var(--background-color);
+  }
+
+  .v2-content-carousel.interactive  .v2-content-carousel__heading {
+    font-size: var(--f-heading-1-font-size);
+    max-width: 60%;
+  }
+
+  .v2-content-carousel.interactive .v2-content-carousel__col {
+    width: 100%;
+  }
+
+  .v2-content-carousel.interactive .v2-content-carousel__images-list-item {
+    max-width: 377px;
+  }
+
+  .v2-content-carousel.interactive .v2-content-carousel__figure-text {
+    font-size: var(--f-heading-3-font-size);
+    padding: 40px;
+  }
+
+  .v2-content-carousel.interactive .icon-plus {
+    right: 40px;
+    top: 40px;
   }
 }

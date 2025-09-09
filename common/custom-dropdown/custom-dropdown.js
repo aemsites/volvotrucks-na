@@ -245,8 +245,8 @@ const Select = function (el, options = [], placeholder, onChangeCallback) {
   // element refs
   this.el = el;
   this.labelEl = el.querySelector(`.${componentName}__label`);
-  this.buttonEl = el.querySelector(`[role=${componentName}-button]`);
-  this.listEl = el.querySelector(`[role=${componentName}-option-list]`);
+  this.buttonEl = el.querySelector('[role=button]');
+  this.listEl = el.querySelector('[role=listbox]');
   this.initialState = true;
 
   // data
@@ -627,14 +627,14 @@ export const getCustomDropdown = async (options = {}) => {
           aria-expanded="false"
           aria-haspopup="${componentName}"
           class="${componentName}__button placeholder-state"
-          role="${componentName}-button"
+          role="button"
           tabindex="0"
         ></div>
         <div
           ${labelClass ? `aria-labelledby="${labelClass}"` : ''}
           id="options"
           class="${componentName}__option-list"
-          role="${componentName}-option-list"
+          role="listbox"
           tabindex="-1"
         ></div>
         <select
