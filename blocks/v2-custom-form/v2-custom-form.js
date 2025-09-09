@@ -266,6 +266,44 @@ function createInput(fd) {
   return input;
 }
 
+function formatDate(date) {
+  return date.toISOString().split('T')[0];
+}
+
+function createDateInput(fd) {
+  const input = createElement('input', {
+    props: {
+      type: fd.Type,
+    },
+  });
+  setPlaceholder(input, fd);
+  setConstraints(input, fd);
+
+  if (fd['Custom Options'] && fd['Custom Options'] !== '') {
+    try {
+      const customOptions = fd['Custom Options'];
+      const customOptionsObj = JSON.parse(customOptions.replace(/(\w+):/g, '"$1":'));
+
+      if (customOptionsObj.minDay || customOptionsObj.maxDay) {
+        const today = new Date();
+
+        const minDate = new Date();
+        minDate.setDate(today.getDate() + customOptionsObj.minDay);
+
+        const maxDate = new Date();
+        maxDate.setDate(today.getDate() + customOptionsObj.maxDay);
+
+        input.min = formatDate(minDate);
+        input.max = formatDate(maxDate);
+      }
+    } catch (error) {
+      console.error('Error parsing Custom Options JSON:', error);
+    }
+  }
+
+  return input;
+}
+
 const withFieldWrapper = (element) => (fd) => {
   const wrapper = createFieldWrapper(fd);
   wrapper.append(element(fd));
@@ -556,6 +594,7 @@ const fieldRenderers = {
   hidden: createHidden,
   fieldset: createFieldSet,
   plaintext: createPlainText,
+  date: createDateInput,
   'custom-dropdown': createSelect, // create a select as a placeholder for the custom dropdown
 };
 
