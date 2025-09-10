@@ -601,9 +601,11 @@ const fieldRenderers = {
 function renderField(fd) {
   const renderer = fieldRenderers[fd.Type];
   let field;
-  if (typeof renderer === 'function') {
+  if (fd.Type === 'date' && typeof renderer === 'function') {
     field = createFieldWrapper(fd);
     field.append(renderer(fd));
+  } else if (typeof renderer === 'function') {
+    field = renderer(fd);
   } else {
     field = createFieldWrapper(fd);
     field.append(createInput(fd));
