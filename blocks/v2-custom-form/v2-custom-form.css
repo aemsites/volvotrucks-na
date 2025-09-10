@@ -252,6 +252,7 @@
 
 .v2-custom-form .form-button-option input.form-buttons-input {
   text-align: center;
+  cursor: pointer;
 }
 
 .form-radio-label::before {
