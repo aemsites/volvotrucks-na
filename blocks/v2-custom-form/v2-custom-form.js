@@ -110,16 +110,35 @@ function generateUnique() {
   return new Date().valueOf() + Math.random();
 }
 
+/**
+ * Get the value of a form field.
+ * @param {HTMLInputElement} field - The form field element.
+ * @param {Object} payload - The form submission payload.
+ * @returns {String|null} The field value or null if not applicable.
+ */
+function getFieldValue(field, payload = {}) {
+  if (field.type === 'radio') {
+    return field.checked ? field.value : null;
+  } else if (field.type === 'button') {
+    return field.parentElement.classList.contains('active') ? field.value : null;
+  } else if (field.type === 'checkbox') {
+    if (field.checked) {
+      return payload[field.name] ? `${payload[field.name]},${field.value}` : field.value;
+    }
+    return null;
+  } else if (field.type !== 'file') {
+    return field.value;
+  }
+  return null;
+}
+
 function constructPayload(form) {
   const payload = { __id__: generateUnique() };
   [...form.elements].forEach((fe) => {
     if (fe.name && !fe.classList.contains(CLASSES.IGNORE_ON_FORM_SUBMIT)) {
-      if (fe.type === 'radio' && fe.checked) {
-        payload[fe.name] = fe.value;
-      } else if (fe.type === 'checkbox' && fe.checked) {
-        payload[fe.name] = payload[fe.name] ? `${payload[fe.name]},${fe.value}` : fe.value;
-      } else if (fe.type !== 'file' && fe.type !== 'checkbox' && fe.type !== 'radio') {
-        payload[fe.name] = fe.value;
+      const value = getFieldValue(fe, payload);
+      if (value !== null) {
+        payload[fe.name] = value;
       }
     }
   });
@@ -390,7 +409,7 @@ function createRadioWrapper(fd) {
   }
 
   const legend = createElement('legend', {
-    classes: [`form-${fd.Type}-legend`],
+    classes: ['form-field-legend'],
   });
   legend.textContent = fd.Label || fd.Name;
   wrapper.append(legend);
@@ -398,9 +417,9 @@ function createRadioWrapper(fd) {
   return wrapper;
 }
 
-function getRadioOptions(fd) {
+function getRadioOptions(fd, isButtons = false) {
   if (!fd.Options) {
-    console.warn(`Missing "Options" for radio field: ${fd.Name}`);
+    console.warn(`Missing "Options" for ${isButtons ? 'buttons' : 'radio'} field: ${fd.Name}`);
     return null;
   }
 
@@ -409,7 +428,7 @@ function getRadioOptions(fd) {
     .filter(Boolean);
 
   if (options.length === 0) {
-    console.warn(`No valid options parsed for radio field: ${fd.Name}`);
+    console.warn(`No valid options parsed for ${isButtons ? 'buttons' : 'radio'} field: ${fd.Name}`);
   }
 
   return options;
@@ -444,6 +463,69 @@ function createRadioOption(option, index, fd) {
   label.append(visualCircle, document.createTextNode(option));
   radioWrapper.append(input, label);
   return radioWrapper;
+}
+
+function createButtons(fd) {
+  const isWider = fd.Type === 'buttons-wider';
+  const FieldsetWrapper = createRadioWrapper(fd);
+  if (isWider) {
+    // if wider, is needed to add this extra class to apply the common styles
+    FieldsetWrapper.classList.add('form-buttons-wrapper');
+  }
+
+  const optionsWrapper = createElement('div', {
+    classes: ['form-options-wrapper', ...(isWider ? ['form-options-wider-wrapper'] : [])],
+  });
+
+  const options = getRadioOptions(fd, true);
+  if (!options || options.length === 0) {
+    return FieldsetWrapper;
+  }
+
+  options.forEach((option, index) => {
+    const buttonOption = createButtonOptions(option, index, fd, isWider);
+    optionsWrapper.append(buttonOption);
+  });
+
+  optionsWrapper.addEventListener('click', (e) => {
+    const target = e.target.closest('.form-button-option');
+    if (target) {
+      optionsWrapper.querySelectorAll('.form-button-option').forEach((btn) => {
+        btn.classList.remove('active');
+        btn.querySelector('input').classList.remove('primary');
+        btn.querySelector('input').classList.add('secondary');
+      });
+      target.classList.add('active');
+      target.querySelector('input').classList.add('primary');
+      target.querySelector('input').classList.remove('secondary');
+    }
+  });
+
+  FieldsetWrapper.append(optionsWrapper);
+  appendHelpText(FieldsetWrapper, fd);
+
+  return FieldsetWrapper;
+}
+
+function createButtonOptions(option, index, fd, isWider = false) {
+  const buttonId = `${fd.Id}-${index}`;
+  const buttonWrapper = createElement('div', {
+    classes: ['form-button-option', ...(index === 0 ? ['active'] : [])],
+  });
+
+  const input = createElement('input', {
+    classes: [`form-${fd.Type}-input`, ...(isWider ? ['form-buttons-input'] : []), 'button', ...(index === 0 ? ['primary'] : ['secondary'])],
+    props: {
+      type: 'button',
+      id: buttonId,
+      name: fd.Name,
+      value: option,
+      required: fd.Mandatory?.toLowerCase() === 'true',
+    },
+  });
+
+  buttonWrapper.append(input);
+  return buttonWrapper;
 }
 
 function appendHelpText(wrapper, fd) {
@@ -546,17 +628,19 @@ const getId = (function getId() {
 })();
 
 const fieldRenderers = {
-  radio: createRadio,
-  checkbox: createCheckbox,
-  textarea: createTextArea,
-  select: createSelect,
   button: createButton,
-  submit: createSubmit,
-  output: createOutput,
-  hidden: createHidden,
-  fieldset: createFieldSet,
-  plaintext: createPlainText,
+  buttons: createButtons,
+  'buttons-wider': createButtons,
+  checkbox: createCheckbox,
   'custom-dropdown': createSelect, // create a select as a placeholder for the custom dropdown
+  fieldset: createFieldSet,
+  hidden: createHidden,
+  output: createOutput,
+  plaintext: createPlainText,
+  radio: createRadio,
+  select: createSelect,
+  submit: createSubmit,
+  textarea: createTextArea,
 };
 
 function renderField(fd) {
@@ -722,7 +806,7 @@ async function createForm(formURL) {
     }
 
     const formField = el.querySelector('input,textarea,select');
-    if (fd.Mandatory && fd.Mandatory.toLowerCase() === 'true') {
+    if (formField && fd.Mandatory && fd.Mandatory.toLowerCase() === 'true') {
       formField.setAttribute('required', 'required');
     }
     if (formField) {
@@ -731,7 +815,7 @@ async function createForm(formURL) {
       }
       formField.name = fd.Name;
 
-      if (fd.Type !== 'radio') {
+      if (!['radio', 'buttons', 'buttons-wider'].includes(fd.Type)) {
         formField.value = fd.Value;
       }
 
