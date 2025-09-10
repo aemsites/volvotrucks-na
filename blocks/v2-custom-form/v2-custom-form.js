@@ -602,7 +602,8 @@ function renderField(fd) {
   const renderer = fieldRenderers[fd.Type];
   let field;
   if (typeof renderer === 'function') {
-    field = renderer(fd);
+    field = createFieldWrapper(fd);
+    field.append(renderer(fd));
   } else {
     field = createFieldWrapper(fd);
     field.append(createInput(fd));
