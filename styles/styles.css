@@ -1298,8 +1298,10 @@ main.blue-contract .section.section-with-title p {
 
 .redesign-v2 a.button.primary,
 .redesign-v2 button.primary,
+.redesign-v2 input.button.primary,
 .redesign-v2 a.button.secondary,
 .redesign-v2 button.secondary,
+.redesign-v2 input.button.secondary,
 .redesign-v2 a.button.tertiary,
 .redesign-v2 button.tertiary,
 .redesign-v2 a.button.marketing,
@@ -1324,35 +1326,41 @@ main.blue-contract .section.section-with-title p {
 }
 
 .redesign-v2 a.button.primary,
-.redesign-v2 button.primary {
+.redesign-v2 button.primary,
+.redesign-v2 input.button.primary {
   background-color: var(--button-primary-bg);
   color: var(--button-primary-color);
 }
 
 .redesign-v2 a.button.primary:hover,
-.redesign-v2 button.primary:hover {
+.redesign-v2 button.primary:hover,
+.redesign-v2 input.button.primary:hover {
   background-color: var(--button-primary-bg-hover);
 }
 
 .redesign-v2 a.button.primary:active,
-.redesign-v2 button.primary:active {
+.redesign-v2 button.primary:active,
+.redesign-v2 input.button.primary:active {
   background-color: var(--button-primary-bg-active);
 }
 
 .redesign-v2 a.button.secondary,
-.redesign-v2 button.secondary {
+.redesign-v2 button.secondary,
+.redesign-v2 input.button.secondary {
   color: var(--button-secondary-color);
   background-color: var(--button-secondary-bg);
   border-color: var(--button-secondary-border);
 }
 
 .redesign-v2 a.button.secondary:hover,
-.redesign-v2 button.secondary:hover {
+.redesign-v2 button.secondary:hover,
+.redesign-v2 input.button.secondary:hover {
   background-color: var(--button-secondary-bg-hover);
 }
 
 .redesign-v2 a.button.secondary:active,
-.redesign-v2 button.secondary:active {
+.redesign-v2 button.secondary:active,
+.redesign-v2 input.button.secondary:active {
   background-color: var(--button-secondary-bg-active);
 }
 
@@ -1514,7 +1522,7 @@ main.blue-contract .section.section-with-title p {
 /* common elements */
 .redesign-v2 div:where([role='dialog']) label,
 .redesign-v2 main label,
-.redesign-v2 main .form-radio-legend {
+.redesign-v2 main .form-field-legend {
   color: var(--c-grey-4);
   font-family: var(--font-family-heading);
   font-size: var(--f-subtitle-2-font-size);
