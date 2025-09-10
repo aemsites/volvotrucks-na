@@ -209,12 +209,18 @@ function kebabName(name) {
 
 function createFieldWrapper(fd, tagName = 'div') {
   const nameStyle = fd.Name ? `form-${kebabName(fd.Name)}` : '';
-  const fieldWrapper = createElement(tagName, {
-    classes: [`form-${fd.Type}-wrapper`, 'field-wrapper'],
-    props: {
+  let props = {};
+
+  if (tagName !== 'div') {
+    props = {
       id: fd.Id,
       name: fd.Name,
-    },
+    };
+  }
+
+  const fieldWrapper = createElement(tagName, {
+    classes: [`form-${fd.Type}-wrapper`, 'field-wrapper'],
+    props,
   });
   if (fd.Mandatory && fd.Mandatory.toLowerCase() === 'true') {
     fieldWrapper.setAttribute('required', 'required');
