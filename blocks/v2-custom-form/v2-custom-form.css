@@ -242,15 +242,16 @@
   display: flex;
   gap: 8px;
   width: 100%;
+  flex-wrap: wrap;
 }
 
 .form-button-option {
-  flex: 1;
+  display: flex;
+  flex-wrap: wrap;
 }
 
 .v2-custom-form .form-button-option input.form-buttons-input {
   text-align: center;
-  padding: 0;
 }
 
 .form-radio-label::before {
@@ -355,6 +356,14 @@
 
   .v2-custom-form-container .field-wrapper {
     width: 100%;
+  }
+
+  .form-button-option {
+    flex: 1;
+  }
+
+  .v2-custom-form .form-button-option input.form-buttons-input {
+    padding: 0;
   }
 }
 
