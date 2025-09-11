@@ -4,6 +4,22 @@ import { smoothScrollHorizontal } from '../../scripts/motion-helper.js';
 const blockName = 'v2-truck-lineup';
 let currentColor;
 
+function setupMetaField(metaFieldName, truckCarousel) {
+  if (!metaFieldName || !truckCarousel) {
+    return;
+  }
+
+  const pageMetaField = document.querySelector(`head meta[name="${metaFieldName}"]`);
+  if (pageMetaField && truckCarousel) {
+    pageMetaField.setAttribute('content', truckCarousel);
+  } else if (truckCarousel) {
+    const meta = document.createElement('meta');
+    meta.name = metaFieldName;
+    meta.content = truckCarousel;
+    document.getElementsByTagName('head')[0].appendChild(meta);
+  }
+}
+
 function stripEmptyTags(main, child) {
   if (child !== main && child.innerHTML.trim() === '') {
     const parent = child.parentNode;
@@ -128,6 +144,8 @@ const updateActiveItem = (index, block) => {
   const descriptions = block.querySelector(`.${blockName}__description-container`);
   const navigation = block.querySelector(`.${blockName}__navigation`);
   const navigationLine = block.querySelector(`.${blockName}__navigation-line`);
+  const metaFieldName = getMetaFieldName(currentImages[index]);
+  const truckCarousel = getTruckCarousel(currentImages[index]);
 
   [allImages, descriptions, navigation].forEach((c) =>
     c.querySelectorAll('.active').forEach((i) => {
@@ -140,6 +158,8 @@ const updateActiveItem = (index, block) => {
   );
 
   currentImages[index].classList.add('active');
+
+  setupMetaField(metaFieldName, truckCarousel);
 
   descriptions.children[index].classList.add('active');
   navigation.children[index].classList.add('active');
@@ -288,6 +308,37 @@ const getTabColor = (tabItem) => {
   return '';
 };
 
+const getMetaFieldName = (container) => {
+  const defaultMetaFieldName = 'v2-truck-lineup-meta-active';
+  const subContainer = container.querySelector(':scope > div, :scope > p > div');
+
+  if (!container) {
+    return defaultMetaFieldName;
+  }
+
+  if (subContainer) {
+    return subContainer.dataset.metaFieldName || defaultMetaFieldName;
+  }
+
+  return container.dataset.metaFieldName || defaultMetaFieldName;
+};
+
+const getTruckCarousel = (container) => {
+  const defaultTruckCarousel = '';
+
+  if (!container) {
+    return defaultTruckCarousel;
+  }
+
+  const subContainer = container.querySelector(':scope > div, :scope > p > div');
+
+  if (subContainer) {
+    return subContainer.dataset.truckCarousel || defaultTruckCarousel;
+  }
+
+  return container.dataset.truckCarousel || defaultTruckCarousel;
+};
+
 export default function decorate(block) {
   const buttonNavigation = block.closest('main').classList.contains('truck-lineup-buttons');
   const descriptionContainer = block.querySelector(':scope > div');
@@ -297,6 +348,12 @@ export default function decorate(block) {
 
   let tabItems = block.querySelectorAll(':scope > div > div');
   const selectedColor = getTabColor(tabItems[0]);
+  const metaFieldName = getMetaFieldName(tabItems[0]);
+  const truckCarousel = getTruckCarousel(tabItems[0]);
+
+  // Set the initial value to the meta field
+  setupMetaField(metaFieldName, truckCarousel);
+
   const colors = new Set();
 
   tabItems.forEach((tabItem) => {
@@ -361,6 +418,9 @@ export default function decorate(block) {
   const imageObj = new Image();
   tabItems.forEach((tabItem) => {
     const color = getTabColor(tabItem);
+    const metaFieldName = getMetaFieldName(tabItem);
+    const truckCarousel = getTruckCarousel(tabItem);
+
     tabItem.classList.add(`${blockName}__desc-item`);
     const tabContent = tabItem.querySelector(':scope > div');
 
@@ -369,6 +429,8 @@ export default function decorate(block) {
     const imageItem = createElement('div', { classes: `${blockName}__image-item` });
     imageItem.appendChild(picture);
     imageItem.setAttribute('data-color', color);
+    imageItem.setAttribute('data-meta-field-name', metaFieldName);
+    imageItem.setAttribute('data-truck-carousel', truckCarousel);
 
     if (!colorCheck.includes(color)) {
       imageItem.classList.add('first-of-color');
