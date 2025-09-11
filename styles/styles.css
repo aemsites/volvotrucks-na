@@ -1534,6 +1534,10 @@ main.blue-contract .section.section-with-title p {
   line-height: var(--f-subtitle-2-line-height);
 }
 
+.redesign-v2 input[type='date'] {
+  text-transform: uppercase;
+}
+
 .redesign-v2 div:where([role='dialog']) input:hover,
 .redesign-v2 main input:hover,
 .redesign-v2 main textarea:hover {
