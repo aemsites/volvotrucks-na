@@ -33,6 +33,10 @@
   width: min(100%, 600px);
 }
 
+.v2-custom-form-container .v2-custom-form__subtitle {
+  margin: 2em auto 1em;
+}
+
 .v2-custom-form-container form {
   display: flex;
   flex-direction: column;
