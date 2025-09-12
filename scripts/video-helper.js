@@ -824,6 +824,65 @@ export async function loadVideoJs() {
   document.dispatchEvent(new Event('videojs-loaded'));
 }
 
+/**
+ * Queries for a playable element within a root.
+ *
+ * @param {ParentNode} root - Element or fragment to search in.
+ * @returns {VideoPlayableEl|null} A native <video> or a Video.js element, or null if none found.
+ */
+export const queryVideoEl = (root) => root?.querySelector('video, .video-js') || null;
+
+/**
+ * Play muted and inline. Supports native <video> and Video.js (.video-js).
+ *
+ * @param {HTMLElement} videoEl - The element to play.
+ * @returns {void}
+ */
+export const playMutedInline = (videoEl) => {
+  if (!videoEl) {
+    return;
+  }
+
+  // Video.js
+  if (window.videojs && videoEl.classList?.contains('video-js')) {
+    const player = window.videojs.getPlayer ? window.videojs.getPlayer(videoEl) : window.videojs(videoEl);
+    player.muted(true);
+    player.play?.().catch(() => {});
+    return;
+  }
+
+  // Native <video>
+  if (videoEl.tagName === 'VIDEO') {
+    videoEl.muted = true;
+    videoEl.setAttribute('playsinline', '');
+    videoEl.play?.().catch(() => {});
+  }
+};
+
+/**
+ * Pause playback. Supports native <video> and Video.js (.video-js).
+ *
+ * @param {HTMLElement} videoEl - The element to pause.
+ * @returns {void}
+ */
+export const pausePlayback = (videoEl) => {
+  if (!videoEl) {
+    return;
+  }
+
+  // Video.js
+  if (window.videojs && videoEl.classList?.contains('video-js')) {
+    const player = window.videojs.getPlayer ? window.videojs.getPlayer(videoEl) : window.videojs(videoEl);
+    player.pause?.();
+    return;
+  }
+
+  // Native <video>
+  if (videoEl.tagName === 'VIDEO') {
+    videoEl.pause?.();
+  }
+};
+
 class VideoEventManager {
   constructor() {
     this.registrations = [];
