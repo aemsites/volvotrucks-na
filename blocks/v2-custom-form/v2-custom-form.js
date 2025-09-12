@@ -209,12 +209,18 @@ function kebabName(name) {
 
 function createFieldWrapper(fd, tagName = 'div') {
   const nameStyle = fd.Name ? `form-${kebabName(fd.Name)}` : '';
-  const fieldWrapper = createElement(tagName, {
-    classes: [`form-${fd.Type}-wrapper`, 'field-wrapper'],
-    props: {
+  let props = {};
+
+  if (tagName !== 'div') {
+    props = {
       id: fd.Id,
       name: fd.Name,
-    },
+    };
+  }
+
+  const fieldWrapper = createElement(tagName, {
+    classes: [`form-${fd.Type}-wrapper`, 'field-wrapper'],
+    props,
   });
   if (fd.Mandatory && fd.Mandatory.toLowerCase() === 'true') {
     fieldWrapper.setAttribute('required', 'required');
@@ -263,6 +269,44 @@ function createInput(fd) {
   });
   setPlaceholder(input, fd);
   setConstraints(input, fd);
+  return input;
+}
+
+function formatDate(date) {
+  return date.toISOString().split('T')[0];
+}
+
+function createDateInput(fd) {
+  const input = createElement('input', {
+    props: {
+      type: fd.Type,
+    },
+  });
+  setPlaceholder(input, fd);
+  setConstraints(input, fd);
+
+  if (fd['Custom Options'] && fd['Custom Options'] !== '') {
+    try {
+      const customOptions = fd['Custom Options'];
+      const customOptionsObj = JSON.parse(customOptions.replace(/(\w+):/g, '"$1":'));
+
+      if (customOptionsObj.minDay || customOptionsObj.maxDay) {
+        const today = new Date();
+
+        const minDate = new Date();
+        minDate.setDate(today.getDate() + customOptionsObj.minDay);
+
+        const maxDate = new Date();
+        maxDate.setDate(today.getDate() + customOptionsObj.maxDay);
+
+        input.min = formatDate(minDate);
+        input.max = formatDate(maxDate);
+      }
+    } catch (error) {
+      console.error('Error parsing Custom Options JSON:', error);
+    }
+  }
+
   return input;
 }
 
@@ -556,13 +600,17 @@ const fieldRenderers = {
   hidden: createHidden,
   fieldset: createFieldSet,
   plaintext: createPlainText,
+  date: createDateInput,
   'custom-dropdown': createSelect, // create a select as a placeholder for the custom dropdown
 };
 
 function renderField(fd) {
   const renderer = fieldRenderers[fd.Type];
   let field;
-  if (typeof renderer === 'function') {
+  if (fd.Type === 'date' && typeof renderer === 'function') {
+    field = createFieldWrapper(fd);
+    field.append(renderer(fd));
+  } else if (typeof renderer === 'function') {
     field = renderer(fd);
   } else {
     field = createFieldWrapper(fd);
