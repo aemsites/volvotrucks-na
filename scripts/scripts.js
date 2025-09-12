@@ -341,20 +341,23 @@ function buildTruckLineupBlock(main) {
 
   const mainChildren = [...main.querySelectorAll(':scope > div')];
   mainChildren.forEach((section, i) => {
-    const isTruckCarousel = section.dataset.truckCarousel;
+    const sectionMetaTruckCarousel = section.dataset.truckCarousel;
+    const isTruckCarousel = !!sectionMetaTruckCarousel;
     if (!isTruckCarousel) {
       return;
     }
 
+    const carouselMetaFieldName = section.dataset.metaFieldName || 'v2-truck-lineup-meta-active';
+
     // save carousel position
     nextElement = mainChildren[i + 1];
-    const sectionMeta = section.dataset.truckCarousel;
     if (!inpageMeta && section.dataset.inpage) {
       inpageMeta = section.dataset.inpage.toLowerCase();
     }
 
     const tabContent = createElement('div', { classes: 'v2-truck-lineup__content' });
-    tabContent.dataset.truckCarousel = sectionMeta;
+    tabContent.dataset.truckCarousel = sectionMetaTruckCarousel;
+    tabContent.dataset.metaFieldName = carouselMetaFieldName;
     tabContent.innerHTML = section.innerHTML;
     const images = tabContent.querySelectorAll('p > picture');
 
