@@ -99,10 +99,6 @@
   border-radius: var(--border-radius);
 }
 
-.v2-content-carousel__figure .v2-video__playback-button {
-  bottom: 34px;
-}
-
 .v2-content-carousel__figure-text {
   font: var(--f-overline-font-size) / var(--f-overline-line-height) var(--font-family-body);
   letter-spacing: var(--f-overline-letter-spacing);
