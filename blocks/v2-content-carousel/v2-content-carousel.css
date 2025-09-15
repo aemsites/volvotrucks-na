@@ -311,7 +311,6 @@ ul.v2-content-carousel__arrowcontrols {
   }
 
   .v2-content-carousel.interactive .v2-content-carousel__figure-text {
-    font-size: var(--f-heading-3-font-size);
     padding: 40px;
   }
 
