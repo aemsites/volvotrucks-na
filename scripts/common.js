@@ -636,12 +636,25 @@ export function createResponsivePicture(images, eager, alt, imageClass) {
 }
 
 /**
- * Checks if the current screen is mobile.
+ * Checks whether the viewport is in the mobile range.
+ * Mobile is defined as a viewport width ≤ 744px (CSS pixels).
  *
- * @returns {boolean} true if it matched the media query
+ * @returns {boolean} True if the media query '(max-width: 744px)' matches.
  */
-export const isMobileViewport = () => {
-  const MQ = window.matchMedia('(max-width: 744px)');
+export const isMobileViewport = () => window.matchMedia('(max-width: 744px)').matches;
 
-  return MQ.matches;
-};
+/**
+ * Checks whether the viewport is in the mobile or tablet range.
+ * Mobile/Tablet is defined as a viewport width ≤ 1199px (CSS pixels).
+ *
+ * @returns {boolean} True if the media query '(max-width: 1199px)' matches.
+ */
+export const isMobileOrTabletViewport = () => window.matchMedia('(max-width: 1199px)').matches;
+
+/**
+ * Checks whether the viewport is in the tablet-only range.
+ * Tablet-only is defined as 768px ≤ viewport width ≤ 1199px (CSS pixels).
+ *
+ * @returns {boolean} True if the media query '(min-width: 768px) and (max-width: 1199px)' matches.
+ */
+export const isTabletOnlyViewport = () => window.matchMedia('(min-width: 768px) and (max-width: 1199px)').matches;
