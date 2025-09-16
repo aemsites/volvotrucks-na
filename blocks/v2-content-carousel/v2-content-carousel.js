@@ -162,7 +162,7 @@ const pauseAllInContainer = (container, itemSelector) => {
  */
 const setupMobileOrTabletAutoplay = (container, itemSelector, videoItemClass) => {
   const FULLY_VISIBLE = 0.98;
-  const headerOffset = getHeaderHeight('header');
+  const headerOffset = getHeaderHeight();
 
   let containerVisible = false;
   let activeObserver = null;
