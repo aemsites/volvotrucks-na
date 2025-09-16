@@ -367,6 +367,14 @@
   color: white;
 }
 
+.v2-custom-form .form-radio-wrapper--buttons .form-radio-input:focus-visible + .form-radio-label::after {
+  display: none;
+}
+
+.v2-custom-form .form-radio-wrapper--buttons .form-radio-input:focus-visible + .form-radio-label { 
+  outline: var(--form-focus-border);
+}
+
 @media (min-width: 744px) {
   .v2-custom-form-container form {
     display: flex;
