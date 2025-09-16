@@ -420,8 +420,10 @@ function createRadio(fd) {
 }
 
 function createRadioWrapper(fd) {
+  const isButtonVariant = fd.Type === 'buttons';
+  const variantClass = isButtonVariant ? 'form-radio-wrapper--buttons' : '';
   const wrapper = createElement('fieldset', {
-    classes: [`form-${fd.Type}-wrapper`, 'field-wrapper'],
+    classes: ['form-radio-wrapper', 'field-wrapper', variantClass],
     props: { name: fd.Name },
   });
 
@@ -434,7 +436,7 @@ function createRadioWrapper(fd) {
   }
 
   const legend = createElement('legend', {
-    classes: [`form-${fd.Type}-legend`],
+    classes: ['form-radio-legend'],
   });
   legend.textContent = fd.Label || fd.Name;
   wrapper.append(legend);
@@ -466,7 +468,7 @@ function createRadioOption(option, index, fd) {
   });
 
   const input = createElement('input', {
-    classes: [`form-${fd.Type}-input`],
+    classes: ['form-radio-input'],
     props: {
       type: 'radio',
       id: radioId,
@@ -477,7 +479,7 @@ function createRadioOption(option, index, fd) {
   });
 
   const label = createElement('label', {
-    classes: [`form-${fd.Type}-label`],
+    classes: ['form-radio-label'],
     props: { for: radioId },
   });
 
@@ -591,6 +593,7 @@ const getId = (function getId() {
 
 const fieldRenderers = {
   radio: createRadio,
+  buttons: createRadio,
   checkbox: createCheckbox,
   textarea: createTextArea,
   select: createSelect,

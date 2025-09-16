@@ -275,13 +275,13 @@
   border-radius: 4px;
 }
 
-.form-radio-input:checked + .form-radio-label::before {
+.form-radio-wrapper .form-radio-input:checked + .form-radio-label::before {
   background-color: var(--field-radio-checked-bg-color);
   border-color: var(--field-radio-checked-color);
   box-shadow: inset 0 0 0 3px var(--c-white);
 }
 
-.form-radio-wrapper.invalid .form-radio-label::before {
+.form-radio-wrapper.invalid .form-radio-input .form-radio-label::before {
   border-color: var(--field-error-color);
 }
 
@@ -332,6 +332,39 @@
 
 .v2-custom-form-container .hidden {
   display: none;
+}
+
+/* Buttons variant for radio buttons */
+.form-radio-wrapper--buttons {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.form-radio-wrapper--buttons .form-radio-option {
+  margin: 0;
+  flex-grow: 1;
+}
+
+.v2-custom-form .form-radio-wrapper--buttons .form-radio-input:not(:checked) + .form-radio-label::before,
+.v2-custom-form .form-radio-wrapper--buttons .form-radio-input:checked + .form-radio-label::before,
+.v2-custom-form .form-radio-wrapper--buttons .form-radio-circle {
+  display: none;
+}
+
+.v2-custom-form .form-radio-wrapper.form-radio-wrapper--buttons .form-radio-label {
+  border: 1px solid var(--form-border-color);
+  border-radius: 4px;
+  background-color: var(--background-color);
+  padding: 10px 20px;
+  text-align: center;
+  transition: background-color 0.3s, border-color 0.3s, color 0.3s;
+  width: 100%;
+}
+
+.v2-custom-form .form-radio-wrapper--buttons .form-radio-input:checked + .form-radio-label {
+  background-color: black;
+  color: white;
 }
 
 @media (min-width: 744px) {
