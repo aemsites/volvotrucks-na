@@ -1,4 +1,11 @@
-import { createElement, decorateIcons, adjustPretitle, isMobileOrTabletViewport } from '../../scripts/common.js';
+import {
+  createElement,
+  decorateIcons,
+  adjustPretitle,
+  isMobileOrTabletViewport,
+  isTabletOnlyViewport,
+  isMobileViewport,
+} from '../../scripts/common.js';
 import { isVideoLink, createVideo, queryVideoEl, playMutedInline, pausePlayback } from '../../scripts/video-helper.js';
 
 const blockName = 'v2-content-carousel';
@@ -148,12 +155,10 @@ const pauseAllInContainer = (container, itemSelector) => {
 };
 
 /**
- * Mobile/Tablet setup: gate autoplay by container visibility and by the active
- * (left-most) item being ~fully visible. When the container is visible (with a
- * top rootMargin equal to the header height), the active item is observed at a
- * near-1.0 threshold so its video plays muted inline; all others are paused.
- * Scroll/resize keep the active item in sync. Returns a teardown that removes
- * observers/listeners and pauses videos.
+ * Mobile/Tablet setup:
+ * - Mobile (≤744px): only the left-most fully visible video plays (others pause).
+ * - Tablet (768–1199px): all video items that are at least `TABLET_VISIBLE` visible play (others pause).
+ * Visibility is gated by the container being on-screen, adjusted for a sticky header via rootMargin.
  *
  * @param {HTMLElement} container - The horizontal scroller element.
  * @param {string} itemSelector - Selector for each carousel item.
@@ -162,24 +167,91 @@ const pauseAllInContainer = (container, itemSelector) => {
  */
 const setupMobileOrTabletAutoplay = (container, itemSelector, videoItemClass) => {
   const FULLY_VISIBLE = 0.98;
+  const TABLET_VISIBLE = 0.5;
   const headerOffset = getHeaderHeight();
 
   let containerVisible = false;
-  let activeObserver = null;
-  let activeItem = null;
-  let lastActiveIndex = -1;
+  let activeObserver = null; // mobile: observe the active item
+  let multiObserver = null; // tablet: observe all video items
+
+  const disconnectActive = () => {
+    activeObserver?.disconnect();
+    activeObserver = null;
+  };
+
+  const disconnectMulti = () => {
+    multiObserver?.disconnect();
+    multiObserver = null;
+  };
 
   const onVisible = () => {
     containerVisible = true;
-    updateMobileOrTabletAutoplay(container, itemSelector, videoItemClass);
+
+    if (isTabletOnlyViewport()) {
+      disconnectActive();
+
+      if (!multiObserver) {
+        multiObserver = new IntersectionObserver(
+          (entries) => {
+            if (!containerVisible) {
+              return;
+            }
+            entries.forEach(({ target, isIntersecting, intersectionRatio }) => {
+              const player = queryVideoEl(target);
+              if (!player) {
+                return;
+              }
+              if (isIntersecting && intersectionRatio >= TABLET_VISIBLE) {
+                playMutedInline(player);
+              } else {
+                pausePlayback(player);
+              }
+            });
+          },
+          { threshold: [0, TABLET_VISIBLE], rootMargin: `-${headerOffset}px 0px 0px 0px` },
+        );
+      }
+
+      const items = container.querySelectorAll(`${itemSelector}.${videoItemClass}`);
+      items.forEach((item) => multiObserver.observe(item));
+    } else {
+      // mobile mode (left-most only)
+      disconnectMulti();
+      updateMobileOrTabletAutoplay(container, itemSelector, videoItemClass);
+
+      const items = container.querySelectorAll(itemSelector);
+      if (!items.length) {
+        return;
+      }
+
+      const activeIndex = getFirstSlotIndex(container, itemSelector);
+      const activeItem = items[activeIndex];
+
+      disconnectActive();
+      activeObserver = new IntersectionObserver(
+        ([entry]) => {
+          if (!containerVisible) {
+            return;
+          }
+          if (entry.isIntersecting && entry.intersectionRatio >= FULLY_VISIBLE) {
+            updateMobileOrTabletAutoplay(container, itemSelector, videoItemClass);
+          } else {
+            const player = queryVideoEl(activeItem);
+            if (player) {
+              pausePlayback(player);
+            }
+          }
+        },
+        { threshold: [FULLY_VISIBLE, 1], rootMargin: `-${headerOffset}px 0px 0px 0px` },
+      );
+      activeObserver.observe(activeItem);
+    }
   };
 
   const onHidden = () => {
     containerVisible = false;
-    activeObserver?.disconnect();
-    activeObserver = null;
-    activeItem = null;
-    lastActiveIndex = -1;
+    disconnectActive();
+    disconnectMulti();
     pauseAllInContainer(container, `${itemSelector}.${videoItemClass}`);
   };
 
@@ -188,64 +260,23 @@ const setupMobileOrTabletAutoplay = (container, itemSelector, videoItemClass) =>
     rootMargin: `-${headerOffset}px 0px 0px 0px`,
   });
 
-  const bindActiveItemObserver = () => {
-    if (!containerVisible) {
-      return;
-    }
-
-    const items = container.querySelectorAll(itemSelector);
-    if (!items.length) {
-      return;
-    }
-
-    const activeIndex = getFirstSlotIndex(container, itemSelector);
-    if (activeIndex === lastActiveIndex) {
-      return;
-    }
-    lastActiveIndex = activeIndex;
-
-    activeObserver?.disconnect();
-    activeItem = items[activeIndex];
-
-    activeObserver = new IntersectionObserver(
-      ([entry]) => {
-        if (!containerVisible) {
-          return;
-        }
-        if (entry.isIntersecting && entry.intersectionRatio >= FULLY_VISIBLE) {
-          updateMobileOrTabletAutoplay(container, itemSelector, videoItemClass);
-        } else {
-          const player = queryVideoEl(activeItem);
-          if (player) {
-            pausePlayback(player);
-          }
-        }
-      },
-      { threshold: [FULLY_VISIBLE, 1] },
-    );
-
-    activeObserver.observe(activeItem);
-  };
-
-  const refreshActive = () => {
+  const refresh = () => {
     if (!containerVisible) {
       return;
     }
     onVisible();
-    bindActiveItemObserver();
   };
 
   onVisible();
-  bindActiveItemObserver();
-
-  container.addEventListener('scroll', refreshActive, { passive: true });
-  window.addEventListener('resize', refreshActive);
+  container.addEventListener('scroll', refresh, { passive: true });
+  window.addEventListener('resize', refresh);
 
   return () => {
     teardownIO?.();
-    activeObserver?.disconnect();
-    container.removeEventListener('scroll', refreshActive);
-    window.removeEventListener('resize', refreshActive);
+    disconnectActive();
+    disconnectMulti();
+    container.removeEventListener('scroll', refresh);
+    window.removeEventListener('resize', refresh);
     onHidden();
   };
 };
@@ -277,7 +308,7 @@ const setupResponsivePlayback = (blockRoot, container, itemSelector, videoItemCl
           ? setupMobileOrTabletAutoplay(container, itemSelector, videoItemClass)
           : setupDesktopHover(blockRoot, itemSelector, videoItemClass);
       mode = nextMode;
-    } else if (nextMode === 'mobileOrTablet') {
+    } else if (isMobileViewport()) {
       updateMobileOrTabletAutoplay(container, itemSelector, videoItemClass);
     }
   };
@@ -384,7 +415,7 @@ const navigate = (carousel, direction) => {
   }
 
   scrollContainer.scrollLeft = newScrollLeft;
-  if (isMobileOrTabletViewport()) {
+  if (isMobileViewport()) {
     updateMobileOrTabletAutoplay(scrollContainer, `.${blockName}__media-item`, `${blockName}__media-item--video`);
   }
 };
