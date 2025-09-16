@@ -622,6 +622,17 @@ function renderField(fd) {
   return field;
 }
 
+function renderTitle(config) {
+  const text = config.Label || '';
+  const tag = config.Name && ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(config.Name.toLowerCase()) ? config.Name.toLowerCase() : 'h2';
+  const title = createElement(tag, {
+    classes: [`${blockName}__subtitle`],
+  });
+  title.textContent = text;
+
+  return title;
+}
+
 async function fetchData(url) {
   try {
     const resp = await fetch(url);
@@ -755,39 +766,45 @@ async function createForm(formURL) {
   const customDropdowns = [];
   const dependencies = []; // these will be used to show/hide the fields based on the dependencies
   data.forEach(async (fd) => {
-    const el = renderField(fd);
+    let el;
 
-    if (fd.Type === 'custom-dropdown') {
-      customDropdowns.push(fd);
-    }
+    if (fd.Type === 'title') {
+      el = renderTitle(fd);
+    } else {
+      el = renderField(fd);
 
-    const formField = el.querySelector('input,textarea,select');
-    if (fd.Mandatory && fd.Mandatory.toLowerCase() === 'true') {
-      formField.setAttribute('required', 'required');
-    }
-    if (formField) {
-      if (!formField.id) {
-        formField.id = fd.Id;
-      }
-      formField.name = fd.Name;
-
-      if (fd.Type !== 'radio') {
-        formField.value = fd.Value;
+      if (fd.Type === 'custom-dropdown') {
+        customDropdowns.push(fd);
       }
 
-      if (fd.Description) {
-        formField.setAttribute('aria-describedby', `${fd.Id}-description`);
-      }
-    }
-    if (fd.Dependency) {
-      // If it has a dependency, we need to hide it by default
-      dependencies.push({
-        element: el,
-        dependency: fd.Dependency,
+      const formField = el.querySelector('input,textarea,select');
+      if (formField) {
+        if (fd.Mandatory && fd.Mandatory.toLowerCase() === 'true') {
+          formField.setAttribute('required', 'required');
+        }
+        if (!formField.id) {
+          formField.id = fd.Id;
+        }
+        formField.name = fd.Name;
 
-        name: (fd.Dependency && fd.Dependency.split(':')[0]) || '',
-        value: (fd.Dependency && fd.Dependency.split(':')[1]) || '',
-      });
+        if (fd.Type !== 'radio') {
+          formField.value = fd.Value;
+        }
+
+        if (fd.Description) {
+          formField.setAttribute('aria-describedby', `${fd.Id}-description`);
+        }
+      }
+      if (fd.Dependency) {
+        // If it has a dependency, we need to hide it by default
+        dependencies.push({
+          element: el,
+          dependency: fd.Dependency,
+
+          name: (fd.Dependency && fd.Dependency.split(':')[0]) || '',
+          value: (fd.Dependency && fd.Dependency.split(':')[1]) || '',
+        });
+      }
     }
     form.append(el);
   });
