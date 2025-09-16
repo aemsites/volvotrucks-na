@@ -1,4 +1,4 @@
-import { createElement, decorateIcons, adjustPretitle, isMobileViewport } from '../../scripts/common.js';
+import { createElement, decorateIcons, adjustPretitle, isMobileOrTabletViewport } from '../../scripts/common.js';
 import { isVideoLink, createVideo, queryVideoEl, playMutedInline, pausePlayback } from '../../scripts/video-helper.js';
 
 const blockName = 'v2-content-carousel';
@@ -31,7 +31,7 @@ const getFirstSlotIndex = (container, itemSelector) => {
  * @param {string} itemSelector
  * @param {string} videoItemClass - e.g. 'v2-content-carousel__media-item--video'
  */
-const updateMobileAutoplay = (container, itemSelector, videoItemClass) => {
+const updateMobileOrTabletAutoplay = (container, itemSelector, videoItemClass) => {
   const items = container.querySelectorAll(itemSelector);
   if (!items.length) {
     return;
@@ -94,16 +94,20 @@ const setupDesktopHover = (root, itemSelector, videoItemClass) => {
 
 /**
  * Observe container visibility and invoke handlers.
- * Returns a teardown function to disconnect the observer, or `undefined`
- * if the container is missing or IntersectionObserver is unavailable.
+ * Uses IntersectionObserver; "visible" means intersecting with
+ * intersectionRatio >= `threshold`. You can offset for a sticky header
+ * via `rootMargin` (e.g., '-52px 0px 0px 0px').
  *
  * @param {HTMLElement} container - Element to observe.
  * @param {() => void} onVisible - Called when container is considered visible.
- * @param {() => void} onHidden - Called when container is considered hidden.
- * @param {{ threshold?: number }} [opts] - Options (visibility ratio).
- * @returns {(() => void) | undefined} Teardown function or `undefined`.
+ * @param {() => void} onHidden  - Called when container is considered hidden.
+ * @param {{ threshold?: number, rootMargin?: string }} [opts] - Observer options.
+ * @param {number}  [opts.threshold=0.25] - Visibility ratio (0–1) to treat as visible.
+ * @param {string}  [opts.rootMargin='0px'] - Root margin in CSS shorthand.
+ * @returns {(() => void) | undefined} Teardown function to disconnect, or `undefined`
+ * if IntersectionObserver is unavailable or container is falsy.
  */
-const setupViewportGate = (container, onVisible, onHidden, { threshold = 0.25 } = {}) => {
+const setupViewportGate = (container, onVisible, onHidden, { threshold = 0.25, rootMargin = '0px' } = {}) => {
   if (!container || typeof IntersectionObserver === 'undefined') {
     return;
   }
@@ -113,12 +117,21 @@ const setupViewportGate = (container, onVisible, onHidden, { threshold = 0.25 } 
       const visible = entry.isIntersecting && entry.intersectionRatio >= threshold;
       (visible ? onVisible : onHidden)();
     },
-    { threshold: [0, threshold, 1] },
+    { threshold: [0, threshold, 1], rootMargin },
   );
 
   observer.observe(container);
   return () => observer.disconnect();
 };
+
+/**
+ * Get the height (in pixels) of the first element matching `selector`.
+ * Useful to compute a negative top rootMargin for a sticky header.
+ *
+ * @param {string} [selector='header'] - CSS selector for the header element.
+ * @returns {number} Pixel height, or 0 if not found.
+ */
+const getHeaderHeight = (selector = 'header') => document.querySelector(selector)?.getBoundingClientRect().height || 0;
 
 /**
  * Pause all videos in a container.
@@ -135,15 +148,22 @@ const pauseAllInContainer = (container, itemSelector) => {
 };
 
 /**
- * Mobile/Tablet setup: gate by viewport + keep in sync on scroll/resize.
- * Autoplay only when the active (left-most) item is fully visible.
- * Returns teardown.
- * @param {HTMLElement} container
- * @param {string} itemSelector
- * @param {string} videoItemClass
+ * Mobile/Tablet setup: gate autoplay by container visibility and by the active
+ * (left-most) item being ~fully visible. When the container is visible (with a
+ * top rootMargin equal to the header height), the active item is observed at a
+ * near-1.0 threshold so its video plays muted inline; all others are paused.
+ * Scroll/resize keep the active item in sync. Returns a teardown that removes
+ * observers/listeners and pauses videos.
+ *
+ * @param {HTMLElement} container - The horizontal scroller element.
+ * @param {string} itemSelector - Selector for each carousel item.
+ * @param {string} videoItemClass - Class indicating items that contain a video.
+ * @returns {() => void} Teardown function.
  */
-const setupMobileAutoplay = (container, itemSelector, videoItemClass) => {
-  const FULLY_VISIBLE = 0.999;
+const setupMobileOrTabletAutoplay = (container, itemSelector, videoItemClass) => {
+  const FULLY_VISIBLE = 0.98;
+  const headerOffset = getHeaderHeight('header');
+
   let containerVisible = false;
   let activeObserver = null;
   let activeItem = null;
@@ -151,7 +171,7 @@ const setupMobileAutoplay = (container, itemSelector, videoItemClass) => {
 
   const onVisible = () => {
     containerVisible = true;
-    updateMobileAutoplay(container, itemSelector, videoItemClass);
+    updateMobileOrTabletAutoplay(container, itemSelector, videoItemClass);
   };
 
   const onHidden = () => {
@@ -163,7 +183,10 @@ const setupMobileAutoplay = (container, itemSelector, videoItemClass) => {
     pauseAllInContainer(container, `${itemSelector}.${videoItemClass}`);
   };
 
-  const teardownIO = setupViewportGate(container, onVisible, onHidden, { threshold: 0 });
+  const teardownIO = setupViewportGate(container, onVisible, onHidden, {
+    threshold: 0,
+    rootMargin: `-${headerOffset}px 0px 0px 0px`,
+  });
 
   const bindActiveItemObserver = () => {
     if (!containerVisible) {
@@ -190,7 +213,7 @@ const setupMobileAutoplay = (container, itemSelector, videoItemClass) => {
           return;
         }
         if (entry.isIntersecting && entry.intersectionRatio >= FULLY_VISIBLE) {
-          updateMobileAutoplay(container, itemSelector, videoItemClass);
+          updateMobileOrTabletAutoplay(container, itemSelector, videoItemClass);
         } else {
           const player = queryVideoEl(activeItem);
           if (player) {
@@ -237,23 +260,25 @@ const setupMobileAutoplay = (container, itemSelector, videoItemClass) => {
  * @returns {() => void}
  */
 const setupResponsivePlayback = (blockRoot, container, itemSelector, videoItemClass) => {
-  const computeMode = () => (isMobileViewport() ? 'mobile' : 'desktop');
+  const computeMode = () => (isMobileOrTabletViewport() ? 'mobileOrTablet' : 'desktop');
 
   let mode = computeMode();
   let unbind =
-    mode === 'mobile' ? setupMobileAutoplay(container, itemSelector, videoItemClass) : setupDesktopHover(blockRoot, itemSelector, videoItemClass);
+    mode === 'mobileOrTablet'
+      ? setupMobileOrTabletAutoplay(container, itemSelector, videoItemClass)
+      : setupDesktopHover(blockRoot, itemSelector, videoItemClass);
 
   const onResize = () => {
     const nextMode = computeMode();
     if (nextMode !== mode) {
       unbind?.();
       unbind =
-        nextMode === 'mobile'
-          ? setupMobileAutoplay(container, itemSelector, videoItemClass)
+        nextMode === 'mobileOrTablet'
+          ? setupMobileOrTabletAutoplay(container, itemSelector, videoItemClass)
           : setupDesktopHover(blockRoot, itemSelector, videoItemClass);
       mode = nextMode;
-    } else if (nextMode === 'mobile') {
-      updateMobileAutoplay(container, itemSelector, videoItemClass);
+    } else if (nextMode === 'mobileOrTablet') {
+      updateMobileOrTabletAutoplay(container, itemSelector, videoItemClass);
     }
   };
 
@@ -266,9 +291,9 @@ const setupResponsivePlayback = (blockRoot, container, itemSelector, videoItemCl
 };
 
 function numberCardsToNavigate() {
-  const isMobile = isMobileViewport();
+  const isMobileOrTablet = isMobileOrTabletViewport();
 
-  if (isMobile) {
+  if (isMobileOrTablet) {
     return 1;
   }
 
@@ -276,10 +301,10 @@ function numberCardsToNavigate() {
 }
 
 const navigate = (carousel, direction) => {
-  const isMobile = isMobileViewport();
+  const isMobileOrTablet = isMobileOrTabletViewport();
   let numberCardsToNavigatePerClick = numberCardsToNavigate();
 
-  if (isMobile) {
+  if (isMobileOrTablet) {
     numberCardsToNavigatePerClick = 1;
   } else {
     const isInteractive = carousel.closest(`.${blockName}`)?.classList.contains('interactive');
@@ -296,7 +321,7 @@ const navigate = (carousel, direction) => {
   const paddingLeft = parseFloat(style.paddingLeft);
   const marginLeft = parseFloat(style.marginLeft);
 
-  if (isMobile) {
+  if (isMobileOrTablet) {
     const isInteractiveVariant = carousel.closest(`.${blockName}`)?.classList.contains('interactive');
     const atStart = newScrollLeft <= paddingLeft + marginLeft + gap;
     const atEnd = scrollContainer.clientWidth + scrollContainer.scrollLeft >= scrollContainerScrollWidth;
@@ -359,13 +384,13 @@ const navigate = (carousel, direction) => {
   }
 
   scrollContainer.scrollLeft = newScrollLeft;
-  if (isMobileViewport()) {
-    updateMobileAutoplay(scrollContainer, `.${blockName}__media-item`, `${blockName}__media-item--video`);
+  if (isMobileOrTabletViewport()) {
+    updateMobileOrTabletAutoplay(scrollContainer, `.${blockName}__media-item`, `${blockName}__media-item--video`);
   }
 };
 
 const createArrowControls = (carousel, isInteractive) => {
-  const isMobile = isMobileViewport();
+  const isMobileOrTablet = isMobileOrTabletViewport();
   const arrowControls = createElement('ul', { classes: [`${blockName}__arrowcontrols`] });
   const arrows = document.createRange().createContextualFragment(`
     <li>
@@ -387,7 +412,7 @@ const createArrowControls = (carousel, isInteractive) => {
   prevButton.addEventListener('click', () => navigate(carousel, 'left'));
   nextButton.addEventListener('click', () => navigate(carousel, 'right'));
 
-  if (!isMobile || (isMobile && !isInteractive)) {
+  if (!isMobileOrTablet || (isMobileOrTablet && !isInteractive)) {
     // disable prev button on load
     prevButton.setAttribute('disabled', 'true');
   }
@@ -468,6 +493,52 @@ const mountImageItem = (el, figure, picture, figCaption) => {
   }
 };
 
+/**
+ * Sync prev/next button disabled state based on current scroll position.
+ * Keeps both enabled on mobile/tablet for the interactive (looping) variant.
+ * @param {HTMLElement} carousel
+ */
+const syncArrowButtons = (carousel) => {
+  const isMobileOrTablet = isMobileOrTabletViewport();
+  const isInteractive = carousel.closest(`.${blockName}`)?.classList.contains('interactive');
+  const controls = carousel.nextElementSibling;
+  if (!controls) {
+    return;
+  }
+
+  const prevBtn = controls.querySelector(`button.${blockName}__button-prev`);
+  const nextBtn = controls.querySelector(`button.${blockName}__button-next`);
+  if (!prevBtn || !nextBtn) {
+    return;
+  }
+
+  if (isMobileOrTablet && isInteractive) {
+    prevBtn.removeAttribute('disabled');
+    nextBtn.removeAttribute('disabled');
+    return;
+  }
+
+  const EPS = 1; // guard for sub-pixel rounding
+  const style = window.getComputedStyle(carousel);
+  const gap = parseFloat(style.gap) || 0;
+  const paddingLeft = parseFloat(style.paddingLeft) || 0;
+  const marginLeft = parseFloat(style.marginLeft) || 0;
+
+  const atStart = carousel.scrollLeft <= paddingLeft + marginLeft + gap + EPS;
+  const atEnd = carousel.clientWidth + carousel.scrollLeft >= carousel.scrollWidth - EPS;
+
+  if (atStart) {
+    prevBtn.setAttribute('disabled', 'true');
+  } else {
+    prevBtn.removeAttribute('disabled');
+  }
+  if (atEnd) {
+    nextBtn.setAttribute('disabled', 'true');
+  } else {
+    nextBtn.removeAttribute('disabled');
+  }
+};
+
 export default async function decorate(block) {
   const rows = [...block.querySelectorAll(':scope > div')];
   const isInteractive = block.classList.contains('interactive');
@@ -532,6 +603,9 @@ export default async function decorate(block) {
 
   const carousel = mediaCol.querySelector(`.${blockName}__media-list`);
   createArrowControls(carousel, isInteractive);
+  syncArrowButtons(carousel);
+  carousel.addEventListener('scroll', () => syncArrowButtons(carousel), { passive: true });
+  window.addEventListener('resize', () => syncArrowButtons(carousel));
   const itemSel = `.${blockName}__media-item`;
   const videoModClass = `${blockName}__media-item--video`;
   setupResponsivePlayback(block, carousel, itemSel, videoModClass);

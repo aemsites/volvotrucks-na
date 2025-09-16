@@ -645,3 +645,14 @@ export const isMobileViewport = () => {
 
   return MQ.matches;
 };
+
+/**
+ * Returns whether the current viewport is within the mobile/tablet range
+ *
+ * @returns {boolean} True if the viewport width ≤ 1199px; otherwise, false.
+ */
+export const isMobileOrTabletViewport = () => {
+  const MQ = window.matchMedia('(max-width: 1199px)');
+
+  return MQ.matches;
+};
