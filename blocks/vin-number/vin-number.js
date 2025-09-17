@@ -50,6 +50,7 @@ const valueDisplayList = [
     key: 'interim_precautions',
     frenchKey: 'interim_precautions_french',
     class: `${blockName}__detail-item--column`,
+    displayIfEmpty: true,
   },
   {
     key: 'remedy_description',
@@ -123,9 +124,8 @@ function renderRecalls(recallsData) {
       recall.mfr_recall_status = recallStatus[recall.mfr_recall_status];
 
       const recallDetailsList = createElement('ul', { classes: `${blockName}__detail-list` });
-
       valueDisplayList.forEach((item) => {
-        if (recall[item.key]) {
+        if (recall[item.key] || item.displayIfEmpty) {
           const recallClass = item.key === 'mfr_recall_status' ? `${blockName}__${recall.mfr_recall_status.replace(/_/g, '-').toLowerCase()}` : '';
           let itemValue = recall[item.key];
           if (recallClass) {
@@ -144,7 +144,7 @@ function renderRecalls(recallsData) {
 
           const itemFragment = docRange.createContextualFragment(`<li class="${blockName}__detail-item ${item.class ? item.class : ''}" >
             <h5 class="${blockName}__detail-title subtitle-1"> ${getTextLabel(item.key)} </h5>
-            <span class="${blockName}__detail-value ${recallClass}">${itemValue}</span>
+            <span class="${blockName}__detail-value ${recallClass}">${itemValue || ''}</span>
           </li>`);
           recallDetailsList.append(...itemFragment.children);
         }
@@ -170,7 +170,6 @@ function getAPIConfig() {
   } else if (window.location.host.includes('localhost')) {
     env = 'dev';
   }
-
   return apiConfig[env];
 }
 
