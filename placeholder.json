@@ -104,10 +104,6 @@
       "Text": "Issue Date"
     },
     {
-      "Key": "tc_recall_date",
-      "Text": "Transport Canada Issue Date"
-    },
-    {
       "Key": "recall_description",
       "Text": "Description"
     },
