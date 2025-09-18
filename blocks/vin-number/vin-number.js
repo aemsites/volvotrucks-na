@@ -149,7 +149,7 @@ function renderRecalls(recallsData) {
             }
           }
 
-          if (item.key === 'recall_effective_date') {
+          if (itemValue && item.key === 'recall_effective_date') {
             const recallText = getTextLabel(`recall_effective_text${isFrench ? '_french' : ''}`).split('//');
             const recallDate = new Date(itemValue);
             const today = new Date();
