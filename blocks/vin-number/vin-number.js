@@ -127,7 +127,7 @@ function renderRecalls(recallsData) {
       valueDisplayList.forEach((item) => {
         if (recall[item.key] || item.displayIfEmpty) {
           const recallClass = item.key === 'mfr_recall_status' ? `${blockName}__${recall.mfr_recall_status.replace(/_/g, '-').toLowerCase()}` : '';
-          let itemValue = recall[item.key];
+          let itemValue = recall[item.key] || '';
           if (recallClass) {
             itemValue = getTextLabel(recall[item.key]);
           } else if (item.key === 'recall_date' && isFrench) {
@@ -144,7 +144,7 @@ function renderRecalls(recallsData) {
 
           const itemFragment = docRange.createContextualFragment(`<li class="${blockName}__detail-item ${item.class ? item.class : ''}" >
             <h5 class="${blockName}__detail-title subtitle-1"> ${getTextLabel(item.key)} </h5>
-            <span class="${blockName}__detail-value ${recallClass}">${itemValue || ''}</span>
+            <span class="${blockName}__detail-value ${recallClass}">${itemValue}</span>
           </li>`);
           recallDetailsList.append(...itemFragment.children);
         }
