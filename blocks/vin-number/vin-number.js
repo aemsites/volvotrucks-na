@@ -54,7 +54,6 @@ const valueDisplayList = [
   },
   {
     key: 'recall_effective_date',
-    frenchKey: 'recall_effective_date_french',
     class: `${blockName}__detail-item--column`,
     text: 'recall_effective_text',
     frenchText: 'recall_effective_text_french',
@@ -149,7 +148,7 @@ function renderRecalls(recallsData) {
             }
           }
 
-          const h5Text = getTextLabel(isFrench ? item.key : `${item.key}_french`);
+          const h5Text = getTextLabel(item.key);
 
           if (itemValue && item.key === 'recall_effective_date') {
             const recallText = getTextLabel(`recall_effective_text${isFrench ? '_french' : ''}`).split('//');
@@ -159,7 +158,7 @@ function renderRecalls(recallsData) {
           }
 
           const itemFragment = docRange.createContextualFragment(`<li class="${blockName}__detail-item ${item.class ? item.class : ''}" >
-            <h5 class="${blockName}__detail-title subtitle-1">${h5Text}:</h5>
+            <h5 class="${blockName}__detail-title subtitle-1">${h5Text}</h5>
             <span class="${blockName}__detail-value ${recallClass}">${itemValue}</span>
           </li>`);
           recallDetailsList.append(...itemFragment.children);
