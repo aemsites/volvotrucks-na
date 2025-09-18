@@ -149,7 +149,7 @@ function renderRecalls(recallsData) {
             }
           }
 
-          const h5Text = getTextLabel(isFrench ? item.key : item.frenchKey);
+          const h5Text = getTextLabel(isFrench ? item.key : `${item.key}_french`);
 
           if (itemValue && item.key === 'recall_effective_date') {
             const recallText = getTextLabel(`recall_effective_text${isFrench ? '_french' : ''}`).split('//');
