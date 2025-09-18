@@ -510,7 +510,7 @@ const createOutput = withFieldWrapper((fd) => {
 });
 
 function createHidden(fd) {
-  const input = createInput('input', {
+  const input = createElement('input', {
     props: {
       type: 'hidden',
       id: fd.Id,
@@ -519,6 +519,55 @@ function createHidden(fd) {
     },
   });
   return input;
+}
+
+function createHiddenMeta(fd) {
+  let value = '';
+
+  // get the value from the head meta tag with the name === fd.Name
+  const meta = document.querySelector(`head meta[name="${fd.Name}"]`);
+
+  if (meta) {
+    value = meta.content;
+  } else {
+    // if the meta tag doens't exist, create it and append it to the head
+    const newMeta = createElement('meta', {
+      props: {
+        name: fd.Name,
+        content: fd.Value || '',
+      },
+    });
+
+    document.head.append(newMeta);
+    value = fd.Value || '';
+  }
+
+  const inputField = createElement('input', {
+    props: {
+      type: 'hidden',
+      id: fd.Id,
+      name: fd.Name,
+      value,
+    },
+  });
+
+  // observe the head meta tag with the name === fd.Name and everytime the value changes, update the hidden input value
+  const observer = new MutationObserver((mutationsList) => {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'content') {
+        const newValue = mutation.target.content;
+        if (inputField) {
+          inputField.value = newValue;
+        }
+      }
+    }
+  });
+
+  if (meta) {
+    observer.observe(meta, { attributes: true });
+  }
+
+  return inputField;
 }
 
 function createLegend(fd) {
@@ -770,6 +819,8 @@ async function createForm(formURL) {
 
     if (fd.Type === 'title') {
       el = renderTitle(fd);
+    } else if (fd.Type === 'meta') {
+      el = createHiddenMeta(fd);
     } else {
       el = renderField(fd);
 
