@@ -116,6 +116,10 @@
       "Text": "Remedy"
     },
     {
+      "Key": "interim_precautions",
+      "Text": "Precautions to Minimize Risk"
+    },
+    {
       "Key": "published_info",
       "Text": "Information last updated"
     },
