@@ -1,5 +1,5 @@
 import { createOptimizedPicture, getMetadata, decorateIcons } from '../../scripts/aem.js';
-import { createElement, getDateFromTimestamp, MAGAZINE_CONFIGS, extractObjectFromArray, getTextLabel } from '../../scripts/common.js';
+import { createElement, getDateFromTimestamp, MAGAZINE_CONFIGS, extractObjectFromArray, getTextLabel, toPathKey } from '../../scripts/common.js';
 import { fetchMagazineArticles, fetchRecommendedArticles } from '../../scripts/services/magazine.service.js';
 import { smoothScrollHorizontal } from '../../scripts/motion-helper.js';
 
@@ -179,6 +179,15 @@ const createStoriesCarousel = (block, stories) => {
   });
 };
 
+const getHeroPathKey = () => {
+  if (!document.querySelector('.v2-magazine-article-hero__container')) {
+    return '';
+  }
+  const canonical = document.querySelector('link[rel="canonical"]')?.href || '';
+  const og = document.querySelector('meta[property="og:url"]')?.content || '';
+  return toPathKey(canonical || og || '');
+};
+
 export default async function decorate(block) {
   const isRelatedArticles = block.classList.contains('related-articles');
   let limit = parseFloat(block.textContent.trim()) || HIGH_LIMIT;
@@ -200,6 +209,13 @@ export default async function decorate(block) {
   } else {
     const recentArticles = await getMagazineArticles(limit, {}, !isRelatedArticles);
     stories = recentArticles?.items || null;
+  }
+
+  stories = Array.isArray(stories) ? stories : [];
+
+  const heroPathKey = getHeroPathKey();
+  if (heroPathKey) {
+    stories = stories.filter((story) => toPathKey(story?.metadata?.url) !== heroPathKey);
   }
 
   if (!stories || stories.length === 0) {

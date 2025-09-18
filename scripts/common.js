@@ -658,3 +658,27 @@ export const isMobileOrTabletViewport = () => window.matchMedia('(max-width: 119
  * @returns {boolean} True if the media query '(min-width: 768px) and (max-width: 1199px)' matches.
  */
 export const isTabletOnlyViewport = () => window.matchMedia('(min-width: 768px) and (max-width: 1199px)').matches;
+
+/**
+ * Normalize a URL to a comparable pathname key.
+ * Lowercases, collapses duplicate slashes, strips trailing slash.
+ * @param {string} href
+ * @returns {string} pathname key or ""
+ */
+export const toPathKey = (href) => {
+  if (!href) {
+    return '';
+  }
+  try {
+    const u = new URL(href, window.location.origin);
+    let p = decodeURI(u.pathname)
+      .toLowerCase()
+      .replace(/\/{2,}/g, '/');
+    if (p.length > 1) {
+      p = p.replace(/\/+$/, '');
+    }
+    return p;
+  } catch {
+    return '';
+  }
+};
