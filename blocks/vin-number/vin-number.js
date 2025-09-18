@@ -47,6 +47,20 @@ const valueDisplayList = [
     class: `${blockName}__detail-item--column`,
   },
   {
+    key: 'interim_precautions',
+    frenchKey: 'interim_precautions_french',
+    class: `${blockName}__detail-item--column`,
+    displayIfEmpty: true,
+  },
+  {
+    key: 'recall_effective_date',
+    frenchKey: 'recall_effective_date',
+    class: `${blockName}__detail-item--column`,
+    text: 'recall_effective_text',
+    frenchText: 'recall_effective_text_french',
+    displayIfEmpty: true,
+  },
+  {
     key: 'remedy_description',
     frenchKey: 'remedy_description_french',
     class: `${blockName}__detail-item--column`,
@@ -116,13 +130,11 @@ function renderRecalls(recallsData) {
 
       // map the number from api to correct status
       recall.mfr_recall_status = recallStatus[recall.mfr_recall_status];
-
       const recallDetailsList = createElement('ul', { classes: `${blockName}__detail-list` });
-
       valueDisplayList.forEach((item) => {
-        if (recall[item.key]) {
+        if (recall[item.key] || item.displayIfEmpty) {
           const recallClass = item.key === 'mfr_recall_status' ? `${blockName}__${recall.mfr_recall_status.replace(/_/g, '-').toLowerCase()}` : '';
-          let itemValue = recall[item.key];
+          let itemValue = recall[item.key] || '';
           if (recallClass) {
             itemValue = getTextLabel(recall[item.key]);
           } else if (item.key === 'recall_date' && isFrench) {
@@ -135,6 +147,13 @@ function renderRecalls(recallsData) {
               noFrenchInoEl.textContent = getTextLabel('no-french-info');
               noFrenchInfo = true;
             }
+          }
+
+          if (item.key === 'recall_effective_date') {
+            const recallText = getTextLabel(`recall_effective_text${isFrench ? '_french' : ''}`).split('//');
+            const recallDate = new Date(itemValue);
+            const today = new Date();
+            itemValue = recallDate < today ? recallText[0] : ` ${recallText[1]} ${itemValue} .`;
           }
 
           const itemFragment = docRange.createContextualFragment(`<li class="${blockName}__detail-item ${item.class ? item.class : ''}" >
@@ -165,7 +184,6 @@ function getAPIConfig() {
   } else if (window.location.host.includes('localhost')) {
     env = 'dev';
   }
-
   return apiConfig[env];
 }
 
