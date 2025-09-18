@@ -54,7 +54,7 @@ const valueDisplayList = [
   },
   {
     key: 'recall_effective_date',
-    frenchKey: 'recall_effective_date',
+    frenchKey: 'recall_effective_date_french',
     class: `${blockName}__detail-item--column`,
     text: 'recall_effective_text',
     frenchText: 'recall_effective_text_french',
