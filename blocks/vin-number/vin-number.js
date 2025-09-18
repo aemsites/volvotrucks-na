@@ -150,9 +150,9 @@ function renderRecalls(recallsData) {
 
           if (itemValue && item.key === 'recall_effective_date') {
             const recallText = getTextLabel(`recall_effective_text${isFrench ? '_french' : ''}`).split('//');
-            const recallDate = new Date(itemValue);
-            const today = new Date();
-            itemValue = recallDate < today ? recallText[0] : ` ${recallText[1]} ${itemValue} .`;
+            const recallDate = new Date(itemValue).setHours(0, 0, 0, 0);
+            const today = new Date().setHours(0, 0, 0, 0);
+            itemValue = recallDate > today ? ` ${recallText[1]} ${itemValue} .` : recallText[0];
           }
 
           const itemFragment = docRange.createContextualFragment(`<li class="${blockName}__detail-item ${item.class ? item.class : ''}" >
