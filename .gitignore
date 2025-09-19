@@ -14,3 +14,5 @@ README.md
 tools/importer/import.js
 tools/importer/sub-nav.js
 config.json
+
+/dist
