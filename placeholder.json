@@ -104,6 +104,10 @@
       "Text": "Issue Date"
     },
     {
+      "Key": "tc_recall_date",
+      "Text": "Transport Canada Issue Date"
+    },
+    {
       "Key": "recall_description",
       "Text": "Description"
     },
@@ -114,6 +118,18 @@
     {
       "Key": "remedy_description",
       "Text": "Remedy"
+    },
+    {
+      "Key": "interim_precautions",
+      "Text": "Precautions to Minimize Risk"
+    },
+    {
+      "Key": "recall_effective_date",
+      "Text": "Remedy Availability"
+    },
+    {
+      "Key": "recall_effective_text",
+      "Text": "The remedy for this recall is currently available.//The remedy for this recall is estimated to be available"
     },
     {
       "Key": "published_info",
