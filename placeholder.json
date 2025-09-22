@@ -101,7 +101,7 @@
     },
     {
       "Key": "recall_date",
-      "Text": "Issue Date"
+      "Text": "NHTSA Issue Date"
     },
     {
       "Key": "tc_recall_date",
