@@ -47,6 +47,12 @@ const valueDisplayList = [
     class: `${blockName}__detail-item--column`,
   },
   {
+    key: 'interim_precautions',
+    frenchKey: 'interim_precautions_french',
+    class: `${blockName}__detail-item--column`,
+    displayIfEmpty: true,
+  },
+  {
     key: 'remedy_description',
     frenchKey: 'remedy_description_french',
     class: `${blockName}__detail-item--column`,
@@ -118,11 +124,10 @@ function renderRecalls(recallsData) {
       recall.mfr_recall_status = recallStatus[recall.mfr_recall_status];
 
       const recallDetailsList = createElement('ul', { classes: `${blockName}__detail-list` });
-
       valueDisplayList.forEach((item) => {
-        if (recall[item.key]) {
+        if (recall[item.key] || item.displayIfEmpty) {
           const recallClass = item.key === 'mfr_recall_status' ? `${blockName}__${recall.mfr_recall_status.replace(/_/g, '-').toLowerCase()}` : '';
-          let itemValue = recall[item.key];
+          let itemValue = recall[item.key] || '';
           if (recallClass) {
             itemValue = getTextLabel(recall[item.key]);
           } else if (item.key === 'recall_date' && isFrench) {
@@ -165,7 +170,6 @@ function getAPIConfig() {
   } else if (window.location.host.includes('localhost')) {
     env = 'dev';
   }
-
   return apiConfig[env];
 }
 
