@@ -209,12 +209,18 @@ function kebabName(name) {
 
 function createFieldWrapper(fd, tagName = 'div') {
   const nameStyle = fd.Name ? `form-${kebabName(fd.Name)}` : '';
-  const fieldWrapper = createElement(tagName, {
-    classes: [`form-${fd.Type}-wrapper`, 'field-wrapper'],
-    props: {
+  let props = {};
+
+  if (tagName !== 'div') {
+    props = {
       id: fd.Id,
       name: fd.Name,
-    },
+    };
+  }
+
+  const fieldWrapper = createElement(tagName, {
+    classes: [`form-${fd.Type}-wrapper`, 'field-wrapper'],
+    props,
   });
   if (fd.Mandatory && fd.Mandatory.toLowerCase() === 'true') {
     fieldWrapper.setAttribute('required', 'required');
@@ -263,6 +269,44 @@ function createInput(fd) {
   });
   setPlaceholder(input, fd);
   setConstraints(input, fd);
+  return input;
+}
+
+function formatDate(date) {
+  return date.toISOString().split('T')[0];
+}
+
+function createDateInput(fd) {
+  const input = createElement('input', {
+    props: {
+      type: fd.Type,
+    },
+  });
+  setPlaceholder(input, fd);
+  setConstraints(input, fd);
+
+  if (fd['Custom Options'] && fd['Custom Options'] !== '') {
+    try {
+      const customOptions = fd['Custom Options'];
+      const customOptionsObj = JSON.parse(customOptions.replace(/(\w+):/g, '"$1":'));
+
+      if (customOptionsObj.minDay || customOptionsObj.maxDay) {
+        const today = new Date();
+
+        const minDate = new Date();
+        minDate.setDate(today.getDate() + customOptionsObj.minDay);
+
+        const maxDate = new Date();
+        maxDate.setDate(today.getDate() + customOptionsObj.maxDay);
+
+        input.min = formatDate(minDate);
+        input.max = formatDate(maxDate);
+      }
+    } catch (error) {
+      console.error('Error parsing Custom Options JSON:', error);
+    }
+  }
+
   return input;
 }
 
@@ -376,8 +420,10 @@ function createRadio(fd) {
 }
 
 function createRadioWrapper(fd) {
+  const isButtonVariant = fd.Type === 'buttons';
+  const variantClass = isButtonVariant ? 'form-radio-wrapper--buttons' : '';
   const wrapper = createElement('fieldset', {
-    classes: [`form-${fd.Type}-wrapper`, 'field-wrapper'],
+    classes: ['form-radio-wrapper', 'field-wrapper', variantClass],
     props: { name: fd.Name },
   });
 
@@ -390,7 +436,7 @@ function createRadioWrapper(fd) {
   }
 
   const legend = createElement('legend', {
-    classes: [`form-${fd.Type}-legend`],
+    classes: ['form-radio-legend'],
   });
   legend.textContent = fd.Label || fd.Name;
   wrapper.append(legend);
@@ -422,7 +468,7 @@ function createRadioOption(option, index, fd) {
   });
 
   const input = createElement('input', {
-    classes: [`form-${fd.Type}-input`],
+    classes: ['form-radio-input'],
     props: {
       type: 'radio',
       id: radioId,
@@ -433,7 +479,7 @@ function createRadioOption(option, index, fd) {
   });
 
   const label = createElement('label', {
-    classes: [`form-${fd.Type}-label`],
+    classes: ['form-radio-label'],
     props: { for: radioId },
   });
 
@@ -466,7 +512,7 @@ const createOutput = withFieldWrapper((fd) => {
 });
 
 function createHidden(fd) {
-  const input = createInput('input', {
+  const input = createElement('input', {
     props: {
       type: 'hidden',
       id: fd.Id,
@@ -475,6 +521,55 @@ function createHidden(fd) {
     },
   });
   return input;
+}
+
+function createHiddenMeta(fd) {
+  let value = '';
+
+  // get the value from the head meta tag with the name === fd.Name
+  const meta = document.querySelector(`head meta[name="${fd.Name}"]`);
+
+  if (meta) {
+    value = meta.content;
+  } else {
+    // if the meta tag doens't exist, create it and append it to the head
+    const newMeta = createElement('meta', {
+      props: {
+        name: fd.Name,
+        content: fd.Value || '',
+      },
+    });
+
+    document.head.append(newMeta);
+    value = fd.Value || '';
+  }
+
+  const inputField = createElement('input', {
+    props: {
+      type: 'hidden',
+      id: fd.Id,
+      name: fd.Name,
+      value,
+    },
+  });
+
+  // observe the head meta tag with the name === fd.Name and everytime the value changes, update the hidden input value
+  const observer = new MutationObserver((mutationsList) => {
+    for (const mutation of mutationsList) {
+      if (mutation.type === 'attributes' && mutation.attributeName === 'content') {
+        const newValue = mutation.target.content;
+        if (inputField) {
+          inputField.value = newValue;
+        }
+      }
+    }
+  });
+
+  if (meta) {
+    observer.observe(meta, { attributes: true });
+  }
+
+  return inputField;
 }
 
 function createLegend(fd) {
@@ -547,6 +642,7 @@ const getId = (function getId() {
 
 const fieldRenderers = {
   radio: createRadio,
+  buttons: createRadio,
   checkbox: createCheckbox,
   textarea: createTextArea,
   select: createSelect,
@@ -556,13 +652,17 @@ const fieldRenderers = {
   hidden: createHidden,
   fieldset: createFieldSet,
   plaintext: createPlainText,
+  date: createDateInput,
   'custom-dropdown': createSelect, // create a select as a placeholder for the custom dropdown
 };
 
 function renderField(fd) {
   const renderer = fieldRenderers[fd.Type];
   let field;
-  if (typeof renderer === 'function') {
+  if (fd.Type === 'date' && typeof renderer === 'function') {
+    field = createFieldWrapper(fd);
+    field.append(renderer(fd));
+  } else if (typeof renderer === 'function') {
     field = renderer(fd);
   } else {
     field = createFieldWrapper(fd);
@@ -572,6 +672,17 @@ function renderField(fd) {
     field.append(createHelpText(fd));
   }
   return field;
+}
+
+function renderTitle(config) {
+  const text = config.Label || '';
+  const tag = config.Name && ['h1', 'h2', 'h3', 'h4', 'h5', 'h6'].includes(config.Name.toLowerCase()) ? config.Name.toLowerCase() : 'h2';
+  const title = createElement(tag, {
+    classes: [`${blockName}__subtitle`],
+  });
+  title.textContent = text;
+
+  return title;
 }
 
 async function fetchData(url) {
@@ -707,39 +818,47 @@ async function createForm(formURL) {
   const customDropdowns = [];
   const dependencies = []; // these will be used to show/hide the fields based on the dependencies
   data.forEach(async (fd) => {
-    const el = renderField(fd);
+    let el;
 
-    if (fd.Type === 'custom-dropdown') {
-      customDropdowns.push(fd);
-    }
+    if (fd.Type === 'title') {
+      el = renderTitle(fd);
+    } else if (fd.Type === 'meta') {
+      el = createHiddenMeta(fd);
+    } else {
+      el = renderField(fd);
 
-    const formField = el.querySelector('input,textarea,select');
-    if (fd.Mandatory && fd.Mandatory.toLowerCase() === 'true') {
-      formField.setAttribute('required', 'required');
-    }
-    if (formField) {
-      if (!formField.id) {
-        formField.id = fd.Id;
-      }
-      formField.name = fd.Name;
-
-      if (fd.Type !== 'radio') {
-        formField.value = fd.Value;
+      if (fd.Type === 'custom-dropdown') {
+        customDropdowns.push(fd);
       }
 
-      if (fd.Description) {
-        formField.setAttribute('aria-describedby', `${fd.Id}-description`);
-      }
-    }
-    if (fd.Dependency) {
-      // If it has a dependency, we need to hide it by default
-      dependencies.push({
-        element: el,
-        dependency: fd.Dependency,
+      const formField = el.querySelector('input,textarea,select');
+      if (formField) {
+        if (fd.Mandatory && fd.Mandatory.toLowerCase() === 'true') {
+          formField.setAttribute('required', 'required');
+        }
+        if (!formField.id) {
+          formField.id = fd.Id;
+        }
+        formField.name = fd.Name;
 
-        name: (fd.Dependency && fd.Dependency.split(':')[0]) || '',
-        value: (fd.Dependency && fd.Dependency.split(':')[1]) || '',
-      });
+        if (fd.Type !== 'radio') {
+          formField.value = fd.Value;
+        }
+
+        if (fd.Description) {
+          formField.setAttribute('aria-describedby', `${fd.Id}-description`);
+        }
+      }
+      if (fd.Dependency) {
+        // If it has a dependency, we need to hide it by default
+        dependencies.push({
+          element: el,
+          dependency: fd.Dependency,
+
+          name: (fd.Dependency && fd.Dependency.split(':')[0]) || '',
+          value: (fd.Dependency && fd.Dependency.split(':')[1]) || '',
+        });
+      }
     }
     form.append(el);
   });
