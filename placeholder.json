@@ -442,6 +442,10 @@
     {
       "Key": "clear",
       "Text": "clear"
+    },
+    {
+      "Key": "invalid_form_weekend_day_label",
+      "Text": "Please select a working day (Monday to Friday)."
     }
   ],
   ":type": "sheet"

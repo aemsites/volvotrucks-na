@@ -290,16 +290,57 @@ function createDateInput(fd) {
       const customOptions = fd['Custom Options'];
       const customOptionsObj = JSON.parse(customOptions.replace(/(\w+):/g, '"$1":'));
 
-      if (customOptionsObj.minDay || customOptionsObj.maxDay) {
+      if (customOptionsObj.ignoreWeekendDays && customOptionsObj.ignoreWeekendDays === true) {
+        // Implement logic to restrict date picker to working days only
+        input.addEventListener('input', (e) => {
+          const selectedDate = new Date(e.target.value);
+          const day = selectedDate.getUTCDay();
+          // 0 = Sunday, 6 = Saturday
+          if (day === 0 || day === 6) {
+            const invalidFormWeekendDayLabel = getTextLabel('invalid_form_weekend_day_label');
+
+            e.target.setCustomValidity(invalidFormWeekendDayLabel);
+          } else {
+            e.target.setCustomValidity('');
+          }
+        });
+      }
+
+      if (customOptionsObj.minDay) {
         const today = new Date();
 
         const minDate = new Date();
         minDate.setDate(today.getDate() + customOptionsObj.minDay);
 
-        const maxDate = new Date();
-        maxDate.setDate(today.getDate() + customOptionsObj.maxDay);
-
         input.min = formatDate(minDate);
+      }
+
+      if (customOptionsObj.maxDay) {
+        let maxDay = customOptionsObj.maxDay;
+
+        if (customOptionsObj.ignoreWeekendDays) {
+          // If ignoreWeekendDays is true, we need to know how many weekend days there are between today and maxDay
+          // or if customOptionsObj.minDay is set, between minDay and maxDay
+          // if that is the case we need to add those invalid days to the maxDay
+          const today = new Date();
+          const startDate = customOptionsObj.minDay ? new Date(today.setDate(today.getDate() + customOptionsObj.minDay)) : today;
+          let weekendDays = 0;
+
+          for (let i = 0; i <= maxDay + weekendDays; i++) {
+            const checkDate = new Date(startDate);
+            checkDate.setDate(startDate.getDate() + i);
+            const day = checkDate.getUTCDay();
+            if (day === 0 || day === 6) {
+              weekendDays += 1;
+            }
+          }
+          maxDay += weekendDays;
+        }
+        const today = new Date();
+
+        const maxDate = new Date();
+        maxDate.setDate(today.getDate() + maxDay);
+
         input.max = formatDate(maxDate);
       }
     } catch (error) {
