@@ -290,7 +290,7 @@ function createDateInput(fd) {
       const customOptions = fd['Custom Options'];
       const customOptionsObj = JSON.parse(customOptions.replace(/(\w+):/g, '"$1":'));
 
-      if (customOptionsObj.ignoreWeekendDays && customOptionsObj.ignoreWeekendDays === true) {
+      if (customOptionsObj.ignoreNonWorkingDays && customOptionsObj.ignoreNonWorkingDays === true) {
         // Implement logic to restrict date picker to working days only
         input.addEventListener('input', (e) => {
           const selectedDate = new Date(e.target.value);
@@ -318,8 +318,8 @@ function createDateInput(fd) {
       if (customOptionsObj.maxDay) {
         let maxDay = customOptionsObj.maxDay;
 
-        if (customOptionsObj.ignoreWeekendDays) {
-          // If ignoreWeekendDays is true, we need to know how many weekend days there are between today and maxDay
+        if (customOptionsObj.ignoreNonWorkingDays) {
+          // If ignoreNonWorkingDays is true, we need to know how many weekend days there are between today and maxDay
           // or if customOptionsObj.minDay is set, between minDay and maxDay
           // if that is the case we need to add those invalid days to the maxDay
           const today = new Date();
