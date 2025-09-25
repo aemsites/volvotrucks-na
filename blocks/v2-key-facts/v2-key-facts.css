@@ -68,9 +68,9 @@
 
   color: var(--c-cta-blue-default);
   font-size: calc(var(--title-scale-factor) * var(--f-heading-4-font-size));
-  letter-spacing: calc(var(--title-scale-factor) * var(--f-heading-5-letter-spacing));
-  line-height: calc(var(--title-scale-factor) * var(--f-heading-5-line-height));
+  letter-spacing: normal;
   text-transform: none;
+  margin-bottom: 0;
 }
 
 .v2-key-facts .v2-key-facts__row--with-text .v2-key-facts__key-subtitle {
