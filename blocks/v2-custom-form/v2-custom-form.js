@@ -1,5 +1,5 @@
 import { loadScript, sampleRUM } from '../../scripts/aem.js';
-import { getTextLabel, createElement, variantsClassesToBEM } from '../../scripts/common.js';
+import { getTextLabel, createElement, variantsClassesToBEM, normalizeUrlText, isHttp } from '../../scripts/common.js';
 import { getCustomDropdown } from '../../../common/custom-dropdown/custom-dropdown.js';
 
 const blockName = 'v2-custom-form';
@@ -57,36 +57,74 @@ function throwFormNotFound(form) {
   console.error('Form with data-submitting=true not found', { form });
 }
 
+function tryRedirect(form, datasetKey, { warnLabel = datasetKey } = {}) {
+  if (!form) {
+    return false;
+  }
+
+  const redirectValue = normalizeUrlText(form.dataset?.[datasetKey]);
+  if (!redirectValue || form.dataset.redirecting === 'true') {
+    return false;
+  }
+
+  try {
+    const resolvedUrl = new URL(redirectValue, window.location.href);
+    if (isHttp(resolvedUrl.protocol)) {
+      form.dataset.redirecting = 'true';
+      window.location.assign(resolvedUrl.href);
+      return true;
+    }
+  } catch {
+    console.warn(`Invalid ${warnLabel} URL`);
+  }
+  return false;
+}
+
 async function submissionSuccess() {
   sampleRUM('form:submit');
-  const successDiv = createElement('div', {
-    classes: [`${blockName}--message`, `${blockName}__message--success`],
-  });
-  successDiv.innerHTML = successMessage(getMessageText(true, true), getMessageText(true, false));
   const form = document.querySelector('form[data-submitting=true]');
   if (!form) {
     throwFormNotFound(form);
     return;
   }
-  const hasCustomMessage = form.dataset.customMessage;
 
-  if (hasCustomMessage) {
-    successDiv.innerHTML = await getCustomMessage(hasCustomMessage);
+  if (tryRedirect(form, 'successRedirect')) {
+    return;
+  }
+
+  const successDiv = createElement('div', {
+    classes: [`${blockName}--message`, `${blockName}__message--success`],
+  });
+  successDiv.innerHTML = successMessage(getMessageText(true, true), getMessageText(true, false));
+
+  const customMessageUrl = form.dataset.customMessage;
+
+  if (customMessageUrl) {
+    successDiv.innerHTML = await getCustomMessage(customMessageUrl);
   }
   form.setAttribute('data-submitting', 'false');
   form.replaceWith(successDiv);
 }
 
 async function submissionFailure() {
-  const errorDiv = createElement('div', {
-    classes: [`${blockName}--message`, `${blockName}__message--error`],
-  });
-  errorDiv.innerHTML = errorMessage(getMessageText(false, true), getMessageText(false, false));
   const form = document.querySelector('form[data-submitting=true]');
   if (!form) {
     throwFormNotFound(form);
     return;
   }
+
+  if (tryRedirect(form, 'errorRedirect', { warnLabel: 'errorRedirect' })) {
+    console.log('redirecting to errorRedirect');
+    return;
+  } else {
+    console.log('no errorRedirect found, showing error message');
+  }
+
+  const errorDiv = createElement('div', {
+    classes: [`${blockName}--message`, `${blockName}__message--error`],
+  });
+  errorDiv.innerHTML = errorMessage(getMessageText(false, true), getMessageText(false, false));
+
   form.setAttribute('data-submitting', 'false');
   form.querySelector('button[type="submit"]').disabled = false;
   form.replaceWith(errorDiv);
@@ -421,9 +459,13 @@ function createRadio(fd) {
 
 function createRadioWrapper(fd) {
   const isButtonVariant = fd.Type === 'buttons';
-  const variantClass = isButtonVariant ? 'form-radio-wrapper--buttons' : '';
+  const classes = ['form-radio-wrapper', 'field-wrapper'];
+  if (isButtonVariant) {
+    classes.push('form-radio-wrapper--buttons');
+  }
+
   const wrapper = createElement('fieldset', {
-    classes: ['form-radio-wrapper', 'field-wrapper', variantClass],
+    classes,
     props: { name: fd.Name },
   });
 
@@ -967,44 +1009,66 @@ function createHoneypotField() {
   return fragment.firstElementChild;
 }
 
+function getConfigValueCell(block, propName) {
+  for (const row of block.querySelectorAll(':scope > div')) {
+    const [propCell, valueCell] = row.children || [];
+    if (propCell && propCell.textContent.trim() === propName) {
+      return valueCell || null;
+    }
+  }
+  return null;
+}
+
 export default async function decorate(block) {
   variantsClassesToBEM(block.classList, variantClasses, blockName);
-  const formLink = block.querySelector('a[href$=".json"]'); // this is the form fields config file
-  const thankYouPage = [...block.querySelectorAll('a')].filter((a) => a.href.includes('thank-you'));
-  const formTitleContainer = block.querySelector(':scope > div:first-child > div');
-  const isFormLinkInsideTitleContainer = formLink && formTitleContainer.contains(formLink);
 
-  if (formLink) {
-    decorateTitles(block);
-    const form = await createForm(formLink.href);
-    if (!form) {
-      console.error('%cForm%c could not be created. No form data found.', 'color:red', 'color:inherit', { formLink, form });
-      // remove the setup rows from the block if the form could not be created
-      block.innerText = '';
-      return;
-    }
-    if (thankYouPage.length > 0) {
-      form.dataset.customMessage = `${thankYouPage[0].href}.plain.html`;
-      block.lastElementChild.remove();
-    }
+  const titleCell = getConfigValueCell(block, 'title');
+  const linkCell = getConfigValueCell(block, 'link');
+  const successFragmentCell = getConfigValueCell(block, 'successFragmentUrl');
+  const successRedirectCell = getConfigValueCell(block, 'successRedirectUrl');
+  const errorRedirectCell = getConfigValueCell(block, 'errorRedirectUrl');
 
-    form.append(createHoneypotField());
+  const formUrl = linkCell ? (linkCell.querySelector('a')?.href || linkCell.textContent).trim() : '';
+  const isJsonUrl = formUrl.toLowerCase().trim().endsWith('.json');
+  const thankYouPageUrl = successFragmentCell ? (successFragmentCell.querySelector('a')?.href || successFragmentCell.textContent).trim() : '';
+  const successRedirectUrl = successRedirectCell ? (successRedirectCell.querySelector('a')?.href || successRedirectCell.textContent).trim() : '';
+  const errorRedirectUrl = errorRedirectCell ? (errorRedirectCell.querySelector('a')?.href || errorRedirectCell.textContent).trim() : '';
 
-    // clean the content block before appending the form
-    block.innerText = '';
-    if (formTitleContainer && !isFormLinkInsideTitleContainer) {
-      addTitleText(formTitleContainer, block);
-    }
-
-    block.append(form);
-
-    // in case the form has any kind of error, the form will be replaced with the error message
-    window.addEventListener('unhandledrejection', ({ reason, error }) => {
-      console.error('Unhandled rejection. Error submitting form:', { reason, error });
-      submissionFailure();
-    });
-  } else {
-    console.error('%cForm link%c is missing or does not end with .json', 'color:red', 'color:inherit', { formLink });
-    block.innerText = '';
+  if (!formUrl || !isJsonUrl) {
+    console.error('%cForm link%c is missing or not a .json', 'color:red', 'color:inherit', { formUrl });
+    block.textContent = '';
+    return;
   }
+
+  decorateTitles(block);
+
+  const form = await createForm(formUrl);
+  if (!form) {
+    console.error('%cForm%c could not be created. No form data found.', 'color:red', 'color:inherit', { formUrl, form });
+    block.textContent = '';
+    return;
+  }
+
+  if (successRedirectUrl) {
+    form.dataset.successRedirect = successRedirectUrl;
+  }
+  if (errorRedirectUrl) {
+    form.dataset.errorRedirect = errorRedirectUrl;
+  }
+  if (!successRedirectUrl && thankYouPageUrl) {
+    form.dataset.customMessage = `${thankYouPageUrl}.plain.html`;
+  }
+
+  block.textContent = '';
+  if (titleCell) {
+    addTitleText(titleCell, block);
+  }
+
+  form.append(createHoneypotField());
+  block.append(form);
+
+  window.addEventListener('unhandledrejection', ({ reason, error }) => {
+    console.error('Unhandled rejection. Error submitting form:', { reason, error });
+    submissionFailure();
+  });
 }

@@ -682,3 +682,28 @@ export const toPathKey = (href) => {
     return '';
   }
 };
+
+/**
+ * Normalize a string intended to be used as a URL.
+ *
+ * - Coerces `undefined`/`null` to an empty string.
+ * - Replaces non-breaking spaces with regular spaces.
+ * - Strips out angle brackets (`<`, `>`).
+ * - Trims leading/trailing whitespace.
+ *
+ * @param {string} [s] - Raw string (possibly from DOM or dataset).
+ * @returns {string} A cleaned string safe to pass to `new URL()`.
+ */
+export const normalizeUrlText = (s) =>
+  String(s || '')
+    .replace(/\u00A0/g, ' ')
+    .replace(/[<>]/g, '')
+    .trim();
+
+/**
+ * Test whether a given URL protocol is HTTP or HTTPS.
+ *
+ * @param {string} protocol - Protocol string (e.g. `"http:"`, `"https:"`).
+ * @returns {boolean} `true` if the protocol is HTTP/HTTPS, otherwise `false`.
+ */
+export const isHttp = (protocol) => /^https?:$/i.test(protocol);
