@@ -1,0 +1,93 @@
+.v2-quote-with-images__column--media {
+  display: none;
+}
+
+.v2-quote-with-images__image {
+  display: block;
+}
+
+.v2-quote-with-images__image.v2-quote-with-images__image--primary {
+  margin-bottom: 16px;
+}
+
+.v2-quote-with-images__image img {
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.v2-quote-with-images__column--quote .v2-quote-with-images__quote {
+  margin: 0;
+  text-indent: 0;
+}
+
+.v2-quote-with-images__column--quote .v2-quote-with-images__quote .v2-quote-with-images__text {
+  text-transform: none;
+  font-family: var(--ff-volvo-novum-medium);
+  font-size: 32px;
+  font-weight: 500;
+  font-style: normal;
+  line-height: 125%;
+  letter-spacing: 0.25px;
+  margin-bottom: 24px;
+  margin-top: 0;
+}
+
+.v2-quote-with-images .v2-quote-with-images__column--quote .v2-quote-with-images__attribution {
+  font-family: var(--ff-volvo-novum-medium);
+  font-size: 14px;
+  font-weight: 500;
+  font-style: normal;
+  line-height: 130%;
+  letter-spacing: 0.15px;
+  margin: 0 60px 0 0;
+}
+
+.v2-quote-with-images .v2-quote-with-images__column--quote .v2-quote-with-images__attribution::before,
+.v2-quote-with-images .v2-quote-with-images__column--quote .v2-quote-with-images__attribution::after {
+  display: none;
+}
+
+@media (min-width: 744px) {
+  .v2-quote-with-images__row {
+    --gap: 16px;
+
+    display: grid;
+    grid-template-columns: 188fr 387fr;
+    gap: var(--gap);
+    align-items: start;
+  }
+
+  .v2-quote-with-images__column--media {
+    display: block;
+  }
+
+  .v2-quote-with-images__image.v2-quote-with-images__image--primary {
+    margin-bottom: 20px;
+  }
+
+  .v2-quote-with-images .v2-quote-with-images__column--quote .v2-quote-with-images__attribution {
+    margin-right: 0;
+  }
+}
+
+@media (min-width: 1200px) {
+  .v2-quote-with-images__row {
+    --gap: 20px
+  }
+
+  .v2-quote-with-images__image.v2-quote-with-images__image--primary {
+    margin-bottom: 40px;
+  }
+
+  .v2-quote-with-images__column--quote .v2-quote-with-images__quote .v2-quote-with-images__text {
+    font-size: 48px;
+    line-height: 110%;
+    letter-spacing: 0;
+    margin-bottom: 40px;
+  }
+
+  .v2-quote-with-images .v2-quote-with-images__column--quote .v2-quote-with-images__attribution {
+    font-size: 16px;
+  }
+}
