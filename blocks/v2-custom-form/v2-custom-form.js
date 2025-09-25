@@ -1,5 +1,5 @@
 import { loadScript, sampleRUM } from '../../scripts/aem.js';
-import { getTextLabel, createElement, variantsClassesToBEM } from '../../scripts/common.js';
+import { getTextLabel, createElement, variantsClassesToBEM, HOLIDAYS } from '../../scripts/common.js';
 import { getCustomDropdown } from '../../../common/custom-dropdown/custom-dropdown.js';
 
 const blockName = 'v2-custom-form';
@@ -276,6 +276,14 @@ function formatDate(date) {
   return date.toISOString().split('T')[0];
 }
 
+function excelDateToISO(serial) {
+  // Excel's day 1 = 1900-01-01, but it wrongly counts 1900 as a leap year
+  const excelEpoch = new Date(Date.UTC(1899, 11, 30));
+  const jsDate = new Date(excelEpoch.getTime() + serial * 86400000);
+
+  return jsDate.toISOString().split('T')[0]; // returns YYYY-MM-DD
+}
+
 function createDateInput(fd) {
   const input = createElement('input', {
     props: {
@@ -295,11 +303,18 @@ function createDateInput(fd) {
         input.addEventListener('input', (e) => {
           const selectedDate = new Date(e.target.value);
           const day = selectedDate.getUTCDay();
+
+          const holidayDates = Object.values(HOLIDAYS).map((date) => excelDateToISO(date));
+          const selectedDateISO = selectedDate.toISOString().split('T')[0];
+
           // 0 = Sunday, 6 = Saturday
           if (day === 0 || day === 6) {
             const invalidFormWeekendDayLabel = getTextLabel('invalid_form_weekend_day_label');
 
             e.target.setCustomValidity(invalidFormWeekendDayLabel);
+          } else if (holidayDates.includes(selectedDateISO)) {
+            const invalidFormHolidayLabel = getTextLabel('invalid_form_holiday_label');
+            e.target.setCustomValidity(invalidFormHolidayLabel);
           } else {
             e.target.setCustomValidity('');
           }
@@ -308,8 +323,8 @@ function createDateInput(fd) {
 
       if (customOptionsObj.minDay) {
         const today = new Date();
-
         const minDate = new Date();
+
         minDate.setDate(today.getDate() + customOptionsObj.minDay);
 
         input.min = formatDate(minDate);
@@ -334,11 +349,12 @@ function createDateInput(fd) {
               weekendDays += 1;
             }
           }
+
           maxDay += weekendDays;
         }
         const today = new Date();
-
         const maxDate = new Date();
+
         maxDate.setDate(today.getDate() + maxDay);
 
         input.max = formatDate(maxDate);
