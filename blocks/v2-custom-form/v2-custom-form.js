@@ -1,5 +1,5 @@
 import { loadScript, sampleRUM } from '../../scripts/aem.js';
-import { getTextLabel, createElement, variantsClassesToBEM } from '../../scripts/common.js';
+import { getTextLabel, createElement, variantsClassesToBEM, HOLIDAYS } from '../../scripts/common.js';
 import { getCustomDropdown } from '../../../common/custom-dropdown/custom-dropdown.js';
 
 const blockName = 'v2-custom-form';
@@ -276,6 +276,14 @@ function formatDate(date) {
   return date.toISOString().split('T')[0];
 }
 
+function excelDateToISO(serial) {
+  // Excel's day 1 = 1900-01-01, but it wrongly counts 1900 as a leap year
+  const excelEpoch = new Date(Date.UTC(1899, 11, 30));
+  const jsDate = new Date(excelEpoch.getTime() + serial * 86400000);
+
+  return jsDate.toISOString().split('T')[0]; // returns YYYY-MM-DD
+}
+
 function createDateInput(fd) {
   const input = createElement('input', {
     props: {
@@ -290,16 +298,70 @@ function createDateInput(fd) {
       const customOptions = fd['Custom Options'];
       const customOptionsObj = JSON.parse(customOptions.replace(/(\w+):/g, '"$1":'));
 
-      if (customOptionsObj.minDay || customOptionsObj.maxDay) {
-        const today = new Date();
+      if (customOptionsObj.ignoreNonWorkingDays && customOptionsObj.ignoreNonWorkingDays === true) {
+        // Implement logic to restrict date picker to working days only
+        input.addEventListener('input', (e) => {
+          const selectedDate = new Date(e.target.value);
+          const day = selectedDate.getUTCDay();
 
+          const holidayDates = Object.values(HOLIDAYS).map((date) => excelDateToISO(date));
+          const selectedDateISO = selectedDate.toISOString().split('T')[0];
+
+          // 0 = Sunday, 6 = Saturday
+          if (day === 0 || day === 6) {
+            const invalidFormWeekendDayLabel = getTextLabel('invalid_form_weekend_day_label');
+
+            e.target.setCustomValidity(invalidFormWeekendDayLabel);
+          } else if (holidayDates.includes(selectedDateISO)) {
+            const invalidFormHolidayLabel = getTextLabel('invalid_form_holiday_label');
+            e.target.setCustomValidity(invalidFormHolidayLabel);
+          } else {
+            e.target.setCustomValidity('');
+          }
+        });
+      }
+
+      if (customOptionsObj.minDay) {
+        const today = new Date();
         const minDate = new Date();
+
         minDate.setDate(today.getDate() + customOptionsObj.minDay);
 
-        const maxDate = new Date();
-        maxDate.setDate(today.getDate() + customOptionsObj.maxDay);
-
         input.min = formatDate(minDate);
+      }
+
+      if (customOptionsObj.maxDay) {
+        let maxDay = customOptionsObj.maxDay;
+
+        if (customOptionsObj.ignoreNonWorkingDays) {
+          // If ignoreNonWorkingDays is true, we need to know how many weekend days there are between today and maxDay
+          // or if customOptionsObj.minDay is set, between minDay and maxDay
+          // if that is the case we need to add those invalid days to the maxDay
+          const today = new Date();
+          const startDate = customOptionsObj.minDay ? new Date(today.setDate(today.getDate() + customOptionsObj.minDay)) : today;
+          let nonWorkingDays = 0;
+
+          for (let i = 0; i <= maxDay + nonWorkingDays; i++) {
+            const checkDate = new Date(startDate);
+            checkDate.setDate(startDate.getDate() + i);
+            const day = checkDate.getUTCDay();
+            const checkDateISO = checkDate.toISOString().split('T')[0];
+            const isHoliday = Object.values(HOLIDAYS)
+              .map((date) => excelDateToISO(date))
+              .includes(checkDateISO);
+
+            if (day === 0 || day === 6 || isHoliday) {
+              nonWorkingDays += 1;
+            }
+          }
+
+          maxDay += nonWorkingDays;
+        }
+        const today = new Date();
+        const maxDate = new Date();
+
+        maxDate.setDate(today.getDate() + maxDay);
+
         input.max = formatDate(maxDate);
       }
     } catch (error) {
