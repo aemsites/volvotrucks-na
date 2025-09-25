@@ -339,18 +339,23 @@ function createDateInput(fd) {
           // if that is the case we need to add those invalid days to the maxDay
           const today = new Date();
           const startDate = customOptionsObj.minDay ? new Date(today.setDate(today.getDate() + customOptionsObj.minDay)) : today;
-          let weekendDays = 0;
+          let nonWorkingDays = 0;
 
-          for (let i = 0; i <= maxDay + weekendDays; i++) {
+          for (let i = 0; i <= maxDay + nonWorkingDays; i++) {
             const checkDate = new Date(startDate);
             checkDate.setDate(startDate.getDate() + i);
             const day = checkDate.getUTCDay();
-            if (day === 0 || day === 6) {
-              weekendDays += 1;
+            const checkDateISO = checkDate.toISOString().split('T')[0];
+            const isHoliday = Object.values(HOLIDAYS)
+              .map((date) => excelDateToISO(date))
+              .includes(checkDateISO);
+
+            if (day === 0 || day === 6 || isHoliday) {
+              nonWorkingDays += 1;
             }
           }
 
-          maxDay += weekendDays;
+          maxDay += nonWorkingDays;
         }
         const today = new Date();
         const maxDate = new Date();
