@@ -23,6 +23,15 @@
   gap: 40px;
 }
 
+.v2-key-facts .v2-key-facts__row.v2-key-facts__centered.v2-key-facts__two-items {
+  flex-flow: unset;
+  align-items: baseline;
+}
+
+.v2-key-facts .v2-key-facts__row.v2-key-facts__centered.v2-key-facts__two-items .v2-key-facts__item {
+  width: calc(50% - 20px);
+}
+
 .v2-key-facts__video,
 .v2-key-facts__row .embed-video {
   width: 100%;
