@@ -78,8 +78,8 @@
 
 .v2-content-card__content ul {
   list-style: disc;
-  list-style-position: inside;
-  padding-inline-start: 12px;
+  list-style-position: outside;
+  padding-inline-start: 25px;
 }
 
 /* TODO: text colour should be a global style */
