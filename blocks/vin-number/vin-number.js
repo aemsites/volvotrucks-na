@@ -56,16 +56,16 @@ const valueDisplayList = [
     displayIfEmpty: true,
   },
   {
+    key: 'remedy_description',
+    frenchKey: 'remedy_description_french',
+    class: `${blockName}__detail-item--column`,
+  },
+  {
     key: 'recall_effective_date',
     class: `${blockName}__detail-item--column`,
     text: 'recall_effective_text',
     frenchText: 'recall_effective_text_french',
     displayIfEmpty: true,
-  },
-  {
-    key: 'remedy_description',
-    frenchKey: 'remedy_description_french',
-    class: `${blockName}__detail-item--column`,
   },
   {
     key: 'mfr_notes',
