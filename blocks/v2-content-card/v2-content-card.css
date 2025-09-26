@@ -76,6 +76,12 @@
   margin: 0;
 }
 
+.v2-content-card__content ul {
+  list-style: disc;
+  list-style-position: outside;
+  padding-inline-start: 25px;
+}
+
 /* TODO: text colour should be a global style */
 .v2-content-card--editorial .v2-content-card__content p {
   color: var(--c-grey-4);
@@ -161,6 +167,26 @@
     --v2-content-card-padding: 24px 32px;
   }
 
+  .v2-content-card.v2-content-card--centered .v2-content-card__item {
+    grid-column: 1 / -1;
+    width: 50%;
+    justify-self: center;
+  }
+
+  .v2-content-card:not(.v2-content-card--images-grid) .v2-content-card__item:nth-child(odd):last-child > article {
+    display: grid;
+    grid-template-columns: 1fr calc(50% + calc(var(--v2-content-card-gutter) / 2));
+    grid-template-areas: 'content media';
+  }
+
+  .v2-content-card.v2-content-card--centered:not(.v2-content-card--images-grid)
+  .v2-content-card__item:nth-child(odd):last-child > article {
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "media"
+      "content";
+  }
+
   .v2-content-card {
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -175,12 +201,6 @@
 
     /* Safari needs to have set border-radius explicitly for videos */
     border-radius: 0 var(--border-radius) var(--border-radius) 0;
-  }
-
-  .v2-content-card:not(.v2-content-card--images-grid) .v2-content-card__item:nth-child(odd):last-child > article {
-    display: grid;
-    grid-template-columns: 1fr calc(50% + calc(var(--v2-content-card-gutter) / 2));
-    grid-template-areas: 'content media';
   }
 
   :where(.v2-content-card:not(.v2-content-card--images-grid) .v2-content-card__item:nth-child(odd):last-child) picture {
