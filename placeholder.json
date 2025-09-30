@@ -442,6 +442,18 @@
     {
       "Key": "clear",
       "Text": "clear"
+    },
+    {
+      "Key": "invalid_form_weekend_day_label",
+      "Text": "Please select a working day (Monday to Friday)."
+    },
+    {
+      "Key": "invalid_form_weekend_day_label",
+      "Text": "Please select a working day (Monday to Friday and no public holidays)."
+    },
+    {
+      "Key": "invalid_form_holiday_label",
+      "Text": "The selected date falls on a holiday. Please choose a different date."
     }
   ],
   ":type": "sheet"
