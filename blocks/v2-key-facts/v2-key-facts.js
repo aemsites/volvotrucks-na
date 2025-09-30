@@ -13,6 +13,7 @@ const CLASSES = {
   item_title: `${blockName}__key-title`,
   item_subtitle: `${blockName}__key-subtitle`,
   centered: `${blockName}__centered`,
+  two_items: `${blockName}__two-items`,
 };
 
 /**
@@ -62,7 +63,12 @@ export default function decorate(block) {
   let hasMedia = false;
   Array.from(block.children).forEach((row) => {
     row.classList.add(CLASSES.row);
-    Array.from(row.children).forEach((col) => {
+
+    const columns = Array.from(row.children);
+    if (columns.length === 2) {
+      row.classList.add(CLASSES.two_items);
+    }
+    columns.forEach((col) => {
       const videoLinks = [...col.querySelectorAll('a')].filter(isVideoLink);
       const isVideoCell = videoLinks.length;
       const isImageCell = !!col.querySelector('picture');
