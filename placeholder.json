@@ -445,10 +445,6 @@
     },
     {
       "Key": "invalid_form_weekend_day_label",
-      "Text": "Please select a working day (Monday to Friday)."
-    },
-    {
-      "Key": "invalid_form_weekend_day_label",
       "Text": "Please select a working day (Monday to Friday and no public holidays)."
     },
     {
