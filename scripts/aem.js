@@ -10,6 +10,13 @@
  * governing permissions and limitations under the License.
  */
 
+// eslint-disable-next-line no-undef
+const context = require.context(
+  '../blocks/', // Relative to this file
+  true,
+  /^[^/]+\/[^/]+\.js$/, // Adjust as needed
+);
+
 /* eslint-env browser */
 
 function sampleRUM(checkpoint, data) {
@@ -541,7 +548,8 @@ async function loadBlock(block) {
       const decorationComplete = new Promise((resolve) => {
         (async () => {
           try {
-            const mod = await import(`${window.hlx.codeBasePath}/blocks/${blockName}/${blockName}.js`);
+            const blockPath = `${blockName}/${blockName}.js`;
+            const mod = await context(blockPath);
             if (mod.default) {
               await mod.default(block);
             }
