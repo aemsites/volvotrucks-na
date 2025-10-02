@@ -776,12 +776,13 @@ main .section:first-child > :first-child {
 }
 
 /* progressive section appearance */
-div:where([role='dialog']) .section[data-section-status='loading'],
+/* stylelint-disable-next-line comment-empty-line-before */
+/* div:where([role='dialog']) .section[data-section-status='loading'],
 main .section[data-section-status='loading'],
 div:where([role='dialog']) .section[data-section-status='initialized'],
 main .section[data-section-status='initialized'] {
   display: none;
-}
+} */
 
 div:where([role='dialog']) .section.highlight,
 main .section.highlight {
