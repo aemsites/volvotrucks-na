@@ -194,6 +194,10 @@
   min-height: fit-content;
 }
 
+.v2-hero--marketing video + .v2-hero__content-wrapper {
+  background: none;
+}
+
 /* Scroll icon */
 .v2-hero__scroll-icon {
   border-radius: 20px;
