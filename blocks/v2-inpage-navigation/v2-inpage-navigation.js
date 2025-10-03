@@ -159,32 +159,30 @@ const addHeaderScrollBehavior = (header) => {
  * Update the in-page navigation factor based on the visibility of the CTA button.
  * @param {HTMLElement} ctaButton
  */
-const updateNavFactor = (ctaButton = null) => {
-  if (!ctaButton) {
+const updateNavFactor = (ctaButton = null, wrapper) => {
+  if (!ctaButton || !wrapper) {
     return;
   }
   const rect = ctaButton.getBoundingClientRect();
-  const docStyle = getComputedStyle(document.documentElement);
-  const navHeight = parseFloat(docStyle.getPropertyValue('--inpage-navigation-bottom-height')) || 0;
 
   // Calculate visible height of CTA button within viewport
   const visible = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
-  const factor = rect.height > 0 ? Math.max(0, Math.min(navHeight, (visible / rect.height) * navHeight)) : navHeight;
 
-  document.documentElement.style.setProperty('--inpage-navigation-factor', `${factor}px`);
+  wrapper.classList.toggle(`${blockName}-wrapper--hide`, visible !== 0);
 };
 
 /**
  * Add scroll behavior to the bottom sticky CTA.
  */
 const addBottomScrollBehavior = (block) => {
+  const wrapper = block.closest('.v2-inpage-navigation-wrapper');
   const primaryButton = getMetadata('inpage-primary-button');
   const primaryCta = document.querySelector(`.v2-hero a[title="${primaryButton}"]:not(.${blockName}__marketing`);
   const secondaryButton = getMetadata('inpage-secondary-button');
   const secondaryCta = document.querySelector(`a[title="${secondaryButton}"]:not(.${blockName}__marketing)`);
   const ctaButton = secondaryCta || primaryCta;
 
-  window.addEventListener('scroll', () => updateNavFactor(ctaButton), { passive: true });
+  window.addEventListener('scroll', () => updateNavFactor(ctaButton, wrapper), { passive: true });
 
   // Add an intersection observer to not hide the footer
   const footer = document.querySelector('footer');
@@ -346,6 +344,7 @@ const decorateTwoButtons = (block) => {
   const isLargerThanMobile = !isMobileViewport();
   const [primaryButton, secondaryButton] = inPageNavigationButtons();
   const wrapper = createElement('div', { classes: `${blockName}__wrapper` });
+  const blockWrapper = block.closest(`.${blockName}-wrapper`);
   block.innerText = '';
 
   if (primaryButton) {
@@ -365,6 +364,7 @@ const decorateTwoButtons = (block) => {
     return;
   }
 
+  blockWrapper.classList.add(`${blockName}-wrapper--hide`);
   addBottomScrollBehavior(block);
 };
 
