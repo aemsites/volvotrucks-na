@@ -1,6 +1,5 @@
 :root {
   --inpage-navigation-height: 58px;
-  --inpage-navigation-opacity: 0;
 }
 
 .v2-inpage-navigation-wrapper {
@@ -204,9 +203,9 @@ then we change it for the next section item in main */
 .bottom-sticky-cta .v2-inpage-navigation-wrapper {
   top: calc(100% - var(--inpage-navigation-height));
   height: 0;
-  opacity: var(--inpage-navigation-opacity);
 }
 
+.bottom-sticky-cta .v2-inpage-navigation-wrapper.v2-inpage-navigation-wrapper--hide,
 .bottom-sticky-cta .v2-inpage-navigation-wrapper.v2-inpage-navigation--hide {
   display: none;
 }
