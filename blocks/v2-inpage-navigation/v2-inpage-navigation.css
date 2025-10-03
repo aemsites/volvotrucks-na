@@ -1,7 +1,7 @@
 :root {
   --inpage-navigation-height: 58px;
-  --inpage-navigation-bottom-height: 116px;
-  --inpage-navigation-factor: var(--inpage-navigation-bottom-height);
+  --inpage-navigation-bottom-height: var(--inpage-navigation-height);
+  --inpage-navigation-factor: var(--inpage-navigation-height);
 }
 
 .v2-inpage-navigation-wrapper {
@@ -188,9 +188,18 @@ then we change it for the next section item in main */
 /* END Customization when dropdown is open */
 
 .redesign-v2 a.button.v2-inpage-navigation__marketing:any-link {
+  --button-font-size: calc(var(--f-button-font-size) * 0.85);
+
   height: auto;
   padding: 10px 20px;
   line-height: var(--f-button-line-height);
+  font-size: var(--button-font-size);
+}
+
+@media (min-width: 375px) {
+  .redesign-v2 a.button.v2-inpage-navigation__marketing:any-link {
+    --button-font-size: var(--f-button-font-size);
+  }
 }
 
 .bottom-sticky-cta .v2-inpage-navigation-wrapper {
@@ -211,11 +220,7 @@ then we change it for the next section item in main */
   justify-content: center;
   align-items: center;
   gap: 8px;
-  flex-direction: column;
-}
-
-.bottom-sticky-cta .v2-inpage-navigation__marketing {
-  width: 100%;
+  flex-direction: row;
 }
 
 .bottom-sticky-cta .marketing.v2-inpage-navigation__marketing.v2-inpage-navigation__marketing--secondary {
@@ -227,21 +232,6 @@ then we change it for the next section item in main */
 .bottom-sticky-cta .marketing.v2-inpage-navigation__marketing.v2-inpage-navigation__marketing--secondary:hover {
   background-color: var(--c-grey-50);
   border-color: var(--c-grey-400);
-}
-
-@media (min-width: 450px) {
-  :root {
-    --inpage-navigation-bottom-height: var(--inpage-navigation-height);
-    --inpage-navigation-factor: var(--inpage-navigation-height);
-  }
-
-  .bottom-sticky-cta .v2-inpage-navigation__wrapper {
-    flex-direction: row;
-  }
-
-  .bottom-sticky-cta .v2-inpage-navigation__marketing {
-    width: auto;
-  }
 }
 
 @media (min-width: 744px) {
