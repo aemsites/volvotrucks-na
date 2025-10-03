@@ -1,7 +1,6 @@
 :root {
   --inpage-navigation-height: 58px;
-  --inpage-navigation-bottom-height: var(--inpage-navigation-height);
-  --inpage-navigation-factor: var(--inpage-navigation-height);
+  --inpage-navigation-opacity: 0;
 }
 
 .v2-inpage-navigation-wrapper {
@@ -203,8 +202,9 @@ then we change it for the next section item in main */
 }
 
 .bottom-sticky-cta .v2-inpage-navigation-wrapper {
-  top: calc(100% - var(--inpage-navigation-bottom-height) + var(--inpage-navigation-factor));
+  top: calc(100% - var(--inpage-navigation-height));
   height: 0;
+  opacity: var(--inpage-navigation-opacity);
 }
 
 .bottom-sticky-cta .v2-inpage-navigation-wrapper.v2-inpage-navigation--hide {
@@ -213,7 +213,7 @@ then we change it for the next section item in main */
 
 .bottom-sticky-cta .v2-inpage-navigation {
   background-color: var(--c-white);
-  height: var(--inpage-navigation-bottom-height);
+  height: var(--inpage-navigation-height);
 }
 
 .bottom-sticky-cta .v2-inpage-navigation__wrapper {

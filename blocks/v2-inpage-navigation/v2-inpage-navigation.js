@@ -165,13 +165,15 @@ const updateNavFactor = (ctaButton = null) => {
   }
   const rect = ctaButton.getBoundingClientRect();
   const docStyle = getComputedStyle(document.documentElement);
-  const navHeight = parseFloat(docStyle.getPropertyValue('--inpage-navigation-bottom-height')) || 0;
+  const navOpacity = parseFloat(docStyle.getPropertyValue('--inpage-navigation-opacity')) || 1;
 
   // Calculate visible height of CTA button within viewport
   const visible = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
-  const factor = rect.height > 0 ? Math.max(0, Math.min(navHeight, (visible / rect.height) * navHeight)) : navHeight;
 
-  document.documentElement.style.setProperty('--inpage-navigation-factor', `${factor}px`);
+  // calculate opacity of the CTA button within viewport
+  const opacity = rect.height > 0 ? 1 - Math.max(0, Math.min(1, visible / rect.height)) : navOpacity;
+
+  document.documentElement.style.setProperty('--inpage-navigation-opacity', opacity);
 };
 
 /**
