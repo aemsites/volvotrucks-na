@@ -187,17 +187,17 @@ then we change it for the next section item in main */
 /* END Customization when dropdown is open */
 
 .redesign-v2 a.button.v2-inpage-navigation__marketing:any-link {
-  --button-font-size: calc(var(--f-button-font-size) * 0.85);
+  --button-size-factor: 0.85;
 
   height: auto;
   padding: 10px 20px;
   line-height: var(--f-button-line-height);
-  font-size: var(--button-font-size);
+  font-size: calc(var(--f-button-font-size) * var(--button-size-factor));
 }
 
 @media (min-width: 375px) {
   .redesign-v2 a.button.v2-inpage-navigation__marketing:any-link {
-    --button-font-size: var(--f-button-font-size);
+    --button-size-factor: 1;
   }
 }
 
