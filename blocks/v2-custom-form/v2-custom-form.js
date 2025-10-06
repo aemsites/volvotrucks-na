@@ -3,7 +3,7 @@ import { getTextLabel, createElement, variantsClassesToBEM, normalizeUrlText, is
 import { getCustomDropdown } from '../../../common/custom-dropdown/custom-dropdown.js';
 
 const blockName = 'v2-custom-form';
-const variantClasses = ['double-column'];
+const variantClasses = ['double-column', 'redirect-new-tab'];
 
 const CLASSES = {
   IGNORE_ON_FORM_SUBMIT: 'ignore-on-form-submit',
@@ -57,12 +57,12 @@ function throwFormNotFound(form) {
   console.error('Form with data-submitting=true not found', { form });
 }
 
-function tryRedirect(form, datasetKey, { warnLabel = datasetKey } = {}) {
+function tryRedirect(form, redirectKey, { warnLabel = redirectKey, redirectNewTab = false } = {}) {
   if (!form) {
     return false;
   }
 
-  const redirectValue = normalizeUrlText(form.dataset?.[datasetKey]);
+  const redirectValue = normalizeUrlText(form.dataset?.[redirectKey]);
   if (!redirectValue || form.dataset.redirecting === 'true') {
     return false;
   }
@@ -71,7 +71,12 @@ function tryRedirect(form, datasetKey, { warnLabel = datasetKey } = {}) {
     const resolvedUrl = new URL(redirectValue, window.location.href);
     if (isHttp(resolvedUrl.protocol)) {
       form.dataset.redirecting = 'true';
-      window.location.assign(resolvedUrl.href);
+
+      if (redirectNewTab) {
+        window.open(resolvedUrl.href, '_blank', 'noopener,noreferrer');
+      } else {
+        window.location.assign(resolvedUrl.href);
+      }
       return true;
     }
   } catch {
@@ -80,7 +85,7 @@ function tryRedirect(form, datasetKey, { warnLabel = datasetKey } = {}) {
   return false;
 }
 
-async function submissionSuccess() {
+async function submissionSuccess(redirectNewTab = false) {
   sampleRUM('form:submit');
   const form = document.querySelector('form[data-submitting=true]');
   if (!form) {
@@ -88,7 +93,7 @@ async function submissionSuccess() {
     return;
   }
 
-  if (tryRedirect(form, 'successRedirect')) {
+  if (tryRedirect(form, 'successRedirect', { redirectNewTab })) {
     return;
   }
 
@@ -106,14 +111,14 @@ async function submissionSuccess() {
   form.replaceWith(successDiv);
 }
 
-async function submissionFailure() {
+async function submissionFailure(redirectNewTab = false) {
   const form = document.querySelector('form[data-submitting=true]');
   if (!form) {
     throwFormNotFound(form);
     return;
   }
 
-  if (tryRedirect(form, 'errorRedirect', { warnLabel: 'errorRedirect' })) {
+  if (tryRedirect(form, 'errorRedirect', { warnLabel: 'errorRedirect', redirectNewTab })) {
     console.log('redirecting to errorRedirect');
     return;
   } else {
@@ -130,12 +135,15 @@ async function submissionFailure() {
   form.replaceWith(errorDiv);
 }
 
-// callback
 window.showResult = function showResult(json) {
+  const form = document.querySelector('form[data-submitting=true]');
+  const block = form?.closest(`.${blockName}`);
+  const isRedirectNewTab = block?.classList.contains(`${blockName}--redirect-new-tab`) || false;
+
   if (json.result === 'success') {
-    submissionSuccess();
+    submissionSuccess(isRedirectNewTab);
   } else if (json.result === 'error') {
-    submissionFailure();
+    submissionFailure(isRedirectNewTab);
   }
 };
 
