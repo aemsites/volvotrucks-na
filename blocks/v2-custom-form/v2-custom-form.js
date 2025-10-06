@@ -1139,6 +1139,9 @@ export default async function decorate(block) {
 
   window.addEventListener('unhandledrejection', ({ reason, error }) => {
     console.error('Unhandled rejection. Error submitting form:', { reason, error });
-    submissionFailure();
+    const form = document.querySelector('form[data-submitting=true]');
+    const block = form?.closest(`.${blockName}`);
+    const redirectNewTab = block?.classList.contains(`${blockName}--redirect-new-tab`) || false;
+    submissionFailure(redirectNewTab);
   });
 }
