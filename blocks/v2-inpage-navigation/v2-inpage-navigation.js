@@ -142,17 +142,34 @@ const updateActive = (id) => {
 
 const addHeaderScrollBehavior = (header) => {
   let prevPosition = 0;
+  let isEnabled = true;
 
-  window.addEventListener('scroll', () => {
+  const onScroll = () => {
+    if (!isEnabled) {
+      return;
+    }
+
     if (window.scrollY > prevPosition) {
       header.classList.add(`${blockName}--hidden`);
     } else {
       header.classList.remove(`${blockName}--hidden`);
     }
-
     // on Safari the window.scrollY can be negative so `> 0` check is needed
     prevPosition = window.scrollY > 0 ? window.scrollY : 0;
-  });
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  return {
+    cleanup: () => window.removeEventListener('scroll', onScroll),
+    enable: () => {
+      isEnabled = true;
+    },
+    disable: () => {
+      isEnabled = false;
+      header.classList.remove(`${blockName}--hidden`);
+    },
+  };
 };
 
 /**
@@ -177,30 +194,57 @@ const updateNavFactor = (ctaButton = null, wrapper) => {
 const addBottomScrollBehavior = (block) => {
   const wrapper = block.closest('.v2-inpage-navigation-wrapper');
   const primaryButton = getMetadata('inpage-primary-button');
-  const primaryCta = document.querySelector(`.v2-hero a[title="${primaryButton}"]:not(.${blockName}__marketing`);
+  const primaryCta = primaryButton && document.querySelector('.v2-hero a.primary');
   const secondaryButton = getMetadata('inpage-secondary-button');
-  const secondaryCta = document.querySelector(`a[title="${secondaryButton}"]:not(.${blockName}__marketing)`);
+  const secondaryCta = secondaryButton && document.querySelector('.v2-hero a.secondary');
   const ctaButton = secondaryCta || primaryCta;
 
-  window.addEventListener('scroll', () => updateNavFactor(ctaButton, wrapper), { passive: true });
+  let isEnabled = true;
+
+  const onScroll = () => {
+    if (!isEnabled) {
+      return;
+    }
+    updateNavFactor(ctaButton, wrapper);
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
 
   // Add an intersection observer to not hide the footer
   const footer = document.querySelector('footer');
+  let footerObserver;
   if (footer && ctaButton) {
-    const observer = new IntersectionObserver(
+    footerObserver = new IntersectionObserver(
       (entries) => {
+        if (!isEnabled) {
+          return;
+        }
         entries.forEach((entry) => {
           block.parentNode.classList.toggle(`${blockName}--hide`, entry.isIntersecting);
         });
       },
-      {
-        root: null,
-        threshold: 0.1,
-      },
+      { root: null, threshold: 0.1 },
     );
-
-    observer.observe(footer);
+    footerObserver.observe(footer);
   }
+
+  return {
+    cleanup: () => {
+      window.removeEventListener('scroll', onScroll);
+      if (footerObserver) {
+        footerObserver.disconnect();
+      }
+    },
+    enable: () => {
+      isEnabled = true;
+      wrapper.classList.add(`${blockName}-wrapper--hide`);
+    },
+    disable: () => {
+      isEnabled = false;
+      wrapper.classList.remove(`${blockName}-wrapper--hide`);
+      block.parentNode.classList.remove(`${blockName}--hide`);
+    },
+  };
 };
 
 /**
@@ -336,36 +380,57 @@ const decorateSingleButton = (block) => {
   addHeaderScrollBehavior(block.parentNode);
 };
 
+const setScrollBehavior = (headerBehavior, bottomBehavior) => {
+  if (isMobileViewport()) {
+    headerBehavior.disable();
+    bottomBehavior.enable();
+  } else {
+    headerBehavior.enable();
+    bottomBehavior.disable();
+  }
+};
+
+/** Add a resize listener to toggle between header and bottom scroll behaviors.
+ * with debounce to avoid multiple calls on resize it automatically fixes itself after the debounce ends
+ * @param {Object} headerBehavior - scroll behavior object for viewport larger than mobile.
+ * @param {Object} bottomBehavior - The bottom scroll behavior object for mobile viewport.
+ */
+const addResizeListener = (headerBehavior, bottomBehavior) => {
+  window.addEventListener(
+    'resize',
+    debounce(() => {
+      setScrollBehavior(headerBehavior, bottomBehavior);
+    }, 200),
+  );
+};
+
 /**
  * Decorate the two buttons within the in-page navigation.
  * @param {HTMLElement} block
  */
 const decorateTwoButtons = (block) => {
-  const isLargerThanMobile = !isMobileViewport();
   const [primaryButton, secondaryButton] = inPageNavigationButtons();
   const wrapper = createElement('div', { classes: `${blockName}__wrapper` });
-  const blockWrapper = block.closest(`.${blockName}-wrapper`);
   block.innerText = '';
 
   if (primaryButton) {
     wrapper.appendChild(primaryButton);
   }
-
   if (secondaryButton) {
     wrapper.appendChild(secondaryButton);
   }
-
   if (primaryButton || secondaryButton) {
     block.appendChild(wrapper);
   }
 
-  if (isLargerThanMobile) {
-    addHeaderScrollBehavior(block.parentNode);
-    return;
-  }
+  // Create both behaviors but enable only the appropriate one
+  const headerBehavior = addHeaderScrollBehavior(block.parentNode);
+  const bottomBehavior = addBottomScrollBehavior(block);
 
-  blockWrapper.classList.add(`${blockName}-wrapper--hide`);
-  addBottomScrollBehavior(block);
+  setScrollBehavior(headerBehavior, bottomBehavior);
+
+  // Toggle behaviors on viewport resize without removing/adding listeners
+  addResizeListener(headerBehavior, bottomBehavior);
 };
 
 export default async function decorate(block) {
