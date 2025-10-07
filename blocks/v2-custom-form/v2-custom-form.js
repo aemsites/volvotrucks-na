@@ -17,6 +17,8 @@ const errorMessage = (errorTitle, errorText) => `<h3 class='${blockName}__title 
 <p class='${blockName}__text ${blockName}__text--error'>${errorText}</p>
 `;
 
+window.__activeForms = window.__activeForms || new Set();
+
 /**
  * Get the message text from placeholder.json based on the success and title
  * @param {Boolean} isSuccess get the success message if true, otherwise the error message
@@ -85,15 +87,16 @@ function tryRedirect(form, redirectKey, { warnLabel = redirectKey, redirectNewTa
   return false;
 }
 
-async function submissionSuccess(redirectNewTab = false) {
+async function submissionSuccess(form, redirectNewTab = false) {
   sampleRUM('form:submit');
-  const form = document.querySelector('form[data-submitting=true]');
+
   if (!form) {
     throwFormNotFound(form);
     return;
   }
 
   if (tryRedirect(form, 'successRedirect', { redirectNewTab })) {
+    window.__activeForms.delete(form);
     return;
   }
 
@@ -109,10 +112,10 @@ async function submissionSuccess(redirectNewTab = false) {
   }
   form.setAttribute('data-submitting', 'false');
   form.replaceWith(successDiv);
+  window.__activeForms.delete(form);
 }
 
-async function submissionFailure(redirectNewTab = false) {
-  const form = document.querySelector('form[data-submitting=true]');
+async function submissionFailure(form, redirectNewTab = false) {
   if (!form) {
     throwFormNotFound(form);
     return;
@@ -120,6 +123,7 @@ async function submissionFailure(redirectNewTab = false) {
 
   if (tryRedirect(form, 'errorRedirect', { warnLabel: 'errorRedirect', redirectNewTab })) {
     console.log('redirecting to errorRedirect');
+    window.__activeForms.delete(form);
     return;
   } else {
     console.log('no errorRedirect found, showing error message');
@@ -133,18 +137,29 @@ async function submissionFailure(redirectNewTab = false) {
   form.setAttribute('data-submitting', 'false');
   form.querySelector('button[type="submit"]').disabled = false;
   form.replaceWith(errorDiv);
+  window.__activeForms.delete(form);
 }
 
 window.showResult = function showResult(json) {
-  const form = document.querySelector('form[data-submitting=true]');
-  const block = form?.closest(`.${blockName}`);
-  const isRedirectNewTab = block?.classList.contains(`${blockName}--redirect-new-tab`) || false;
+  const activeForms = Array.from(window.__activeForms);
+  const form = activeForms.reverse().find((f) => f.dataset.submitting === 'true');
+
+  if (!form) {
+    console.warn('showResult: no active submitting form found');
+    return;
+  }
+
+  const block = form.closest(`.${blockName}`);
+  const redirectNewTab = block?.classList.contains(`${blockName}--redirect-new-tab`) || false;
 
   if (json.result === 'success') {
-    submissionSuccess(isRedirectNewTab);
+    submissionSuccess(form, redirectNewTab);
   } else if (json.result === 'error') {
-    submissionFailure(isRedirectNewTab);
+    submissionFailure(form, redirectNewTab);
   }
+
+  window.__activeForms.delete(form);
+  form.dataset.submitting = 'false';
 };
 
 function serialize(obj) {
@@ -184,6 +199,7 @@ async function prepareRequest(form) {
 async function handleSubmit(form) {
   if (form.getAttribute('data-submitting') !== 'true') {
     form.setAttribute('data-submitting', 'true');
+    window.__activeForms.add(form);
     await prepareRequest(form);
   }
 }
@@ -1019,11 +1035,11 @@ async function createForm(formURL) {
     cleanErrorMessages(form);
     e.preventDefault();
 
-    const honeypot = form.querySelector('input[name="form_extra_field"]');
-    if (honeypot && honeypot.value) {
-      console.warn('Form submission blocked: honeypot field was filled (possible bot).');
-      return;
-    }
+    // const honeypot = form.querySelector('input[name="form_extra_field"]');
+    // if (honeypot && honeypot.value) {
+    //   console.warn('Form submission blocked: honeypot field was filled (possible bot).');
+    //   return;
+    // }
 
     if (isValid) {
       const block = form.closest(`.${blockName}`);
@@ -1139,9 +1155,17 @@ export default async function decorate(block) {
 
   window.addEventListener('unhandledrejection', ({ reason, error }) => {
     console.error('Unhandled rejection. Error submitting form:', { reason, error });
-    const form = document.querySelector('form[data-submitting=true]');
-    const block = form?.closest(`.${blockName}`);
+
+    const activeForms = Array.from(window.__activeForms || []);
+    const form = activeForms.reverse().find((f) => f.dataset.submitting === 'true');
+
+    if (!form) {
+      throwFormNotFound(form);
+      return;
+    }
+
+    const block = form.closest(`.${blockName}`);
     const redirectNewTab = block?.classList.contains(`${blockName}--redirect-new-tab`) || false;
-    submissionFailure(redirectNewTab);
+    submissionFailure(form, redirectNewTab);
   });
 }
