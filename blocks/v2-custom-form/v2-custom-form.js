@@ -1035,11 +1035,11 @@ async function createForm(formURL) {
     cleanErrorMessages(form);
     e.preventDefault();
 
-    // const honeypot = form.querySelector('input[name="form_extra_field"]');
-    // if (honeypot && honeypot.value) {
-    //   console.warn('Form submission blocked: honeypot field was filled (possible bot).');
-    //   return;
-    // }
+    const honeypot = form.querySelector('input[name="form_extra_field"]');
+    if (honeypot && honeypot.value) {
+      console.warn('Form submission blocked: honeypot field was filled (possible bot).');
+      return;
+    }
 
     if (isValid) {
       const block = form.closest(`.${blockName}`);
