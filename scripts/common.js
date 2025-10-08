@@ -1,18 +1,6 @@
-import { loadCSS, loadBlock, loadSections, buildBlock, decorateBlock, getMetadata } from './aem.js';
+import { loadCSS, getMetadata } from './aem.js';
 
 let placeholders = null;
-
-/**
- * loads a block named 'footer' into footer
- */
-function loadFooter(footer) {
-  if (footer) {
-    const footerBlock = buildBlock('footer', '');
-    footer.append(footerBlock);
-    decorateBlock(footerBlock);
-    loadBlock(footerBlock);
-  }
-}
 
 /**
  * Returns the true origin of the current page in the browser.
