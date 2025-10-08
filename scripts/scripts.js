@@ -11,6 +11,7 @@ import {
   loadCSS,
   loadScript,
   loadBlock,
+  loadFooter,
   loadHeader,
 } from './aem.js';
 
@@ -19,7 +20,6 @@ import {
   getHref,
   getPlaceholders,
   getTextLabel,
-  loadLazy,
   loadTemplate,
   createElement,
   slugify,
@@ -865,6 +865,37 @@ const moveClassToHtmlEl = (className, elementSelector = 'main') => {
     document.querySelector(elementSelector).classList.remove(className);
   }
 };
+
+/**
+ * loads everything that doesn't need to be delayed.
+ */
+async function loadLazy(doc) {
+  const main = doc.querySelector('main');
+  await loadSections(main);
+
+  const { hash } = window.location;
+  const element = hash ? doc.getElementById(hash.substring(1)) : false;
+  if (hash && element) {
+    element.scrollIntoView();
+  }
+  const header = doc.querySelector('header');
+
+  const disableFooter = getMetadata('disable-footer').toLowerCase() === 'true';
+
+  if (!disableFooter) {
+    loadFooter(doc.querySelector('footer'));
+  }
+
+  const subnav = header?.querySelector('.block.sub-nav');
+  if (subnav) {
+    loadBlock(subnav);
+    header.appendChild(subnav);
+  }
+
+  loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+
+  import('../tools/sidekick/aem-genai-variations.js');
+}
 
 /**
  * Loads everything that happens a lot later,

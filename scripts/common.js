@@ -211,35 +211,6 @@ export async function loadTemplate(doc, templateName) {
   }
 }
 
-/**
- * loads everything that doesn't need to be delayed.
- */
-export async function loadLazy(doc) {
-  const main = doc.querySelector('main');
-  await loadSections(main);
-
-  const { hash } = window.location;
-  const element = hash ? doc.getElementById(hash.substring(1)) : false;
-  if (hash && element) {
-    element.scrollIntoView();
-  }
-  const header = doc.querySelector('header');
-
-  const disableFooter = getMetadata('disable-footer').toLowerCase() === 'true';
-
-  if (!disableFooter) {
-    loadFooter(doc.querySelector('footer'));
-  }
-
-  const subnav = header?.querySelector('.block.sub-nav');
-  if (subnav) {
-    loadBlock(subnav);
-    header.appendChild(subnav);
-  }
-
-  loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
-}
-
 export const removeEmptyTags = (block, isRecursive) => {
   const isEmpty = (node) => {
     const tagName = `</${node.tagName}>`;
