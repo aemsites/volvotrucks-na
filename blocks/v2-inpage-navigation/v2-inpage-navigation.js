@@ -142,50 +142,38 @@ const updateActive = (id) => {
 
 const addHeaderScrollBehavior = (header) => {
   let prevPosition = 0;
-  let isEnabled = true;
 
-  const onScroll = () => {
-    if (!isEnabled) {
-      return;
-    }
-
+  window.addEventListener('scroll', () => {
     if (window.scrollY > prevPosition) {
       header.classList.add(`${blockName}--hidden`);
     } else {
       header.classList.remove(`${blockName}--hidden`);
     }
+
     // on Safari the window.scrollY can be negative so `> 0` check is needed
     prevPosition = window.scrollY > 0 ? window.scrollY : 0;
-  };
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-
-  return {
-    cleanup: () => window.removeEventListener('scroll', onScroll),
-    enable: () => {
-      isEnabled = true;
-    },
-    disable: () => {
-      isEnabled = false;
-      header.classList.remove(`${blockName}--hidden`);
-    },
-  };
+  });
 };
 
 /**
  * Update the in-page navigation factor based on the visibility of the CTA button.
  * @param {HTMLElement} ctaButton
  */
-const updateNavFactor = (ctaButton = null, wrapper) => {
-  if (!ctaButton || !wrapper) {
+const updateNavFactor = (ctaButton = null) => {
+  if (!ctaButton) {
     return;
   }
   const rect = ctaButton.getBoundingClientRect();
+  const docStyle = getComputedStyle(document.documentElement);
+  const navOpacity = parseFloat(docStyle.getPropertyValue('--inpage-navigation-opacity')) || 1;
 
   // Calculate visible height of CTA button within viewport
   const visible = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
 
-  wrapper.classList.toggle(`${blockName}-wrapper--hide`, visible !== 0);
+  // calculate opacity of the CTA button within viewport
+  const opacity = rect.height > 0 ? 1 - Math.max(0, Math.min(1, visible / rect.height)) : navOpacity;
+
+  document.documentElement.style.setProperty('--inpage-navigation-opacity', opacity);
 };
 
 /**
@@ -199,52 +187,25 @@ const addBottomScrollBehavior = (block) => {
   const secondaryCta = secondaryButton && document.querySelector('.v2-hero a.secondary');
   const ctaButton = secondaryCta || primaryCta;
 
-  let isEnabled = true;
-
-  const onScroll = () => {
-    if (!isEnabled) {
-      return;
-    }
-    updateNavFactor(ctaButton, wrapper);
-  };
-
-  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('scroll', () => updateNavFactor(ctaButton, wrapper), { passive: true });
 
   // Add an intersection observer to not hide the footer
   const footer = document.querySelector('footer');
-  let footerObserver;
   if (footer && ctaButton) {
-    footerObserver = new IntersectionObserver(
+    const observer = new IntersectionObserver(
       (entries) => {
-        if (!isEnabled) {
-          return;
-        }
         entries.forEach((entry) => {
           block.parentNode.classList.toggle(`${blockName}--hide`, entry.isIntersecting);
         });
       },
-      { root: null, threshold: 0.1 },
+      {
+        root: null,
+        threshold: 0.1,
+      },
     );
-    footerObserver.observe(footer);
-  }
 
-  return {
-    cleanup: () => {
-      window.removeEventListener('scroll', onScroll);
-      if (footerObserver) {
-        footerObserver.disconnect();
-      }
-    },
-    enable: () => {
-      isEnabled = true;
-      wrapper.classList.add(`${blockName}-wrapper--hide`);
-    },
-    disable: () => {
-      isEnabled = false;
-      wrapper.classList.remove(`${blockName}-wrapper--hide`);
-      block.parentNode.classList.remove(`${blockName}--hide`);
-    },
-  };
+    observer.observe(footer);
+  }
 };
 
 /**
@@ -380,35 +341,12 @@ const decorateSingleButton = (block) => {
   addHeaderScrollBehavior(block.parentNode);
 };
 
-const setScrollBehavior = (headerBehavior, bottomBehavior) => {
-  if (isMobileViewport()) {
-    headerBehavior.disable();
-    bottomBehavior.enable();
-  } else {
-    headerBehavior.enable();
-    bottomBehavior.disable();
-  }
-};
-
-/** Add a resize listener to toggle between header and bottom scroll behaviors.
- * with debounce to avoid multiple calls on resize it automatically fixes itself after the debounce ends
- * @param {Object} headerBehavior - scroll behavior object for viewport larger than mobile.
- * @param {Object} bottomBehavior - The bottom scroll behavior object for mobile viewport.
- */
-const addResizeListener = (headerBehavior, bottomBehavior) => {
-  window.addEventListener(
-    'resize',
-    debounce(() => {
-      setScrollBehavior(headerBehavior, bottomBehavior);
-    }, 200),
-  );
-};
-
 /**
  * Decorate the two buttons within the in-page navigation.
  * @param {HTMLElement} block
  */
 const decorateTwoButtons = (block) => {
+  const isLargerThanMobile = !isMobileViewport();
   const [primaryButton, secondaryButton] = inPageNavigationButtons();
   const wrapper = createElement('div', { classes: `${blockName}__wrapper` });
   block.innerText = '';
@@ -416,21 +354,21 @@ const decorateTwoButtons = (block) => {
   if (primaryButton) {
     wrapper.appendChild(primaryButton);
   }
+
   if (secondaryButton) {
     wrapper.appendChild(secondaryButton);
   }
+
   if (primaryButton || secondaryButton) {
     block.appendChild(wrapper);
   }
 
-  // Create both behaviors but enable only the appropriate one
-  const headerBehavior = addHeaderScrollBehavior(block.parentNode);
-  const bottomBehavior = addBottomScrollBehavior(block);
+  if (isLargerThanMobile) {
+    addHeaderScrollBehavior(block.parentNode);
+    return;
+  }
 
-  setScrollBehavior(headerBehavior, bottomBehavior);
-
-  // Toggle behaviors on viewport resize without removing/adding listeners
-  addResizeListener(headerBehavior, bottomBehavior);
+  addBottomScrollBehavior(block);
 };
 
 export default async function decorate(block) {
