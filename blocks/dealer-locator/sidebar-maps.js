@@ -79,7 +79,6 @@ $currentAddress = '';
 $directionsMessage = $('#directions-message');
 $isAmentities = window.locatorConfig.amenities;
 $brandOptionSelected = "";
-$eloquaFormHTML = $('script#eloquaForm').html();
 var uptimeClicked = false;
 $electricDealer = false;
 $hoverText = $('#hoverText').val();

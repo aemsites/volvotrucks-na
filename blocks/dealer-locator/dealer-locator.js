@@ -469,12 +469,5 @@ export default async function decorate(block) {
     </div>
 </div>
 <div id="locator-snackbar"></div>
-
-<script id="eloquaForm" type="text/template">
-    <div class="template">
-
-    </div>
-</script>
-
 </div> `;
 }
