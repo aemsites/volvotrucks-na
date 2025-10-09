@@ -2687,7 +2687,7 @@ footer {
   margin-top: -5px;
 }
 
-@media (min-width: 700px) {
+@media (min-width: 744px) {
   .dealer-locator .nearby-pins article.teaser .dealerPanelContainer {
     min-width: 315px;
   }
