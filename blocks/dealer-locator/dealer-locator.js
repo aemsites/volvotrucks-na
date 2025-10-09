@@ -34,36 +34,6 @@ export default async function decorate(block) {
   });
 
   block.innerHTML = `<input id="hoverText" value="Please unselect the selected option to click this option" hidden/>
-<!-- PartsASIST Datasource Selection -->
-<div class="datasource-option" style="display:none;">
-    <div class="backdrop"></div>
-    <div class="col-12">
-        <div class="row">
-            <h3 class="MediumTitleSentence">Select a Brand</h3>
-            <p>To view participating dealers near you.</p>
-            <div class="brand">
-                <button id="volvo" type="button">Volvo Trucks</button>
-                <button id="mack" type="button">Mack Trucks</button>
-                <button id="dual" type="button" style="min-width:80px;">Other</button>
-            </div>
-        </div>
-    </div>
-</div>
-<!-- PartsASIST Registration Modal -->
-<div class="partsasist-form" style="display:none;">
-    <div class="backdrop"></div>
-    <div class="col-12">
-        <div class="row regForm rtl-padding">
-
-            <button type="button" class="btn" onclick="$.fn.resetRegistration(this);">Return to Dealer Locator</button>
-
-            <h3 class="MediumTitleSentence"></h3>
-        </div>
-        <div class="row regForm">
-            <div id="select-form">SELECT FORM HTML</div>
-        </div>
-    </div>
-</div>
 <div class="wrapper">
     <div class="mobile-main-header">
         <div class="panel-header">
