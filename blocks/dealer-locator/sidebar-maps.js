@@ -334,7 +334,7 @@ $.fn.getTimeZoneId = async function (dealer) {
 
 $.fn.loadPins = function () {
 
-  
+
   $pins = [];
   $nearbyPins = [];
   $markers = [];
@@ -2217,7 +2217,7 @@ $.fn.selectNearbyPins = function () {
     templateClone.find('.distance').text(pin.distance.toFixed(2) + ' mi');
     templateClone.find('.address').text(pin.MAIN_ADDRESS_LINE_1_TXT);
     templateClone.find('.city').text(pin.MAIN_CITY_NM + ', ' + pin.MAIN_STATE_PROV_CD + ' ' + pin.MAIN_POSTAL_CD);
-      templateClone.find('.phone').text($.fn.formatPhoneNumber(pin.REG_PHONE_NUMBER));
+    templateClone.find('.phone').text($.fn.formatPhoneNumber(pin.REG_PHONE_NUMBER));
       templateClone.find('.website a').text('Dealer Site');
       templateClone.find('.website a').attr("href", $.fn.formatWebAddress(pin.WEB_ADDRESS));
       templateClone.find('.detail-website a').attr("href", $.fn.formatWebAddress(pin.WEB_ADDRESS));
