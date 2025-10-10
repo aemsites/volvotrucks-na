@@ -196,12 +196,10 @@ then we change it for the next section item in main */
 .bottom-sticky-cta .v2-inpage-navigation-wrapper {
   top: calc(100% - var(--inpage-navigation-bottom-height) + var(--inpage-navigation-factor));
   height: 0;
-  transform: translateY(100%);
+  visibility: hidden;
   opacity: 0;
+  transform: translateY(100%);
   pointer-events: none;
-  transition:
-    transform var(--duration-medium) ease-in-out,
-    opacity var(--duration-medium) ease-in-out;
 }
 
 .bottom-sticky-cta .v2-inpage-navigation-wrapper.v2-inpage-navigation--hide {
@@ -235,9 +233,13 @@ then we change it for the next section item in main */
 }
 
 .bottom-sticky-cta .v2-inpage-navigation-wrapper.v2-inpage-navigation--ready {
-  transform: none;
+  visibility: visible;
   opacity: 1;
+  transform: none;
   pointer-events: auto;
+  transition:
+    transform var(--duration-medium) ease-in-out,
+    opacity var(--duration-medium) ease-in-out;
 }
 
 @media (min-width: 450px) {

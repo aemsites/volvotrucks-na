@@ -227,7 +227,10 @@ const addBottomScrollBehavior = (block) => {
     footerObserver.observe(footer);
   }
 
-  requestAnimationFrame(() => updateNavFactor(ctaButton));
+  requestAnimationFrame(() => {
+    updateNavFactor(ctaButton);
+    wrapper.classList.add('v2-inpage-navigation--ready');
+  });
 
   return () => {
     window.removeEventListener('scroll', handleScroll);
