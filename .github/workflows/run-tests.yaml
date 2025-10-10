@@ -13,8 +13,7 @@ jobs:
         node-version: '20'
     - name: Configure npm for Volvo Azure Artifacts
       run: |
-        echo "@volvo:registry=https://pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/" >> ~/.npmrc
-        echo "//pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/:_password=$(echo -n ${{ secrets.VOLVO_PAT }} | base64)" >> ~/.npmrc
+        echo "//pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/:_authToken=$(echo -n ${{ secrets.VOLVO_PAT }} | base64)" >> ~/.npmrc
         echo "always-auth=true" >> ~/.npmrc
     - run: npm ci
     - run: npm run lint
