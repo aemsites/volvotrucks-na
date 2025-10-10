@@ -196,6 +196,12 @@ then we change it for the next section item in main */
 .bottom-sticky-cta .v2-inpage-navigation-wrapper {
   top: calc(100% - var(--inpage-navigation-bottom-height) + var(--inpage-navigation-factor));
   height: 0;
+  transform: translateY(100%);
+  opacity: 0;
+  pointer-events: none;
+  transition:
+    transform var(--duration-medium) ease-in-out,
+    opacity var(--duration-medium) ease-in-out;
 }
 
 .bottom-sticky-cta .v2-inpage-navigation-wrapper.v2-inpage-navigation--hide {
@@ -228,9 +234,21 @@ then we change it for the next section item in main */
   border-color: var(--c-grey-400);
 }
 
+.bottom-sticky-cta .v2-inpage-navigation-wrapper.v2-inpage-navigation--ready {
+  transform: none;
+  opacity: 1;
+  pointer-events: auto;
+}
+
 @media (min-width: 450px) {
   .bottom-sticky-cta .v2-inpage-navigation__marketing {
     width: auto;
+  }
+
+  .bottom-sticky-cta .v2-inpage-navigation-wrapper {
+    transform: none;
+    opacity: 1;
+    pointer-events: auto;
   }
 }
 

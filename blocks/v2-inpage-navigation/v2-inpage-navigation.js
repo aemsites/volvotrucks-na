@@ -192,20 +192,21 @@ const updateNavFactor = (ctaButton = null) => {
  */
 const addBottomScrollBehavior = (block) => {
   const wrapper = block.closest('.v2-inpage-navigation-wrapper');
-  const primaryLabel = getMetadata('inpage-primary-button');
-  const secondaryLabel = getMetadata('inpage-secondary-button');
-  const primaryCta = document.querySelector(`.v2-hero a[title="${primaryLabel}"]:not(.${blockName}__marketing)`);
-  const secondaryCta = document.querySelector(`a[title="${secondaryLabel}"]:not(.${blockName}__marketing)`);
-  const cta = secondaryCta || primaryCta;
+  const primaryButton = getMetadata('inpage-primary-button');
+  const primaryCta = document.querySelector(`.v2-hero a[title="${primaryButton}"]:not(.${blockName}__marketing`);
+  const secondaryButton = getMetadata('inpage-secondary-button');
+  const secondaryCta = document.querySelector(`a[title="${secondaryButton}"]:not(.${blockName}__marketing)`);
+  const ctaButton = secondaryCta || primaryCta;
 
-  if (!cta) {
+  if (!ctaButton) {
     return () => {};
   }
 
-  const handleScroll = () => updateNavFactor(cta);
+  const handleScroll = () => updateNavFactor(ctaButton);
   const handleResize = debounce(() => {
     if (isMobileViewport()) {
-      updateNavFactor(cta);
+      updateNavFactor(ctaButton);
+      wrapper.classList.add('v2-inpage-navigation--ready');
     }
   }, 150);
 
@@ -226,7 +227,7 @@ const addBottomScrollBehavior = (block) => {
     footerObserver.observe(footer);
   }
 
-  requestAnimationFrame(() => updateNavFactor(cta));
+  requestAnimationFrame(() => updateNavFactor(ctaButton));
 
   return () => {
     window.removeEventListener('scroll', handleScroll);
@@ -235,6 +236,7 @@ const addBottomScrollBehavior = (block) => {
     footerObserver?.disconnect();
     document.documentElement.style.setProperty('--inpage-navigation-factor', '0px');
     wrapper?.classList.remove(`${blockName}--hide`);
+    wrapper.classList.remove('v2-inpage-navigation--ready', `${blockName}--hide`);
   };
 };
 
