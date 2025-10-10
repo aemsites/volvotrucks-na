@@ -246,12 +246,6 @@ then we change it for the next section item in main */
   .bottom-sticky-cta .v2-inpage-navigation__marketing {
     width: auto;
   }
-
-  .bottom-sticky-cta .v2-inpage-navigation-wrapper {
-    transform: none;
-    opacity: 1;
-    pointer-events: auto;
-  }
 }
 
 @media (min-width: 744px) {

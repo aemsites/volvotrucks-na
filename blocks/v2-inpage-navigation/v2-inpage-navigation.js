@@ -229,7 +229,7 @@ const addBottomScrollBehavior = (block) => {
 
   requestAnimationFrame(() => {
     updateNavFactor(ctaButton);
-    wrapper.classList.add('v2-inpage-navigation--ready');
+    wrapper.classList.add(`${blockName}--ready`);
   });
 
   return () => {
@@ -238,8 +238,7 @@ const addBottomScrollBehavior = (block) => {
     window.removeEventListener('orientationchange', handleResize);
     footerObserver?.disconnect();
     document.documentElement.style.setProperty('--inpage-navigation-factor', '0px');
-    wrapper?.classList.remove(`${blockName}--hide`);
-    wrapper.classList.remove('v2-inpage-navigation--ready', `${blockName}--hide`);
+    wrapper?.classList.remove(`${blockName}--ready`, `${blockName}--hide`);
   };
 };
 
