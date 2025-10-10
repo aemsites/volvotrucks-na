@@ -172,7 +172,7 @@ const updateNavFactor = (ctaButton = null) => {
   }
   const rect = ctaButton.getBoundingClientRect();
   const docStyle = getComputedStyle(document.documentElement);
-  const navHeight = parseFloat(docStyle.getPropertyValue('--inpage-navigation-bottom-height')) || 0;
+  const navHeight = parseFloat(docStyle.getPropertyValue('--inpage-navigation-height')) || 0;
 
   // Calculate visible height of CTA button within viewport
   const visibleHeight = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
@@ -192,20 +192,20 @@ const updateNavFactor = (ctaButton = null) => {
  */
 const addBottomScrollBehavior = (block) => {
   const wrapper = block.closest('.v2-inpage-navigation-wrapper');
-  const primaryLabel = getMetadata('inpage-primary-button');
-  const secondaryLabel = getMetadata('inpage-secondary-button');
-  const primaryCta = document.querySelector(`.v2-hero a[title="${primaryLabel}"]:not(.${blockName}__marketing)`);
-  const secondaryCta = document.querySelector(`a[title="${secondaryLabel}"]:not(.${blockName}__marketing)`);
-  const cta = secondaryCta || primaryCta;
+  const primaryButton = getMetadata('inpage-primary-button');
+  const primaryCta = document.querySelector(`.v2-hero a[title="${primaryButton}"]:not(.${blockName}__marketing`);
+  const secondaryButton = getMetadata('inpage-secondary-button');
+  const secondaryCta = document.querySelector(`a[title="${secondaryButton}"]:not(.${blockName}__marketing)`);
+  const ctaButton = secondaryCta || primaryCta;
 
-  if (!cta) {
+  if (!ctaButton) {
     return () => {};
   }
 
-  const handleScroll = () => updateNavFactor(cta);
+  const handleScroll = () => updateNavFactor(ctaButton);
   const handleResize = debounce(() => {
     if (isMobileViewport()) {
-      updateNavFactor(cta);
+      updateNavFactor(ctaButton);
     }
   }, 150);
 
@@ -226,7 +226,7 @@ const addBottomScrollBehavior = (block) => {
     footerObserver.observe(footer);
   }
 
-  updateNavFactor(cta);
+  updateNavFactor(ctaButton);
 
   return () => {
     window.removeEventListener('scroll', handleScroll);
