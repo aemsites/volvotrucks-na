@@ -202,11 +202,21 @@ const addBottomScrollBehavior = (block) => {
     return () => {};
   }
 
-  const handleScroll = () => updateNavFactor(ctaButton);
+  const handleScroll = (() => {
+    let last = 0;
+    const delay = 100;
+    return () => {
+      const now = Date.now();
+      if (now - last >= delay) {
+        updateNavFactor(ctaButton);
+        last = now;
+      }
+    };
+  })();
+
   const handleResize = debounce(() => {
     if (isMobileViewport()) {
       updateNavFactor(ctaButton);
-      wrapper.classList.add('v2-inpage-navigation--ready');
     }
   }, 150);
 
@@ -227,10 +237,7 @@ const addBottomScrollBehavior = (block) => {
     footerObserver.observe(footer);
   }
 
-  requestAnimationFrame(() => {
-    updateNavFactor(ctaButton);
-    wrapper.classList.add(`${blockName}--ready`);
-  });
+  requestAnimationFrame(() => updateNavFactor(ctaButton));
 
   return () => {
     window.removeEventListener('scroll', handleScroll);
@@ -238,7 +245,7 @@ const addBottomScrollBehavior = (block) => {
     window.removeEventListener('orientationchange', handleResize);
     footerObserver?.disconnect();
     document.documentElement.style.setProperty('--inpage-navigation-factor', '0px');
-    wrapper?.classList.remove(`${blockName}--ready`, `${blockName}--hide`);
+    wrapper?.classList.remove(`${blockName}--hide`);
   };
 };
 
