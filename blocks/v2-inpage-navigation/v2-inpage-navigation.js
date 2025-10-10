@@ -143,7 +143,7 @@ const updateActive = (id) => {
 const addHeaderScrollBehavior = (header) => {
   let prevPosition = 0;
 
-  window.addEventListener('scroll', () => {
+  const onScroll = () => {
     if (window.scrollY > prevPosition) {
       header.classList.add(`${blockName}--hidden`);
     } else {
@@ -152,7 +152,14 @@ const addHeaderScrollBehavior = (header) => {
 
     // on Safari the window.scrollY can be negative so `> 0` check is needed
     prevPosition = window.scrollY > 0 ? window.scrollY : 0;
-  });
+  };
+
+  window.addEventListener('scroll', onScroll, { passive: true });
+
+  return () => {
+    window.removeEventListener('scroll', onScroll);
+    header.classList.remove(`${blockName}--hidden`);
+  };
 };
 
 /**
@@ -165,51 +172,136 @@ const updateNavFactor = (ctaButton = null) => {
   }
   const rect = ctaButton.getBoundingClientRect();
   const docStyle = getComputedStyle(document.documentElement);
-  const navHeight = parseFloat(docStyle.getPropertyValue('--inpage-navigation-bottom-height')) || 0;
+  const navHeight = parseFloat(docStyle.getPropertyValue('--inpage-navigation-height')) || 0;
 
   // Calculate visible height of CTA button within viewport
-  const visible = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
-  const factor = rect.height > 0 ? Math.max(0, Math.min(navHeight, (visible / rect.height) * navHeight)) : navHeight;
+  const visibleHeight = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
+  const factor = rect.height ? Math.max(0, Math.min(navHeight, (visibleHeight / rect.height) * navHeight)) : navHeight;
 
   document.documentElement.style.setProperty('--inpage-navigation-factor', `${factor}px`);
 };
 
 /**
- * Add scroll behavior to the bottom sticky CTA.
+ * Handles bottom-sticky in-page nav behavior on mobile:
+ * - Updates nav position based on CTA visibility.
+ * - Hides when footer enters the viewport.
+ * - Cleans up all listeners and observers when called.
+ *
+ * @param {HTMLElement} block - The in-page navigation block.
+ * @returns {() => void} Teardown function to remove listeners and reset styles.
  */
 const addBottomScrollBehavior = (block) => {
+  const wrapper = block.closest('.v2-inpage-navigation-wrapper');
   const primaryButton = getMetadata('inpage-primary-button');
   const primaryCta = document.querySelector(`.v2-hero a[title="${primaryButton}"]:not(.${blockName}__marketing`);
   const secondaryButton = getMetadata('inpage-secondary-button');
   const secondaryCta = document.querySelector(`a[title="${secondaryButton}"]:not(.${blockName}__marketing)`);
   const ctaButton = secondaryCta || primaryCta;
 
-  window.addEventListener('scroll', () => updateNavFactor(ctaButton), { passive: true });
-
-  // Add an intersection observer to not hide the footer
-  const footer = document.querySelector('footer');
-  if (footer && ctaButton) {
-    const observer = new IntersectionObserver(
-      (entries) => {
-        entries.forEach((entry) => {
-          block.parentNode.classList.toggle(`${blockName}--hide`, entry.isIntersecting);
-        });
-      },
-      {
-        root: null,
-        threshold: 0.1,
-      },
-    );
-
-    observer.observe(footer);
+  if (!ctaButton) {
+    return () => {};
   }
+
+  const handleScroll = (() => {
+    let last = 0;
+    const delay = 100;
+    return () => {
+      const now = Date.now();
+      if (now - last >= delay) {
+        updateNavFactor(ctaButton);
+        last = now;
+      }
+    };
+  })();
+
+  const handleResize = debounce(() => {
+    if (isMobileViewport()) {
+      updateNavFactor(ctaButton);
+    }
+  }, 150);
+
+  window.addEventListener('scroll', handleScroll, { passive: true });
+  window.addEventListener('resize', handleResize);
+  window.addEventListener('orientationchange', handleResize);
+
+  // Footer visibility observer
+  const footer = document.querySelector('footer');
+  let footerObserver;
+  if (footer) {
+    footerObserver = new IntersectionObserver(
+      ([entry]) => {
+        block.parentNode.classList.toggle(`${blockName}--hide`, entry.isIntersecting);
+      },
+      { threshold: 0.1 },
+    );
+    footerObserver.observe(footer);
+  }
+
+  requestAnimationFrame(() => updateNavFactor(ctaButton));
+
+  return () => {
+    window.removeEventListener('scroll', handleScroll);
+    window.removeEventListener('resize', handleResize);
+    window.removeEventListener('orientationchange', handleResize);
+    footerObserver?.disconnect();
+    document.documentElement.style.setProperty('--inpage-navigation-factor', '0px');
+    wrapper?.classList.remove(`${blockName}--hide`);
+  };
+};
+
+/**
+ * Minimal responsive wiring:
+ * - Mobile: bottom-sticky + update factor once per scroll (handled inside addBottomScrollBehavior).
+ * - Desktop: header hide-on-scroll.
+ * One global listener switches modes; no nested per-mode listeners.
+ *
+ * @param {HTMLElement} block
+ * @returns {() => void} teardown
+ */
+const setupResponsiveBehavior = (block) => {
+  let teardown = null;
+
+  const enterMobile = () => {
+    const stop = addBottomScrollBehavior(block);
+    updateNavFactor(document.querySelector('.v2-hero a.primary') || document.querySelector('.v2-hero a.secondary'));
+    return () => {
+      if (stop) {
+        stop();
+      }
+      document.documentElement.style.setProperty('--inpage-navigation-factor', '0px');
+    };
+  };
+
+  const enterDesktop = () => addHeaderScrollBehavior(block.parentNode);
+
+  const apply = () => {
+    if (teardown) {
+      teardown();
+      teardown = null;
+    }
+    teardown = isMobileViewport() ? enterMobile() : enterDesktop();
+  };
+
+  apply();
+
+  const onChange = debounce(apply, 200);
+  window.addEventListener('resize', onChange);
+  window.addEventListener('orientationchange', onChange);
+
+  return () => {
+    if (teardown) {
+      teardown();
+    }
+    window.removeEventListener('resize', onChange);
+    window.removeEventListener('orientationchange', onChange);
+  };
 };
 
 /**
  * Decorate a single button within the in-page navigation.
  * @param {HTMLElement} block
  */
-const decorateSingleButton = (block) => {
+const renderInpageDropdownNav = (block) => {
   const ctaButton = inPageNavigationButton();
 
   const wrapper = block.querySelector(':scope > div');
@@ -335,47 +427,67 @@ const decorateSingleButton = (block) => {
     }),
   );
 
-  addHeaderScrollBehavior(block.parentNode);
+  setupResponsiveBehavior(block);
 };
 
 /**
- * Decorate the two buttons within the in-page navigation.
- * @param {HTMLElement} block
+ * Build and wire the dual-CTA variant of the in-page nav.
+ * - Renders primary/secondary CTAs if present.
+ * - Mobile: enables bottom-sticky behavior.
+ * - Desktop: enables header hide-on-scroll.
+ * - Re-evaluates on resize/orientation and tears down previous listeners.
+ *
+ * @param {HTMLElement} navBlock - Root element of the in-page navigation block.
  */
-const decorateTwoButtons = (block) => {
-  const isLargerThanMobile = !isMobileViewport();
-  const [primaryButton, secondaryButton] = inPageNavigationButtons();
-  const wrapper = createElement('div', { classes: `${blockName}__wrapper` });
+const renderCtaNav = (block) => {
+  const [primaryCta, secondaryCta] = inPageNavigationButtons();
+  const buttonsWrapper = createElement('div', { classes: `${blockName}__wrapper` });
   block.innerText = '';
 
-  if (primaryButton) {
-    wrapper.appendChild(primaryButton);
+  if (primaryCta) {
+    buttonsWrapper.appendChild(primaryCta);
   }
 
-  if (secondaryButton) {
-    wrapper.appendChild(secondaryButton);
+  if (secondaryCta) {
+    buttonsWrapper.appendChild(secondaryCta);
   }
 
-  if (primaryButton || secondaryButton) {
-    block.appendChild(wrapper);
+  if (primaryCta || secondaryCta) {
+    block.appendChild(buttonsWrapper);
   }
 
-  if (isLargerThanMobile) {
-    addHeaderScrollBehavior(block.parentNode);
-    return;
-  }
+  let teardown = null;
 
-  addBottomScrollBehavior(block);
+  const applyMode = () => {
+    if (teardown) {
+      teardown();
+      teardown = null;
+    }
+
+    if (isMobileViewport()) {
+      block.parentNode.classList.remove(`${blockName}--hidden`);
+      teardown = addBottomScrollBehavior(block);
+    } else {
+      document.documentElement.style.setProperty('--inpage-navigation-factor', '0px');
+      teardown = addHeaderScrollBehavior(block.parentNode);
+    }
+  };
+
+  applyMode();
+
+  const handleViewportChange = debounce(applyMode, 150);
+  window.addEventListener('resize', handleViewportChange);
+  window.addEventListener('orientationchange', handleViewportChange);
 };
 
 export default async function decorate(block) {
   // Check if the block is within a bottom sticky CTA variant set in metadata
-  const isBottomSticky = block.closest('main')?.classList.contains('bottom-sticky-cta');
+  const isBottomStickyVariant = block.closest('main')?.classList.contains('bottom-sticky-cta');
 
-  if (isBottomSticky) {
-    decorateTwoButtons(block);
+  if (isBottomStickyVariant) {
+    renderCtaNav(block);
     return;
   }
 
-  decorateSingleButton(block);
+  renderInpageDropdownNav(block);
 }

@@ -37,6 +37,10 @@
   min-height: calc(100vh - (var(--nav-height) + var(--inpage-navigation-height) - 2px));
 }
 
+.bottom-sticky-cta .v2-inpage-navigation-wrapper + .v2-hero-container .v2-hero {
+  min-height: calc(100vh - (var(--nav-height)));
+}
+
 @supports (height: 1svh) {
   .v2-hero {
     min-height: calc(100svh - var(--nav-height));
@@ -45,6 +49,10 @@
   .v2-inpage-navigation-wrapper + .v2-hero-container .v2-hero,
   .v2-inpage-navigation-wrapper + .v2-hero-container .v2-hero__content-wrapper {
     min-height: calc(100svh - (var(--nav-height) + var(--inpage-navigation-height) - 2px));
+  }
+
+  .bottom-sticky-cta .v2-inpage-navigation-wrapper + .v2-hero-container .v2-hero {
+    min-height: calc(100vh - (var(--nav-height)));
   }
 }
 
