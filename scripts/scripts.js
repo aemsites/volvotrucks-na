@@ -11,6 +11,7 @@ import {
   loadCSS,
   loadScript,
   loadBlock,
+  loadFooter,
   loadHeader,
 } from './aem.js';
 
@@ -19,7 +20,6 @@ import {
   getHref,
   getPlaceholders,
   getTextLabel,
-  loadLazy,
   loadTemplate,
   createElement,
   slugify,
@@ -341,20 +341,23 @@ function buildTruckLineupBlock(main) {
 
   const mainChildren = [...main.querySelectorAll(':scope > div')];
   mainChildren.forEach((section, i) => {
-    const isTruckCarousel = section.dataset.truckCarousel;
+    const sectionMetaTruckCarousel = section.dataset.truckCarousel;
+    const isTruckCarousel = !!sectionMetaTruckCarousel;
     if (!isTruckCarousel) {
       return;
     }
 
+    const carouselMetaFieldName = section.dataset.metaFieldName || 'v2-truck-lineup-meta-active';
+
     // save carousel position
     nextElement = mainChildren[i + 1];
-    const sectionMeta = section.dataset.truckCarousel;
     if (!inpageMeta && section.dataset.inpage) {
       inpageMeta = section.dataset.inpage.toLowerCase();
     }
 
     const tabContent = createElement('div', { classes: 'v2-truck-lineup__content' });
-    tabContent.dataset.truckCarousel = sectionMeta;
+    tabContent.dataset.truckCarousel = sectionMetaTruckCarousel;
+    tabContent.dataset.metaFieldName = carouselMetaFieldName;
     tabContent.innerHTML = section.innerHTML;
     const images = tabContent.querySelectorAll('p > picture');
 
@@ -637,10 +640,6 @@ function buildInpageNavigationBlock(main) {
 
   if (items.length > 0) {
     const section = createElement('div');
-    Object.assign(section.style, {
-      height: '48px',
-      overflow: 'hidden',
-    });
     const inpageBlock = buildBlock(inpageClassName, { elems: items });
 
     section.append(inpageBlock);
@@ -866,6 +865,37 @@ const moveClassToHtmlEl = (className, elementSelector = 'main') => {
     document.querySelector(elementSelector).classList.remove(className);
   }
 };
+
+/**
+ * loads everything that doesn't need to be delayed.
+ */
+async function loadLazy(doc) {
+  const main = doc.querySelector('main');
+  await loadSections(main);
+
+  const { hash } = window.location;
+  const element = hash ? doc.getElementById(hash.substring(1)) : false;
+  if (hash && element) {
+    element.scrollIntoView();
+  }
+  const header = doc.querySelector('header');
+
+  const disableFooter = getMetadata('disable-footer').toLowerCase() === 'true';
+
+  if (!disableFooter) {
+    loadFooter(doc.querySelector('footer'));
+  }
+
+  const subnav = header?.querySelector('.block.sub-nav');
+  if (subnav) {
+    loadBlock(subnav);
+    header.appendChild(subnav);
+  }
+
+  loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+
+  import('../tools/sidekick/aem-genai-variations.js');
+}
 
 /**
  * Loads everything that happens a lot later,
