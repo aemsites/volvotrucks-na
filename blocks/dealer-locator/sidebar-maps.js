@@ -307,7 +307,7 @@ $.fn.loadPins = function () {
   }
 
   $.ajax({
-    url: window.locatorConfig.dataSource + '?' + ((window.locatorConfig.asist) ? 'asist=1%26' : '') + 'state=1',
+    url: `${window.locatorConfig.dataSource}?state=1`,
     type: "GET",
     success: function (data) {
 
@@ -358,7 +358,6 @@ $.fn.loadPins = function () {
                         }
 
                         if ($service.toLowerCase().indexOf('select part store') > -1) {
-                          $dealer.isPartsAssist = true;
                           $dealer.services[service] = 'SELECT Part Store&reg;';
                         }
                       }

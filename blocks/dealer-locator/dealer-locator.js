@@ -3,8 +3,6 @@ import { loadScript } from '../../scripts/aem.js';
 export default async function decorate(block) {
   const datasource = block.textContent.trim();
   window.locatorConfig = {
-    asist: false,
-    showAsistDialog: true,
     consolidateFilters: true,
     selectedBrand: 'volvo',
     dataSource: datasource,
