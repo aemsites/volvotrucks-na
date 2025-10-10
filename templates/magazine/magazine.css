@@ -162,10 +162,6 @@ div#sidebar.section.template.article-sidebar.loading {
   visibility: hidden;
 }
 
-div.section.eloqua-form-container > div.default-content-wrapper {
-  text-align: center;
-}
-
 body.magazine > main .section.related-articles-container > div.default-content-wrapper {
   text-align: center;
   float: unset;
@@ -189,21 +185,6 @@ div.section.related-articles-container {
   font-size: 48px;
   line-height: 48px;
   letter-spacing: 3.6px;
-}
-
-div.section.eloqua-form-container {
-  background-color: #d8d8d8;
-  position: relative;
-  clear: right;
-  width: 100%;
-  padding: 35px 15px;
-  margin: 48px auto;
-}
-
-div.section.eloqua-form-container > div.eloqua-form-wrapper {
-  margin: 10px auto;
-  width: 100%;
-  max-width: 960px;
 }
 
 #fe774 {
@@ -277,10 +258,6 @@ div.section.eloqua-form-container > div.eloqua-form-wrapper {
 
   body.magazine > main .section .related-articles-wrapper {
     clear: right;
-    width: 100%;
-  }
-
-  body > main > div.section.eloqua-form-container > div.default-content-wrapper {
     width: 100%;
   }
 
