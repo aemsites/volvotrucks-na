@@ -16,7 +16,9 @@ jobs:
         echo "@volvo:registry=https://pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/" >> ~/.npmrc
         echo "//pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/:_authToken=$(echo -n ${{ secrets.VOLVO_PAT }} | base64)" >> ~/.npmrc
         echo "always-auth=true" >> ~/.npmrc
-    - run: npm ci --verbose
-    - run: npm run lint
+    - name: Install dependencies
+      run: npm ci --verbose
+    - name: Run Lint
+      run: npm run lint
       env:
         CI: true
