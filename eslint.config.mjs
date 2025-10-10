@@ -7,7 +7,7 @@ export default [
     files: ['**/*.js', '**/*.jsx', '**/*.mjs'],
   },
   {
-    ignores: ['**/*.min.js', '**/dealer-locator/vendor/*'],
+    ignores: ['**/*.min.js', '**/dealer-locator/vendor/*', 'dist/*'],
   },
   {
     languageOptions: { globals: globals.browser },

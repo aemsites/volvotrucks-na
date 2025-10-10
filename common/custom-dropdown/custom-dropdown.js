@@ -1,4 +1,4 @@
-import { getTextLabel, createElement } from '../../../scripts/common.js';
+import { getTextLabel, createElement } from '../../scripts/common.js';
 import { loadCSS } from '../../scripts/aem.js';
 
 const componentName = 'custom-dropdown';
