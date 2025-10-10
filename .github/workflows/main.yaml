@@ -16,5 +16,5 @@ jobs:
         echo "//pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/:username=AzureDevOps" >> ~/.npmrc
         echo "//pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/:_password=$(echo -n ${{ secrets.VOLVO_PAT }} | base64)" >> ~/.npmrc
         echo "always-auth=true" >> ~/.npmrc
-    - run: npm ci
+    - run: npm ci --verbose
     - run: npm run lint
