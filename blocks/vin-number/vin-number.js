@@ -81,6 +81,11 @@ const recallStatus = {
   12: 'recall-incomplete-no-remedy',
 };
 
+const formatFrenchDate = (date) => {
+  const formattedDate = new Date(date).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' });
+  return formattedDate;
+};
+
 function renderRecalls(recallsData) {
   const resultTextEle = document.querySelector(`.${blockName}__results-text`);
   let resultContent = getTextLabel('result text')
@@ -88,9 +93,7 @@ function renderRecalls(recallsData) {
     .replace(/\${vin}/, recallsData.vin);
   let noFrenchInfo = false;
 
-  const recallsOldestDate = isFrench
-    ? new Date(recallsData.recalls_since).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' })
-    : recallsData.recalls_since;
+  const recallsOldestDate = isFrench ? formatFrenchDate(recallsData.recalls_since) : recallsData.recalls_since;
   const blockEl = document.querySelector(`.${blockName}__recalls-wrapper`);
 
   const recallsMake = createElement('div', { classes: `${blockName}__recalls-make-wrapper` });
@@ -139,8 +142,8 @@ function renderRecalls(recallsData) {
           let itemValue = recall[item.key] || '';
           if (recallClass) {
             itemValue = getTextLabel(recall[item.key]);
-          } else if (item.key === 'recall_date' && isFrench) {
-            itemValue = new Date(recall[item.key]).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' });
+          } else if (item.key === 'recall_date' || item.key === 'tc_recall_date') {
+            itemValue = isFrench ? formatFrenchDate(recall[item.key]) : recall[item.key];
           } else if (isFrench && item.frenchKey) {
             if (recall[item.frenchKey]) {
               itemValue = recall[item.frenchKey];
@@ -155,7 +158,7 @@ function renderRecalls(recallsData) {
             const recallText = getTextLabel(`recall_effective_text${isFrench ? '_french' : ''}`).split('//');
             const recallDate = new Date(itemValue).setHours(0, 0, 0, 0);
             const today = new Date().setHours(0, 0, 0, 0);
-            itemValue = recallDate > today ? ` ${recallText[1]} ${itemValue} .` : recallText[0];
+            itemValue = recallDate > today ? ` ${recallText[1]} ${isFrench ? formatFrenchDate(itemValue) : itemValue} .` : recallText[0];
           }
 
           const itemFragment = docRange.createContextualFragment(`<li class="${blockName}__detail-item ${item.class ? item.class : ''}" >
@@ -280,7 +283,7 @@ export default async function decorate(block) {
   fetchRefreshDate().then((response) => {
     let refreshDate = response || 'XX-XX-XXXX';
     if (response && isFrench) {
-      refreshDate = new Date(response).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' });
+      refreshDate = formatFrenchDate(response);
     }
 
     const refresDateWrapper = createElement('div', {
