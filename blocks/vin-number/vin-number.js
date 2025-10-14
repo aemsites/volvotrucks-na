@@ -1,7 +1,7 @@
 import { getTextLabel, createElement, getJsonFromUrl, getPlaceholders } from '../../scripts/common.js';
 
 const docRange = document.createRange();
-const isFrench = window.location.href.indexOf('fr') > -1;
+const isFrench = window.location.href.indexOf('/fr') > -1;
 const blockName = 'vin-number';
 
 const apiConfig = {
@@ -285,9 +285,6 @@ export default async function decorate(block) {
     if (response && isFrench) {
       refreshDate = formatFrenchDate(response);
     }
-
-    console.log(isFrench);
-    console.log(refreshDate);
 
     const refresDateWrapper = createElement('div', {
       classes: `${blockName}__refresh-date-wrapper`,
