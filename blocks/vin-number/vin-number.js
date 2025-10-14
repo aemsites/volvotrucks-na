@@ -155,7 +155,7 @@ function renderRecalls(recallsData) {
           }
 
           if (itemValue && item.key === 'recall_effective_date') {
-            const recallText = getTextLabel(`recall_effective_text${isFrench ? '_french' : ''}`).split('//');
+            const recallText = getTextLabel(isFrench ? 'vin_number:recall_effective_text_french' : 'recall_effective_text').split('//');
             const recallDate = new Date(itemValue).setHours(0, 0, 0, 0);
             const today = new Date().setHours(0, 0, 0, 0);
             itemValue = recallDate > today ? ` ${recallText[1]} ${isFrench ? formatFrenchDate(itemValue) : itemValue} .` : recallText[0];
