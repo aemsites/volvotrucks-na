@@ -64,7 +64,7 @@ const valueDisplayList = [
     key: 'recall_effective_date',
     class: `${blockName}__detail-item--column`,
     text: 'recall_effective_text',
-    frenchText: 'recall_effective_text_french',
+    frenchText: 'vin_number:recall_effective_text_french',
     displayIfEmpty: true,
   },
   {
