@@ -286,6 +286,9 @@ export default async function decorate(block) {
       refreshDate = formatFrenchDate(response);
     }
 
+    console.log(isFrench);
+    console.log(refreshDate);
+
     const refresDateWrapper = createElement('div', {
       classes: `${blockName}__refresh-date-wrapper`,
     });
