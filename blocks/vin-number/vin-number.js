@@ -283,7 +283,7 @@ export default async function decorate(block) {
   fetchRefreshDate().then((response) => {
     let refreshDate = response || 'XX-XX-XXXX';
     if (response && isFrench) {
-      refreshDate = new Date(response).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' });
+      refreshDate = formatFrenchDate(response);
     }
 
     const refresDateWrapper = createElement('div', {
