@@ -233,7 +233,7 @@ async function fetchRefreshDate() {
       console.error('Error fetching refresh date:', error);
     }
   }
-  return isFrench ? formatFrenchDate(refreshDate) : refreshDate;
+  return refreshDate;
 }
 
 function fetchRecalls(e) {
@@ -293,7 +293,7 @@ export default async function decorate(block) {
       ${getTextLabel('published_info')}:
     </span>
     <span class="${blockName}__refresh-date">
-      ${refreshDate}
+      ${isFrench ? formatFrenchDate(refreshDate) : refreshDate}
     </span>`);
 
     const form = createElement('form', {
