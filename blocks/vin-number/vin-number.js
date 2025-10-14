@@ -222,13 +222,13 @@ function setStorageItem(key, value) {
 }
 
 async function fetchRefreshDate() {
-  let refreshDate = getStorageItem('refreshDate');
+  const refreshDate = getStorageItem('refreshDate');
   if (!refreshDate) {
     const { url, key } = getAPIConfig();
     try {
       const response = await getJsonFromUrl(`${url}refreshdate?api_key=${key}`);
       setStorageItem('refreshDate', response.refresh_date);
-      refreshDate = response.refresh_date;
+      return response.refresh_date;
     } catch (error) {
       console.error('Error fetching refresh date:', error);
     }
@@ -293,7 +293,7 @@ export default async function decorate(block) {
       ${getTextLabel('published_info')}:
     </span>
     <span class="${blockName}__refresh-date">
-      ${isFrench ? formatFrenchDate(refreshDate) : refreshDate}
+      ${refreshDate}
     </span>`);
 
     const form = createElement('form', {
