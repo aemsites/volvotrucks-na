@@ -233,7 +233,7 @@ async function fetchRefreshDate() {
       console.error('Error fetching refresh date:', error);
     }
   }
-  return refreshDate;
+  return isFrench ? formatFrenchDate(refreshDate) : refreshDate;
 }
 
 function fetchRecalls(e) {
