@@ -78,11 +78,11 @@ export default function decorate(block) {
     cookieMsgContainer.style.background = `linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.80) 100%), url(${img.src}) center / cover no-repeat`;
 
     const cookieMessage = document.createRange().createContextualFragment(`
-      <h3 class="cookie-message__title">${getTextLabel('single video message title')}</h3>
-      ${getTextLabel('single video message text')}
+      <h3 class="cookie-message__title">${getTextLabel('v2_livestream_embed:single_video_message_title')}</h3>
+      ${getTextLabel('v2_livestream_embed:single_video_message_text')}
       <div class="cookie-message__button-container">
-        <button class="primary dark">${getTextLabel('single video message button')}</button>
-        <button class="button secondary dark">${getTextLabel('single video message button deny')}</button>
+        <button class="primary dark">${getTextLabel('v2_livestream_embed:single_video_message_button')}</button>
+        <button class="button secondary dark">${getTextLabel('v2_livestream_embed:single_video_message_button_deny')}</button>
       </div>
     `);
 

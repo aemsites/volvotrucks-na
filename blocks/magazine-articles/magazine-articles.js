@@ -147,7 +147,7 @@ async function filterArticles(articles, activeFilters) {
 }
 
 async function createFilter(articles, activeFilters, createDropdown, createInputSearch) {
-  const searchText = getTextLabel('Search');
+  const searchText = getTextLabel('magazine_articles:search');
   const term = activeFilters.search || '';
   const { category, topic, truck } = filterLists;
   const search = await createInputSearch(searchText.toLowerCase(), term, searchText);

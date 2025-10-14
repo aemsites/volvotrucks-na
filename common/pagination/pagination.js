@@ -61,7 +61,7 @@ const createButton = (text, classes, onClick, isDisabled = false, icon = null, a
 const createPageButton = (pageIndex, currentPage, onClick) => {
   const isActive = pageIndex === currentPage;
   const classes = isActive ? ['pagination-button', 'active'] : ['pagination-button'];
-  const paginationPageAriaLabel = getTextLabel('paginationPageAriaLabel');
+  const paginationPageAriaLabel = getTextLabel('pagination:page_aria_label');
   const ariaLabel = `${paginationPageAriaLabel} ${pageIndex + 1}`;
   const button = createButton(pageIndex + 1, classes, () => onClick(pageIndex), false, null, ariaLabel);
 
@@ -83,7 +83,7 @@ const createPageButton = (pageIndex, currentPage, onClick) => {
  */
 const createArrowButton = (direction, isDisabled, onClick) => {
   const icon = direction === 'prev' ? createIcon('icon-chevron-left') : createIcon('icon-chevron-right');
-  const ariaLabel = direction === 'prev' ? getTextLabel('paginationPreviousPageAriaLabel') : getTextLabel('paginationNextPageAriaLabel');
+  const ariaLabel = direction === 'prev' ? getTextLabel('pagination:previous_page_aria_label') : getTextLabel('pagination:next_page_aria_label');
 
   return createButton(null, ['pagination-arrow', direction], onClick, isDisabled, icon, ariaLabel);
 };
@@ -186,7 +186,7 @@ const renderPaginationControls = (paginationList, currentPage, totalPages, chang
  */
 const ensurePaginationNav = (block) => {
   let paginationNav = block.querySelector('nav.pagination-nav');
-  const paginationNavAriaLabel = getTextLabel('paginationNavAriaLabel');
+  const paginationNavAriaLabel = getTextLabel('pagination:nav_aria_label');
 
   if (!paginationNav) {
     paginationNav = createElement('nav', { classes: ['pagination-nav'], props: { 'aria-label': paginationNavAriaLabel } });

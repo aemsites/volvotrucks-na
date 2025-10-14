@@ -6,14 +6,14 @@ import { searchQuery, fetchSearchData, sanitizeQueryTerm, TENANT } from '../../s
 import { fetchAutosuggest, handleArrowDown, handleArrowUp } from './autosuggest.js';
 
 const PLACEHOLDERS = {
-  searchFor: getTextLabel('Search For'),
-  noResults: getTextLabel('no results'),
-  refine: getTextLabel('refine'),
-  showingResults: getTextLabel('Showing results for'), // searchResultSummarySection
-  sortBy: getTextLabel('Sort By'), // searchOptionsSection
-  sortFilter: getTextLabel('Sort Filter'),
-  previous: getTextLabel('Previous'),
-  next: getTextLabel('Next'),
+  searchFor: getTextLabel('search:search_for'),
+  noResults: getTextLabel('search:no_results'),
+  refine: getTextLabel('search:refine'),
+  showingResults: getTextLabel('search:showing_results_for'), // searchResultSummarySection
+  sortBy: getTextLabel('search:sort_by'), // searchOptionsSection
+  sortFilter: getTextLabel('search:sort_filter'),
+  previous: getTextLabel('search:previous'),
+  next: getTextLabel('search:next'),
 };
 
 const SEARCH_PARAMS = {

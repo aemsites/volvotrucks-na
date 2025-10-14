@@ -73,7 +73,7 @@ const buildMetaPubDate = () => {
 const buildMetaReadTime = () => {
   const readTime = getMetadata('readingtime');
   const readTimeSpan = createElement('span', { classes: `${articleHero}__readtime` });
-  readTimeSpan.innerText = `${readTime.split(' ').join('')} ${getTextLabel('readTime')}`;
+  readTimeSpan.innerText = `${readTime.split(' ').join('')} ${getTextLabel('v2_magazine:read_time')}`;
   return readTimeSpan;
 };
 

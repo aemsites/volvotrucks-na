@@ -74,7 +74,7 @@ const createButton = (type) => {
 };
 
 const getInputType = (e) => {
-  const errorMessage = getTextLabel('Please enter valid value');
+  const errorMessage = getTextLabel('calculator:error_message');
   // identify and return if the input is a number input or a select
   const inputLabel = e.label.slice(2).replaceAll('_', ' ');
   if (e.type === 'select') {
