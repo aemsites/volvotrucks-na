@@ -222,13 +222,13 @@ function setStorageItem(key, value) {
 }
 
 async function fetchRefreshDate() {
-  const refreshDate = getStorageItem('refreshDate');
+  let refreshDate = getStorageItem('refreshDate');
   if (!refreshDate) {
     const { url, key } = getAPIConfig();
     try {
       const response = await getJsonFromUrl(`${url}refreshdate?api_key=${key}`);
       setStorageItem('refreshDate', response.refresh_date);
-      return response.refresh_date;
+      refreshDate = response.refresh_date;
     } catch (error) {
       console.error('Error fetching refresh date:', error);
     }
