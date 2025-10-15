@@ -921,7 +921,7 @@ async function loadPage() {
     await loadVideoJs();
   }
 }
-console.log('Loading page');
+
 loadPage();
 
 /* REDESIGN CLASS CHECK */

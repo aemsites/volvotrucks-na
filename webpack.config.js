@@ -86,7 +86,8 @@ module.exports = {
           test: /[\\/]node_modules[\\/]@volvo[\\/]vcdk[\\/]/, // Group @volvo/vcdk code into one file
           name: 'vcdk', // Create a shared vcdk.js file
           chunks: 'all',
-          maxSize: 100,
+          minSize: 100, // Allow splitting for files of all sizes
+          enforce: true, // Ensure this group is always created
           priority: 10, // Higher priority to ensure this group gets picked first
         },
         default: {
