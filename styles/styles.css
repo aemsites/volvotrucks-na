@@ -1947,9 +1947,3 @@ main.blue-contract .section.section-with-title p {
   white-space: nowrap;
   border: 0;
 }
-
-.icon-plus {
-  background: var(--c-white);
-  border-radius: 4px;
-  padding: 12px;
-}
