@@ -57,6 +57,14 @@
   font-size: var(--fields-font-size);
 }
 
+/* iOS Safari–only fix */
+@supports (-webkit-touch-callout: none) and (not (translate: none)) {
+  .v2-custom-form-container input[type="date"] {
+    display: flex;
+    align-items: center;
+  }
+}
+
 .v2-custom-form-container input,
 .v2-custom-form-container select {
   line-height: 10px;
