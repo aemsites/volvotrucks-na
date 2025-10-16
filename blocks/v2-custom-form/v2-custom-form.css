@@ -62,7 +62,6 @@
   .v2-custom-form-container input[type="date"] {
     display: flex;
     align-items: center;
-    min-width: calc(100% - var(--section-div-padding)) !important;
   }
 }
 
