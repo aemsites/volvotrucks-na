@@ -45,20 +45,8 @@
   margin: 0 auto;
 }
 
-.v2-custom-form-container textarea,
-.v2-custom-form-container input,
-.v2-custom-form-container select {
-  background-color: var(--background-color);
-  border: var(--field-border);
-  width: 100%;
-  max-width: 100%;
-  padding: 10px;
-  height: 40px;
-  font-size: var(--fields-font-size);
-}
-
 /* iOS Safari–only fix */
-@supports (-webkit-touch-callout: none) {
+@supports (-webkit-touch-callout: none) and (-webkit-overflow-scrolling: touch) {
   .v2-custom-form-container input[type="date"] {
     display: flex;
     align-items: center;
@@ -73,6 +61,18 @@
 
 .v2-custom-form-container textarea {
   height: 110px;
+}
+
+.v2-custom-form-container .v2-custom-form textarea,
+.v2-custom-form-container .v2-custom-form input,
+.v2-custom-form-container .v2-custom-form select {
+  background-color: var(--background-color);
+  border: var(--field-border);
+  width: 100%;
+  max-width: 100%;
+  padding: 8px;
+  height: 40px;
+  font-size: var(--fields-font-size);
 }
 
 .v2-custom-form-container :is(input, select, textarea, .custom-dropdown__button, .form-radio-buttons) {
