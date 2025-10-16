@@ -31,9 +31,10 @@ const parsePressRelease = (item) => {
 const renderSearchBar = async () => {
   const searchBar = createElement('div', { classes: `${blockName}__search-bar` });
   if (placeholderText === placeholderKey) {
-    console.warn(`Missing placeholder text for key: %c${placeholderKey}`, 'color: orange');
+    console.warn(`Missing placeholder text for key: %c${placeholderKey}. getting placeholders...`, 'color: orange');
     await getPlaceholders();
     placeholderText = getTextLabel(placeholderKey);
+    console.log(`Retrieved placeholder text: %c${placeholderText}`, 'color: gold');
   }
   searchBar.innerHTML = `
     <input type="text" name="search" autocomplete="off" placeholder="${placeholderText}"/>
