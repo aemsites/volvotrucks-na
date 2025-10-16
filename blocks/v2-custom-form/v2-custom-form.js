@@ -926,6 +926,8 @@ async function createForm(formURL) {
 
     if (fd.Type === 'title') {
       el = renderTitle(fd);
+    } else if (fd.Type === 'paragraph') {
+      el = createPlainText(fd);
     } else if (fd.Type === 'meta') {
       el = createHiddenMeta(fd);
     } else {
