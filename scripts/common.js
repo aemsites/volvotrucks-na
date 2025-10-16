@@ -29,7 +29,18 @@ export const getLanguagePath = () => {
 
 export async function getPlaceholders() {
   const url = `${getLanguagePath()}placeholder.json`;
-  placeholders = await fetch(url).then((resp) => resp.json());
+  try {
+    const response = await fetch(url);
+    if (response.ok) {
+      placeholders = await response.json();
+    } else {
+      console.error(`Error fetching placeholder.json from ${url}: ${response.status} ${response.statusText}`);
+      placeholders = { data: [] };
+    }
+  } catch (error) {
+    console.error(`Error fetching placeholder.json from ${url}:`, error);
+    placeholders = { data: [] };
+  }
 }
 
 export function getTextLabel(key) {
