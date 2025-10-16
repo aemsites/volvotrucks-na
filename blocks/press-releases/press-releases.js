@@ -31,7 +31,7 @@ const parsePressRelease = (item) => {
 const renderSearchBar = async () => {
   const searchBar = createElement('div', { classes: `${blockName}__search-bar` });
   if (placeholderText === placeholderKey) {
-    console.warn(`Missing placeholder text for key: %c${placeholderKey}. getting placeholders...`, 'color: orange');
+    console.warn(`Missing placeholder text for key: %c${placeholderKey}.%c getting placeholders...`, 'color: orange', 'color: initial');
     await getPlaceholders();
     placeholderText = getTextLabel(placeholderKey);
     console.log(`Retrieved placeholder text: %c${placeholderText}`, 'color: gold');
@@ -199,7 +199,6 @@ const addEventListeners = (block) => {
 };
 
 export default async function decorate(block) {
-  console.log('%cTesting Press Releases', 'color: orange', { placeholderText });
   block.append(await renderSearchBar());
   await initPressReleasesPagination(block);
   addEventListeners(block);

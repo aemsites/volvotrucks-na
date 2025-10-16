@@ -33,7 +33,6 @@ export async function getPlaceholders() {
 }
 
 export function getTextLabel(key) {
-  console.log(`Getting text label for key: %c${key}`, 'color: cyan', { placeholders });
   return placeholders?.data.find((el) => el.Key === key)?.Text || key;
 }
 
