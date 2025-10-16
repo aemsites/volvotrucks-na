@@ -26,10 +26,11 @@ const parsePressRelease = (item) => {
   };
 };
 
-const renderSearchBar = () => {
+const renderSearchBar = async () => {
+  const placeholderText = await getTextLabel('PressReleases:SearchPlaceholder');
   const searchBar = createElement('div', { classes: `${blockName}__search-bar` });
   searchBar.innerHTML = `
-    <input type="text" name="search" autocomplete="off" placeholder="${getTextLabel('PressReleases:SearchPlaceholder')}"/>
+    <input type="text" name="search" autocomplete="off" placeholder="${placeholderText}"/>
     <button type="submit"><i class="fa fa-search"></i></button>`;
   return searchBar;
 };
@@ -191,7 +192,7 @@ const addEventListeners = (block) => {
 };
 
 export default async function decorate(block) {
-  block.append(renderSearchBar());
+  block.append(await renderSearchBar());
   await initPressReleasesPagination(block);
   addEventListeners(block);
 }
