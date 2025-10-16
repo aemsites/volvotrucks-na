@@ -7,7 +7,8 @@ const blockName = 'press-releases';
 const PAGE_SIZE = 10;
 let paginationCssOnce;
 const pageDataCache = new Map();
-const placeholderText = getTextLabel('PressReleases:SearchPlaceholder');
+const placeholderKey = 'PressReleases:SearchPlaceholder';
+let placeholderText = getTextLabel(placeholderKey);
 
 const parsePressRelease = (item) => {
   const isImageLink = (link) => `${link}`.split('?')[0].match(/\.(jpeg|jpg|gif|png|svg|bmp|webp)$/) !== null;
@@ -29,6 +30,10 @@ const parsePressRelease = (item) => {
 
 const renderSearchBar = async () => {
   const searchBar = createElement('div', { classes: `${blockName}__search-bar` });
+  if (placeholderText === placeholderKey) {
+    console.warn(`Missing placeholder text for key: %c${placeholderKey}`, 'color: orange');
+    placeholderText = getTextLabel(placeholderKey);
+  }
   searchBar.innerHTML = `
     <input type="text" name="search" autocomplete="off" placeholder="${placeholderText}"/>
     <button type="submit"><i class="fa fa-search"></i></button>`;
