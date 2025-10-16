@@ -62,6 +62,7 @@
   .v2-custom-form-container input[type="date"] {
     display: flex;
     align-items: center;
+    appearance: none;
   }
 }
 
