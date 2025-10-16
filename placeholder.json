@@ -76,14 +76,6 @@
       "Text": "Please enter valid value"
     },
     {
-      "Key": "no eloqua message",
-      "Text": "We cannot show the content because you have not given us permission to store cookie files"
-    },
-    {
-      "Key": "no eloqua link message",
-      "Text": "Change cookie settings"
-    },
-    {
       "Key": "vinlabel",
       "Text": "Enter your 17-digit VIN (Vehicle Identification Number)"
     },
