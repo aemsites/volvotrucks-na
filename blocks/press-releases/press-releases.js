@@ -7,6 +7,7 @@ const blockName = 'press-releases';
 const PAGE_SIZE = 10;
 let paginationCssOnce;
 const pageDataCache = new Map();
+const placeholderText = getTextLabel('PressReleases:SearchPlaceholder');
 
 const parsePressRelease = (item) => {
   const isImageLink = (link) => `${link}`.split('?')[0].match(/\.(jpeg|jpg|gif|png|svg|bmp|webp)$/) !== null;
@@ -27,7 +28,6 @@ const parsePressRelease = (item) => {
 };
 
 const renderSearchBar = async () => {
-  const placeholderText = await getTextLabel('PressReleases:SearchPlaceholder');
   const searchBar = createElement('div', { classes: `${blockName}__search-bar` });
   searchBar.innerHTML = `
     <input type="text" name="search" autocomplete="off" placeholder="${placeholderText}"/>
