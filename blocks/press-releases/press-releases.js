@@ -192,6 +192,7 @@ const addEventListeners = (block) => {
 };
 
 export default async function decorate(block) {
+  console.log('%cTesting Press Releases', 'color: orange', { placeholderText });
   block.append(await renderSearchBar());
   await initPressReleasesPagination(block);
   addEventListeners(block);
