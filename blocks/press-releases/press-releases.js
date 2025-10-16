@@ -1,4 +1,4 @@
-import { createElement, getOrigin, getDateFromTimestamp, getTextLabel } from '../../scripts/common.js';
+import { createElement, getOrigin, getDateFromTimestamp, getTextLabel, getPlaceholders } from '../../scripts/common.js';
 import { createOptimizedPicture, loadCSS } from '../../scripts/aem.js';
 import createPagination from '../../common/pagination/pagination.js';
 import { fetchPressReleases } from '../../scripts/services/press-release.service.js';
@@ -32,6 +32,7 @@ const renderSearchBar = async () => {
   const searchBar = createElement('div', { classes: `${blockName}__search-bar` });
   if (placeholderText === placeholderKey) {
     console.warn(`Missing placeholder text for key: %c${placeholderKey}`, 'color: orange');
+    await getPlaceholders();
     placeholderText = getTextLabel(placeholderKey);
   }
   searchBar.innerHTML = `
