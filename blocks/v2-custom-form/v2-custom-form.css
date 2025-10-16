@@ -46,7 +46,7 @@
 }
 
 /* iOS Safari–only fix */
-@supports (-webkit-touch-callout: none) and (-webkit-overflow-scrolling: touch) {
+@supports (-webkit-touch-callout: none) {
   .v2-custom-form-container input[type="date"] {
     display: flex;
     align-items: center;
