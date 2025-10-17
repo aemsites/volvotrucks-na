@@ -1,3 +1,4 @@
+
 {
   "searchConfig": {
     "total": 3,
@@ -16,6 +17,10 @@
         "name": "SEARCH_URL_DEV",
         "value": "https://search-api-qa-eds.aws.43636.vnonprod.com/search"
       }
+    ],
+    "columns": [
+      "name",
+      "value"
     ]
   },
   "headerConfig": {
@@ -31,12 +36,43 @@
         "name": "LOGIN_DISABLED",
         "value": "false"
       }
+    ],
+    "columns": [
+      "name",
+      "value"
+    ]
+  },
+  "magazineConfig": {
+    "total": 4,
+    "offset": 0,
+    "limit": 4,
+    "data": [
+      {
+        "name": "DATE_LANGUAGE",
+        "value": "en-US"
+      },
+      {
+        "name": "DATE_OPTIONS",
+        "value": "[\"month: short\",\"day: numeric\",\"year: numeric\"]"
+      },
+      {
+        "name": "DATE_OPTIONS_MOBILE",
+        "value": "[\"month: 2-digit\",\"day: 2-digit\",\"year: numeric\"]"
+      },
+      {
+        "name": "MAGAZINE_PATH",
+        "value": "news-and-stories/volvo-trucks-stories/"
+      }
+    ],
+    "columns": [
+      "name",
+      "value"
     ]
   },
   "cookieValues": {
-    "total": 10,
+    "total": 11,
     "offset": 0,
-    "limit": 10,
+    "limit": 11,
     "data": [
       {
         "name": "PERFORMANCE_COOKIE",
@@ -82,16 +118,43 @@
         "name": "MNTN_PIXEL_ID",
         "value": "39860"
       }
+    ],
+    "columns": [
+      "name",
+      "value"
     ]
   },
-  "tools": {
+  "holidays": {
     "total": 4,
     "offset": 0,
     "limit": 4,
     "data": [
       {
+        "name": "Juneteenth National Independence Day",
+        "value": "45827"
+      },
+      {
+        "name": "New Year’s Day",
+        "value": "45658"
+      },
+      {
+        "name": "Veterans Day",
+        "value": "45972"
+      }
+    ],
+    "columns": [
+      "name",
+      "value"
+    ]
+  },
+  "tools": {
+    "total": 8,
+    "offset": 0,
+    "limit": 8,
+    "data": [
+      {
         "name": "GIT_OWNER",
-        "value": "aemsites"
+        "value": "volvogroup"
       },
       {
         "name": "GIT_REPO",
@@ -107,11 +170,11 @@
       },
       {
         "name": "v1SectionClasses",
-        "value": "[\"section-with-background\",\"section-with-title\",\"highlight\",\"tabbed-container-full-width\",\"tabbed-container\"]"
+        "value": "[\"background\",\"background-top\",\"bg-paper\",\"bg-white-paper\",\"dark-background\",\"center\",\"flex-center\",\"font-l\",\"font-m\",\"font-s\",\"font-xl\",\"font-xxl\",\"font-xs\",\"font-xxs\",\"helvetica-55\",\"helvetica-65\",\"helvetica-75\",\"helvetica-56\",\"helvetica-66\",\"helvetica-76\",\"gap\",\"highlight\",\"line-separator\",\"magazine-listing-content\",\"no-first-line\",\"padding-0\",\"padding-16\",\"padding-32\",\"section-width\",\"text-white\",\"text-black\",\"responsive-title\",\"title-line\",\"title-margin-bottom-0\",\"title-white\",\"wrapper-margin-top-0\"]"
       },
       {
         "name": "v2SectionClasses",
-        "value": "[\"section--gray-background\",\"section--black-background\",\"full-width\",\"expanded-width\",\"v2-iframe-container\"]"
+        "value": "[\"header-with-mark\",\"recalls-padding\",\"section--background-with-dots\",\"section--black-background\",\"section--gray-background\",\"section--light-gray-background\",\"section--no-gap\",\"section--no-vertical-padding\",\"section--with-background\"]"
       },
       {
         "name": "v1AllowedBlocks",
@@ -121,6 +184,10 @@
         "name": "v2AllowedBlocks",
         "value": "[\"embed\",\"footer\",\"fragment\",\"header\",\"iframe\",\"library-metadata\",\"section-metadata\",\"engine-specifications\",\"sub-nav\"]"
       }
+    ],
+    "columns": [
+      "name",
+      "value"
     ]
   },
   "newsFeedConfig": {
@@ -144,25 +211,10 @@
         "name": "LIMIT",
         "value": "1000"
       }
-    ]
-  },
-  "magazineConfig": {
-    "total": 3,
-    "offset": 0,
-    "limit": 3,
-    "data": [
-      {
-        "name": "DATE_OPTIONS",
-        "value": "[\"month: short\",\"day: numeric\",\"year: numeric\"]"
-      },
-      {
-        "name": "DATE_OPTIONS_MOBILE",
-        "value": "[\"month: 2-digit\",\"day: 2-digit\",\"year: numeric\"]"
-      },
-      {
-        "name": "MAGAZINE_PATH",
-        "value": "news-and-stories/volvo-trucks-stories/"
-      }
+    ],
+    "columns": [
+      "name",
+      "value"
     ]
   },
   "truckConfiguratorUrls": {
@@ -178,16 +230,22 @@
         "name": "CSS",
         "value": "[\"https://truckbuilder-vtna-9023.onecx.prod.rapidimages.net/configurator.css\"]"
       }
+    ],
+    "columns": [
+      "name",
+      "value"
     ]
   },
   ":version": 3,
   ":names": [
-    "searchUrls",
-    "cookieValues",
-    "headerConfig",
-    "tools",
     "newsFeedConfig",
-    "magazineConfig"
+    "searchConfig",
+    "truckConfiguratorUrls",
+    "headerConfig",
+    "magazineConfig",
+    "cookieValues",
+    "holidays",
+    "tools"
   ],
   ":type": "multi-sheet"
 }

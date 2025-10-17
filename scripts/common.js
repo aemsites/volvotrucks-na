@@ -1,19 +1,6 @@
-import { sampleRUM, loadCSS, loadBlock, loadSections, loadHeader, buildBlock, decorateBlock, getMetadata } from './aem.js';
-import { createVideo, isVideoLink } from './video-helper.js';
+import { loadCSS, getMetadata } from './aem.js';
 
 let placeholders = null;
-
-/**
- * loads a block named 'footer' into footer
- */
-function loadFooter(footer) {
-  if (footer) {
-    const footerBlock = buildBlock('footer', '');
-    footer.append(footerBlock);
-    decorateBlock(footerBlock);
-    loadBlock(footerBlock);
-  }
-}
 
 /**
  * Returns the true origin of the current page in the browser.
@@ -30,6 +17,7 @@ export function getHref() {
   }
 
   const urlParams = new URLSearchParams(window.parent.location.search);
+
   return `${window.parent.location.origin}${urlParams.get('path')}`;
 }
 
@@ -96,26 +84,23 @@ export function createNewSection(blockName, sectionName, node) {
 }
 
 /**
- * Provides the functionality to add a video
- * to the provided section if the link corresponds to a video.
- * @param {string} blockName - Name of the block.
- * @param {HTMLElement} section - Represents the section to which the video should be added.
- * @param {HTMLAnchorElement} link - Anchor link
- * @returns {HTMLElement} - Section with added video
+ * Waits for a descendant matching selector to exist within parent AND be in the DOM,
+ * then calls callback(element).
  */
-export function addVideoToSection(blockName, section, link) {
-  const isVideo = link ? isVideoLink(link) : false;
-  if (isVideo) {
-    const video = createVideo(link.getAttribute('href'), `${blockName}__video`, {
-      muted: true,
-      autoplay: true,
-      loop: true,
-      playsinline: true,
-    });
-    link.remove();
-    section.append(video);
+export function waitForElementInDOM(parent, selector, callback) {
+  const el = parent.querySelector(selector);
+  if (el && document.body.contains(el)) {
+    callback(el);
+    return;
   }
-  return section;
+  const observer = new MutationObserver(() => {
+    const el = parent.querySelector(selector);
+    if (el && document.body.contains(el)) {
+      observer.disconnect();
+      callback(el);
+    }
+  });
+  observer.observe(parent, { childList: true, subtree: true });
 }
 
 const ICONS_CACHE = {};
@@ -212,40 +197,6 @@ export async function loadTemplate(doc, templateName) {
   } catch (error) {
     console.log(`failed to load block ${templateName}`, error);
   }
-}
-
-/**
- * loads everything that doesn't need to be delayed.
- */
-export async function loadLazy(doc) {
-  const main = doc.querySelector('main');
-  await loadSections(main);
-
-  const { hash } = window.location;
-  const element = hash ? doc.getElementById(hash.substring(1)) : false;
-  if (hash && element) {
-    element.scrollIntoView();
-  }
-  const header = doc.querySelector('header');
-
-  const disableHeader = getMetadata('disable-header').toLowerCase() === 'true';
-  const disableFooter = getMetadata('disable-footer').toLowerCase() === 'true';
-
-  if (!disableHeader) {
-    loadHeader(header);
-  }
-
-  if (!disableFooter) {
-    loadFooter(doc.querySelector('footer'));
-  }
-
-  const subnav = header?.querySelector('.block.sub-nav');
-  if (subnav) {
-    loadBlock(subnav);
-    header.appendChild(subnav);
-  }
-
-  loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
 }
 
 export const removeEmptyTags = (block, isRecursive) => {
@@ -425,7 +376,8 @@ const formatValues = (values) => {
   return obj;
 };
 
-const { searchConfig, cookieValues, magazineConfig, tools, headerConfig, newsFeedConfig, truckConfiguratorUrls } = await getConstantValues();
+const { searchConfig, cookieValues, magazineConfig, tools, headerConfig, newsFeedConfig, truckConfiguratorUrls, holidays } =
+  await getConstantValues();
 
 // This data comes from the sharepoint 'constants.xlsx' file
 export const TOOLS_CONFIGS = formatValues(tools?.data);
@@ -435,6 +387,7 @@ export const MAGAZINE_CONFIGS = formatValues(magazineConfig?.data);
 export const HEADER_CONFIGS = formatValues(headerConfig?.data);
 export const NEWS_FEED_CONFIGS = formatValues(newsFeedConfig?.data);
 export const TRUCK_CONFIGURATOR_URLS = formatValues(truckConfiguratorUrls?.data);
+export const HOLIDAYS = formatValues(holidays?.data);
 
 /**
  * Check if one trust group is checked.
@@ -642,3 +595,76 @@ export function createResponsivePicture(images, eager, alt, imageClass) {
 
   return picture;
 }
+
+/**
+ * Checks whether the viewport is in the mobile range.
+ * Mobile is defined as a viewport width ≤ 744px (CSS pixels).
+ *
+ * @returns {boolean} True if the media query '(max-width: 744px)' matches.
+ */
+export const isMobileViewport = () => window.matchMedia('(max-width: 744px)').matches;
+
+/**
+ * Checks whether the viewport is in the mobile or tablet range.
+ * Mobile/Tablet is defined as a viewport width ≤ 1199px (CSS pixels).
+ *
+ * @returns {boolean} True if the media query '(max-width: 1199px)' matches.
+ */
+export const isMobileOrTabletViewport = () => window.matchMedia('(max-width: 1199px)').matches;
+
+/**
+ * Checks whether the viewport is in the tablet-only range.
+ * Tablet-only is defined as 768px ≤ viewport width ≤ 1199px (CSS pixels).
+ *
+ * @returns {boolean} True if the media query '(min-width: 768px) and (max-width: 1199px)' matches.
+ */
+export const isTabletOnlyViewport = () => window.matchMedia('(min-width: 768px) and (max-width: 1199px)').matches;
+
+/**
+ * Normalize a URL to a comparable pathname key.
+ * Lowercases, collapses duplicate slashes, strips trailing slash.
+ * @param {string} href
+ * @returns {string} pathname key or ""
+ */
+export const toPathKey = (href) => {
+  if (!href) {
+    return '';
+  }
+  try {
+    const u = new URL(href, window.location.origin);
+    let p = decodeURI(u.pathname)
+      .toLowerCase()
+      .replace(/\/{2,}/g, '/');
+    if (p.length > 1) {
+      p = p.replace(/\/+$/, '');
+    }
+    return p;
+  } catch {
+    return '';
+  }
+};
+
+/**
+ * Normalize a string intended to be used as a URL.
+ *
+ * - Coerces `undefined`/`null` to an empty string.
+ * - Replaces non-breaking spaces with regular spaces.
+ * - Strips out angle brackets (`<`, `>`).
+ * - Trims leading/trailing whitespace.
+ *
+ * @param {string} [s] - Raw string (possibly from DOM or dataset).
+ * @returns {string} A cleaned string safe to pass to `new URL()`.
+ */
+export const normalizeUrlText = (s) =>
+  String(s || '')
+    .replace(/\u00A0/g, ' ')
+    .replace(/[<>]/g, '')
+    .trim();
+
+/**
+ * Test whether a given URL protocol is HTTP or HTTPS.
+ *
+ * @param {string} protocol - Protocol string (e.g. `"http:"`, `"https:"`).
+ * @returns {boolean} `true` if the protocol is HTTP/HTTPS, otherwise `false`.
+ */
+export const isHttp = (protocol) => /^https?:$/i.test(protocol);

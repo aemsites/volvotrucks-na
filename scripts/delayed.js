@@ -1,7 +1,6 @@
 /* global fbq */
-import { loadScript, loadCSS, sampleRUM } from './aem.js';
+import { loadScript, sampleRUM } from './aem.js';
 import { isPerformanceAllowed, isTargetingAllowed, isSocialAllowed, isDevHost, extractObjectFromArray, COOKIE_CONFIGS } from './common.js';
-import { VIDEO_JS_SCRIPT, VIDEO_JS_CSS } from './video-helper.js';
 
 // COOKIE ACCEPTANCE AND IDs default to false in case no ID is present
 const {
@@ -17,20 +16,24 @@ const {
 // Core Web Vitals RUM collection
 sampleRUM('cwv');
 
-if (isPerformanceAllowed()) {
-  GTM_ID && loadGoogleTagManager();
-  HOTJAR_ID && loadHotjar();
-}
+// This functions runs once at the begining and whenever a change in the selected group of cookies change.
+function checkCookiesAndLoadAllScripts() {
+  if (isPerformanceAllowed()) {
+    GTM_ID && loadGoogleTagManager();
+    HOTJAR_ID && loadHotjar();
+  }
 
-if (isTargetingAllowed()) {
-  ACC_ENG_TRACKING && loadAccountEngagementTracking();
-}
+  if (isTargetingAllowed()) {
+    ACC_ENG_TRACKING && loadAccountEngagementTracking();
+  }
 
-if (isSocialAllowed()) {
-  FACEBOOK_PIXEL_ID && loadFacebookPixel();
-  TIKTOK_PIXEL_ID && loadTiktokPixel();
-  MNTN_PIXEL_ID && loadMNTNTrackingPixel();
+  if (isSocialAllowed()) {
+    FACEBOOK_PIXEL_ID && loadFacebookPixel();
+    TIKTOK_PIXEL_ID && loadTiktokPixel();
+    MNTN_PIXEL_ID && loadMNTNTrackingPixel();
+  }
 }
+checkCookiesAndLoadAllScripts();
 
 // add more delayed functionality here
 
@@ -129,7 +132,8 @@ if (DATA_DOMAIN_SCRIPT && !window.location.pathname.includes('srcdoc') && !isDev
         return;
       }
       if (!isSameGroups(currentOnetrustActiveGroups, window.OnetrustActiveGroups) && window.isSingleVideo !== 'true') {
-        window.location.reload();
+        // Run all cookie checks and their associated scripts
+        checkCookiesAndLoadAllScripts();
       }
     });
   };
@@ -147,7 +151,7 @@ async function loadGoogleTagManager() {
     w[l].push({ 'gtm.start': new Date().getTime(), event: 'gtm.js' });
     const f = d.getElementsByTagName(s)[0];
     const j = d.createElement(s);
-    const dl = l !== 'dataLayer' ? `&l=${l}` : '';
+    const dl = l != 'dataLayer' ? `&l=${l}` : '';
     j.async = true;
     j.src = `https://www.googletagmanager.com/gtm.js?id=${i}${dl}`;
     f.parentNode.insertBefore(j, f);
@@ -417,25 +421,4 @@ async function loadMNTNConversionPixel(orderId, orderAmount = '') {
     y.src = ('https:' === document.location.protocol ? 'https://' : 'http://') + w;
     r.parentNode.insertBefore(y, r);
   })();
-}
-
-async function loadVideoJs() {
-  await Promise.all([loadCSS(VIDEO_JS_CSS), loadScript(VIDEO_JS_SCRIPT)]);
-
-  const jsScript = document.querySelector(`head > script[src="${VIDEO_JS_SCRIPT}"]`);
-  const cssScript = document.querySelector(`head > link[href="${VIDEO_JS_CSS}"]`);
-
-  jsScript.dataset.loaded = true;
-  cssScript.dataset.loaded = true;
-  document.dispatchEvent(new Event('videojs-loaded'));
-}
-
-const hasVideo =
-  document.querySelector('.video-js') ||
-  document.querySelector('.link-with-video') ||
-  document.querySelector('.text-link-with-video') ||
-  document.querySelector('.v2-video__big-play-button') ||
-  document.querySelector('.v2-resource-gallery__video-list-item .icon-play-video');
-if (hasVideo) {
-  loadVideoJs();
 }

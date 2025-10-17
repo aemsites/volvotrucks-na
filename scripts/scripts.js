@@ -11,6 +11,8 @@ import {
   loadCSS,
   loadScript,
   loadBlock,
+  loadFooter,
+  loadHeader,
 } from './aem.js';
 
 import {
@@ -18,17 +20,23 @@ import {
   getHref,
   getPlaceholders,
   getTextLabel,
-  loadLazy,
   loadTemplate,
   createElement,
   slugify,
   variantsClassesToBEM,
   formatStringToArray,
   TRUCK_CONFIGURATOR_URLS,
-  getLocale,
 } from './common.js';
 
-import { isVideoLink, isSoundcloudLink, isLowResolutionVideoUrl, addVideoShowHandler, addSoundcloudShowHandler } from './video-helper.js';
+import {
+  isVideoLink,
+  isSoundcloudLink,
+  isLowResolutionVideoUrl,
+  addVideoShowHandler,
+  addSoundcloudShowHandler,
+  hasVideoOnPage,
+  loadVideoJs,
+} from './video-helper.js';
 
 import { validateCountries } from './validate-countries.js';
 
@@ -333,20 +341,23 @@ function buildTruckLineupBlock(main) {
 
   const mainChildren = [...main.querySelectorAll(':scope > div')];
   mainChildren.forEach((section, i) => {
-    const isTruckCarousel = section.dataset.truckCarousel;
+    const sectionMetaTruckCarousel = section.dataset.truckCarousel;
+    const isTruckCarousel = !!sectionMetaTruckCarousel;
     if (!isTruckCarousel) {
       return;
     }
 
+    const carouselMetaFieldName = section.dataset.metaFieldName || 'v2-truck-lineup-meta-active';
+
     // save carousel position
     nextElement = mainChildren[i + 1];
-    const sectionMeta = section.dataset.truckCarousel;
     if (!inpageMeta && section.dataset.inpage) {
       inpageMeta = section.dataset.inpage.toLowerCase();
     }
 
     const tabContent = createElement('div', { classes: 'v2-truck-lineup__content' });
-    tabContent.dataset.truckCarousel = sectionMeta;
+    tabContent.dataset.truckCarousel = sectionMetaTruckCarousel;
+    tabContent.dataset.metaFieldName = carouselMetaFieldName;
     tabContent.innerHTML = section.innerHTML;
     const images = tabContent.querySelectorAll('p > picture');
 
@@ -629,10 +640,6 @@ function buildInpageNavigationBlock(main) {
 
   if (items.length > 0) {
     const section = createElement('div');
-    Object.assign(section.style, {
-      height: '48px',
-      overflow: 'hidden',
-    });
     const inpageBlock = buildBlock(inpageClassName, { elems: items });
 
     section.append(inpageBlock);
@@ -788,13 +795,21 @@ export function decorateMain(main, head) {
 async function loadEager(doc) {
   decorateTemplateAndTheme();
 
+  const disableHeader = getMetadata('disable-header').toLowerCase() === 'true';
   const main = doc.querySelector('main');
   const { head } = doc;
+
+  if (!disableHeader) {
+    const header = doc.querySelector('header');
+    header && loadHeader(header);
+  }
+
   if (main) {
     decorateMain(main, head);
     document.body.classList.add('appear');
-    const language = getLocale();
-    document.documentElement.lang = language;
+    const meta_i18n = doc.querySelector('meta[name="i18n"]');
+    const meta_locale = doc.querySelector('meta[name="locale"]');
+    document.documentElement.lang = (meta_i18n && meta_i18n.content) || (meta_locale && meta_locale.content.toLowerCase()) || 'en';
     const templateName = getMetadata('template');
     if (templateName) {
       await loadTemplate(doc, templateName);
@@ -852,6 +867,37 @@ const moveClassToHtmlEl = (className, elementSelector = 'main') => {
 };
 
 /**
+ * loads everything that doesn't need to be delayed.
+ */
+async function loadLazy(doc) {
+  const main = doc.querySelector('main');
+  await loadSections(main);
+
+  const { hash } = window.location;
+  const element = hash ? doc.getElementById(hash.substring(1)) : false;
+  if (hash && element) {
+    element.scrollIntoView();
+  }
+  const header = doc.querySelector('header');
+
+  const disableFooter = getMetadata('disable-footer').toLowerCase() === 'true';
+
+  if (!disableFooter) {
+    loadFooter(doc.querySelector('footer'));
+  }
+
+  const subnav = header?.querySelector('.block.sub-nav');
+  if (subnav) {
+    loadBlock(subnav);
+    header.appendChild(subnav);
+  }
+
+  loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+
+  import('../tools/sidekick/aem-genai-variations.js');
+}
+
+/**
  * Loads everything that happens a lot later,
  * without impacting the user experience.
  */
@@ -862,10 +908,18 @@ function loadDelayed() {
   // load anything that can be postponed to the latest here
 }
 
+/**
+ * Main page initialization logic.
+ * Loads eager/lazy resources and conditionally loads video support.
+ */
 async function loadPage() {
   await loadEager(document);
   await loadLazy(document);
   loadDelayed();
+
+  if (hasVideoOnPage()) {
+    await loadVideoJs();
+  }
 }
 
 loadPage();

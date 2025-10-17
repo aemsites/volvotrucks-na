@@ -76,14 +76,6 @@
       "Text": "Please enter valid value"
     },
     {
-      "Key": "no eloqua message",
-      "Text": "We cannot show the content because you have not given us permission to store cookie files"
-    },
-    {
-      "Key": "no eloqua link message",
-      "Text": "Change cookie settings"
-    },
-    {
       "Key": "vinlabel",
       "Text": "Enter your 17-digit VIN (Vehicle Identification Number)"
     },
@@ -101,7 +93,11 @@
     },
     {
       "Key": "recall_date",
-      "Text": "Issue Date"
+      "Text": "NHTSA Issue Date"
+    },
+    {
+      "Key": "tc_recall_date",
+      "Text": "Transport Canada Issue Date"
     },
     {
       "Key": "recall_description",
@@ -114,6 +110,18 @@
     {
       "Key": "remedy_description",
       "Text": "Remedy"
+    },
+    {
+      "Key": "interim_precautions",
+      "Text": "Precautions to Minimize Risk"
+    },
+    {
+      "Key": "recall_effective_date",
+      "Text": "Remedy Availability"
+    },
+    {
+      "Key": "recall_effective_text",
+      "Text": "The remedy for this recall is currently available.//The remedy for this recall is estimated to be available"
     },
     {
       "Key": "published_info",
@@ -418,6 +426,22 @@
     {
       "Key": "charts:subtitle",
       "Text": "Engine Ratings"
+    },
+    {
+      "Key": "PressReleases:SearchPlaceholder",
+      "Text": "Search for..."
+    },
+    {
+      "Key": "clear",
+      "Text": "clear"
+    },
+    {
+      "Key": "invalid_form_weekend_day_label",
+      "Text": "Please select a working day (Monday to Friday and no public holidays)."
+    },
+    {
+      "Key": "invalid_form_holiday_label",
+      "Text": "The selected date falls on a holiday. Please choose a different date."
     }
   ],
   ":type": "sheet"

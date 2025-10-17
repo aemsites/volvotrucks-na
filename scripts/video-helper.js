@@ -1,6 +1,6 @@
 /* global videojs */
 import { isSocialAllowed, createElement, deepMerge, getTextLabel } from './common.js';
-import { loadScript } from './aem.js';
+import { loadScript, loadCSS } from './aem.js';
 
 export const VIDEO_JS_SCRIPT = '/scripts/videojs/video.min.js';
 export const VIDEO_JS_CSS = '/scripts/videojs/video-js.min.css';
@@ -10,7 +10,7 @@ export const VIDEO_JS_CSS = '/scripts/videojs/video-js.min.css';
 export const AEM_ASSETS = {
   aemCloudDomain: '.adobeaemcloud.com',
   videoURLRegex: /\/assets\/urn:aaid:aem:[\w-]+\/play/,
-  videoIdRegex: /urn:aaid:aem:[0-9a-fA-F-]+/,
+  videoIdRegex: /(urn:aaid:aem:[0-9a-fA-F-]+|https?:\/\/[^\s]+\.m3u8)/,
 };
 
 export const youtubeVideoRegex =
@@ -125,13 +125,7 @@ export async function setupPlayer(url, videoContainer, config, video) {
 }
 
 export function getDeviceSpecificVideoUrl(videoUrl) {
-  const { userAgent } = navigator;
-  const isIOS = /iPad|iPhone|iPod/.test(userAgent);
-  const isSafari =
-    /Safari/i.test(userAgent) && !/Chrome/i.test(userAgent) && !/CriOs/i.test(userAgent) && !/Android/i.test(userAgent) && !/Edg/i.test(userAgent);
-
-  const manifest = isIOS || isSafari ? 'manifest.m3u8' : 'manifest.mpd';
-  return videoUrl.replace(/manifest\.mpd|manifest\.m3u8|play/, manifest);
+  return videoUrl.replace(/manifest\.mpd|manifest\.m3u8|play/, 'manifest.m3u8');
 }
 
 export const addVideoConfig = (videoId, props = {}) => {
@@ -155,6 +149,10 @@ export function isYoutubeVideoUrl(url) {
   return youtubeVideoRegex.test(url);
 }
 
+export function isHlsVideoUrl(url) {
+  return typeof url === 'string' && url.split('?')[0].endsWith('.m3u8');
+}
+
 export function getYoutubeVideoId(url) {
   const match = url.match(youtubeVideoRegex);
 
@@ -163,10 +161,11 @@ export function getYoutubeVideoId(url) {
 
 export function isVideoLink(link) {
   const linkString = link.getAttribute('href');
-  return (
-    (linkString.includes('youtube.com/embed/') || videoURLRegex.test(linkString) || isLowResolutionVideoUrl(linkString)) &&
-    link.closest('.block.embed') === null
-  );
+  const isManifestUrl = /\.m3u8(\?.*)?$/.test(linkString);
+  const isYouTube = linkString.includes('youtube.com/embed/');
+  const isAEM = videoURLRegex.test(linkString);
+  const isMp4 = isLowResolutionVideoUrl(linkString);
+  return (isYouTube || isAEM || isMp4 || isManifestUrl) && link.closest('.block.embed') === null;
 }
 
 export function selectVideoLink(links, preferredType, videoType = videoTypes.both) {
@@ -179,6 +178,7 @@ export function selectVideoLink(links, preferredType, videoType = videoTypes.bot
 
   const aemVideoLink = findLinkByCondition((href) => videoURLRegex.test(href));
   const youTubeLink = findLinkByCondition((href) => href.includes('youtube.com/embed/'));
+  const hlsLink = findLinkByCondition((href) => href.split('?')[0].endsWith('.m3u8'));
   const localMediaLink = findLinkByCondition((href) => href.split('?')[0].endsWith('.mp4'));
 
   if (aemVideoLink) {
@@ -186,6 +186,9 @@ export function selectVideoLink(links, preferredType, videoType = videoTypes.bot
   }
   if (prefersYouTube && youTubeLink) {
     return youTubeLink;
+  }
+  if (hlsLink) {
+    return hlsLink;
   }
   return localMediaLink;
 }
@@ -788,6 +791,95 @@ export const handleVideoMessage = (event, videoId, blockName = 'video') => {
     //   default:
     //     break;
     // }
+  }
+};
+
+/**
+ * Checks if the current page contains any known video-related elements.
+ * @returns {boolean} True if a video block is found.
+ */
+export function hasVideoOnPage() {
+  return !!(
+    document.querySelector('.video-js') ||
+    document.querySelector('.link-with-video') ||
+    document.querySelector('.text-link-with-video') ||
+    document.querySelector('.v2-video__big-play-button') ||
+    document.querySelector('.v2-resource-gallery__video-list-item .icon-play-video')
+  );
+}
+
+/**
+ * Dynamically loads Video.js script and CSS and dispatches an event once loaded.
+ * @returns {Promise<void>}
+ */
+export async function loadVideoJs() {
+  await Promise.all([loadCSS(VIDEO_JS_CSS), loadScript(VIDEO_JS_SCRIPT)]);
+
+  const jsScript = document.querySelector(`head > script[src="${VIDEO_JS_SCRIPT}"]`);
+  const cssScript = document.querySelector(`head > link[href="${VIDEO_JS_CSS}"]`);
+
+  jsScript.dataset.loaded = true;
+  cssScript.dataset.loaded = true;
+
+  document.dispatchEvent(new Event('videojs-loaded'));
+}
+
+/**
+ * Queries for a playable element within a root.
+ *
+ * @param {ParentNode} root - Element or fragment to search in.
+ * @returns {VideoPlayableEl|null} A native <video> or a Video.js element, or null if none found.
+ */
+export const queryVideoEl = (root) => root?.querySelector('video, .video-js') || null;
+
+/**
+ * Play muted and inline. Supports native <video> and Video.js (.video-js).
+ *
+ * @param {HTMLElement} videoEl - The element to play.
+ * @returns {void}
+ */
+export const playMutedInline = (videoEl) => {
+  if (!videoEl) {
+    return;
+  }
+
+  // Video.js
+  if (window.videojs && videoEl.classList?.contains('video-js')) {
+    const player = window.videojs.getPlayer ? window.videojs.getPlayer(videoEl) : window.videojs(videoEl);
+    player.muted(true);
+    player.play?.().catch(() => {});
+    return;
+  }
+
+  // Native <video>
+  if (videoEl.tagName === 'VIDEO') {
+    videoEl.muted = true;
+    videoEl.setAttribute('playsinline', '');
+    videoEl.play?.().catch(() => {});
+  }
+};
+
+/**
+ * Pause playback. Supports native <video> and Video.js (.video-js).
+ *
+ * @param {HTMLElement} videoEl - The element to pause.
+ * @returns {void}
+ */
+export const pausePlayback = (videoEl) => {
+  if (!videoEl) {
+    return;
+  }
+
+  // Video.js
+  if (window.videojs && videoEl.classList?.contains('video-js')) {
+    const player = window.videojs.getPlayer ? window.videojs.getPlayer(videoEl) : window.videojs(videoEl);
+    player.pause?.();
+    return;
+  }
+
+  // Native <video>
+  if (videoEl.tagName === 'VIDEO') {
+    videoEl.pause?.();
   }
 };
 

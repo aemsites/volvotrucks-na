@@ -22,6 +22,10 @@
   line-height: var(--f-heading-4-line-height);
 }
 
+.v2-section-header-container > .v2-section-header-wrapper:nth-child(5) {
+  padding-top: 64px;
+}
+
 @media (min-width: 1200px) {
   .v2-section-header__title {
     font-size: var(--f-heading-3-font-size);
@@ -33,5 +37,9 @@
     font-size: var(--f-body-2-font-size);
     letter-spacing: var(--f-body-2-letter-spacing);
     line-height: var(--f-body-2-line-height);
+  }
+
+  .v2-section-header-container > .v2-section-header-wrapper:nth-child(5) {
+    padding-top: 216px;
   }
 }

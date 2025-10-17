@@ -1,12 +1,12 @@
-import { createElement, getLocale } from '../../scripts/common.js';
+import { createElement, decorateIcons, getLocale } from '../../scripts/common.js';
 import { autosuggestQuery, fetchSearchData, TENANT } from '../../scripts/search-api.js';
 
 const autoSuggestClass = 'autosuggest-results-item-highlighted';
 
-export function fetchAutosuggest(term, autosuggestEle, rowEle, func) {
+export function fetchAutosuggest(term, autosuggestEle, rowEle, func, showSearchIcon, maxSuggestions) {
   const fragmentRange = document.createRange();
-  const language = getLocale();
-  const locale = language.split('-')[0].toUpperCase();
+  const locale = getLocale();
+  const language = locale.split('-')[0].toUpperCase();
 
   if (!TENANT) {
     console.error('%cTenant %cis not defined', 'color: red', 'color: default');
@@ -18,27 +18,31 @@ export function fetchAutosuggest(term, autosuggestEle, rowEle, func) {
     variables: {
       tenant: TENANT,
       term,
-      locale,
-      sizeSuggestions: 5,
+      language,
+      sizeSuggestions: maxSuggestions || 5,
     },
   }).then(({ errors, data }) => {
     if (errors) {
       console.log('%cSomething went wrong', { errors });
     } else {
-      const { edssuggest: { terms } = {} } = data;
+      const { edsWordPhraseSuggest: { terms } = {} } = data;
       autosuggestEle.textContent = '';
       autosuggestEle.classList.remove('show');
 
       if (terms.length) {
         terms.forEach((val) => {
           const row = createElement(rowEle.tag, { classes: rowEle.class, props: rowEle.props });
-          const suggestFragment = fragmentRange.createContextualFragment(`<b>
-            ${val}
-          </b>`);
+          let suggestionContent = `<b>${val}</b>`;
+          if (showSearchIcon) {
+            suggestionContent = `
+              <span class="icon icon-search-icon"></span>
+              <span>${val.replaceAll(term, `<b>${term}</b>`)}</span>
+            `;
+          }
+          const suggestFragment = fragmentRange.createContextualFragment(suggestionContent);
           row.appendChild(suggestFragment);
-
           row.onclick = () => func(val);
-
+          decorateIcons(row);
           autosuggestEle.appendChild(row);
           autosuggestEle.classList.add('show');
         });

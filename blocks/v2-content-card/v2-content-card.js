@@ -3,7 +3,7 @@ import { adjustPretitle, createElement, removeEmptyTags, variantsClassesToBEM } 
 import { createVideo, getDynamicVideoHeight, isVideoLink } from '../../scripts/video-helper.js';
 
 const blockName = 'v2-content-card';
-const variantClasses = ['images-grid', 'images-grid-masonry', 'editorial'];
+const variantClasses = ['images-grid', 'images-grid-masonry', 'editorial', 'with-button', 'centered'];
 
 const handleVideoLinks = (videoLinks) => {
   videoLinks.forEach((videoLink) => {

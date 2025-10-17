@@ -1,22 +1,28 @@
 import { SEARCH_CONFIGS } from './common.js';
 
-export const { TENANT = false, SEARCH_URL_PROD = false } = SEARCH_CONFIGS;
+export const { TENANT = false, SEARCH_URL_PROD = false, SEARCH_URL_DEV = false } = SEARCH_CONFIGS;
 
 // because the dev url has different items is better to use the prod one also in dev
 export async function fetchSearchData(queryObj) {
+  const query = {
+    method: 'POST',
+    headers: {
+      Accept: 'application/json',
+      'Content-Type': 'application/json',
+      'Content-Length': queryObj.length,
+    },
+    body: JSON.stringify(queryObj),
+  };
+
+  if (!SEARCH_URL_PROD && !SEARCH_URL_DEV) {
+    throw new Error('Search link not found');
+  }
+
   try {
-    if (!SEARCH_URL_PROD) {
-      throw new Error('Search link not found');
+    let response = await fetch(SEARCH_URL_PROD, query);
+    if (!response.ok) {
+      response = await fetch(SEARCH_URL_DEV, query);
     }
-    const response = await fetch(SEARCH_URL_PROD, {
-      method: 'POST',
-      headers: {
-        Accept: 'application/json',
-        'Content-Type': 'application/json',
-        'Content-Length': queryObj.length,
-      },
-      body: JSON.stringify(queryObj),
-    });
 
     return response.json();
   } catch (error) {
@@ -70,8 +76,8 @@ $facets: [EdsFieldEnum], $sort: EdsSortOptionsEnum, $article: ArticleFilter, $ca
 `;
 
 export const autosuggestQuery = () => `
-query Edssuggest($term: String!, $tenant: String!, $locale: EdsLocaleEnum!, $sizeSuggestions: Int) {
-  edssuggest(term: $term, tenant: $tenant, locale: $locale, sizeSuggestions: $sizeSuggestions) {
+query EdsWordPhraseSuggest($term: String!, $tenant: String!, $language: EdsLocaleEnum!, $sizeSuggestions: Int) {
+  edsWordPhraseSuggest(term: $term, tenant: $tenant, language: $language, sizeSuggestions: $sizeSuggestions) {
     terms
   }
 }
@@ -147,4 +153,26 @@ export const topicSearchQuery = () => `
       }
     }
   }
+`;
+
+export const pressReleaseQuery = () => `
+ query Edssearch($tenant: String!, $language: EdsLocaleEnum!, $q: String, $limit: Int, $offset: Int,
+  $facets: [EdsFieldEnum], $sort: EdsSortOptionsEnum, $article: ArticleFilter, $category: [String]) {
+    edssearch(tenant: $tenant, language: $language, q: $q, limit: $limit, offset: $offset,
+    facets: $facets, sort: $sort, article: $article, category: $category) {
+      count
+      items {
+        uuid
+        metadata {
+          title
+          description
+          image
+          url
+          language
+          category
+          publishDate
+        }
+      }
+    }
+  } 
 `;
