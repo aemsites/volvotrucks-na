@@ -26,23 +26,11 @@ const parsePressRelease = (item) => {
   };
 };
 
-const getPlaceholderText = async () => {
-  const placeholderKey = 'PressReleases:SearchPlaceholder';
-  let placeholderText = getTextLabel(placeholderKey);
-  if (placeholderText === placeholderKey) {
-    // if the placeholder key is not found, fetch placeholders and try again
-    await getPlaceholders();
-    placeholderText = getTextLabel(placeholderKey);
-  }
-  return placeholderText;
-};
-
-const renderSearchBar = async () => {
+const renderSearchBar = () => {
   const searchBar = createElement('div', { classes: `${blockName}__search-bar` });
-  const placeholderText = await getPlaceholderText();
-
+  console.log('%cgetTextLabel:', 'color: cyan', getTextLabel('PressReleases:SearchPlaceholder'));
   searchBar.innerHTML = `
-    <input type="text" name="search" autocomplete="off" placeholder="${placeholderText}"/>
+    <input type="text" name="search" autocomplete="off" placeholder="${getTextLabel('PressReleases:SearchPlaceholder')}"/>
     <button type="submit"><i class="fa fa-search"></i></button>`;
   return searchBar;
 };
@@ -204,7 +192,8 @@ const addEventListeners = (block) => {
 };
 
 export default async function decorate(block) {
-  block.append(await renderSearchBar());
+  await getPlaceholders();
+  block.append(renderSearchBar());
   await initPressReleasesPagination(block);
   addEventListeners(block);
 }
