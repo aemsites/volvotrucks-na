@@ -31,9 +31,15 @@ export const getLanguagePath = () => {
  * Calls the `placeholder.json` and stores the data for later use in `getTextLabel` function.
  *
  * It uses a global variable to store the data asynchronously so it is fetched only once.
+ *
+ * also avoids multiple calls to the same URL if called multiple times before the first call is resolved.
+ * @returns {Promise<void>}
  */
 export async function getPlaceholders() {
   const url = `${getLanguagePath()}placeholder.json`;
+  if (placeholders) {
+    return;
+  }
   placeholders = await fetch(url).then((resp) => resp.json());
 }
 
