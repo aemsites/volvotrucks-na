@@ -25,4 +25,68 @@ export default function decorate(block) {
 
     unwrapDivs(row);
   });
+
+
+
+  // Leaving a lint error on puporse
+  // From this point on it is just code for the POC and should be removed later:
+
+  const button = document.createRange().createContextualFragment('<vcdk-button variant="marketing" size="medium">Button</vcdk-button>');
+  block.appendChild(button);
+
+  const testContent = [
+    {
+      title: 'one title',
+      text: 'Lorem Ipsum is simply dummy text of the printing and typesetting wwindustry. Lorem Ipsum has been the standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
+    },
+    {
+      title: 'two title',
+      text: 'Lorem Ipsum is simply dummy text of the printing and typesetting wwindustry. Lorem Ipsum has been the standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
+    },
+    {
+      title: 'third title',
+      text: 'Lorem Ipsum is simply dummy text of the printing and typesetting wwindustry. Lorem Ipsum has been the standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book',
+    },
+  ];
+
+  const accordionContentFragmentMarckup = testContent.reduce((fragment, item) => {
+    const itemMarkup = `<vcdk-accordion>
+        <span slot="title">${item.title}</span>
+        <p>${item.text}</p>
+      </vcdk-accordion>`;
+    return fragment + itemMarkup;
+  }, '');
+
+  block.appendChild(document.createRange().createContextualFragment(accordionContentFragmentMarckup));
+  block.appendChild(
+    document.createRange().createContextualFragment(`<vcdk-dropdown class="some-dropdown">
+      
+      
+          <vcdk-dropdown-option value="en-CA">
+            Canada
+          </vcdk-dropdown-option>
+        
+          <vcdk-dropdown-option value="pl-PL" selected="">
+            Poland
+          </vcdk-dropdown-option>
+        
+          <vcdk-dropdown-option value="sv-SE">
+            Sweden
+          </vcdk-dropdown-option>
+        
+    </vcdk-dropdown>`),
+  );
+
+  initDropdown(block);
+}
+
+function initDropdown(block) {
+  const dropdown = block.querySelector('.some-dropdown');
+
+  console.log(dropdown);
+
+  dropdown.addEventListener('vcdk-dropdown-change', (e) => {
+    const selectedValue = e.target.value;
+    console.log(`Selected value: ${selectedValue}`);
+  });
 }
