@@ -28,7 +28,6 @@ const parsePressRelease = (item) => {
 
 const renderSearchBar = () => {
   const searchBar = createElement('div', { classes: `${blockName}__search-bar` });
-  console.log('%cgetTextLabel:', 'color: cyan', getTextLabel('PressReleases:SearchPlaceholder'));
   searchBar.innerHTML = `
     <input type="text" name="search" autocomplete="off" placeholder="${getTextLabel('PressReleases:SearchPlaceholder')}"/>
     <button type="submit"><i class="fa fa-search"></i></button>`;
