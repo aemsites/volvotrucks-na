@@ -27,11 +27,23 @@ export const getLanguagePath = () => {
   return langCodeMatch ? langCodeMatch[1] : '/';
 };
 
+/**
+ * Calls the `placeholder.json` and stores the data for later use in `getTextLabel` function.
+ *
+ * It uses a global variable to store the data asynchronously so it is fetched only once.
+ */
 export async function getPlaceholders() {
   const url = `${getLanguagePath()}placeholder.json`;
   placeholders = await fetch(url).then((resp) => resp.json());
 }
 
+/**
+ * Returns the text label for the given key from the placeholders data.
+ *
+ * If the key is not found, or placeholders are not loaded, it returns the key itself.
+ * @param {String} key The key to look for in the placeholders data
+ * @returns {String} The text label or the key if not found
+ */
 export function getTextLabel(key) {
   return placeholders?.data.find((el) => el.Key === key)?.Text || key;
 }
