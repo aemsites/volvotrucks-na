@@ -32,14 +32,14 @@ export const getLanguagePath = () => {
  *
  * It uses a global variable to store the data asynchronously so it is fetched only once.
  *
- * also avoids multiple calls to the same URL if called multiple times before the first call is resolved.
- * @returns {Promise<void>}
+ * Also avoids multiple calls to the same URL if called multiple times before the first call is resolved.
+ * @returns {Promise<void|undefined>} Resolves when placeholders are loaded, or undefined if already loaded.
  */
 export async function getPlaceholders() {
-  const url = `${getLanguagePath()}placeholder.json`;
   if (placeholders) {
     return;
   }
+  const url = `${getLanguagePath()}placeholder.json`;
   placeholders = await fetch(url).then((resp) => resp.json());
 }
 
