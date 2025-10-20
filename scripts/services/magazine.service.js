@@ -222,8 +222,8 @@ export const fetchRecommendedArticles = async ({
   }
 };
 
-const defaultAuthor = getTextLabel('defaultAuthor');
-const defaultReadTime = getTextLabel('defaultReadTime');
+const defaultAuthor = getTextLabel('magazine:default_author');
+const defaultReadTime = getTextLabel('magazine:default_read_time');
 /**
  * Extract the classes of a block and in case there is a 'limit-X' set, extract it as a number
  * @param {Object} item - The raw article item that comes from opensearch

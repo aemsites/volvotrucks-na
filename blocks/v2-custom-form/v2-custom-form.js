@@ -26,9 +26,9 @@ window.__activeForms = window.__activeForms || new Set();
  * @returns {String} use the fn getTextLabel to get the message from placeholder.json
  */
 const getMessageText = (isSuccess, isTitle) => {
-  const key = isSuccess ? 'Successful' : 'Error';
-  const type = isTitle ? 'Title' : 'Text';
-  return getTextLabel(`V2CustomForm:${key}Submission${type}`);
+  const key = isSuccess ? 'successful' : 'error';
+  const type = isTitle ? 'title' : 'text';
+  return getTextLabel(`v2_custom_form:${key}_submission_${type}`);
 };
 
 // Form Block identifies the submit endpoint via these rules and in order
@@ -371,11 +371,11 @@ function createDateInput(fd) {
 
           // 0 = Sunday, 6 = Saturday
           if (day === 0 || day === 6) {
-            const invalidFormWeekendDayLabel = getTextLabel('invalid_form_weekend_day_label');
+            const invalidFormWeekendDayLabel = getTextLabel('v2_custom_form:invalid_form_weekend_day_label');
 
             e.target.setCustomValidity(invalidFormWeekendDayLabel);
           } else if (holidayDates.includes(selectedDateISO)) {
-            const invalidFormHolidayLabel = getTextLabel('invalid_form_holiday_label');
+            const invalidFormHolidayLabel = getTextLabel('v2_custom_form:invalid_form_holiday_label');
             e.target.setCustomValidity(invalidFormHolidayLabel);
           } else {
             e.target.setCustomValidity('');
