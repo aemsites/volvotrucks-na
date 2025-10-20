@@ -48,8 +48,7 @@ main .section.dealer-locator-container > div {
 
 .dealer-locator,
 .dealer-locator,
-.dealer-locator #map,
-.dealer-locator .partsasist-form .regForm #select-form #eloquaForm .row {
+.dealer-locator #map {
   overflow: hidden;
 }
 
@@ -107,52 +106,6 @@ main .section.dealer-locator-container > div {
 @media (max-width: 992px) {
   .dealer-locator {
     margin-top: 32px;
-  }
-}
-
-.dealer-locator .partsasist-form {
-  z-index: var(--z-index-header);
-  display: none;
-  display: block;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-
-.dealer-locator .partsasist-form .backdrop {
-  background-color: #fff;
-  position: absolute;
-  width: 100%;
-  height: 100%;
-}
-
-.dealer-locator .partsasist-form .regForm {
-  width: 1200px;
-  margin: 0 auto;
-  position: relative;
-}
-
-.dealer-locator .partsasist-form .regForm.rtl-padding {
-  padding-top: 25px;
-  padding-right: 25px;
-  padding-left: 25px;
-}
-
-.dealer-locator .partsasist-form .regForm #select-form #eloquaForm {
-  color: var(--c-grey-4) !important;
-}
-
-.dealer-locator .partsasist-form .regForm #select-form #eloquaForm .field-holder {
-  width: 100%;
-}
-
-.dealer-locator .partsasist-form .regForm .submit-button {
-  width: 100%;
-}
-
-@media (max-width: 991px) {
-  .dealer-locator .partsasist-form .regForm {
-    width: 100%;
   }
 }
 
@@ -2564,7 +2517,6 @@ footer {
   margin-top: 0 !important;
 }
 
-#eloquaForm .field-holder,
 .contact-form .field-holder {
   width: 45.389%;
 }
@@ -2685,4 +2637,14 @@ footer {
 .tooltip.bottom-right .tooltip-arrow {
   left: 5px;
   margin-top: -5px;
+}
+
+@media (min-width: 576px) {
+  .dealer-locator .nearby-pins article.teaser .dealerPanelContainer {
+    min-width: 315px;
+  }
+  
+  .dealer-locator .nearby-pins article.teaser .teaser-bottom .right .call {
+    display: none;
+  }
 }
