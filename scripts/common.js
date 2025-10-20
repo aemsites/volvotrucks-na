@@ -1,6 +1,16 @@
 import { loadCSS, getMetadata } from './aem.js';
 
+/**
+ * Placeholders data for the application and the translations
+ * @type {Object|null}
+ */
 let placeholders = null;
+/**
+ * Promise that resolves to the placeholders data.
+ * Used to cache and share the placeholders loading operation across multiple requests.
+ * @type {Promise<Object>|null}
+ */
+let placeholdersPromise = null;
 
 /**
  * Returns the true origin of the current page in the browser.
@@ -28,20 +38,35 @@ export const getLanguagePath = () => {
 };
 
 /**
- * Calls the `placeholder.json` and stores the data for later use in `getTextLabel` function.
+ * Updates the `placeholders` variable by fetching the `placeholder.json` file.
  *
- * It uses a global variable to store the data asynchronously so it is fetched only once.
+ * This function ensures placeholders are fetched only once by maintaining a promise-based
+ * locking mechanism. Subsequent calls will wait for the initial fetch to complete.
+ * The placeholders data is retrieved from a language-specific JSON file and stored globally.
  *
- * Also avoids multiple calls to the same URL if called multiple times before the first call is resolved.
- * @returns {Promise<Object>} Resolves with the placeholders data.
+ * @async
+ * @returns {Promise<void>} Resolves when placeholders have been fetched and the global variable updated
+ * @throws {Error} Logs error to console if placeholder fetch fails, but does not reject
+ *
+ * @example
+ * await getPlaceholders();
+ * // placeholders global variable is now populated
  */
 export async function getPlaceholders() {
-  if (placeholders) {
-    return Promise.resolve(placeholders);
+  if (!placeholders && !placeholdersPromise) {
+    const url = `${getLanguagePath()}placeholder.json`;
+    placeholdersPromise = fetch(url)
+      .then((resp) => resp.json())
+      .then((data) => {
+        placeholders = data;
+        placeholdersPromise = null;
+      })
+      .catch((error) => {
+        console.error('Error fetching placeholders:', error);
+        placeholdersPromise = null;
+      });
   }
-  const url = `${getLanguagePath()}placeholder.json`;
-  placeholders = await fetch(url).then((resp) => resp.json());
-  return placeholders;
+  await placeholdersPromise;
 }
 
 /**
