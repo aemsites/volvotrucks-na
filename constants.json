@@ -236,6 +236,21 @@
       "value"
     ]
   },
+  "dealerLocator": {
+    "total": 1,
+    "offset": 0,
+    "limit": 1,
+    "data": [
+      {
+        "name": "KEY",
+        "value": "AIzaSyA9t_Wxw8WC-6MyDQ5PrVi8RK6oOoNoB5M"
+      }
+    ],
+    "columns": [
+      "name",
+      "value"
+    ]
+  },
   ":version": 3,
   ":names": [
     "newsFeedConfig",
@@ -245,6 +260,7 @@
     "magazineConfig",
     "cookieValues",
     "holidays",
+    "dealerLocator",
     "tools"
   ],
   ":type": "multi-sheet"

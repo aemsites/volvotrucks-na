@@ -1,8 +1,12 @@
 import { loadScript } from '../../scripts/aem.js';
+import { DEALER_LOCATOR_CONFIGS } from '../../scripts/common.js';
+
+const { KEY: key = 'MissingKey' } = DEALER_LOCATOR_CONFIGS;
 
 export default async function decorate(block) {
   const datasource = block.textContent.trim();
   window.locatorConfig = {
+    key,
     consolidateFilters: true,
     selectedBrand: 'volvo',
     dataSource: datasource,
