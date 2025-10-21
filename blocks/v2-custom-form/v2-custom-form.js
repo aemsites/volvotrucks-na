@@ -3,7 +3,7 @@ import { getTextLabel, createElement, variantsClassesToBEM, normalizeUrlText, is
 import { getCustomDropdown } from '../../../common/custom-dropdown/custom-dropdown.js';
 
 const blockName = 'v2-custom-form';
-const variantClasses = ['double-column'];
+const variantClasses = ['double-column', 'redirect-new-tab'];
 
 const CLASSES = {
   IGNORE_ON_FORM_SUBMIT: 'ignore-on-form-submit',
@@ -17,6 +17,8 @@ const errorMessage = (errorTitle, errorText) => `<h3 class='${blockName}__title 
 <p class='${blockName}__text ${blockName}__text--error'>${errorText}</p>
 `;
 
+window.__activeForms = window.__activeForms || new Set();
+
 /**
  * Get the message text from placeholder.json based on the success and title
  * @param {Boolean} isSuccess get the success message if true, otherwise the error message
@@ -24,9 +26,9 @@ const errorMessage = (errorTitle, errorText) => `<h3 class='${blockName}__title 
  * @returns {String} use the fn getTextLabel to get the message from placeholder.json
  */
 const getMessageText = (isSuccess, isTitle) => {
-  const key = isSuccess ? 'Successful' : 'Error';
-  const type = isTitle ? 'Title' : 'Text';
-  return getTextLabel(`V2CustomForm:${key}Submission${type}`);
+  const key = isSuccess ? 'successful' : 'error';
+  const type = isTitle ? 'title' : 'text';
+  return getTextLabel(`v2_custom_form:${key}_submission_${type}`);
 };
 
 // Form Block identifies the submit endpoint via these rules and in order
@@ -57,12 +59,12 @@ function throwFormNotFound(form) {
   console.error('Form with data-submitting=true not found', { form });
 }
 
-function tryRedirect(form, datasetKey, { warnLabel = datasetKey } = {}) {
+function tryRedirect(form, redirectKey, { warnLabel = redirectKey, redirectNewTab = false } = {}) {
   if (!form) {
     return false;
   }
 
-  const redirectValue = normalizeUrlText(form.dataset?.[datasetKey]);
+  const redirectValue = normalizeUrlText(form.dataset?.[redirectKey]);
   if (!redirectValue || form.dataset.redirecting === 'true') {
     return false;
   }
@@ -71,7 +73,12 @@ function tryRedirect(form, datasetKey, { warnLabel = datasetKey } = {}) {
     const resolvedUrl = new URL(redirectValue, window.location.href);
     if (isHttp(resolvedUrl.protocol)) {
       form.dataset.redirecting = 'true';
-      window.location.assign(resolvedUrl.href);
+
+      if (redirectNewTab) {
+        window.open(resolvedUrl.href, '_blank', 'noopener,noreferrer');
+      } else {
+        window.location.assign(resolvedUrl.href);
+      }
       return true;
     }
   } catch {
@@ -80,15 +87,16 @@ function tryRedirect(form, datasetKey, { warnLabel = datasetKey } = {}) {
   return false;
 }
 
-async function submissionSuccess() {
+async function submissionSuccess(form, redirectNewTab = false) {
   sampleRUM('form:submit');
-  const form = document.querySelector('form[data-submitting=true]');
+
   if (!form) {
     throwFormNotFound(form);
     return;
   }
 
-  if (tryRedirect(form, 'successRedirect')) {
+  if (tryRedirect(form, 'successRedirect', { redirectNewTab })) {
+    window.__activeForms.delete(form);
     return;
   }
 
@@ -104,17 +112,18 @@ async function submissionSuccess() {
   }
   form.setAttribute('data-submitting', 'false');
   form.replaceWith(successDiv);
+  window.__activeForms.delete(form);
 }
 
-async function submissionFailure() {
-  const form = document.querySelector('form[data-submitting=true]');
+async function submissionFailure(form, redirectNewTab = false) {
   if (!form) {
     throwFormNotFound(form);
     return;
   }
 
-  if (tryRedirect(form, 'errorRedirect', { warnLabel: 'errorRedirect' })) {
+  if (tryRedirect(form, 'errorRedirect', { warnLabel: 'errorRedirect', redirectNewTab })) {
     console.log('redirecting to errorRedirect');
+    window.__activeForms.delete(form);
     return;
   } else {
     console.log('no errorRedirect found, showing error message');
@@ -128,15 +137,29 @@ async function submissionFailure() {
   form.setAttribute('data-submitting', 'false');
   form.querySelector('button[type="submit"]').disabled = false;
   form.replaceWith(errorDiv);
+  window.__activeForms.delete(form);
 }
 
-// callback
 window.showResult = function showResult(json) {
-  if (json.result === 'success') {
-    submissionSuccess();
-  } else if (json.result === 'error') {
-    submissionFailure();
+  const activeForms = Array.from(window.__activeForms);
+  const form = activeForms.reverse().find((f) => f.dataset.submitting === 'true');
+
+  if (!form) {
+    console.warn('showResult: no active submitting form found');
+    return;
   }
+
+  const block = form.closest(`.${blockName}`);
+  const redirectNewTab = block?.classList.contains(`${blockName}--redirect-new-tab`) || false;
+
+  if (json.result === 'success') {
+    submissionSuccess(form, redirectNewTab);
+  } else if (json.result === 'error') {
+    submissionFailure(form, redirectNewTab);
+  }
+
+  window.__activeForms.delete(form);
+  form.dataset.submitting = 'false';
 };
 
 function serialize(obj) {
@@ -176,6 +199,7 @@ async function prepareRequest(form) {
 async function handleSubmit(form) {
   if (form.getAttribute('data-submitting') !== 'true') {
     form.setAttribute('data-submitting', 'true');
+    window.__activeForms.add(form);
     await prepareRequest(form);
   }
 }
@@ -347,11 +371,11 @@ function createDateInput(fd) {
 
           // 0 = Sunday, 6 = Saturday
           if (day === 0 || day === 6) {
-            const invalidFormWeekendDayLabel = getTextLabel('invalid_form_weekend_day_label');
+            const invalidFormWeekendDayLabel = getTextLabel('v2_custom_form:invalid_form_weekend_day_label');
 
             e.target.setCustomValidity(invalidFormWeekendDayLabel);
           } else if (holidayDates.includes(selectedDateISO)) {
-            const invalidFormHolidayLabel = getTextLabel('invalid_form_holiday_label');
+            const invalidFormHolidayLabel = getTextLabel('v2_custom_form:invalid_form_holiday_label');
             e.target.setCustomValidity(invalidFormHolidayLabel);
           } else {
             e.target.setCustomValidity('');
@@ -926,6 +950,8 @@ async function createForm(formURL) {
 
     if (fd.Type === 'title') {
       el = renderTitle(fd);
+    } else if (fd.Type === 'paragraph') {
+      el = createPlainText(fd);
     } else if (fd.Type === 'meta') {
       el = createHiddenMeta(fd);
     } else {
@@ -1131,6 +1157,17 @@ export default async function decorate(block) {
 
   window.addEventListener('unhandledrejection', ({ reason, error }) => {
     console.error('Unhandled rejection. Error submitting form:', { reason, error });
-    submissionFailure();
+
+    const activeForms = Array.from(window.__activeForms || []);
+    const form = activeForms.reverse().find((f) => f.dataset.submitting === 'true');
+
+    if (!form) {
+      throwFormNotFound(form);
+      return;
+    }
+
+    const block = form.closest(`.${blockName}`);
+    const redirectNewTab = block?.classList.contains(`${blockName}--redirect-new-tab`) || false;
+    submissionFailure(form, redirectNewTab);
   });
 }

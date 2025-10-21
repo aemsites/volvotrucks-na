@@ -194,7 +194,6 @@ ul.v2-content-carousel__arrowcontrols {
   transform: scale(1.05);
 }
 
-
 .v2-content-carousel.interactive .v2-content-carousel__figure-text {
   bottom: 0;
   color: var(--c-white);
@@ -215,12 +214,15 @@ ul.v2-content-carousel__arrowcontrols {
 }
 
 .v2-content-carousel.interactive .icon-plus {
+  background: var(--c-white);
   color: var(--c-main-black);
   height: 48px;
+  width: 48px;
   position: absolute;
   right: 24px;
   top: 24px;
-  width: 48px;
+  border-radius: 4px;
+  padding: 12px;
 }
 
 .v2-content-carousel.interactive .icon-plus svg {
@@ -243,7 +245,7 @@ ul.v2-content-carousel__arrowcontrols {
     --content-carousel-col-gap: 24px;
     --content-carousel-container-margin: 32px;
     --static-content-card-width: clamp(506px, 68%, calc((100% - var(--content-carousel-list-gap)) / 1.25));
-  --content-carousel-interactive-gap: 48px;
+    --content-carousel-interactive-gap: 48px;
   }
 
   .v2-content-carousel__media-col {
@@ -270,7 +272,7 @@ ul.v2-content-carousel__arrowcontrols {
     --content-carousel-row-gap: 72px;
     --content-carousel-container-margin: 20px;
     --static-content-card-width: calc((100% - var(--content-carousel-list-gap)) / 1.8);
-  --content-carousel-interactive-gap: 80px;
+    --content-carousel-interactive-gap: 80px;
   }
 
   .v2-content-carousel__col {
@@ -310,7 +312,7 @@ ul.v2-content-carousel__arrowcontrols {
     background: var(--background-color);
   }
 
-  .v2-content-carousel.interactive  .v2-content-carousel__heading {
+  .v2-content-carousel.interactive .v2-content-carousel__heading {
     font-size: var(--f-heading-1-font-size);
     max-width: 60%;
   }

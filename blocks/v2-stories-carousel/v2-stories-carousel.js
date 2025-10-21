@@ -81,8 +81,8 @@ const navigate = (carousel, direction, arrowLeftButton, arrowRightButton) => {
 };
 
 const createArrowControls = (carousel) => {
-  const arrowLeftButtonLabel = getTextLabel('Previous');
-  const arrowRightButtonLabel = getTextLabel('Next');
+  const arrowLeftButtonLabel = getTextLabel('v2_stories_carousel:previous');
+  const arrowRightButtonLabel = getTextLabel('v2_stories_carousel:next');
   const arrowControlsContainer = createElement('ul', { classes: `${blockName}-arrowcontrols` });
   arrowControlsContainer.innerHTML = `
     <li>

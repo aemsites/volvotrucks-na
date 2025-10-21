@@ -20,14 +20,14 @@ async function handleSubmissionResult({ titleText, messageText, isSuccess }) {
 window.logResult = function logResult(json) {
   if (json.result === 'success') {
     handleSubmissionResult({
-      titleText: getTextLabel('form-subscribe:success-title'),
-      messageText: getTextLabel('form-subscribe:success-text'),
+      titleText: getTextLabel('v2_newsletter:success_title'),
+      messageText: getTextLabel('v2_newsletter:success_text'),
       isSuccess: true,
     });
   } else if (json.result === 'error') {
     handleSubmissionResult({
-      titleText: getTextLabel('form-subscribe:error-title'),
-      messageText: getTextLabel('form-subscribe:error-text'),
+      titleText: getTextLabel('v2_newsletter:error_title'),
+      messageText: getTextLabel('v2_newsletter:error_text'),
       isSuccess: false,
     });
   }

@@ -79,7 +79,7 @@ async function renderBlock(block) {
     function showOverlay() {
       viewer.overlay.show({
         id: outOfImageId,
-        title: getTextLabel('This is 360° image'),
+        title: getTextLabel('photosphere:360°_image'),
       });
       showCustomOverlay = true;
     }

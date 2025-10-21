@@ -4,99 +4,103 @@
   "limit": 80,
   "data": [
     {
-      "Key": "Low resolution video message",
+      "Key": "video_helper:low_resolution_message",
       "Text": "For a premium high resolution experience, please accept cookies."
     },
     {
-      "Key": "Change cookie settings",
+      "Key": "video_helper:change_cookie_settings",
       "Text": "Change cookie settings"
     },
     {
-      "Key": "Search For",
+      "Key": "search:search_for",
       "Text": "Search For"
     },
     {
-      "Key": "no results",
+      "Key": "press_releases:no_results",
       "Text": "sorry, your search for $0 returned no results!"
     },
     {
-      "Key": "refine",
+      "Key": "search:no_results",
+      "Text": "sorry, your search for $0 returned no results!"
+    },
+    {
+      "Key": "v2_article_cards:no_results",
+      "Text": "sorry, your search for $0 returned no results!"
+    },
+    {
+      "Key": "search:refine",
       "Text": "let's refine, or try searching by different search keywords instead."
     },
     {
-      "Key": "Showing results for",
+      "Key": "search:showing_results_for",
       "Text": "Showing <strong>$0 - $1</strong> of <strong>$2</strong> results for <strong>\"$3\"</strong>"
     },
     {
-      "Key": "Sort By",
+      "Key": "search:sort_by",
       "Text": "Sort By"
     },
     {
-      "Key": "Sort Filter",
+      "Key": "search:sort_filter",
       "Text": "Relevance,Newest Content,Oldest Content"
     },
     {
-      "Key": "Previous",
+      "Key": "search:previous",
       "Text": "Previous"
     },
     {
-      "Key": "Next",
+      "Key": "v2_stories_carousel:previous",
+      "Text": "Previous"
+    },
+    {
+      "Key": "search:next",
       "Text": "Next"
     },
     {
-      "Key": "No search results",
-      "Text": "SORRY, YOUR SEARCH FOR \"{{$0}}\" RETURNED NO RESULTS!"
+      "Key": "v2_stories_carousel:next",
+      "Text": "Next"
     },
     {
-      "Key": "No search results promp",
-      "Text": "LET'S REFINE, OR TRY SEARCHING BY DIFFERENT SEARCH KEYWORDS INSTEAD."
-    },
-    {
-      "Key": "This is 360° image",
+      "Key": "photosphere:360°_image",
       "Text": "This is 360° image"
     },
     {
-      "Key": "Close menu",
+      "Key": "header:close_menu",
       "Text": "Close menu"
     },
     {
-      "Key": "Search",
+      "Key": "header:search",
       "Text": "Search"
     },
     {
-      "Key": "Open menu",
+      "Key": "magazine_articles:search",
+      "Text": "Search"
+    },
+    {
+      "Key": "header:open_menu",
       "Text": "Open menu"
     },
     {
-      "Key": "Overview",
+      "Key": "header:overview",
       "Text": "Overview"
     },
     {
-      "Key": "Please enter valid value",
+      "Key": "calculator:error_message",
       "Text": "Please enter valid value"
     },
     {
-      "Key": "no eloqua message",
-      "Text": "We cannot show the content because you have not given us permission to store cookie files"
-    },
-    {
-      "Key": "no eloqua link message",
-      "Text": "Change cookie settings"
-    },
-    {
-      "Key": "vinlabel",
+      "Key": "vin_number:label",
       "Text": "Enter your 17-digit VIN (Vehicle Identification Number)"
     },
     {
-      "Key": "vinformat",
+      "Key": "vin_number:format",
       "Text": "The VIN entered is not valid for Volvo Trucks, Prevost, Nova Bus, or Volvo Bus vehicles"
     },
     {
-      "Key": "result text",
+      "Key": "vin_number:result_text",
       "Text": "${count} recalls available for VIN \"${vin}\""
     },
     {
-      "Key": "recalls",
+      "Key": "vin_number:recalls",
       "Text": "Recalls"
     },
     {
@@ -128,11 +132,11 @@
       "Text": "Remedy Availability"
     },
     {
-      "Key": "recall_effective_text",
+      "Key": "vin_number:recall_effective_text",
       "Text": "The remedy for this recall is currently available.//The remedy for this recall is estimated to be available"
     },
     {
-      "Key": "published_info",
+      "Key": "vin_number:published_info",
       "Text": "Information last updated"
     },
     {
@@ -152,11 +156,11 @@
       "Text": "Recall Incomplete, remedy not available"
     },
     {
-      "Key": "loading recalls",
+      "Key": "vin_number:loading_recalls",
       "Text": "Loading recalls"
     },
     {
-      "Key": "no recalls",
+      "Key": "vin_number:no_recalls",
       "Text": "No recalls for VIN"
     },
     {
@@ -164,7 +168,7 @@
       "Text": "Next Steps"
     },
     {
-      "Key": "submit",
+      "Key": "vin_number:submit",
       "Text": "Submit"
     },
     {
@@ -176,7 +180,7 @@
       "Text": "NHTSA Recall Number"
     },
     {
-      "Key": "recall_oldest_info",
+      "Key": "vin_number:recall_oldest_info",
       "Text": "Recall information available since:"
     },
     {
@@ -184,271 +188,275 @@
       "Text": "Transport Canada Number"
     },
     {
-      "Key": "no-french-info",
+      "Key": "vin_number:no_french_info",
       "Text": "L'anglais est affiché là où le français n'est pas disponible."
     },
     {
-      "Key": "vinformat-length",
+      "Key": "vin_number:format_length",
       "Text": "Please fill out this field"
     },
     {
-      "Key": "day",
+      "Key": "v2_hero:day",
       "Text": "day"
     },
     {
-      "Key": "hour",
+      "Key": "v2_hero:hour",
       "Text": "hour"
     },
     {
-      "Key": "minute",
+      "Key": "v2_hero:minute",
       "Text": "minute"
     },
     {
-      "Key": "second",
+      "Key": "v2_hero:second",
       "Text": "second"
     },
     {
-      "Key": "Close",
+      "Key": "modal:close",
       "Text": "Close"
     },
     {
-      "Key": "Copied",
+      "Key": "v2_social_block:copied",
       "Text": "Copied!"
     },
     {
-      "Key": "event-notify:first-name",
+      "Key": "event_notify:first_name",
       "Text": "First name"
     },
     {
-      "Key": "event-notify:last-name",
+      "Key": "event_notify:last_name",
       "Text": "Last name"
     },
     {
-      "Key": "event-notify:zip",
+      "Key": "event_notify:zip",
       "Text": "Zip or Postal Code"
     },
     {
-      "Key": "event-notify:email",
+      "Key": "event_notify:email",
       "Text": "Email"
     },
     {
-      "Key": "event-notify:agreement",
+      "Key": "event_notify:agreement",
       "Text": "I agree to receive email updates from Volvo Trucks North America"
     },
     {
-      "Key": "event-notify:notify",
+      "Key": "event_notify:notify",
       "Text": "Notify me"
     },
     {
-      "Key": "event-notify:add-event",
+      "Key": "event_notify:add_event",
       "Text": "Add event to calendar"
     },
     {
-      "Key": "event-notify:company",
+      "Key": "event_notify:company",
       "Text": "Company"
     },
     {
-      "Key": "event-notify:country",
+      "Key": "event_notify:country",
       "Text": "Country"
     },
     {
-      "Key": "event-notify:united-states",
+      "Key": "event_notify:united_states",
       "Text": "United States"
     },
     {
-      "Key": "event-notify:canada",
+      "Key": "event_notify:canada",
       "Text": "Canada"
     },
     {
-      "Key": "event-notify:other",
+      "Key": "event_notify:other",
       "Text": "Other"
     },
     {
-      "Key": "view all",
+      "Key": "v2_resource_gallery:view_all",
       "Text": "View all"
     },
     {
-      "Key": "toggle list",
-      "Text": "Toggle resources list"
-    },
-    {
-      "Key": "view less",
+      "Key": "v2_resource_gallery:view_less",
       "Text": "View less"
     },
     {
-      "Key": "recall_available_info",
+      "Key": "vin_number:recall_available_info",
       "Text": "since:"
     },
     {
-      "Key": "make",
+      "Key": "vin_number:make",
       "Text": "Make"
     },
     {
-      "Key": "model",
+      "Key": "vin_number:model",
       "Text": "Model"
     },
     {
-      "Key": "model year",
+      "Key": "vin_number:model_year",
       "Text": "Model Year"
     },
     {
-      "Key": "go to top",
+      "Key": "footer:go_to_top",
       "Text": "Go to the top of the page"
     },
     {
-      "Key": "single video message title",
+      "Key": "v2_livestream_embed:single_video_message_title",
       "Text": "Enable cookies to view the reveal?"
     },
     {
-      "Key": "single video message text",
+      "Key": "modal:single_video_message_title",
+      "Text": "Enable cookies to view the reveal?"
+    },
+    {
+      "Key": "v2_livestream_embed:single_video_message_text",
       "Text": "<p class='cookie-message__text'>Our media viewer uses social media cookies and/or similar technologies set by third-party services, as outlined in our <a href='/cookies/'>Cookie Notice</a>.</p><p class='cookie-message__text'>Use “Accept Cookies” to view the reveal and to agree to the storing of cookies on your device and to our use of cookies, or use “Reject Cookies” to decline to review the reveal.</p>"
     },
     {
-      "Key": "single video message button",
+      "Key": "modal:single_video_message_text",
+      "Text": "<p class='cookie-message__text'>Our media viewer uses social media cookies and/or similar technologies set by third-party services, as outlined in our <a href='/cookies/'>Cookie Notice</a>.</p><p class='cookie-message__text'>Use “Accept Cookies” to view the reveal and to agree to the storing of cookies on your device and to our use of cookies, or use “Reject Cookies” to decline to review the reveal.</p>"
+    },
+    {
+      "Key": "v2_livestream_embed:single_video_message_button",
       "Text": "Accept All Cookies"
     },
     {
-      "Key": "single video message button deny",
+      "Key": "modal:single_video_message_button",
+      "Text": "Accept All Cookies"
+    },
+    {
+      "Key": "v2_livestream_embed:single_video_message_button_deny",
       "Text": "Reject Cookies"
     },
     {
-      "Key": "form-subscribe:email-label",
+      "Key": "modal:single_video_message_button_deny",
+      "Text": "Reject Cookies"
+    },
+    {
+      "Key": "subscribe:email_label",
       "Text": "Enter your email"
     },
     {
-      "Key": "form-subscribe:button-submit",
+      "Key": "subscribe:button_submit",
       "Text": "Submit"
     },
     {
-      "Key": "form-subscribe:success-title",
+      "Key": "v2_newsletter:success_title",
       "Text": "You’re all set."
     },
     {
-      "Key": "form-subscribe:success-text",
+      "Key": "v2_newsletter:success_text",
       "Text": "We’ll be sending you all the latest Volvo info"
     },
     {
-      "Key": "form-subscribe:error-title",
+      "Key": "v2_newsletter:error_title",
       "Text": "Oops, something went wrong."
     },
     {
-      "Key": "form-subscribe:error-text",
+      "Key": "v2_newsletter:error_text",
       "Text": "Please <a href=\"https://www.volvotrucks.us/about-volvo/contact-us/\">contact us</a>."
     },
     {
-      "Key": "modal:error-title-unknown",
-      "Text": "Oops, something went wrong."
-    },
-    {
-      "Key": "modal:error-text-unknown",
-      "Text": "Something went wrong. Please try again."
-    },
-    {
-      "Key": "modal:error-title-404",
-      "Text": "Oops, something went wrong."
-    },
-    {
-      "Key": "modal:error-text-404",
-      "Text": "Requested content not found."
-    },
-    {
-      "Key": "404-back-link",
+      "Key": "404:back_link_title",
       "Text": "BACK"
     },
     {
-      "Key": "readTime",
+      "Key": "v2_magazine:read_time",
       "Text": "read"
     },
     {
-      "Key": "readMoreBtn",
+      "Key": "v2_article_cards:read_more",
       "Text": "Read More"
     },
     {
-      "Key": "defaultAuthor",
+      "Key": "magazine:default_author",
       "Text": "Volvo Trucks NA"
     },
     {
-      "Key": "defaultReadTime",
+      "Key": "magazine:default_read_time",
       "Text": "10 min"
     },
     {
-      "Key": "paginationNavAriaLabel",
+      "Key": "pagination:nav_aria_label",
       "Text": "pagination"
     },
     {
-      "Key": "paginationPageAriaLabel",
+      "Key": "pagination:page_aria_label",
       "Text": "page"
     },
     {
-      "Key": "paginationPreviousPageAriaLabel",
+      "Key": "pagination:previous_page_aria_label",
       "Text": "previous page"
     },
     {
-      "Key": "paginationNextPageAriaLabel",
+      "Key": "pagination:next_page_aria_label",
       "Text": "next page"
     },
     {
-      "Key": "filterDefault",
+      "Key": "v2_article_search:default_filter",
       "Text": "All Topics"
     },
     {
-      "Key": "searchPlaceholder",
+      "Key": "v2_article_search:search_placeholder",
       "Text": "Search magazine"
     },
     {
-      "Key": "V2CustomForm:SuccessfulSubmissionTitle",
+      "Key": "v2_custom_form:successful_submission_title",
       "Text": "THANK YOU!"
     },
     {
-      "Key": "V2CustomForm:SuccessfulSubmissionText",
+      "Key": "v2_custom_form:successful_submission_text",
       "Text": "Your information has been submitted. Someone will be in touch with you shortly."
     },
     {
-      "Key": "V2CustomForm:ErrorSubmissionTitle",
+      "Key": "v2_custom_form:error_submission_title",
       "Text": "Error"
     },
     {
-      "Key": "V2CustomForm:ErrorSubmissionText",
+      "Key": "v2_custom_form:error_submission_text",
       "Text": "Information not sent. Please, try again later."
     },
     {
-      "Key": "charts:bottom-label",
+      "Key": "performance_chart:bottom_label",
       "Text": "Revolutions Per Minute"
     },
     {
-      "Key": "charts:label-tq",
+      "Key": "performance_chart:label_tq",
       "Text": "Peak Torque"
     },
     {
-      "Key": "charts:label-hp",
+      "Key": "performance_chart:label_hp",
       "Text": "Peak Power"
     },
     {
-      "Key": "charts:unit-tq",
+      "Key": "performance_chart:unit_tq",
       "Text": "lb-ft"
     },
     {
-      "Key": "charts:unit-hp",
+      "Key": "performance_chart:unit_hp",
       "Text": "HP"
     },
     {
-      "Key": "charts:subtitle",
+      "Key": "engine_specifications:subtitle",
       "Text": "Engine Ratings"
     },
     {
-      "Key": "PressReleases:SearchPlaceholder",
+      "Key": "engine_specifications:unit_tq",
+      "Text": "lb-ft"
+    },
+    {
+      "Key": "engine_specifications:unit_hp",
+      "Text": "HP"
+    },
+    {
+      "Key": "press_releases:search_placeholder",
       "Text": "Search for..."
     },
     {
-      "Key": "clear",
+      "Key": "v2_article_search:clear",
       "Text": "clear"
     },
     {
-      "Key": "invalid_form_weekend_day_label",
+      "Key": "v2_custom_form:invalid_form_weekend_day_label",
       "Text": "Please select a working day (Monday to Friday and no public holidays)."
     },
     {
-      "Key": "invalid_form_holiday_label",
+      "Key": "v2_custom_form:invalid_form_holiday_label",
       "Text": "The selected date falls on a holiday. Please choose a different date."
     }
   ],

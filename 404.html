@@ -23,7 +23,7 @@
           const observer = new MutationObserver((mutations, observer) => {
             const fragmentContainer = document.querySelector('.fragment');
             if (fragmentContainer) {
-              const backLinkTitle = getTextLabel('404-back-link');
+              const backLinkTitle = getTextLabel('404:back_link_title');
               const btnContainer = document.createElement('p');
               const backBtn = document.createElement('a');
               backBtn.classList.add('button', 'button--primary');
