@@ -22,7 +22,7 @@ const createModalTopBar = (parentEl) => {
     <div class="modal-top-bar">
       <div class="modal-top-bar-content">
         <h2 class="modal-top-bar-heading" id="modal-heading"></h2>
-        <button type="button" class="modal-close-button" aria-label=${getTextLabel('close')}>
+        <button type="button" class="modal-close-button" aria-label=${getTextLabel('modal:close')}>
           <span class="icon icon-close" aria-hidden="true" />
         </button>
       </div>
@@ -208,11 +208,11 @@ const createModal = () => {
           cookieMsgContainer.style.background = 'linear-gradient(180deg, rgba(0, 0, 0, 0.00) 0%, rgba(0, 0, 0, 0.80) 100%) center / cover no-repeat';
 
           const cookieMessage = document.createRange().createContextualFragment(`
-            <h3 class="modal-cookie-message__title">${getTextLabel('single video message title')}</h3>
-            ${getTextLabel('single video message text')}
+            <h3 class="modal-cookie-message__title">${getTextLabel('modal:single_video_message_title')}</h3>
+            ${getTextLabel('modal:single_video_message_text')}
             <div class="modal-cookie-message__button-container">
-              <button class="button primary dark">${getTextLabel('single video message button')}</button>
-              <button class="button secondary dark">${getTextLabel('single video message button deny')}</button>
+              <button class="button primary dark">${getTextLabel('modal:single_video_message_button')}</button>
+              <button class="button secondary dark">${getTextLabel('modal:single_video_message_button_deny')}</button>
             </div>
           `);
 

@@ -243,8 +243,8 @@ export function cleanupVideoLink(block, link, hasPoster) {
 }
 
 export function createLowResolutionBanner() {
-  const lowResolutionMessage = getTextLabel('Low resolution video message');
-  const changeCookieSettings = getTextLabel('Change cookie settings');
+  const lowResolutionMessage = getTextLabel('video_helper:low_resolution_message');
+  const changeCookieSettings = getTextLabel('video_helper:change_cookie_settings');
   let banner;
 
   if (document.documentElement.classList.contains('redesign-v2')) {

@@ -90,7 +90,7 @@ const renderArticleCard = (article) => {
     const newButton = document.createRange().createContextualFragment(`
       <div class="button-container ${blockName}__card-button">
         <a class="button tertiary">
-          ${getTextLabel('readMoreBtn')}
+          ${getTextLabel('v2_article_cards:read_more')}
         </a>
       </div>
     `);
@@ -452,7 +452,7 @@ const initPaginatedVariant = async (block, queryOptions, pageSize, featuredArtic
   } else if (featuredArticles.length === 0) {
     contentArea.innerHTML = '';
     const noResultsMsg = createElement('p', { classes: `${blockName}__no-results-message` });
-    noResultsMsg.textContent = getTextLabel('no results').replace('$0', '');
+    noResultsMsg.textContent = getTextLabel('v2_article_cards:no_results').replace('$0', '');
     contentArea.append(noResultsMsg);
   }
 

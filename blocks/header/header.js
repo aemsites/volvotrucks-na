@@ -74,7 +74,7 @@ const createActions = (actionsWrapper) => {
       });
   });
 
-  const closeMenuLabel = getTextLabel('Close menu');
+  const closeMenuLabel = getTextLabel('header:close_menu');
   const closeIcon = document.createRange().createContextualFragment(`
     <li class="${blockClass}__action-item ${blockClass}__action-item--close-menu">
       <button
@@ -95,8 +95,8 @@ const createActions = (actionsWrapper) => {
 
 const mobileActions = () => {
   const mobileActionsEl = createElement('div', { classes: [`${blockClass}__mobile-actions`] });
-  const searchLabel = getTextLabel('Search');
-  const openMenuLabel = getTextLabel('Open menu');
+  const searchLabel = getTextLabel('header:search');
+  const openMenuLabel = getTextLabel('header:open_menu');
   const searchResults = `${getLanguagePath()}search-results`;
 
   const searchEl = `<a href="${searchResults}" aria-label="${searchLabel}" class="${blockClass}__search-button ${blockClass}__action-link ${blockClass}__link">
@@ -140,7 +140,7 @@ const createOverviewLink = (linkToCopy, parent) => {
   overview.classList.add(`${blockClass}__overview-link`);
   const link = overview.querySelector('a');
   link.classList.add(`${blockClass}__link`);
-  link.textContent = getTextLabel('Overview');
+  link.textContent = getTextLabel('header:overview');
   parent.prepend(overview);
 };
 

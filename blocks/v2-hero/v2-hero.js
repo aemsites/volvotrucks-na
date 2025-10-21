@@ -39,10 +39,10 @@ function updateCountdown(eventTime, block) {
   const seconds = Math.floor((diff % (1000 * 60)) / 1000);
 
   // Format labels
-  const dayLabel = days === 1 ? getTextLabel('day') : `${getTextLabel('day')}s`;
-  const hourLabel = hours === 1 ? getTextLabel('hour') : `${getTextLabel('hour')}s`;
-  const minuteLabel = minutes === 1 ? getTextLabel('minute') : `${getTextLabel('minute')}s`;
-  const secondLabel = seconds === 1 ? getTextLabel('second') : `${getTextLabel('second')}s`;
+  const dayLabel = days === 1 ? getTextLabel('v2_hero:day') : `${getTextLabel('v2_hero:day')}s`;
+  const hourLabel = hours === 1 ? getTextLabel('v2_hero:hour') : `${getTextLabel('v2_hero:hour')}s`;
+  const minuteLabel = minutes === 1 ? getTextLabel('v2_hero:minute') : `${getTextLabel('v2_hero:minute')}s`;
+  const secondLabel = seconds === 1 ? getTextLabel('v2_hero:second') : `${getTextLabel('v2_hero:second')}s`;
 
   updateCountdownElement(block, 'days', days, dayLabel);
   updateCountdownElement(block, 'hours', hours, hourLabel);
