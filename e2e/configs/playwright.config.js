@@ -1,6 +1,10 @@
 // @ts-check
 import { defineConfig, devices } from '@playwright/test';
 
+/**
+ * @param {Record<string, string | undefined>} env Environment variables map
+ * @returns {string} Resolved base URL
+ */
 function getbaseUrl(env) {
   const branch = 'https://main--volvotrucks-us--volvogroup.aem.page';
 
