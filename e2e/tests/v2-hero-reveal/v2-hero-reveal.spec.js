@@ -113,8 +113,3 @@ test.describe('V2 Hero Reveal', () => {
     });
   });
 });
-
-test('force fail test', async () => {
-  throw new Error('Intentional fail to test CI behavior');
-});
-
