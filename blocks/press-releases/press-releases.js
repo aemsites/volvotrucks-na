@@ -1,4 +1,4 @@
-import { createElement, getOrigin, getDateFromTimestamp, getTextLabel } from '../../scripts/common.js';
+import { createElement, getOrigin, getDateFromTimestamp, getTextLabel, getPlaceholders } from '../../scripts/common.js';
 import { createOptimizedPicture, loadCSS } from '../../scripts/aem.js';
 import createPagination from '../../common/pagination/pagination.js';
 import { fetchPressReleases } from '../../scripts/services/press-release.service.js';
@@ -191,6 +191,7 @@ const addEventListeners = (block) => {
 };
 
 export default async function decorate(block) {
+  await getPlaceholders();
   block.append(renderSearchBar());
   await initPressReleasesPagination(block);
   addEventListeners(block);
