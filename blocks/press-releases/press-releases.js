@@ -29,7 +29,7 @@ const parsePressRelease = (item) => {
 const renderSearchBar = () => {
   const searchBar = createElement('div', { classes: `${blockName}__search-bar` });
   searchBar.innerHTML = `
-    <input type="text" name="search" autocomplete="off" placeholder="${getTextLabel('PressReleases:SearchPlaceholder')}"/>
+    <input type="text" name="search" autocomplete="off" placeholder="${getTextLabel('press_releases:search_placeholder')}"/>
     <button type="submit"><i class="fa fa-search"></i></button>`;
   return searchBar;
 };
@@ -166,7 +166,7 @@ const initPressReleasesPagination = async (block, baseParams = {}) => {
     contentArea.innerHTML = '';
     const noResultsMsg = createElement('p', { classes: `${blockName}__no-results-message` });
     const q = baseParams?.q || '';
-    noResultsMsg.textContent = getTextLabel('no results').replace('$0', `"${q}"`);
+    noResultsMsg.textContent = getTextLabel('press_releases:no_results').replace('$0', `"${q}"`);
     contentArea.append(noResultsMsg);
   }
 };
