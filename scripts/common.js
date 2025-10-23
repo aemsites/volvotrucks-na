@@ -376,7 +376,7 @@ const formatValues = (values) => {
   return obj;
 };
 
-const { searchConfig, cookieValues, magazineConfig, tools, headerConfig, newsFeedConfig, truckConfiguratorUrls, holidays, dealerLocator } =
+const { searchConfig, cookieValues, magazineConfig, tools, headerConfig, newsFeedConfig, truckConfiguratorUrls, holidays } =
   await getConstantValues();
 
 // This data comes from the sharepoint 'constants.xlsx' file
@@ -388,7 +388,6 @@ export const HEADER_CONFIGS = formatValues(headerConfig?.data);
 export const NEWS_FEED_CONFIGS = formatValues(newsFeedConfig?.data);
 export const TRUCK_CONFIGURATOR_URLS = formatValues(truckConfiguratorUrls?.data);
 export const HOLIDAYS = formatValues(holidays?.data);
-export const DEALER_LOCATOR_CONFIGS = formatValues(dealerLocator?.data);
 
 /**
  * Check if one trust group is checked.
