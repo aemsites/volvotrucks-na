@@ -29,7 +29,7 @@ export default async function decorate(block) {
     const copyLink = item.querySelector('.icon-link');
     if (copyLink) {
       copyAnchor = anchor;
-      anchor.dataset.tooltip = getTextLabel('Copied');
+      anchor.dataset.tooltip = getTextLabel('v2_social_block:copied');
 
       anchor.addEventListener('click', async (e) => {
         e.preventDefault();

@@ -20,9 +20,9 @@ const searchInputExpanded = `${blockName}__search-input--expanded`;
 const blockVariants = ['black', 'gray'];
 
 await getPlaceholders();
-const filterDefault = getTextLabel('filterDefault');
-const searchPlaceholder = getTextLabel('searchPlaceholder');
-const clearPlaceholder = getTextLabel('clear');
+const filterDefault = getTextLabel('v2_article_search:default_filter');
+const searchPlaceholder = getTextLabel('v2_article_search:search_placeholder');
+const clearPlaceholder = getTextLabel('v2_article_search:clear');
 
 const locale = getLocale();
 const language = locale.split('-')[0].toUpperCase();

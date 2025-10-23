@@ -86,7 +86,7 @@ export default function decorate(block) {
     viewAllButton.innerHTML = `
       <span class="icon icon-plus"></span>
       <span class="icon icon-minus"></span>
-      <span class="${blockName}__button-text">${getTextLabel('view all')}</span>
+      <span class="${blockName}__button-text">${getTextLabel('v2_resource_gallery:view_all')}</span>
     `;
 
     decorateIcons(viewAllButton);
@@ -96,12 +96,12 @@ export default function decorate(block) {
       const buttonText = viewAllButton.lastElementChild;
       if (viewAllButton.ariaExpanded === 'true') {
         viewAllButton.ariaExpanded = 'false';
-        buttonText.innerText = getTextLabel('view all');
+        buttonText.innerText = getTextLabel('v2_resource_gallery:view_all');
         block.classList.remove(`${blockName}__list--expand`);
         toggleListEle(block, false);
       } else {
         viewAllButton.ariaExpanded = 'true';
-        buttonText.innerText = getTextLabel('view less');
+        buttonText.innerText = getTextLabel('v2_resource_gallery:view_less');
         block.classList.add(`${blockName}__list--expand`);
         toggleListEle(block, true);
       }

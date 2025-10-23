@@ -1,11 +1,11 @@
 import { getTextLabel } from '../../scripts/common.js';
 
 const TEXT = {
-  bottom: getTextLabel('charts:bottom-label'),
-  labelTQ: getTextLabel('charts:label-tq'),
-  labelHP: getTextLabel('charts:label-hp'),
-  unitTQ: getTextLabel('charts:unit-tq'),
-  unitHP: getTextLabel('charts:unit-hp'),
+  bottom: getTextLabel('performance_chart:bottom_label'),
+  labelTQ: getTextLabel('performance_chart:label_tq'),
+  labelHP: getTextLabel('performance_chart:label_hp'),
+  unitTQ: getTextLabel('performance_chart:unit_tq'),
+  unitHP: getTextLabel('performance_chart:unit_hp'),
 };
 
 const COLORS = {

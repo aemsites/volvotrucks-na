@@ -1,6 +1,16 @@
 import { loadCSS, getMetadata } from './aem.js';
 
+/**
+ * Placeholders data for the application and the translations
+ * @type {Object|null}
+ */
 let placeholders = null;
+/**
+ * Promise that resolves to the placeholders data.
+ * Used to cache and share the placeholders loading operation across multiple requests.
+ * @type {Promise<Object>|null}
+ */
+let placeholdersPromise = null;
 
 /**
  * Returns the true origin of the current page in the browser.
@@ -27,11 +37,45 @@ export const getLanguagePath = () => {
   return langCodeMatch ? langCodeMatch[1] : '/';
 };
 
+/**
+ * Updates the `placeholders` variable by fetching the `placeholder.json` file.
+ *
+ * This function ensures placeholders are fetched only once by maintaining a promise-based
+ * locking mechanism. Subsequent calls will wait for the initial fetch to complete.
+ * The placeholders data is retrieved from a language-specific JSON file and stored globally.
+ *
+ * @async
+ * @returns {Promise<void>} Resolves when placeholders have been fetched and the global variable updated
+ * @throws {Error} Logs error to console if placeholder fetch fails, but does not reject
+ *
+ * @example
+ * await getPlaceholders();
+ * // placeholders global variable is now populated
+ */
 export async function getPlaceholders() {
-  const url = `${getLanguagePath()}placeholder.json`;
-  placeholders = await fetch(url).then((resp) => resp.json());
+  if (!placeholders && !placeholdersPromise) {
+    const url = `${getLanguagePath()}placeholder.json`;
+    placeholdersPromise = fetch(url)
+      .then((resp) => resp.json())
+      .then((data) => {
+        placeholders = data;
+        placeholdersPromise = null;
+      })
+      .catch((error) => {
+        console.error('Error fetching placeholders:', error);
+        placeholdersPromise = null;
+      });
+  }
+  await placeholdersPromise;
 }
 
+/**
+ * Returns the text label for the given key from the placeholders data.
+ *
+ * If the key is not found, or placeholders are not loaded, it returns the key itself.
+ * @param {String} key The key to look for in the placeholders data
+ * @returns {String} The text label or the key if not found
+ */
 export function getTextLabel(key) {
   return placeholders?.data.find((el) => el.Key === key)?.Text || key;
 }

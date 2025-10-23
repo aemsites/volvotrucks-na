@@ -1,26 +1,26 @@
 import { getTextLabel } from '../../../scripts/common.js';
 import { getCustomDropdown } from '../../../common/custom-dropdown/custom-dropdown.js';
 
-const COUNTRY_CODES = ['united-states', 'canada', 'other'];
+const COUNTRY_CODES = ['united_states', 'canada', 'other'];
 const formName = 'event-notify';
 const TYPES = {
-  firstName: 'first-name',
-  lastName: 'last-name',
+  firstName: 'first_name',
+  lastName: 'last_name',
   zip: 'zip',
   email: 'email',
   country: 'country',
   company: 'company',
   agreement: 'agreement',
   notify: 'notify',
-  addEvent: 'add-event',
+  addEvent: 'add_event',
 };
 
 const mapCountryCodesToLabels = (countryCodes = []) => {
-  return countryCodes.map((code) => getTextLabel(`event-notify:${code}`));
+  return countryCodes.map((code) => getTextLabel(`event_notify:${code}`));
 };
 
 const getTypeKey = (type) => {
-  return `${formName}:${type}`;
+  return `event_notify:${type}`;
 };
 
 const optionList = mapCountryCodesToLabels(COUNTRY_CODES);
