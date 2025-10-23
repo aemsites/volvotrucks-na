@@ -11,11 +11,19 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: '20'
-    - name: Configure npm for Volvo Azure Artifacts
+    - name: Update .npmrc with Azure PAT token
       run: |
-        echo "@volvo:registry=https://pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/" >> ~/.npmrc
-        echo "//pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/:_authToken=$(echo -n ${{ secrets.VOLVO_PAT }} | base64)" >> ~/.npmrc
-        echo "always-auth=true" >> ~/.npmrc
+        echo "; begin auth token
+        //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/:username=volvogroup
+        //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/:_password=[BASE64_ENCODED_PERSONAL_ACCESS_TOKEN]
+        //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/:email=AZU-VES-VCDK@volvogroup.onmicrosoft.com
+        //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/:username=volvogroup
+        //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/:_password=[BASE64_ENCODED_PERSONAL_ACCESS_TOKEN]
+        //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/:email=AZU-VES-VCDK@volvogroup.onmicrosoft.com
+        ; end auth token" > .npmrc
+        sed -i 's/\[BASE64_ENCODED_PERSONAL_ACCESS_TOKEN\]/${{ env.AZURE_PAT_TOKEN_BASE64 }}/g' .npmrc
+      env:
+        AZURE_PAT_TOKEN_BASE64: ${{ secrets.VOLVO_PAT }}
     - name: Install dependencies
       run: npm ci --verbose
     - name: Run Lint
