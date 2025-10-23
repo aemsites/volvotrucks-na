@@ -6,6 +6,9 @@ jobs:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@v4
+      with:
+        persist-credentials: false  # don't use default GITHUB_TOKEN
+        fetch-depth: 0
     - name: Use Node.js 20
       uses: actions/setup-node@v4
       with:
@@ -33,13 +36,26 @@ jobs:
       env:
         TOKEN: ${{ secrets.PAT_BUILD_TOKEN }}
       run: |
+        # Git identity for the commit
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
+
+        # Avoid warnings for ignored files
+        git config advice.addIgnoredFile false
+
+        # Remove existing dist folder from branch
         git rm -rf dist || true
-        git add dist -f
+
+        # Force add new dist files (even if in .gitignore)
+        git add -f dist
+
+        # Only commit if there are actual changes
         if git diff --cached --quiet; then
-          echo "No changes to commit."
+          echo "✅ No changes to commit."
         else
           git commit -m "chore: update dist [skip ci]"
+          echo "📦 Changes committed, pushing to branch..."
+
+          # Push using the Personal Access Token (PAT)
           git push https://x-access-token:${TOKEN}@github.com/${{ github.repository }} HEAD:${{ github.ref_name }}
         fi
