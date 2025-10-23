@@ -30,15 +30,16 @@ jobs:
     - name: Build
       run: npm run build
     - name: Commit built files
+      env:
+        TOKEN: ${{ secrets.PAT_BUILD_TOKEN }}
       run: |
         git config user.name "github-actions[bot]"
         git config user.email "github-actions[bot]@users.noreply.github.com"
+        git rm -rf dist || true
         git add dist -f
         if git diff --cached --quiet; then
           echo "No changes to commit."
         else
           git commit -m "chore: update dist [skip ci]"
-          git push origin HEAD:${{ github.ref_name }}
+          git push https://x-access-token:${TOKEN}@github.com/${{ github.repository }} HEAD:${{ github.ref_name }}
         fi
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
