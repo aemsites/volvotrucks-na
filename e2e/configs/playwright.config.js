@@ -5,7 +5,7 @@ import { defineConfig, devices } from '@playwright/test';
  * @param {Record<string, string | undefined>} env Environment variables map
  * @returns {string} Resolved base URL
  */
-function getbaseUrl(env) {
+function getBaseUrl(env) {
   const branch = 'https://main--volvotrucks-us--volvogroup.aem.page';
 
   if (env.BRANCH) {
@@ -31,7 +31,7 @@ function getbaseUrl(env) {
  * @see https://playwright.dev/docs/test-configuration
  */
 export default defineConfig({
-  testDir: '../../e2e',
+  testDir: '../tests',
   /* Run tests in files in parallel */
   fullyParallel: false,
   /* Fail the build on CI if you accidentally left test.only in the source code. */
@@ -50,7 +50,7 @@ export default defineConfig({
   /* Shared settings for all the projects below. See https://playwright.dev/docs/api/class-testoptions. */
   use: {
     /* Base URL to use in actions like `await page.goto('/')`. */
-    baseURL: getbaseUrl(process.env),
+    baseURL: getBaseUrl(process.env),
 
     /* Collect trace when retrying the failed test. See https://playwright.dev/docs/trace-viewer */
     trace: 'on-first-retry',
