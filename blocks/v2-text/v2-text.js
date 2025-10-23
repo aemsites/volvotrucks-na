@@ -26,9 +26,6 @@ export default function decorate(block) {
     unwrapDivs(row);
   });
 
-
-
-  // Leaving a lint error on puporse
   // From this point on it is just code for the POC and should be removed later:
 
   const button = document.createRange().createContextualFragment('<vcdk-button variant="marketing" size="medium">Button</vcdk-button>');
