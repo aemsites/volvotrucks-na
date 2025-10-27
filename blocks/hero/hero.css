@@ -137,7 +137,7 @@ main .hero-with-video .hero-video {
 
   main .hero picture::after {
     top: 0;
-    background-image: linear-gradient(-30deg, rgba(0 0 0 / 0%), rgba(0 0 0 / 40%));
+    background-image: linear-gradient(-30deg, rgb(0 0 0 / 0%), rgb(0 0 0 / 40%));
   }
 
   main .hero-with-video picture img {
