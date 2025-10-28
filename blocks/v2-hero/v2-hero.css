@@ -202,7 +202,8 @@
   min-height: fit-content;
 }
 
-.v2-hero--marketing video + .v2-hero__content-wrapper {
+.v2-hero--marketing video + .v2-hero__content-wrapper,
+.v2-hero--marketing .v2-hero__video + .v2-hero__content-wrapper {
   background: none;
 }
 
