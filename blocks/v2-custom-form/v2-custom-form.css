@@ -214,8 +214,7 @@
   line-height: var(--fields-line-height);
 }
 
-.v2-custom-form-container .field-wrapper.visually-hidden,
-.v2-custom-form-container .hidden {
+.v2-custom-form-container .field-wrapper.visually-hidden {
   left: 0;
 }
 
