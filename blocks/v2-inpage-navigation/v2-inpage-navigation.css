@@ -4,16 +4,28 @@
   --inpage-navigation-factor: var(--inpage-navigation-bottom-height);
 }
 
-.v2-inpage-navigation-wrapper {
+.v2-inpage-navigation {
+  border-width: 1px 0;
+  border-style: solid;
+  border-color: var(--c-grey-50);
+  height: var(--inpage-navigation-height);
+}
+
+.v2-inpage-navigation-wrapper .v2-inpage-navigation{
   background-color: var(--c-white);
   left: 0;
-  position: sticky;
+  position: fixed;
   top: var(--nav-height);
   width: 100%;
   z-index: var(--z-index-inpage-nav);
   transition:
     transform var(--duration-medium) ease-in-out,
+    top var(--duration-medium) ease-in-out,
     z-index var(--duration-medium) ease-in-out;
+}
+
+.v2-inpage-navigation-wrapper .v2-inpage-navigation.v2-inpage-navigation--hidden{
+  top: -56px;
 }
 
 /* As the first section in main doesn't need to have padding-top
@@ -34,13 +46,6 @@ then we change it for the next section item in main */
 
 .v2-inpage-navigation--hidden.v2-inpage-navigation-wrapper {
   transform: translateY(calc(var(--nav-height) * -1));
-}
-
-.v2-inpage-navigation {
-  border-width: 1px 0;
-  border-style: solid;
-  border-color: var(--c-grey-50);
-  height: var(--inpage-navigation-height);
 }
 
 .v2-inpage-navigation__wrapper {
@@ -247,6 +252,19 @@ then we change it for the next section item in main */
 
   .bottom-sticky-cta .v2-inpage-navigation__wrapper {
     justify-content: flex-end;
+  }
+
+  .v2-inpage-navigation--hidden{
+    transform: unset;
+  }
+
+  .v2-inpage-navigation--hidden .v2-inpage-navigation{
+    top: 0;
+    transition: top var(--duration-large) var(--easing-entrance);
+  }
+
+  .v2-inpage-navigation--hidden.v2-inpage-navigation-wrapper{
+    transform: unset;
   }
 }
 

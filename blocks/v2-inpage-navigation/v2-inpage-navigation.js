@@ -140,11 +140,11 @@ const updateActive = (id) => {
   }
 };
 
-const addHeaderScrollBehavior = (header) => {
+const addScrollBehavior = (header) => {
   let prevPosition = 0;
 
-  const onScroll = () => {
-    if (window.scrollY > prevPosition) {
+  window.addEventListener('scroll', () => {
+    if (window.scrollY > prevPosition && !document.body.classList.contains('disable-scroll')) {
       header.classList.add(`${blockName}--hidden`);
     } else {
       header.classList.remove(`${blockName}--hidden`);
@@ -152,15 +152,18 @@ const addHeaderScrollBehavior = (header) => {
 
     // on Safari the window.scrollY can be negative so `> 0` check is needed
     prevPosition = window.scrollY > 0 ? window.scrollY : 0;
-  };
+  });
+};
 
+const addDesktopScrollBehavior = (block) => {
+  addScrollBehavior(block.parentNode);
   window.addEventListener('scroll', onScroll, { passive: true });
 
   return () => {
     window.removeEventListener('scroll', onScroll);
     header.classList.remove(`${blockName}--hidden`);
   };
-};
+}
 
 /**
  * Update the in-page navigation factor based on the visibility of the CTA button.
@@ -263,6 +266,7 @@ const setupResponsiveBehavior = (block) => {
 
   const enterMobile = () => {
     const stop = addBottomScrollBehavior(block);
+    addScrollBehavior(block)
     updateNavFactor(document.querySelector('.v2-hero a.primary') || document.querySelector('.v2-hero a.secondary'));
     return () => {
       if (stop) {
@@ -272,7 +276,7 @@ const setupResponsiveBehavior = (block) => {
     };
   };
 
-  const enterDesktop = () => addHeaderScrollBehavior(block.parentNode);
+  const enterDesktop = () => addDesktopScrollBehavior(block);
 
   const apply = () => {
     if (teardown) {
@@ -469,7 +473,7 @@ const renderCtaNav = (block) => {
       teardown = addBottomScrollBehavior(block);
     } else {
       document.documentElement.style.setProperty('--inpage-navigation-factor', '0px');
-      teardown = addHeaderScrollBehavior(block.parentNode);
+      teardown = addScrollBehavior(block.parentNode);
     }
   };
 
