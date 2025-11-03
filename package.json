@@ -4,8 +4,8 @@
   "version": "48.0.0",
   "description": "Volvo Trucks North America",
   "engines": {
-    "node": ">=v20.15.1 <23",
-    "npm": ">=10.7.0"
+    "node": ">=20.19.5 <23",
+    "npm": ">=10.8.2"
   },
   "scripts": {
     "dev": "aem up",
@@ -41,7 +41,7 @@
   "homepage": "https://github.com/adobe/helix-project-boilerplate#readme",
   "devDependencies": {
     "@playwright/test": "^1.56.1",
-    "@types/node": "^24.9.1",
+    "@types/node": "^24.10.0",
     "cheerio": "^1.1.2",
     "copyfiles": "^2.4.1",
     "cross-env": "^10.1.0",
@@ -50,7 +50,7 @@
     "eslint-plugin-prettier": "^5.5.4",
     "globals": "^16.4.0",
     "husky": "^9.1.7",
-    "lint-staged": "^16.2.5",
+    "lint-staged": "^16.2.6",
     "playwright": "^1.56.1",
     "stylelint": "16.25.0",
     "stylelint-config-standard": "39.0.1",
