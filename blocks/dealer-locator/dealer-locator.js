@@ -1,25 +1,39 @@
 import { loadScript } from '../../scripts/aem.js';
+import { TOOLS_CONFIGS } from '../../scripts/common.js';
+
+const missingKeyMessage = 'MissingKey';
+const { GOOGLE_API_KEY: apiKey = missingKeyMessage } = TOOLS_CONFIGS;
 
 export default async function decorate(block) {
   const datasource = block.textContent.trim();
-  window.locatorConfig = {
-    consolidateFilters: true,
-    selectedBrand: 'volvo',
-    dataSource: datasource,
-    amenities: [
-      'Appointments Accepted',
-      'Bilingual Service',
-      'Driver Lounge',
-      'Free Pickup and Delivery',
-      'Hotel Shuttle',
-      'Internet Service',
-      'Laundry',
-      'Showers',
-      'Telephones',
-      'Trailer Parking',
-      'Video Games',
-    ],
-  };
+  if (!apiKey || apiKey === missingKeyMessage) {
+    console.error(
+      'The block is wrongly set up or is missing the %cGOOGLE_API_KEY%c in the %cTOOLS_CONFIGS',
+      'color: red;',
+      'color: initial;',
+      'color: red;',
+    );
+  } else {
+    window.locatorConfig = {
+      apiKey,
+      consolidateFilters: true,
+      selectedBrand: 'volvo',
+      dataSource: datasource,
+      amenities: [
+        'Appointments Accepted',
+        'Bilingual Service',
+        'Driver Lounge',
+        'Free Pickup and Delivery',
+        'Hotel Shuttle',
+        'Internet Service',
+        'Laundry',
+        'Showers',
+        'Telephones',
+        'Trailer Parking',
+        'Video Games',
+      ],
+    };
+  }
 
   loadScript('/blocks/dealer-locator/vendor/jquery.min.js', { type: 'text/javascript', charset: 'UTF-8' }).then(() => {
     // these scripts depend on jquery:
