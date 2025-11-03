@@ -46,6 +46,7 @@ then we change it for the next section item in main */
 
 .v2-inpage-navigation--hidden.v2-inpage-navigation-wrapper {
   transform: translateY(calc(var(--nav-height) * -1));
+  transition: transform var(--duration-large) var(--easing-entrance);
 }
 
 .v2-inpage-navigation__wrapper {
