@@ -153,21 +153,21 @@ const initPressReleasesPagination = async (block, baseParams = {}) => {
   const { total, totalPages } = await fetchCountAndPrimeCache(baseParams);
   const loadPageData = makePageLoader(baseParams);
 
-  createPagination({
-    block,
-    contentArea,
-    totalPages,
-    renderItems: renderPressReleaseList,
-    loadPageData,
-    initialPage: 0,
-  });
-
   if (!total) {
     contentArea.innerHTML = '';
     const noResultsMsg = createElement('p', { classes: `${blockName}__no-results-message` });
     const q = baseParams?.q || '';
     noResultsMsg.textContent = getTextLabel('press_releases:no_results').replace('$0', `"${q}"`);
     contentArea.append(noResultsMsg);
+  } else {
+    createPagination({
+      block,
+      contentArea,
+      totalPages,
+      renderItems: renderPressReleaseList,
+      loadPageData,
+      initialPage: 0,
+    });
   }
 };
 
