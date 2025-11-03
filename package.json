@@ -17,6 +17,14 @@
     "lint:js:fix": "eslint . --fix",
     "lint:css:fix": "stylelint 'common/**/*.css' 'blocks/**/*.css' 'styles/*.css' 'templates/**/*.css' --fix",
     "lint:fix": "npm run lint:js:fix && npm run lint:css:fix",
+    "e2e": "npx playwright test --config=e2e/configs/playwright.config.js",
+    "e2e:local": "cross-env LOCAL_DEV=TRUE npx playwright test --config=e2e/configs/playwright.config.js",
+    "e2e:branch": "cross-env BRANCH=$BRANCH npx playwright test --config=e2e/configs/playwright.config.js",
+    "e2e:base": "cross-env BASE_URL=$BASE_URL npx playwright test --config=e2e/configs/playwright.config.js",
+    "e2e:ui": "npx playwright test --ui --config=e2e/configs/playwright.config.js",
+    "e2e:ui:local": "cross-env LOCAL_DEV=TRUE npx playwright test --ui --config=e2e/configs/playwright.config.js",
+    "e2e:report": "npx playwright show-report e2e-report",
+    "e2e:smoke": "npx playwright test --config=e2e/configs/playwright.config.js --grep \"@smoke\"",
     "prepare": "husky",
     "postupdate": "copyfiles -u 3 'node_modules/video.js/dist/video.min.js' 'node_modules/video.js/dist/video-js.min.css' scripts/videojs"
   },
@@ -32,15 +40,20 @@
   "license": "UNLICENSED",
   "homepage": "https://github.com/adobe/helix-project-boilerplate#readme",
   "devDependencies": {
+    "@playwright/test": "^1.56.1",
+    "@types/node": "^24.9.1",
+    "cheerio": "^1.1.2",
     "copyfiles": "^2.4.1",
-    "eslint": "^9.24.0",
-    "eslint-config-prettier": "^9.1.0",
-    "eslint-plugin-prettier": "^5.2.6",
-    "globals": "^15.13.0",
+    "cross-env": "^10.1.0",
+    "eslint": "^9.38.0",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.4",
+    "globals": "^16.4.0",
     "husky": "^9.1.7",
-    "lint-staged": "^15.2.7",
-    "stylelint": "16.12.0",
-    "stylelint-config-standard": "36.0.1",
-    "video.js": "8.17.3"
+    "lint-staged": "^16.2.5",
+    "playwright": "^1.56.1",
+    "stylelint": "16.25.0",
+    "stylelint-config-standard": "39.0.1",
+    "video.js": "8.23.4"
   }
 }
