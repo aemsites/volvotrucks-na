@@ -24,7 +24,12 @@
     z-index var(--duration-medium) ease-in-out;
 }
 
-.v2-inpage-navigation-wrapper .v2-inpage-navigation.v2-inpage-navigation--hidden{
+.bottom-sticky-cta .v2-inpage-navigation {
+  background-color: var(--c-white);
+  height: var(--inpage-navigation-bottom-height);
+}
+
+.v2-inpage-navigation-wrapper.v2-inpage-navigation--hidden .v2-inpage-navigation{
   top: -56px;
 }
 
@@ -41,11 +46,6 @@ then we change it for the next section item in main */
 
 .v2-inpage-navigation--open .v2-inpage-navigation__items-container {
   transform: translateY(-100%);
-  transition: transform var(--duration-large) var(--easing-entrance);
-}
-
-.v2-inpage-navigation--hidden.v2-inpage-navigation-wrapper {
-  transform: translateY(calc(var(--nav-height) * -1));
   transition: transform var(--duration-large) var(--easing-entrance);
 }
 
@@ -206,11 +206,6 @@ then we change it for the next section item in main */
 
 .bottom-sticky-cta .v2-inpage-navigation-wrapper.v2-inpage-navigation--hide {
   display: none;
-}
-
-.bottom-sticky-cta .v2-inpage-navigation {
-  background-color: var(--c-white);
-  height: var(--inpage-navigation-bottom-height);
 }
 
 .bottom-sticky-cta .v2-inpage-navigation__wrapper {

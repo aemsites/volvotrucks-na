@@ -140,14 +140,14 @@ const updateActive = (id) => {
   }
 };
 
-const addScrollBehavior = (header) => {
+const addScrollBehavior = (block) => {
   let prevPosition = 0;
 
   window.addEventListener('scroll', () => {
     if (window.scrollY > prevPosition && !document.body.classList.contains('disable-scroll')) {
-      header.classList.add(`${blockName}--hidden`);
+      block.classList.add(`${blockName}--hidden`);
     } else {
-      header.classList.remove(`${blockName}--hidden`);
+      block.classList.remove(`${blockName}--hidden`);
     }
 
     // on Safari the window.scrollY can be negative so `> 0` check is needed
@@ -157,13 +157,13 @@ const addScrollBehavior = (header) => {
 
 const addDesktopScrollBehavior = (block) => {
   addScrollBehavior(block.parentNode);
-  window.addEventListener('scroll', onScroll, { passive: true });
+  window.addEventListener('scroll', addScrollBehavior, { passive: true });
 
   return () => {
-    window.removeEventListener('scroll', onScroll);
-    header.classList.remove(`${blockName}--hidden`);
+    window.removeEventListener('scroll', addScrollBehavior);
+    block.classList.remove(`${blockName}--hidden`);
   };
-}
+};
 
 /**
  * Update the in-page navigation factor based on the visibility of the CTA button.
@@ -266,7 +266,7 @@ const setupResponsiveBehavior = (block) => {
 
   const enterMobile = () => {
     const stop = addBottomScrollBehavior(block);
-    addScrollBehavior(block)
+    addScrollBehavior(block);
     updateNavFactor(document.querySelector('.v2-hero a.primary') || document.querySelector('.v2-hero a.secondary'));
     return () => {
       if (stop) {
@@ -447,7 +447,6 @@ const renderCtaNav = (block) => {
   const [primaryCta, secondaryCta] = inPageNavigationButtons();
   const buttonsWrapper = createElement('div', { classes: `${blockName}__wrapper` });
   block.innerText = '';
-
   if (primaryCta) {
     buttonsWrapper.appendChild(primaryCta);
   }
@@ -470,10 +469,11 @@ const renderCtaNav = (block) => {
 
     if (isMobileViewport()) {
       block.parentNode.classList.remove(`${blockName}--hidden`);
+      addScrollBehavior(block.parentNode);
       teardown = addBottomScrollBehavior(block);
     } else {
       document.documentElement.style.setProperty('--inpage-navigation-factor', '0px');
-      teardown = addScrollBehavior(block.parentNode);
+      teardown = addDesktopScrollBehavior(block.parentNode);
     }
   };
 
@@ -492,6 +492,5 @@ export default async function decorate(block) {
     renderCtaNav(block);
     return;
   }
-
   renderInpageDropdownNav(block);
 }
