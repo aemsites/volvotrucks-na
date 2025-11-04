@@ -1,4 +1,4 @@
-import { createElement, getOrigin, getDateFromTimestamp, getTextLabel } from '../../scripts/common.js';
+import { createElement, getOrigin, getDateFromTimestamp, getTextLabel, getPlaceholders } from '../../scripts/common.js';
 import { createOptimizedPicture, loadCSS } from '../../scripts/aem.js';
 import createPagination from '../../common/pagination/pagination.js';
 import { fetchPressReleases } from '../../scripts/services/press-release.service.js';
@@ -153,21 +153,21 @@ const initPressReleasesPagination = async (block, baseParams = {}) => {
   const { total, totalPages } = await fetchCountAndPrimeCache(baseParams);
   const loadPageData = makePageLoader(baseParams);
 
-  createPagination({
-    block,
-    contentArea,
-    totalPages,
-    renderItems: renderPressReleaseList,
-    loadPageData,
-    initialPage: 0,
-  });
-
   if (!total) {
     contentArea.innerHTML = '';
     const noResultsMsg = createElement('p', { classes: `${blockName}__no-results-message` });
     const q = baseParams?.q || '';
     noResultsMsg.textContent = getTextLabel('press_releases:no_results').replace('$0', `"${q}"`);
     contentArea.append(noResultsMsg);
+  } else {
+    createPagination({
+      block,
+      contentArea,
+      totalPages,
+      renderItems: renderPressReleaseList,
+      loadPageData,
+      initialPage: 0,
+    });
   }
 };
 
@@ -191,6 +191,7 @@ const addEventListeners = (block) => {
 };
 
 export default async function decorate(block) {
+  await getPlaceholders();
   block.append(renderSearchBar());
   await initPressReleasesPagination(block);
   addEventListeners(block);
