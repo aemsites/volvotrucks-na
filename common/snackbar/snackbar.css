@@ -21,7 +21,7 @@
 .snackbar-container {
   position: fixed;
   inset: 0;
-  padding: 64px 16px 16px;
+  padding: 64px 16px 128px;
   display: flex;
   flex-flow: column wrap;
   place-content: var(--snackbar-position, center flex-end);
