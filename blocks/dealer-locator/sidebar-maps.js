@@ -1636,7 +1636,7 @@ $.fn.tmpPins = function (tmpPinList) {
 
     if (pin.REG_PHONE_NUMBER) {
       templateClone.find('.call').html('<a href="tel:' + pin.REG_PHONE_NUMBER + '">' + "Call" + '</a>');
-      templateClone.find('.call a').attr("href", $.fn.formatPhoneNumber(pin.REG_PHONE_NUMBER));
+      templateClone.find('.call a').attr("href", "tel:" + $.fn.formatPhoneNumber(pin.REG_PHONE_NUMBER));
       // templateClone.find('.detail-call').html('<a href="tel:' + pin.REG_PHONE_NUMBER + '">' + '<img src="/blocks/dealer-locator/images/Phone-2.png" />' + "Call" + '</a>');
     } else {
       templateClone.find('.call').text('Call');
