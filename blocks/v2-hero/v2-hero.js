@@ -153,10 +153,6 @@ function decorate(block) {
       b.classList.add('dark');
     }
 
-    if (block.classList.contains(`${blockName}--marketing`)) {
-      b.classList.add('marketing');
-    }
-
     b.parentElement.remove();
     buttonsWrapper.appendChild(b);
   });

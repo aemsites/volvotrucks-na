@@ -2,6 +2,272 @@ import { getMetadata } from '../../scripts/aem.js';
 import { createElement, decorateIcons, getTextLabel, debounce, isMobileViewport } from '../../scripts/common.js';
 
 const blockName = 'v2-inpage-navigation';
+const CTA_METADATA_PAIRS = [
+  { labelKey: 'inpage-primary-button', urlKey: 'inpage-primary-link', variant: 'marketing' },
+  { labelKey: 'inpage-secondary-button', urlKey: 'inpage-secondary-link', variant: 'secondary' },
+];
+const HERO_CTA_SELECTOR = '.v2-hero--marketing .v2-hero__buttons-wrapper';
+const FLOATING_VISIBLE_CLASS = `${blockName}__cta-floating--visible`;
+let heroObserverInitialized = false;
+let cachedHeroCTAPromise;
+
+/**
+ * Creates a CTA <a> element for the in-page navigation block.
+ *
+ * @param {string} label   - Text for the button.
+ * @param {string} url     - Link target (href).
+ * @param {string} variant - Visual style ("marketing", "secondary").
+ * @returns {HTMLAnchorElement} The generated CTA element.
+ */
+const createInpageNavigationButton = (label, url, variant) =>
+  createElement('a', {
+    classes: [
+      'button',
+      variant,
+      `${blockName}__marketing`,
+    ],
+    props: { href: url, title: label },
+  });
+
+/**
+ * Creates CTA buttons for the in-page navigation using configured metadata.
+ *
+ * @returns {HTMLAnchorElement[]} Array of generated CTA links.
+ */
+const getInpageNavigationButtons = () =>
+  CTA_METADATA_PAIRS
+    .map(({ labelKey, urlKey, variant }) => {
+      const label = getMetadata(labelKey);
+      const url = getMetadata(urlKey);
+
+      if (!label || !url) {return null;}
+
+      const button = createInpageNavigationButton(label, url, variant);
+      button.textContent = label;
+      return button;
+    })
+    .filter(Boolean);
+
+/**
+ * Resolves to true if a hero CTA exists.
+ * May wait up to 2s for delayed blocks (lazy-loaded hero).
+ *
+ * @returns {Promise<boolean>}
+ */
+const waitForHeroCTA = () => {
+  if (cachedHeroCTAPromise) {return cachedHeroCTAPromise;}
+
+  // Promise resolves once the hero CTA appears (or times out)
+  cachedHeroCTAPromise = new Promise((resolve) => {
+    if (document.querySelector(HERO_CTA_SELECTOR)) {
+      resolve(true);
+      return;
+    }
+
+    const observer = new MutationObserver(() => {
+    const found = document.querySelector(HERO_CTA_SELECTOR);
+    if (found) {
+        observer.disconnect();
+        resolve(true);
+      }
+    });
+
+    observer.observe(document.body, { childList: true, subtree: true });
+
+    setTimeout(() => {
+      observer.disconnect();
+      resolve(false);
+    }, 2000);
+  });
+
+  return cachedHeroCTAPromise;
+};
+
+/**
+ * Returns the floating CTA container, creating it if needed.
+ *
+ * @returns {HTMLElement} The floating CTA wrapper element.
+ */
+const ensureFloatingCTAContainer = () => {
+  const existing = document.querySelector(`.${blockName}__cta-floating`);
+  if (existing) {return existing;}
+
+  const container = createElement('div', {
+    classes: `${blockName}__cta-floating`,
+  });
+
+  document.body.appendChild(container);
+  return container;
+};
+
+/**
+ * Recalculates whether the floating CTA should be visible.
+ * Desktop → always hidden.
+ * Mobile → visible only when hero CTA is NOT visible.
+ */
+const recalcHeroCTAVisibility = (floatingContainer) => {
+  if (!floatingContainer) {return;}
+
+  if (!isMobileViewport()) {
+    floatingContainer.classList.remove(FLOATING_VISIBLE_CLASS);
+    return;
+  }
+
+  const heroCTAWrapper = document.querySelector(HERO_CTA_SELECTOR);
+  if (!heroCTAWrapper) {
+    floatingContainer.classList.remove(FLOATING_VISIBLE_CLASS);
+    return;
+  }
+
+  const rect = heroCTAWrapper.getBoundingClientRect();
+  const viewportHeight = window.innerHeight;
+  const heroInView = rect.top < viewportHeight && rect.bottom > 0;
+  updateFloatingCTAVisibility(floatingContainer, heroInView);
+};
+
+/**
+ * Shows or hides the floating CTA container.
+ *
+ * @param {HTMLElement} container - The floating CTA wrapper.
+ * @param {boolean} isVisible - Whether the hero CTA is visible in the viewport.
+ */
+const updateFloatingCTAVisibility = (container, isVisible) => {
+  container.classList.toggle(FLOATING_VISIBLE_CLASS, !isVisible);
+};
+
+/**
+ * Moves CTA buttons to either the top container or the floating container,
+ * depending on viewport size and whether a hero CTA exists.
+ *
+ * - Desktop: CTAs always stay in the top container.
+ * - Mobile + Hero present: CTAs go to the floating container.
+ * - Mobile + No hero: CTAs stay in the top container.
+ *
+ * @param {HTMLElement[]} ctaButtons - The CTA button elements.
+ * @param {HTMLElement} topContainer - The static CTA container inside the block.
+ * @param {HTMLElement} floatingContainer - The mobile floating CTA container.
+ */
+const moveCTAButtons = (ctaButtons, topContainer, floatingContainer) => {
+  if (!ctaButtons.length) {return;}
+
+  waitForHeroCTA().then((heroExists) => {
+    const isMobile = isMobileViewport();
+
+    // No hero CTA present → always keep CTAs at top
+    if (!heroExists) {
+      ctaButtons.forEach((btn) => {
+        if (!topContainer.contains(btn)) {topContainer.appendChild(btn);}
+      });
+      floatingContainer.classList.remove(FLOATING_VISIBLE_CLASS);
+      return;
+    }
+
+    // Hero CTA exists
+    if (isMobile) {
+      // Mobile → use floating container
+      ctaButtons.forEach((btn) => {
+        if (!floatingContainer.contains(btn)) {floatingContainer.appendChild(btn);}
+      });
+    } else {
+      // Desktop → always use top container
+      ctaButtons.forEach((btn) => {
+        if (!topContainer.contains(btn)) {topContainer.appendChild(btn);}
+      });
+
+      floatingContainer.classList.remove(FLOATING_VISIBLE_CLASS);
+    }
+  });
+};
+
+/**
+ * Observes the hero CTA wrapper and updates floating CTA visibility on mobile
+ * based on IntersectionObserver. Falls back to a MutationObserver if the hero
+ * block is injected asynchronously.
+ *
+ * @param {HTMLElement} floatingContainer - The floating CTA wrapper.
+ */
+const observeHeroCTAVisibility = (floatingContainer) => {
+  if (heroObserverInitialized) {return;}
+  heroObserverInitialized = true;
+
+  const setupObserver = (heroCTAWrapper) => {
+    if (!isMobileViewport()) {return;}
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        const entry = entries[0];
+        if (!floatingContainer.children.length) {return;}
+
+        updateFloatingCTAVisibility(floatingContainer, entry.isIntersecting);
+      },
+      { threshold: 0.1 },
+    );
+
+    observer.observe(heroCTAWrapper);
+    floatingContainer.classList.remove(FLOATING_VISIBLE_CLASS);
+  };
+
+  // Attempt immediate lookup
+  let heroCTAWrapper = document.querySelector(HERO_CTA_SELECTOR);
+  if (heroCTAWrapper) {
+    setupObserver(heroCTAWrapper);
+    return;
+  }
+
+  // Otherwise wait briefly for hero blocks
+  const mutationObserver = new MutationObserver(() => {
+    heroCTAWrapper = document.querySelector(HERO_CTA_SELECTOR);
+    if (heroCTAWrapper) {
+      mutationObserver.disconnect();
+      setupObserver(heroCTAWrapper);
+    }
+  });
+
+  mutationObserver.observe(document.body, { childList: true, subtree: true });
+
+  // Stop observing after a short timeout
+  setTimeout(() => {
+    mutationObserver.disconnect();
+  }, 2000);
+};
+
+/**
+ * Creates and appends the top CTA container inside the block wrapper.
+ *
+ * @param {HTMLElement} wrapper - The in-page navigation block wrapper.
+ * @returns {HTMLElement} The created CTA container.
+ */
+const createCtaContainer = (wrapper) => {
+  const ctaContainer = createElement('div', {
+    classes: `${blockName}__cta-container`,
+  });
+
+  wrapper.appendChild(ctaContainer);
+  return ctaContainer;
+};
+
+/**
+ * Initializes CTA placement and floating-CTA behavior for the in-page navigation.
+ *
+ * @param {HTMLAnchorElement[]} ctaButtons - The CTA buttons to manage.
+ * @param {HTMLElement} ctaContainer - The top CTA container inside the block.
+ */
+const setupInpageCtas = (ctaButtons, ctaContainer) => {
+  if (!ctaButtons.length) {return;}
+
+  const floatingCTAContainer = ensureFloatingCTAContainer();
+  ctaButtons.forEach((btn) => ctaContainer.appendChild(btn));
+  moveCTAButtons(ctaButtons, ctaContainer, floatingCTAContainer);
+  observeHeroCTAVisibility(floatingCTAContainer);
+
+  window.addEventListener(
+    'resize',
+    debounce(() => {
+      moveCTAButtons(ctaButtons, ctaContainer, floatingCTAContainer);
+      recalcHeroCTAVisibility(floatingCTAContainer);
+    }),
+  );
+};
 
 const scrollToSection = (id) => {
   let timeout;
@@ -20,59 +286,6 @@ const scrollToSection = (id) => {
     }, 500);
   });
   resizeObserver.observe(main);
-};
-
-/**
- * Creates an in-page navigation button element if both button title and link are provided.
- *
- * @param {string} title - The title of the button.
- * @param {string} url - The URL the button should link to.
- * @returns {HTMLElement|null} The anchor element representing the button, or null if required parameters are missing.
- */
-const createInPageButton = (title, url, secondary = false) => {
-  if (title && url) {
-    const link = createElement('a', {
-      classes: ['button', 'marketing', `${blockName}__marketing`],
-      props: {
-        href: url,
-        title,
-      },
-    });
-    if (secondary) {
-      link.classList.add(`${blockName}__marketing--secondary`);
-    }
-    link.textContent = title;
-
-    return link;
-  }
-  return null;
-};
-
-/**
- * Creates an in-page navigation button element if both button title and link metadata are available.
- *
- * @returns {HTMLElement|null} The anchor element representing the button, or null if required metadata is missing.
- */
-const inPageNavigationButton = () => {
-  // if we have a button title & button link
-  const title = getMetadata('inpage-button');
-  const url = getMetadata('inpage-link');
-  return createInPageButton(title, url);
-};
-
-/**
- * Creates an array of in-page navigation buttons based on metadata.
- * Each item in the returned array can be an HTMLElement or null, depending on the presence of metadata.
- *
- * @returns {(HTMLElement|null)[]} An array containing up to two elements: each is either an HTMLElement or null.
- */
-const inPageNavigationButtons = () => {
-  // if we have primary and secondary inpage buttons
-  const primaryButton = getMetadata('inpage-primary-button');
-  const primaryLink = getMetadata('inpage-primary-link');
-  const secondaryButton = getMetadata('inpage-secondary-button');
-  const secondaryLink = getMetadata('inpage-secondary-link');
-  return [createInPageButton(primaryButton, primaryLink), createInPageButton(secondaryButton, secondaryLink, true)];
 };
 
 // Retrieve an array of sections with its corresponding intersectionRatio
@@ -140,10 +353,10 @@ const updateActive = (id) => {
   }
 };
 
-const addHeaderScrollBehavior = (header) => {
+const addHeaderScrollBehaviour = (header) => {
   let prevPosition = 0;
 
-  const onScroll = () => {
+  window.addEventListener('scroll', () => {
     if (window.scrollY > prevPosition) {
       header.classList.add(`${blockName}--hidden`);
     } else {
@@ -152,157 +365,11 @@ const addHeaderScrollBehavior = (header) => {
 
     // on Safari the window.scrollY can be negative so `> 0` check is needed
     prevPosition = window.scrollY > 0 ? window.scrollY : 0;
-  };
-
-  window.addEventListener('scroll', onScroll, { passive: true });
-
-  return () => {
-    window.removeEventListener('scroll', onScroll);
-    header.classList.remove(`${blockName}--hidden`);
-  };
+  });
 };
 
-/**
- * Update the in-page navigation factor based on the visibility of the CTA button.
- * @param {HTMLElement} ctaButton
- */
-const updateNavFactor = (ctaButton = null) => {
-  if (!ctaButton) {
-    return;
-  }
-  const rect = ctaButton.getBoundingClientRect();
-  const docStyle = getComputedStyle(document.documentElement);
-  const navHeight = parseFloat(docStyle.getPropertyValue('--inpage-navigation-height')) || 0;
-
-  // Calculate visible height of CTA button within viewport
-  const visibleHeight = Math.max(0, Math.min(rect.bottom, window.innerHeight) - Math.max(rect.top, 0));
-  const factor = rect.height ? Math.max(0, Math.min(navHeight, (visibleHeight / rect.height) * navHeight)) : navHeight;
-
-  document.documentElement.style.setProperty('--inpage-navigation-factor', `${factor}px`);
-};
-
-/**
- * Handles bottom-sticky in-page nav behavior on mobile:
- * - Updates nav position based on CTA visibility.
- * - Hides when footer enters the viewport.
- * - Cleans up all listeners and observers when called.
- *
- * @param {HTMLElement} block - The in-page navigation block.
- * @returns {() => void} Teardown function to remove listeners and reset styles.
- */
-const addBottomScrollBehavior = (block) => {
-  const wrapper = block.closest('.v2-inpage-navigation-wrapper');
-  const primaryButton = getMetadata('inpage-primary-button');
-  const primaryCta = document.querySelector(`.v2-hero a[title="${primaryButton}"]:not(.${blockName}__marketing`);
-  const secondaryButton = getMetadata('inpage-secondary-button');
-  const secondaryCta = document.querySelector(`a[title="${secondaryButton}"]:not(.${blockName}__marketing)`);
-  const ctaButton = secondaryCta || primaryCta;
-
-  if (!ctaButton) {
-    return () => {};
-  }
-
-  const handleScroll = (() => {
-    let last = 0;
-    const delay = 100;
-    return () => {
-      const now = Date.now();
-      if (now - last >= delay) {
-        updateNavFactor(ctaButton);
-        last = now;
-      }
-    };
-  })();
-
-  const handleResize = debounce(() => {
-    if (isMobileViewport()) {
-      updateNavFactor(ctaButton);
-    }
-  }, 150);
-
-  window.addEventListener('scroll', handleScroll, { passive: true });
-  window.addEventListener('resize', handleResize);
-  window.addEventListener('orientationchange', handleResize);
-
-  // Footer visibility observer
-  const footer = document.querySelector('footer');
-  let footerObserver;
-  if (footer) {
-    footerObserver = new IntersectionObserver(
-      ([entry]) => {
-        block.parentNode.classList.toggle(`${blockName}--hide`, entry.isIntersecting);
-      },
-      { threshold: 0.1 },
-    );
-    footerObserver.observe(footer);
-  }
-
-  requestAnimationFrame(() => updateNavFactor(ctaButton));
-
-  return () => {
-    window.removeEventListener('scroll', handleScroll);
-    window.removeEventListener('resize', handleResize);
-    window.removeEventListener('orientationchange', handleResize);
-    footerObserver?.disconnect();
-    document.documentElement.style.setProperty('--inpage-navigation-factor', '0px');
-    wrapper?.classList.remove(`${blockName}--hide`);
-  };
-};
-
-/**
- * Minimal responsive wiring:
- * - Mobile: bottom-sticky + update factor once per scroll (handled inside addBottomScrollBehavior).
- * - Desktop: header hide-on-scroll.
- * One global listener switches modes; no nested per-mode listeners.
- *
- * @param {HTMLElement} block
- * @returns {() => void} teardown
- */
-const setupResponsiveBehavior = (block) => {
-  let teardown = null;
-
-  const enterMobile = () => {
-    const stop = addBottomScrollBehavior(block);
-    updateNavFactor(document.querySelector('.v2-hero a.primary') || document.querySelector('.v2-hero a.secondary'));
-    return () => {
-      if (stop) {
-        stop();
-      }
-      document.documentElement.style.setProperty('--inpage-navigation-factor', '0px');
-    };
-  };
-
-  const enterDesktop = () => addHeaderScrollBehavior(block.parentNode);
-
-  const apply = () => {
-    if (teardown) {
-      teardown();
-      teardown = null;
-    }
-    teardown = isMobileViewport() ? enterMobile() : enterDesktop();
-  };
-
-  apply();
-
-  const onChange = debounce(apply, 200);
-  window.addEventListener('resize', onChange);
-  window.addEventListener('orientationchange', onChange);
-
-  return () => {
-    if (teardown) {
-      teardown();
-    }
-    window.removeEventListener('resize', onChange);
-    window.removeEventListener('orientationchange', onChange);
-  };
-};
-
-/**
- * Decorate a single button within the in-page navigation.
- * @param {HTMLElement} block
- */
-const renderInpageDropdownNav = (block) => {
-  const ctaButton = inPageNavigationButton();
+export default async function decorate(block) {
+  const ctaButtons = getInpageNavigationButtons();
 
   const wrapper = block.querySelector(':scope > div');
   wrapper.classList.add(`${blockName}__wrapper`);
@@ -362,9 +429,8 @@ const renderInpageDropdownNav = (block) => {
 
   decorateIcons(wrapper);
 
-  if (ctaButton) {
-    wrapper.appendChild(ctaButton);
-  }
+  const ctaContainer = createCtaContainer(wrapper);
+  setupInpageCtas(ctaButtons, ctaContainer);
 
   list.addEventListener('click', gotoSection);
 
@@ -427,67 +493,5 @@ const renderInpageDropdownNav = (block) => {
     }),
   );
 
-  setupResponsiveBehavior(block);
-};
-
-/**
- * Build and wire the dual-CTA variant of the in-page nav.
- * - Renders primary/secondary CTAs if present.
- * - Mobile: enables bottom-sticky behavior.
- * - Desktop: enables header hide-on-scroll.
- * - Re-evaluates on resize/orientation and tears down previous listeners.
- *
- * @param {HTMLElement} navBlock - Root element of the in-page navigation block.
- */
-const renderCtaNav = (block) => {
-  const [primaryCta, secondaryCta] = inPageNavigationButtons();
-  const buttonsWrapper = createElement('div', { classes: `${blockName}__wrapper` });
-  block.innerText = '';
-
-  if (primaryCta) {
-    buttonsWrapper.appendChild(primaryCta);
-  }
-
-  if (secondaryCta) {
-    buttonsWrapper.appendChild(secondaryCta);
-  }
-
-  if (primaryCta || secondaryCta) {
-    block.appendChild(buttonsWrapper);
-  }
-
-  let teardown = null;
-
-  const applyMode = () => {
-    if (teardown) {
-      teardown();
-      teardown = null;
-    }
-
-    if (isMobileViewport()) {
-      block.parentNode.classList.remove(`${blockName}--hidden`);
-      teardown = addBottomScrollBehavior(block);
-    } else {
-      document.documentElement.style.setProperty('--inpage-navigation-factor', '0px');
-      teardown = addHeaderScrollBehavior(block.parentNode);
-    }
-  };
-
-  applyMode();
-
-  const handleViewportChange = debounce(applyMode, 150);
-  window.addEventListener('resize', handleViewportChange);
-  window.addEventListener('orientationchange', handleViewportChange);
-};
-
-export default async function decorate(block) {
-  // Check if the block is within a bottom sticky CTA variant set in metadata
-  const isBottomStickyVariant = block.closest('main')?.classList.contains('bottom-sticky-cta');
-
-  if (isBottomStickyVariant) {
-    renderCtaNav(block);
-    return;
-  }
-
-  renderInpageDropdownNav(block);
+  addHeaderScrollBehaviour(block.parentNode);
 }

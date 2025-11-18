@@ -37,10 +37,6 @@
   min-height: calc(100vh - (var(--nav-height) + var(--inpage-navigation-height) - 2px));
 }
 
-.bottom-sticky-cta .v2-inpage-navigation-wrapper + .v2-hero-container .v2-hero {
-  min-height: calc(100vh - (var(--nav-height)));
-}
-
 @supports (height: 1svh) {
   .v2-hero {
     min-height: calc(100svh - var(--nav-height));
@@ -49,10 +45,6 @@
   .v2-inpage-navigation-wrapper + .v2-hero-container .v2-hero,
   .v2-inpage-navigation-wrapper + .v2-hero-container .v2-hero__content-wrapper {
     min-height: calc(100svh - (var(--nav-height) + var(--inpage-navigation-height) - 2px));
-  }
-
-  .bottom-sticky-cta .v2-inpage-navigation-wrapper + .v2-hero-container .v2-hero {
-    min-height: calc(100vh - (var(--nav-height)));
   }
 }
 
@@ -109,21 +101,6 @@
   align-items: center;
   justify-content: flex-end;
   text-align: center;
-}
-
-.v2-hero--marketing .v2-hero__content-wrapper {
-  color: var(--c-white);
-}
-
-.v2-hero--marketing .marketing.button.secondary {
-  border-color: var(--c-white);
-  background-color: transparent;
-  color: var(--c-white);
-}
-
-.v2-hero--marketing .marketing.button.secondary:hover {
-  background-color: var(--c-white);
-  color: var(--c-main-black);
 }
 
 .v2-hero--dark {
