@@ -95,6 +95,20 @@ const waitForHeroCTA = (forceFresh = false) => {
 };
 
 /**
+ * Returns true only if this page needs a floating CTA container.
+ * Floating CTAs are required only when:
+ * - 1 or 2 CTAs exist AND
+ * - A hero CTA exists (hero marketing variant)
+ *
+ * @param {number} ctaCount
+ * @returns {Promise<boolean>}
+ */
+const shouldUseFloatingCtas = async (ctaCount) => {
+  if (ctaCount === 0) { return false; }
+  return waitForHeroCTA();
+};
+
+/**
  * Returns the floating CTA container, creating it if needed.
  *
  * @returns {HTMLElement} The floating CTA wrapper element.
@@ -147,44 +161,42 @@ const updateFloatingCTAVisibility = (container, isVisible) => {
 };
 
 /**
- * Moves CTA buttons to either the top container or the floating container,
- * depending on viewport size and whether a hero CTA exists.
+ * Moves CTA buttons between the top container and the floating container.
+ * If floatingContainer is null, CTAs always remain in the top container.
  *
- * - Desktop: CTAs always stay in the top container.
- * - Mobile + Hero present: CTAs go to the floating container.
- * - Mobile + No hero: CTAs stay in the top container.
- *
- * @param {HTMLElement[]} ctaButtons - The CTA button elements.
- * @param {HTMLElement} topContainer - The static CTA container inside the block.
- * @param {HTMLElement} floatingContainer - The mobile floating CTA container.
+ * @param {HTMLElement[]} ctaButtons
+ * @param {HTMLElement} topContainer
+ * @param {HTMLElement|null} floatingContainer
  */
 const moveCTAButtons = (ctaButtons, topContainer, floatingContainer) => {
-  if (!ctaButtons.length) {return;}
+  if (!ctaButtons.length) { return; }
+
+  if (!floatingContainer) {
+    ctaButtons.forEach((btn) => {
+      if (!topContainer.contains(btn)) { topContainer.appendChild(btn); }
+    });
+    return;
+  }
 
   waitForHeroCTA().then((heroExists) => {
     const isMobile = isMobileViewport();
 
-    // No hero CTA present → always keep CTAs at top
     if (!heroExists) {
       ctaButtons.forEach((btn) => {
-        if (!topContainer.contains(btn)) {topContainer.appendChild(btn);}
+        if (!topContainer.contains(btn)) { topContainer.appendChild(btn); }
       });
       floatingContainer.classList.remove(FLOATING_VISIBLE_CLASS);
       return;
     }
 
-    // Hero CTA exists
     if (isMobile) {
-      // Mobile → use floating container
       ctaButtons.forEach((btn) => {
-        if (!floatingContainer.contains(btn)) {floatingContainer.appendChild(btn);}
+        if (!floatingContainer.contains(btn)) { floatingContainer.appendChild(btn); }
       });
     } else {
-      // Desktop → always use top container
       ctaButtons.forEach((btn) => {
-        if (!topContainer.contains(btn)) {topContainer.appendChild(btn);}
+        if (!topContainer.contains(btn)) { topContainer.appendChild(btn); }
       });
-
       floatingContainer.classList.remove(FLOATING_VISIBLE_CLASS);
     }
   });
@@ -241,6 +253,8 @@ const activateHeroObserverIfNeeded = (floatingContainer) => {
  * @param {HTMLElement} floatingContainer
  */
 const observeHeroCTAVisibility = (floatingContainer) => {
+  if (!floatingContainer) { return; }
+
   activateHeroObserverIfNeeded(floatingContainer);
 
   // Observe late hero CTA injection
@@ -282,24 +296,33 @@ const createCtaContainer = (wrapper) => {
 };
 
 /**
- * Initializes CTA placement and floating-CTA behavior for the in-page navigation.
+ * Initializes CTA placement logic for the in-page navigation block.
+ * Creates floating CTA behavior only for variants that require it.
  *
- * @param {HTMLAnchorElement[]} ctaButtons - The CTA buttons to manage.
- * @param {HTMLElement} ctaContainer - The top CTA container inside the block.
+ * @param {HTMLAnchorElement[]} ctaButtons - CTA buttons configured via metadata.
+ * @param {HTMLElement} ctaContainer - The static CTA container inside the block.
  */
-const setupInpageCtas = (ctaButtons, ctaContainer) => {
-  if (!ctaButtons.length) {return;}
+const setupInpageCtas = async (ctaButtons, ctaContainer) => {
+  if (!ctaButtons.length) { return; }
 
-  const floatingCTAContainer = ensureFloatingCTAContainer();
+  const useFloating = await shouldUseFloatingCtas(ctaButtons.length);
+  const floatingContainer = useFloating
+    ? ensureFloatingCTAContainer()
+    : null;
+
+  // Initial placement (always start at top)
   ctaButtons.forEach((btn) => ctaContainer.appendChild(btn));
-  moveCTAButtons(ctaButtons, ctaContainer, floatingCTAContainer);
-  observeHeroCTAVisibility(floatingCTAContainer);
+
+  if (!useFloating) { return; }
+
+  moveCTAButtons(ctaButtons, ctaContainer, floatingContainer);
+  observeHeroCTAVisibility(floatingContainer);
 
   window.addEventListener(
     'resize',
     debounce(() => {
-      moveCTAButtons(ctaButtons, ctaContainer, floatingCTAContainer);
-      recalcHeroCTAVisibility(floatingCTAContainer);
+      moveCTAButtons(ctaButtons, ctaContainer, floatingContainer);
+      recalcHeroCTAVisibility(floatingContainer);
     }),
   );
 };
