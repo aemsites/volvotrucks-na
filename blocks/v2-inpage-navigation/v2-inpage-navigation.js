@@ -8,7 +8,6 @@ const CTA_METADATA_PAIRS = [
 ];
 const HERO_CTA_SELECTOR = '.v2-hero--marketing .v2-hero__buttons-wrapper';
 const FLOATING_VISIBLE_CLASS = `${blockName}__cta-floating--visible`;
-let heroObserverInitialized = false;
 let cachedHeroCTAPromise;
 
 /**
@@ -49,15 +48,28 @@ const getInpageNavigationButtons = () =>
     .filter(Boolean);
 
 /**
- * Resolves to true if a hero CTA exists.
- * May wait up to 2s for delayed blocks (lazy-loaded hero).
+ * Determines whether a hero CTA wrapper exists.
  *
- * @returns {Promise<boolean>}
+ * - Resolves immediately if already in the DOM.
+ * - Otherwise waits up to 2s for late DOM injection.
+ * - Caches the result, but can refresh if a previous lookup resolved false.
+ *
+ * @param {boolean} [forceFresh=false] - Re-checks DOM if last result was false.
+ * @returns {Promise<boolean>} Resolves true if hero CTA exists, otherwise false.
  */
-const waitForHeroCTA = () => {
-  if (cachedHeroCTAPromise) {return cachedHeroCTAPromise;}
+const waitForHeroCTA = (forceFresh = false) => {
+  if (forceFresh && cachedHeroCTAPromise) {
+    return cachedHeroCTAPromise.then((value) => {
+      if (value === false) {
+        cachedHeroCTAPromise = null;
+        return waitForHeroCTA(false);
+      }
+      return value;
+    });
+  }
 
-  // Promise resolves once the hero CTA appears (or times out)
+  if (cachedHeroCTAPromise) { return cachedHeroCTAPromise; }
+
   cachedHeroCTAPromise = new Promise((resolve) => {
     if (document.querySelector(HERO_CTA_SELECTOR)) {
       resolve(true);
@@ -65,8 +77,7 @@ const waitForHeroCTA = () => {
     }
 
     const observer = new MutationObserver(() => {
-    const found = document.querySelector(HERO_CTA_SELECTOR);
-    if (found) {
+      if (document.querySelector(HERO_CTA_SELECTOR)) {
         observer.disconnect();
         resolve(true);
       }
@@ -121,8 +132,8 @@ const recalcHeroCTAVisibility = (floatingContainer) => {
 
   const rect = heroCTAWrapper.getBoundingClientRect();
   const viewportHeight = window.innerHeight;
-  const heroInView = rect.top < viewportHeight && rect.bottom > 0;
-  updateFloatingCTAVisibility(floatingContainer, heroInView);
+  const heroIsIntersecting = rect.top < viewportHeight && rect.bottom > 0;
+  updateFloatingCTAVisibility(floatingContainer, heroIsIntersecting);
 };
 
 /**
@@ -180,55 +191,79 @@ const moveCTAButtons = (ctaButtons, topContainer, floatingContainer) => {
 };
 
 /**
- * Observes the hero CTA wrapper and updates floating CTA visibility on mobile
- * based on IntersectionObserver. Falls back to a MutationObserver if the hero
- * block is injected asynchronously.
+ * Attaches a new IntersectionObserver to the hero CTA wrapper
+ * (mobile only). Replaces any previously active observer.
  *
- * @param {HTMLElement} floatingContainer - The floating CTA wrapper.
+ * @param {HTMLElement} heroCTAWrapper
+ * @param {HTMLElement} floatingContainer
  */
-const observeHeroCTAVisibility = (floatingContainer) => {
-  if (heroObserverInitialized) {return;}
-  heroObserverInitialized = true;
-
-  const setupObserver = (heroCTAWrapper) => {
-    if (!isMobileViewport()) {return;}
-
-    const observer = new IntersectionObserver(
-      (entries) => {
-        const entry = entries[0];
-        if (!floatingContainer.children.length) {return;}
-
-        updateFloatingCTAVisibility(floatingContainer, entry.isIntersecting);
-      },
-      { threshold: 0.1 },
-    );
-
-    observer.observe(heroCTAWrapper);
-    floatingContainer.classList.remove(FLOATING_VISIBLE_CLASS);
-  };
-
-  // Attempt immediate lookup
-  let heroCTAWrapper = document.querySelector(HERO_CTA_SELECTOR);
-  if (heroCTAWrapper) {
-    setupObserver(heroCTAWrapper);
-    return;
+const setupHeroVisibilityObserver = (heroCTAWrapper, floatingContainer) => {
+  // Disconnect previous observer, if any
+  if (observeHeroCTAVisibility._observer) {
+    observeHeroCTAVisibility._observer.disconnect();
   }
 
-  // Otherwise wait briefly for hero blocks
-  const mutationObserver = new MutationObserver(() => {
-    heroCTAWrapper = document.querySelector(HERO_CTA_SELECTOR);
-    if (heroCTAWrapper) {
-      mutationObserver.disconnect();
-      setupObserver(heroCTAWrapper);
+  if (!isMobileViewport()) { return; }
+
+  const observer = new IntersectionObserver(
+    (entries) => {
+      const entry = entries[0];
+      if (!floatingContainer.children.length) { return; }
+      updateFloatingCTAVisibility(floatingContainer, entry.isIntersecting);
+    },
+    { threshold: 0.1 },
+  );
+
+  observer.observe(heroCTAWrapper);
+  observeHeroCTAVisibility._observer = observer;
+
+  // Hide floating CTA until first intersection callback runs
+  floatingContainer.classList.remove(FLOATING_VISIBLE_CLASS);
+};
+
+/**
+ * Sets up an IntersectionObserver immediately if the hero CTA exists.
+ *
+ * @param {HTMLElement} floatingContainer
+ */
+const activateHeroObserverIfNeeded = (floatingContainer) => {
+  const wrapper = document.querySelector(HERO_CTA_SELECTOR);
+  if (wrapper) {
+    setupHeroVisibilityObserver(wrapper, floatingContainer);
+  }
+};
+
+/**
+ * Main handler: tracks hero CTA visibility on mobile.
+ * Falls back to MutationObserver if the hero block loads late,
+ * and re-evaluates on viewport resizing.
+ *
+ * @param {HTMLElement} floatingContainer
+ */
+const observeHeroCTAVisibility = (floatingContainer) => {
+  activateHeroObserverIfNeeded(floatingContainer);
+
+  // Observe late hero CTA injection
+  const mo = new MutationObserver(() => {
+    const wrapper = document.querySelector(HERO_CTA_SELECTOR);
+    if (wrapper) {
+      mo.disconnect();
+      setupHeroVisibilityObserver(wrapper, floatingContainer);
     }
   });
 
-  mutationObserver.observe(document.body, { childList: true, subtree: true });
+  mo.observe(document.body, { childList: true, subtree: true });
 
-  // Stop observing after a short timeout
-  setTimeout(() => {
-    mutationObserver.disconnect();
-  }, 2000);
+  // Stop mutation observer after a short window
+  setTimeout(() => mo.disconnect(), 2000);
+
+  // Re-create observer on viewport changes
+  window.addEventListener(
+    'resize',
+    debounce(() => {
+      activateHeroObserverIfNeeded(floatingContainer);
+    }),
+  );
 };
 
 /**
