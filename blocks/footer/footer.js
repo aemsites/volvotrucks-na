@@ -90,7 +90,10 @@ export default async function decorate(block) {
   footer.appendChild(copyrightWrapper);
   await decorateIcons(footer);
   block.append(footer);
-  addScrollToTopButton(block);
+  const disableBackToTop = getMetadata('disable-back-to-top') === 'true';
+  if (!disableBackToTop) {
+    addScrollToTopButton(block);
+  }
 }
 
 function wrapSocialMediaLinks(footer) {
