@@ -90,10 +90,11 @@ export default async function decorate(block) {
   footer.appendChild(copyrightWrapper);
   await decorateIcons(footer);
   block.append(footer);
-  const disableBackToTop = getMetadata('disable-back-to-top') === 'true';
-  if (!disableBackToTop) {
-    addScrollToTopButton(block);
+  const noScrollToTopMobile = getMetadata('no-scroll-to-top-mobile') === 'true';
+  if (noScrollToTopMobile) {
+    block.classList.add('no-scroll-to-top-mobile');
   }
+  addScrollToTopButton(block);
 }
 
 function wrapSocialMediaLinks(footer) {

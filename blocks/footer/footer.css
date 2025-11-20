@@ -216,6 +216,16 @@ a.scroll-to-top:focus {
   display: block;
 }
 
+.no-scroll-to-top-mobile .scroll-to-top-container {
+  display: none;
+}
+
+@media screen and (min-width: 744px) {
+  .no-scroll-to-top-mobile .scroll-to-top-container {
+    display: block;
+  } 
+}
+
 /* desktop */
 @media screen and (min-width: 1200px) {
   .footer-links-wrapper,
