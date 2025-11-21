@@ -217,6 +217,10 @@ main .section .engine-specifications-wrapper {
   opacity: 0;
 }
 
+.custom-dropdown__button {
+  padding-right: 36px !important;
+}
+
 /* Media queries */
 @media (min-width: 744px) {
   .engine-specifications-wrapper {
