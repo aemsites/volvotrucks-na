@@ -184,6 +184,10 @@
   background: none;
 }
 
+.v2-hero--marketing .button.marketing.dark {
+  color: var(--c-white);
+}
+
 /* Scroll icon */
 .v2-hero__scroll-icon {
   border-radius: 20px;
