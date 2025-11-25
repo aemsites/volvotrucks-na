@@ -217,7 +217,7 @@ main .section .engine-specifications-wrapper {
   opacity: 0;
 }
 
-#es-dropdown-button {
+.engine-specifications__dropdown-container .custom-dropdown .custom-dropdown__button {
   padding-right: 36px;
 }
 

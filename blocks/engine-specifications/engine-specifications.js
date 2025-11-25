@@ -191,8 +191,6 @@ const buildDrodownOptions = async (dropdownContainer, horsepowerMap, chartOption
   const customDropdown = await getCustomDropdown(dropdownConfig);
 
   dropdownContainer.append(customDropdown);
-  const button = dropdownContainer.querySelector('.custom-dropdown__button');
-  button.setAttribute('id', 'es-dropdown-button');
 };
 
 const setChartUpponSelection = (selectedNumber, chartParent, hpSelector, allCharts) => {
