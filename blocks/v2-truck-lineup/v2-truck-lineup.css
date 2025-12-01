@@ -121,21 +121,21 @@ body .section.v2-truck-lineup-container .v2-truck-lineup-wrapper {
 
 .v2-truck-lineup .default-content-wrapper {
   display: flex;
+  flex-direction: column;
   justify-content: center;
   align-items: center;
-  gap: 84px;
+  gap: 24px;
 }
 
 .v2-truck-lineup .default-content-wrapper .v2-truck-lineup__text p,
 .v2-truck-lineup .default-content-wrapper .v2-truck-lineup__text h2{
-  font-size: 2rem;
+  font-size: 1.5rem;
   font-weight: 300;
   font-family: var(--ff-volvo-novum);
 }
 
 .v2-truck-lineup .default-content-wrapper .v2-truck-lineup__text p {
   color: var(--c-grey-4);
-  font-size: 2rem;
 }
 
 .v2-truck-lineup .default-content-wrapper .v2-truck-lineup__text h2 {
@@ -143,7 +143,7 @@ body .section.v2-truck-lineup-container .v2-truck-lineup-wrapper {
 }
 
 .v2-truck-lineup .v2-truck-lineup__content {
-  text-align: start;
+  text-align: center;
 }
 
 .v2-truck-lineup__text {
@@ -364,6 +364,15 @@ ul.v2-truck-lineup__color-switcher {
   .v2-truck-lineup__arrow-controls {
     display: block;
   }
+
+  .v2-truck-lineup .default-content-wrapper {
+    gap: 32px;
+  }
+
+  .v2-truck-lineup .default-content-wrapper .v2-truck-lineup__text p,
+  .v2-truck-lineup .default-content-wrapper .v2-truck-lineup__text h2{
+    font-size: 2rem;
+  }
 }
 
 @media screen and (min-width: 1200px) {
@@ -386,6 +395,15 @@ ul.v2-truck-lineup__color-switcher {
 
   .v2-truck-lineup__content {
     max-width: var(--wrapper-width);
+  }
+
+  .v2-truck-lineup .default-content-wrapper {
+    gap: 84px;
+    flex-direction: row;
+  }
+
+  .v2-truck-lineup .v2-truck-lineup__content {
+    text-align: start;
   }
 
   div:where([role='dialog']):not(.truck-lineup-content-center) .v2-truck-lineup__content .default-content-wrapper,
