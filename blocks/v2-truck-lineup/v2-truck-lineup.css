@@ -405,24 +405,4 @@ ul.v2-truck-lineup__color-switcher {
   .v2-truck-lineup .v2-truck-lineup__content {
     text-align: start;
   }
-
-  div:where([role='dialog']):not(.truck-lineup-content-center) .v2-truck-lineup__content .default-content-wrapper,
-  main:not(.truck-lineup-content-center) .v2-truck-lineup__content .default-content-wrapper {
-    align-items: flex-start;
-    display: grid;
-    grid-template-columns: 1fr 567px 80px 430px 1fr;
-  }
-
-  div:where([role='dialog']):not(.truck-lineup-content-center) .v2-truck-lineup__buttons-container,
-  main:not(.truck-lineup-content-center) .v2-truck-lineup__buttons-container,
-  div:where([role='dialog']):not(.truck-lineup-content-center) .v2-truck-lineup__buttons-container .button-container,
-  main:not(.truck-lineup-content-center) .v2-truck-lineup__buttons-container .button-container {
-    margin-top: 0;
-  }
-
-  div:where([role='dialog']):not(.truck-lineup-content-center) .v2-truck-lineup__buttons-container,
-  main:not(.truck-lineup-content-center) .v2-truck-lineup__buttons-container {
-    justify-content: start;
-    grid-column: 4;
-  }
 }
