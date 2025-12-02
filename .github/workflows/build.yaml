@@ -30,8 +30,8 @@ jobs:
       run: npm ci --verbose
     - name: Lint
       run: npm run lint
-    - name: Build
-      run: npm run build
+    - name: Build (production, no sourcemaps)
+      run: NODE_ENV=production npm run build
     - name: Commit built files
       env:
         TOKEN: ${{ secrets.PAT_BUILD_TOKEN }}

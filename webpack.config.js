@@ -6,12 +6,32 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
+const isProd = process.env.NODE_ENV === 'production';
+
 // List of files to ignore
 const ignoreFiles = [
   'blocks/dealer-locator/vendor/moment.js',
   'blocks/dealer-locator/vendor/moment-timezone.min.js',
   'blocks/dealer-locator/vendor/moment-timezone.js',
 ];
+
+const plugins = [
+  new HtmlWebpackPlugin({
+    title: 'Volvo NA',
+  }),
+  new MiniCssExtractPlugin({
+    filename: '[name].css',
+  }),
+];
+
+if (!isProd) {
+  plugins.push(
+    new webpack.SourceMapDevToolPlugin({
+      filename: '[file].map[query]',
+      exclude: ['vendor.js'],
+    }),
+  );
+}
 
 module.exports = {
   mode: 'production',
@@ -46,18 +66,7 @@ module.exports = {
     ],
   },
 
-  plugins: [
-    new HtmlWebpackPlugin({
-      title: 'Volvo NA',
-    }),
-    new MiniCssExtractPlugin({
-      filename: '[name].css',
-    }),
-    new webpack.SourceMapDevToolPlugin({
-      filename: '[file].map[query]',
-      exclude: ['vendor.js'],
-    }),
-  ],
+  plugins, 
 
   optimization: {
     usedExports: true,
