@@ -66,7 +66,7 @@ $lastPane = "";                                                                 
 $radiusValue = $('#range').val();                                                               // the current radius value
 $sortedPins = null;                                                                             // stores all pins by distance (miles)
 $offset = ((new Date().getTimezoneOffset()) / 60) * -1;
-$key = 'AIzaSyAP8IewqHuU8SMz_6tNiIUlbU_l0GFOd1w';
+$key = window?.locatorConfig?.apiKey || '';
 $myDealer = null;
 $wayPoints = [];
 $directionsService = null;
@@ -1636,7 +1636,7 @@ $.fn.tmpPins = function (tmpPinList) {
 
     if (pin.REG_PHONE_NUMBER) {
       templateClone.find('.call').html('<a href="tel:' + pin.REG_PHONE_NUMBER + '">' + "Call" + '</a>');
-      templateClone.find('.call a').attr("href", $.fn.formatPhoneNumber(pin.REG_PHONE_NUMBER));
+      templateClone.find('.call a').attr("href", "tel:" + $.fn.formatPhoneNumber(pin.REG_PHONE_NUMBER));
       // templateClone.find('.detail-call').html('<a href="tel:' + pin.REG_PHONE_NUMBER + '">' + '<img src="/blocks/dealer-locator/images/Phone-2.png" />' + "Call" + '</a>');
     } else {
       templateClone.find('.call').text('Call');

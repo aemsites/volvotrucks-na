@@ -16,3 +16,12 @@ tools/importer/sub-nav.js
 config.json
 
 /dist
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/e2e-results/
+/e2e-report/
+/e2e-blob-report/
+/playwright/.cache/

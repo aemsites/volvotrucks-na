@@ -107,7 +107,7 @@ const performDomCheck = () => {
   logCombinedViolations(blockViolations, sectionViolations);
 };
 
-const existingElement = document.querySelector('body > helix-sidekick');
+const existingElement = document.querySelector('body > aem-sidekick');
 if (existingElement) {
   performDomCheck();
 } else {
@@ -115,7 +115,7 @@ if (existingElement) {
     mutationsList.forEach((mutation) => {
       if (mutation.type === 'childList') {
         mutation.addedNodes.forEach((node) => {
-          if (node.nodeType === 1 && node.tagName.toLowerCase() === 'helix-sidekick') {
+          if (node.nodeType === 1 && node.tagName.toLowerCase() === 'aem-sidekick') {
             performDomCheck();
             observer.disconnect();
           }

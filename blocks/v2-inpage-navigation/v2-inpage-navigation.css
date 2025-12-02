@@ -1,12 +1,12 @@
 :root {
   --inpage-navigation-height: 58px;
-  --inpage-navigation-bottom-height: var(--inpage-navigation-height);
-  --inpage-navigation-factor: var(--inpage-navigation-bottom-height);
 }
 
 .v2-inpage-navigation-wrapper {
   background-color: var(--c-white);
+  height: auto !important;
   left: 0;
+  overflow: unset !important;
   position: sticky;
   top: var(--nav-height);
   width: 100%;
@@ -46,6 +46,7 @@ then we change it for the next section item in main */
 .v2-inpage-navigation__wrapper {
   display: flex;
   padding: 8px 16px;
+  height: 100%;
 }
 
 .v2-inpage-navigation__dropdown {
@@ -193,45 +194,32 @@ then we change it for the next section item in main */
   line-height: var(--f-button-line-height);
 }
 
-.bottom-sticky-cta .v2-inpage-navigation-wrapper {
-  top: calc(100% - var(--inpage-navigation-bottom-height) + var(--inpage-navigation-factor));
-  height: 0;
-}
-
-.bottom-sticky-cta .v2-inpage-navigation-wrapper.v2-inpage-navigation--hide {
-  display: none;
-}
-
-.bottom-sticky-cta .v2-inpage-navigation {
-  background-color: var(--c-white);
-  height: var(--inpage-navigation-bottom-height);
-}
-
-.bottom-sticky-cta .v2-inpage-navigation__wrapper {
+.v2-inpage-navigation__cta-floating {
+  display: flex;
   justify-content: center;
-  align-items: center;
   gap: 8px;
+  position: sticky;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 12px 16px;
+  background: var(--c-white);
+  transform: translateY(100%);
+  transition: transform var(--duration-medium) ease;
 }
 
-.bottom-sticky-cta .v2-inpage-navigation__marketing {
+.v2-inpage-navigation__cta-floating--visible {
+  transform: translateY(0);
+}
+
+.v2-inpage-navigation__cta-floating .button {
   width: 100%;
 }
 
-.bottom-sticky-cta .marketing.v2-inpage-navigation__marketing.v2-inpage-navigation__marketing--secondary {
-  background-color: var(--c-white);
-  color: var(--c-main-black);
-  border-color: var(--c-main-black);
+@media (min-width: 576px) {
+  .v2-inpage-navigation__cta-floating .button {
+  width: auto;
 }
-
-.bottom-sticky-cta .marketing.v2-inpage-navigation__marketing.v2-inpage-navigation__marketing--secondary:hover {
-  background-color: var(--c-grey-50);
-  border-color: var(--c-grey-400);
-}
-
-@media (min-width: 450px) {
-  .bottom-sticky-cta .v2-inpage-navigation__marketing {
-    width: auto;
-  }
 }
 
 @media (min-width: 744px) {
@@ -240,13 +228,9 @@ then we change it for the next section item in main */
     padding-right: 32px;
   }
 
-  .bottom-sticky-cta .v2-inpage-navigation-wrapper {
-    top: var(--nav-height);
-    height: auto;
-  }
-
-  .bottom-sticky-cta .v2-inpage-navigation__wrapper {
-    justify-content: flex-end;
+  .v2-inpage-navigation__cta-container {
+    display: flex;
+    gap: 8px;
   }
 }
 
