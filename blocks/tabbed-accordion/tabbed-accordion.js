@@ -27,7 +27,7 @@ export default function decorate(block) {
     if (currentActiveTabContent !== tabContent) {
       currentActiveTabContent.classList.remove('is-active');
     }
-    tabContent.parentElement.classList.add('is-active');
+    tabContent.parentElement.parentElement.classList.add('is-active');
 
     const currentActiveNavigationItem = nav.querySelector('.active');
     if (currentActiveNavigationItem !== listItem) {

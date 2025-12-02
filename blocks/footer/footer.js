@@ -90,6 +90,10 @@ export default async function decorate(block) {
   footer.appendChild(copyrightWrapper);
   await decorateIcons(footer);
   block.append(footer);
+  const noScrollToTopMobile = getMetadata('no-scroll-to-top-mobile') === 'true';
+  if (noScrollToTopMobile) {
+    block.classList.add('no-scroll-to-top-mobile');
+  }
   addScrollToTopButton(block);
 }
 
