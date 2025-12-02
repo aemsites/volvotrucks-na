@@ -6,7 +6,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
-const disableSourceMaps = process.env.NO_SOURCEMAPS === 'true';
+const isProd = process.env.NODE_ENV === 'production';
+const isDev = !isProd;
 
 // List of files to ignore
 const ignoreFiles = [
@@ -24,7 +25,7 @@ const plugins = [
   }),
 ];
 
-if (!disableSourceMaps) {
+if (isDev) {
   plugins.push(
     new webpack.SourceMapDevToolPlugin({
       filename: '[file].map[query]',
@@ -34,7 +35,7 @@ if (!disableSourceMaps) {
 }
 
 module.exports = {
-  mode: 'production',
+  mode: isProd ? 'production' : 'development',
 
   entry: './scripts/entrypoint.js',
 

@@ -2065,4 +2065,3 @@
           aria-labelledby="accordionID"></slot>
       </details>
     `}};h.styles=[o.IT.subtitle1,d],c([(0,s.MZ)({type:String})],h.prototype,"headerTitle",void 0),c([(0,s.MZ)({type:String})],h.prototype,"headerIcon",void 0),c([(0,s.MZ)({type:Boolean,reflect:!0})],h.prototype,"open",void 0),h=c([(0,a.E)("vcdk-accordion")],h)}}]);
-//# sourceMappingURL=vcdk.js.map
