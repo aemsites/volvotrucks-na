@@ -1,7 +1,7 @@
 /* eslint-disable no-undef */
 const path = require('path');
 
-const TerserPlugin = require('terser-webpack-plugin'); // TODO: Re-implement this back again and test
+const TerserPlugin = require('terser-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
@@ -62,25 +62,6 @@ module.exports = {
   optimization: {
     usedExports: true,
     splitChunks: {
-      // TODO: Remove after refining the chunks configuration
-      /* 
-      cacheGroups: {
-        vcdk: {
-          test: /[\\/]node_modules[\\/]@volvo[\\/]vcdk[\\/]/, // Group @volvo/vcdk code into one file
-          name: 'vcdk', // Create a shared vcdk.js file
-          chunks: 'all',
-          priority: 10, // Higher priority to ensure this group gets picked first
-        },
-        default: {
-          // test: /\.(js)$/,
-          name: 'main', // Name of the chunk for everything else
-          chunks: 'all', // Apply to all chunks
-          minSize: 0, // Allow splitting for files of all sizes
-          minChunks: 1, // Minimum number of chunks that must share a module before splitting
-          priority: 0, // Lower priority for the default chunk
-        },
-        styles: false,
-      }, */
       cacheGroups: {
         vcdk: {
           test: /[\\/]node_modules[\\/]@volvo[\\/]vcdk[\\/]/, // Group @volvo/vcdk code into one file
@@ -99,7 +80,16 @@ module.exports = {
       },
     },
     minimize: true,
-    minimizer: [new TerserPlugin()],
+    minimizer: [
+      new TerserPlugin({
+        extractComments: false,
+        terserOptions: {
+          compress: true,
+          mangle: true,
+          format: { comments: false },
+        },
+      }),
+    ],
   },
 
   // Ignore files during watch mode
