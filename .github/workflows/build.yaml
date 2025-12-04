@@ -13,8 +13,6 @@ jobs:
       uses: actions/setup-node@v4
       with:
         node-version: 20
-    - name: Remove dist folder
-      run: rm -rf dist
     - name: Update .npmrc with Azure PAT token
       run: |
         echo "; begin auth token
@@ -28,6 +26,27 @@ jobs:
         sed -i 's/\[BASE64_ENCODED_PERSONAL_ACCESS_TOKEN\]/${{ env.AZURE_PAT_TOKEN_BASE64 }}/g' .npmrc
       env:
         AZURE_PAT_TOKEN_BASE64: ${{ secrets.VOLVO_PAT }}
+    - name: Delete dist folder and commit
+      env:
+        TOKEN: ${{ secrets.PAT_BUILD_TOKEN }}
+      run: |
+        # Git identity for the commit
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+        # Remove existing dist folder from branch
+        git rm -rf dist || true
+
+        # Only commit if there are actual changes
+        if git diff --cached --quiet; then
+          echo "✅ No dist folder to remove."
+        else
+          git commit -m "chore: remove dist folder [skip ci]" --no-verify
+          echo "🗑️ Dist folder removed, pushing changes..."
+
+          # Push using the Personal Access Token (PAT)
+          git push https://x-access-token:${TOKEN}@github.com/${{ github.repository }} HEAD:${{ github.ref_name }}
+        fi
     - name: Install dependencies
       run: npm ci --verbose
     - name: Lint
@@ -44,9 +63,6 @@ jobs:
 
         # Avoid warnings for ignored files
         git config advice.addIgnoredFile false
-
-        # Remove existing dist folder from branch
-        git rm -rf dist || true
 
         # Force add new dist files (even if in .gitignore)
         git add -f dist
