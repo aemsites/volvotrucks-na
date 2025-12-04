@@ -35,7 +35,6 @@ jobs:
     - name: Commit built files
       env:
         TOKEN: ${{ secrets.PAT_BUILD_TOKEN }}
-        HUSKY: 0
       run: |
         # Git identity for the commit
         git config user.name "github-actions[bot]"
