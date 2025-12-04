@@ -32,6 +32,14 @@ jobs:
       run: npm run lint
     - name: Build (production, no sourcemaps)
       run: NODE_ENV=production npm run build
+    - name: Debug build output
+      run: |
+        echo "Node version:"
+        node -v
+        echo "npm version:"
+        npm -v
+        echo "dist content:"
+        ls -la dist
     - name: Commit built files
       env:
         TOKEN: ${{ secrets.PAT_BUILD_TOKEN }}
