@@ -55,7 +55,7 @@ jobs:
         if git diff --cached --quiet; then
           echo "✅ No changes to commit."
         else
-          git commit -m "chore: update dist [skip ci]"
+          git commit -m "chore: update dist [skip ci]" --no-verify
           echo "📦 Changes committed, pushing to branch..."
 
           # Push using the Personal Access Token (PAT)
