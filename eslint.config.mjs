@@ -8,7 +8,7 @@ const mainConfig = {
   ...pluginJs.configs.recommended,
   ...prettierRecommended,
   files: ['**/*.js', '**/*.mjs'],
-  ignores: ['**/*.min.js', '**/dealer-locator/vendor/*', './e2e-report/**'],
+  ignores: ['**/*.min.js', '**/dealer-locator/vendor/*', './e2e-report/**', 'dist/*'],
   rules: {
     curly: 'error',
     'no-undef': 'error',

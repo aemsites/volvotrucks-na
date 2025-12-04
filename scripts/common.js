@@ -232,7 +232,7 @@ export async function loadTemplate(doc, templateName) {
             await mod.default(doc);
           }
         } catch (error) {
-          console.log(`failed to load module for ${templateName}`, error);
+          console.log(`failed to load template for ${templateName}`, error);
         }
         resolve();
       })();

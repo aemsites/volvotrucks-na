@@ -8,5 +8,6 @@
         "message": "Expected class \"%s\" to be in kebab-case or BEM-style naming."
       }
     ]
-  }
+  },
+  "ignoreFiles": ["dist/**"]
 }

@@ -1,0 +1,32 @@
+name: Tests and Linting
+
+on: [pull_request]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Use Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '20'
+    - name: Update .npmrc with Azure PAT token
+      run: |
+        echo "; begin auth token
+        //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/:username=volvogroup
+        //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/:_password=[BASE64_ENCODED_PERSONAL_ACCESS_TOKEN]
+        //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/:email=AZU-VES-VCDK@volvogroup.onmicrosoft.com
+        //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/:username=volvogroup
+        //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/:_password=[BASE64_ENCODED_PERSONAL_ACCESS_TOKEN]
+        //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/:email=AZU-VES-VCDK@volvogroup.onmicrosoft.com
+        ; end auth token" > .npmrc
+        sed -i 's/\[BASE64_ENCODED_PERSONAL_ACCESS_TOKEN\]/${{ env.AZURE_PAT_TOKEN_BASE64 }}/g' .npmrc
+      env:
+        AZURE_PAT_TOKEN_BASE64: ${{ secrets.VOLVO_PAT }}
+    - name: Install dependencies
+      run: npm ci --verbose
+    - name: Run Lint
+      run: npm run lint
+      env:
+        CI: true

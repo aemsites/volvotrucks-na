@@ -1,0 +1,79 @@
+name: Build
+on: [push]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+      with:
+        persist-credentials: false  # don't use default GITHUB_TOKEN
+        fetch-depth: 0
+    - name: Use Node.js 20
+      uses: actions/setup-node@v4
+      with:
+        node-version: 20
+    - name: Update .npmrc with Azure PAT token
+      run: |
+        echo "; begin auth token
+        //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/:username=volvogroup
+        //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/:_password=[BASE64_ENCODED_PERSONAL_ACCESS_TOKEN]
+        //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/:email=AZU-VES-VCDK@volvogroup.onmicrosoft.com
+        //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/:username=volvogroup
+        //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/:_password=[BASE64_ENCODED_PERSONAL_ACCESS_TOKEN]
+        //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/:email=AZU-VES-VCDK@volvogroup.onmicrosoft.com
+        ; end auth token" > .npmrc
+        sed -i 's/\[BASE64_ENCODED_PERSONAL_ACCESS_TOKEN\]/${{ env.AZURE_PAT_TOKEN_BASE64 }}/g' .npmrc
+      env:
+        AZURE_PAT_TOKEN_BASE64: ${{ secrets.VOLVO_PAT }}
+    - name: Delete dist folder and commit
+      env:
+        TOKEN: ${{ secrets.PAT_BUILD_TOKEN }}
+      run: |
+        # Git identity for the commit
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+        # Remove existing dist folder from branch
+        git rm -rf dist || true
+
+        # Only commit if there are actual changes
+        if git diff --cached --quiet; then
+          echo "✅ No dist folder to remove."
+        else
+          git commit -m "chore: remove dist folder [skip ci]"
+          echo "🗑️ Dist folder removed, pushing changes..."
+
+          # Push using the Personal Access Token (PAT)
+          git push https://x-access-token:${TOKEN}@github.com/${{ github.repository }} HEAD:${{ github.ref_name }}
+        fi
+    - name: Install dependencies
+      run: npm ci --verbose
+    - name: Lint
+      run: npm run lint
+    - name: Build (production, no sourcemaps)
+      run: NODE_ENV=production npm run build
+    - name: Commit built files
+      env:
+        TOKEN: ${{ secrets.PAT_BUILD_TOKEN }}
+      run: |
+        # Git identity for the commit
+        git config user.name "github-actions[bot]"
+        git config user.email "github-actions[bot]@users.noreply.github.com"
+
+        # Avoid warnings for ignored files
+        git config advice.addIgnoredFile false
+
+        # Force add new dist files (even if in .gitignore)
+        git add -f dist
+
+        # Only commit if there are actual changes
+        if git diff --cached --quiet; then
+          echo "✅ No changes to commit."
+        else
+          git commit -m "chore: update dist [skip ci]" --no-verify
+          echo "📦 Changes committed, pushing to branch..."
+
+          # Push using the Personal Access Token (PAT)
+          git push https://x-access-token:${TOKEN}@github.com/${{ github.repository }} HEAD:${{ github.ref_name }}
+        fi
