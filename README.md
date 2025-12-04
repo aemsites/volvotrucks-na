@@ -48,13 +48,13 @@ Use the resulting string as the value for the `_password` field in your `.npmrc`
 
 ## Debugging Production Code Using Local Sourcemaps
 
-Production builds (CI) run with NODE_ENV=production and do not generate sourcemaps.
+Production builds do not include sourcemaps.
 
 To debug a production issue:
 1. Check out the exact commit currently deployed to production (usually the latest commit on main, or a specific commit SHA if needed).
 2. Build locally (sourcemaps enabled):
 ```sh
-npm run build
+npm run build:dev
 ```
 3. Open the production page in your browser and access its developer tools, then navigate to the panel where source files are displayed (e.g. Sources).
 4. Add your local `dist/` folder to the workspace / file system mapping (name varies by browser).
