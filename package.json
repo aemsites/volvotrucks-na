@@ -8,7 +8,7 @@
     "npm": ">=10.8.2"
   },
   "scripts": {
-    "build": "NODE_ENV=production webpack --config ./webpack.config.js",
+    "build": "webpack --config ./webpack.config.js",
     "watch": "webpack --watch --config ./webpack.config.js",
     "dev": "aem up",
     "dev:ca": "aem up --url https://main--volvotrucks-ca--volvogroup.aem.page/en-ca/",

@@ -1,3 +1,6 @@
+/*!***********************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/@volvo/vcdk/dist/themes/volvo/semantic.css ***!
+  \***********************************************************************************************************/
 /**
  * Do not edit directly
  * Generated on Wed, 06 Aug 2025 13:33:15 GMT
@@ -709,6 +712,9 @@
   --vcdk-motion-duration-large: 320ms;
 }
 
+/*!*****************************************************************************************************************!*\
+  !*** css ./node_modules/css-loader/dist/cjs.js!./node_modules/@volvo/vcdk/dist/themes/volvo/semantic-light.css ***!
+  \*****************************************************************************************************************/
 /**
  * Do not edit directly
  * Generated on Wed, 06 Aug 2025 13:33:15 GMT
@@ -1065,3 +1071,5 @@
   --vcdk-motion-duration-large: 320ms;
 }
 
+
+/*# sourceMappingURL=vcdk.css.map*/
