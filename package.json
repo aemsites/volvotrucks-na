@@ -9,7 +9,8 @@
   },
   "scripts": {
     "build": "webpack --config ./webpack.config.js",
-    "watch": "webpack --watch --config ./webpack.config.js",
+    "build:dev": "SOURCEMAPS=true webpack --config ./webpack.config.js",
+    "watch": "SOURCEMAPS=true webpack --watch --config ./webpack.config.js",
     "dev": "aem up",
     "dev:ca": "aem up --url https://main--volvotrucks-ca--volvogroup.aem.page/en-ca/",
     "dev:mx": "aem up --url https://main--volvotrucks-mx--volvogroup.aem.page",
