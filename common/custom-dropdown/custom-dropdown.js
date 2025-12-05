@@ -22,6 +22,8 @@ const SelectActions = {
   Type: 10,
 };
 
+const OptionsTranslations = [];
+
 /**
  * Get the value of an option.
  *
@@ -305,8 +307,14 @@ Select.prototype.createOption = function createOption(option, index) {
     optionEl.className = index === 0 ? `${componentName}__option option-current` : `${componentName}__option`;
     optionEl.setAttribute('aria-selected', `${index === 0}`);
   }
-
-  optionEl.innerText = getOptionLabel(option);
+  // If options is a pair of label and value, use OptionsTranslations array
+  const optionLabel = option.split(';')[0]?.split(':')[1];
+  if(optionLabel) {
+    const optionValue = option.split(';')[1]?.split(':')[1];
+    const optionObject = {label:optionLabel, value:optionValue};
+    OptionsTranslations.push(optionObject);
+  }
+  optionEl.innerText = getOptionLabel(optionLabel ? optionLabel : option);
 
   optionEl.addEventListener('click', (event) => {
     event.stopPropagation();
