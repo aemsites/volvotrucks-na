@@ -288,13 +288,9 @@ const renderRecalls = async (recallsData, recallFields) => {
           return;
         }
 
-        console.log(recallValue);
         const isDateValue = isValidDateString(new String(recallValue));
-        console.log(isDateValue);
         if (isDateValue) {
-          console.log(recallValue);
           recallValue = formatDateWithLocale(recallValue);
-          console.log(recallValue);
         }
 
         const hasConfigurableText = configurable_text;
