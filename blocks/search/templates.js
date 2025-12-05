@@ -84,10 +84,16 @@ export const getNoResultsTemplate = ({ noResults, refine }) => `
   </div>
 `;
 
-const addEmTag = (text, value) => {
-  const words = text.split(' ');
-  const result = words.map((word) => (word.toLowerCase() === value.toLowerCase() ? `<em>${word}</em>` : word));
-  return result.join(' ');
+const addEmTag = (text, query) => {
+  if (!text || !query) {return text;}
+
+  const normalizedQuery = query.trim().replace(/\s+/g, ' ');
+  if (!normalizedQuery) {return text;}
+
+  const escapedQuery = normalizedQuery.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  const regex = new RegExp(`(${escapedQuery})`, 'gi');
+
+  return text.replace(regex, '<em>$1</em>');
 };
 
 export const getResultsItemsTemplate = ({ items, queryTerm }) => {
