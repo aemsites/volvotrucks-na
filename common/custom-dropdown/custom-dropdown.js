@@ -22,8 +22,6 @@ const SelectActions = {
   Type: 10,
 };
 
-const OptionsTranslations = [];
-
 /**
  * Get the value of an option.
  *
@@ -307,14 +305,17 @@ Select.prototype.createOption = function createOption(option, index) {
     optionEl.className = index === 0 ? `${componentName}__option option-current` : `${componentName}__option`;
     optionEl.setAttribute('aria-selected', `${index === 0}`);
   }
-  // If options is a pair of label and value, use OptionsTranslations array
-  const optionLabel = option.split(';')[0]?.split(':')[1];
-  if(optionLabel) {
-    const optionValue = option.split(';')[1]?.split(':')[1];
-    const optionObject = {label:optionLabel, value:optionValue};
-    OptionsTranslations.push(optionObject);
+
+  let normalizedOption = option;
+
+  if (typeof option === 'string' && option.includes(':')) {
+    const label = option.split(';')[0]?.split(':')[1];
+    const value = option.split(';')[1]?.split(':')[1];
+    normalizedOption = { label, value };
   }
-  optionEl.innerText = getOptionLabel(optionLabel ? optionLabel : option);
+
+  this.options[index] = normalizedOption;
+  optionEl.innerText = getOptionLabel(normalizedOption);
 
   optionEl.addEventListener('click', (event) => {
     event.stopPropagation();
@@ -510,7 +511,10 @@ Select.prototype.selectOption = function selectOption(index) {
 
   // call the onChangeCallback if provided
   if (this.onChangeCallback) {
-    this.onChangeCallback(selected);
+    this.onChangeCallback({
+      label: getOptionLabel(selected),
+      value: getOptionValue(selected),
+    });
   }
 };
 
