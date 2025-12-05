@@ -174,10 +174,10 @@ const fetchRefreshDate = async () => {
 
 /**
  * Checks if a value is a valid date string (e.g., 'Aug 25, 2023', '9/11/2024', '17 févr. 2016')
- * or date object that is not 'Invalid date'. * This function explicitly excludes simple numeric inputs (like 0, 11, or 12) 
+ * This function explicitly excludes simple numeric inputs (like 0, 11, or 12) 
  * which could be the value for 'mfr_recall_status' field
  * 
- * * @param {*} value - The value to test. Expected to be a string or a Date object.
+ * * @param {string} value - The value to test. Expected to be a date string.
  * @returns {boolean} True if the value is a valid date string, false otherwise.
  */
 function isValidDateString(value) {
