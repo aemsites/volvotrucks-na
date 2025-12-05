@@ -173,25 +173,20 @@ const fetchRefreshDate = async () => {
 };
 
 /**
- * Checks if a string in the format 'MMM DD, YYYY' (e.g., 'Aug 25, 2023')
- * can be successfully parsed into a valid, non-erroneous JavaScript Date object.
- *
- * @param {string} dateString - The string to test.
- * @returns {boolean} True if the string is a valid date, false otherwise.
+ * Checks if a value is a valid date string (e.g., 'Aug 25, 2023', '9/11/2024', '17 févr. 2016').
+ * This function explicitly excludes simple numeric inputs (like 0, 11, or 12) 
+ * which could be the value for 'mfr_recall_status' field
+ * 
+ * * @param {*} value - The value to test. Expected to be a string.
+ * @returns {boolean} True if the value is a valid date string, false otherwise.
  */
-const isValidDateString = (dateString) => {
-  if (typeof dateString !== 'string' && typeof dateString !== 'number') {
+function isValidDateString(value) {
+  if (typeof value !== 'string' || value.trim() === '') {
     return false;
   }
-  if (typeof dateString === 'number') {
-    return false;
-  }
-  const date = new Date(dateString);
-  if (isNaN(date.getTime())) {
-    return false;
-  }
-  return true;
-};
+  const date = new Date(value);
+  return !isNaN(date.getTime());
+}
 
 /**
  * Processes and transforms field values based on the field key and a configurable
@@ -293,9 +288,13 @@ const renderRecalls = async (recallsData, recallFields) => {
           return;
         }
 
+        console.log(recallValue);
         const isDateValue = isValidDateString(new String(recallValue));
+        console.log(isDateValue);
         if (isDateValue) {
+          console.log(recallValue);
           recallValue = formatDateWithLocale(recallValue);
+          console.log(recallValue);
         }
 
         const hasConfigurableText = configurable_text;
