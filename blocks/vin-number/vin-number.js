@@ -1,5 +1,5 @@
 import { readBlockConfig } from '../../scripts/aem.js';
-import { getTextLabel, createElement, getJsonFromUrl, getPlaceholders, getLocale, SEARCH_CONFIGS } from '../../scripts/common.js';
+import { getTextLabel, createElement, getJsonFromUrl, getPlaceholders, getLocale } from '../../scripts/common.js';
 
 const BRAND = 'volvo';
 const docRange = document.createRange();
