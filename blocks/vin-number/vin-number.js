@@ -4,7 +4,7 @@ import { getTextLabel, createElement, getJsonFromUrl, getPlaceholders, getLocale
 const BRAND = 'volvo';
 const docRange = document.createRange();
 const blockName = 'vin-number';
-const refreshDateUniqueKey = `refreshdate-${BRAND}`;
+const refreshDateUniqueKey = `refresh-date-${BRAND}`;
 let configUrl;
 
 // All placeholder labels centralized
