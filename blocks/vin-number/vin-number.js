@@ -2,10 +2,10 @@ import { readBlockConfig } from '../../scripts/aem.js';
 import { getTextLabel, createElement, getJsonFromUrl, getPlaceholders, getLocale, SEARCH_CONFIGS } from '../../scripts/common.js';
 
 const { TENANT } = SEARCH_CONFIGS;
-const locale = getLocale();
+const language = getLocale().split('-')[0] || 'en';
 const docRange = document.createRange();
 const blockName = 'vin-number';
-const refreshDateUniqueKey = `refreshdate-${TENANT}-${locale}`;
+const refreshDateUniqueKey = `refreshdate-${TENANT}-${language}`;
 let configUrl;
 
 // All placeholder labels centralized
@@ -75,13 +75,12 @@ const fetchRecallFields = async () => {
 
 /**
  * Formats a date string into a localized format (e.g., "Aug 25, 2023").
- * Uses 'getLocale()' function to determine the current locale like 'en-US' or 'fr-FR'.
+ * Uses language variable to determine the current locale like 'en' or 'fr'.
  *
  * @param {string | Date} date - The date value to format (e.g., "2023-08-25" or a Date object).
  * @returns {string} The formatted date string in the local format (e.g., 'en' or 'fr').
  */
 const formatDateWithLocale = (date) => {
-  const language = locale.split('-')[0] || 'en';
   const formattedDate = new Date(date).toLocaleDateString(language, { year: 'numeric', month: 'short', day: 'numeric' });
   return formattedDate;
 };
