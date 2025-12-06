@@ -1,7 +1,10 @@
 import { readBlockConfig } from '../../scripts/aem.js';
 import { getTextLabel, createElement, getJsonFromUrl, getPlaceholders, getLocale } from '../../scripts/common.js';
 
+// Only these 2 variables are brand-specific
 const BRAND = 'volvo';
+const formValidationPattern = '^[1,2,3,4][c,C,N,n,R,r,P,p,V,v][1,2,4,5,9,C,c,e,E,K,k,V,v][B-C,E-H,J-N,R-T,V-Y,b-c,e-h,j-n,r-t,v-y][A-Za-z0-9]{13}$';
+
 const docRange = document.createRange();
 const blockName = 'vin-number';
 const refreshDateUniqueKey = `refresh-date-${BRAND}`;
@@ -411,7 +414,7 @@ export default async function decorate(block) {
         maxlength="17"
         required
         class="${blockName}__input"
-        pattern="^[1,2,3,4][c,C,N,n,R,r,P,p,V,v][1,2,4,5,9,C,c,e,E,K,k,V,v][B-C,E-H,J-N,R-T,V-Y,b-c,e-h,j-n,r-t,v-y][A-Za-z0-9]{13}$"
+        pattern="${formValidationPattern}"
       />
       <label for="vin_number" class="${blockName}__label">${getTextLabel(LABELS.label)}</label>
     </div>
