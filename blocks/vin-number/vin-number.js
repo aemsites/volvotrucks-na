@@ -384,7 +384,6 @@ export default async function decorate(block) {
     );
   }
 
-
   const refreshDate = getStorageItem('refreshDate-MT') || '';
   const refresDateWrapper = createElement('div', {
     classes: `${blockName}__refresh-date-wrapper`,
@@ -434,11 +433,11 @@ export default async function decorate(block) {
   const vinInput = block.querySelector(`.${blockName}__input`);
 
   vinInput.oninvalid = (e) => {
+    if (e.target.value.length < e.target.maxLength) {
+      e.target.setCustomValidity(getTextLabel(LABELS.formatLength));
+      return;
+    }
     e.target.setCustomValidity(getTextLabel(LABELS.format));
-  };
-
-  vinInput.oninput = (e) => {
-    e.target.setCustomValidity('');
   };
 
   if (!refreshDate) {
