@@ -1,8 +1,11 @@
 import { readBlockConfig } from '../../scripts/aem.js';
-import { getTextLabel, createElement, getJsonFromUrl, getPlaceholders, getLocale } from '../../scripts/common.js';
+import { getTextLabel, createElement, getJsonFromUrl, getPlaceholders, getLocale, SEARCH_CONFIGS } from '../../scripts/common.js';
 
+const { TENANT } = SEARCH_CONFIGS;
+const locale = getLocale();
 const docRange = document.createRange();
 const blockName = 'vin-number';
+const refreshDateUniqueKey = `refreshdate-${TENANT}-${locale}`;
 let configUrl;
 
 // All placeholder labels centralized
@@ -78,7 +81,7 @@ const fetchRecallFields = async () => {
  * @returns {string} The formatted date string in the local format (e.g., 'en' or 'fr').
  */
 const formatDateWithLocale = (date) => {
-  const language = getLocale().split('-')[0] || 'en';
+  const language = locale.split('-')[0] || 'en';
   const formattedDate = new Date(date).toLocaleDateString(language, { year: 'numeric', month: 'short', day: 'numeric' });
   return formattedDate;
 };
@@ -158,12 +161,12 @@ const setStorageItem = (key, value) => {
  * date string (e.g., "Aug 25, 2023"). Returns undefined if the API call fails.
  */
 const fetchRefreshDate = async () => {
-  const refreshDate = getStorageItem('refreshDate');
+  const refreshDate = getStorageItem(refreshDateUniqueKey);
   if (!refreshDate) {
     const { url, key } = getAPIConfig();
     try {
       const response = await getJsonFromUrl(`${url}refreshdate?api_key=${key}`);
-      setStorageItem('refreshDate', response.refresh_date);
+      setStorageItem(refreshDateUniqueKey, response.refresh_date);
       return formatDateWithLocale(response.refresh_date);
     } catch (error) {
       console.error('Error fetching refresh date:', error);
@@ -384,7 +387,7 @@ export default async function decorate(block) {
     );
   }
 
-  const refreshDate = getStorageItem('refreshDate-MT') || '';
+  const refreshDate = getStorageItem(refreshDateUniqueKey) || '';
   const refresDateWrapper = createElement('div', {
     classes: `${blockName}__refresh-date-wrapper`,
   });
