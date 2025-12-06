@@ -104,56 +104,12 @@
       "Text": "Recalls"
     },
     {
-      "Key": "recall_date",
-      "Text": "NHTSA Issue Date"
-    },
-    {
-      "Key": "tc_recall_date",
-      "Text": "Transport Canada Issue Date"
-    },
-    {
-      "Key": "recall_description",
-      "Text": "Description"
-    },
-    {
-      "Key": "safety_risk_description",
-      "Text": "Safety Risk"
-    },
-    {
-      "Key": "remedy_description",
-      "Text": "Remedy"
-    },
-    {
-      "Key": "interim_precautions",
-      "Text": "Precautions to Minimize Risk"
-    },
-    {
-      "Key": "recall_effective_date",
-      "Text": "Remedy Availability"
-    },
-    {
       "Key": "vin_number:recall_effective_text",
       "Text": "The remedy for this recall is currently available.//The remedy for this recall is estimated to be available"
     },
     {
       "Key": "vin_number:published_info",
       "Text": "Information last updated"
-    },
-    {
-      "Key": "mfr_recall_status",
-      "Text": "Recall Status"
-    },
-    {
-      "Key": "recall-complete",
-      "Text": "Recall Complete"
-    },
-    {
-      "Key": "recall-incomplete",
-      "Text": "Recall Incomplete"
-    },
-    {
-      "Key": "recall-incomplete-no-remedy",
-      "Text": "Recall Incomplete, remedy not available"
     },
     {
       "Key": "vin_number:loading_recalls",
@@ -164,28 +120,12 @@
       "Text": "No recalls for VIN"
     },
     {
-      "Key": "mfr_notes",
-      "Text": "Next Steps"
-    },
-    {
       "Key": "vin_number:submit",
       "Text": "Submit"
     },
     {
-      "Key": "mfr_recall_number",
-      "Text": "Brand Recall Number"
-    },
-    {
-      "Key": "nhtsa_recall_number",
-      "Text": "NHTSA Recall Number"
-    },
-    {
       "Key": "vin_number:recall_oldest_info",
       "Text": "Recall information available since:"
-    },
-    {
-      "Key": "tc_recall_nbr",
-      "Text": "Transport Canada Number"
     },
     {
       "Key": "vin_number:no_french_info",
