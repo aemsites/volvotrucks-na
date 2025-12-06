@@ -1,11 +1,10 @@
 import { readBlockConfig } from '../../scripts/aem.js';
 import { getTextLabel, createElement, getJsonFromUrl, getPlaceholders, getLocale, SEARCH_CONFIGS } from '../../scripts/common.js';
 
-const { TENANT } = SEARCH_CONFIGS;
-const language = getLocale().split('-')[0] || 'en';
+const BRAND = 'volvo';
 const docRange = document.createRange();
 const blockName = 'vin-number';
-const refreshDateUniqueKey = `refreshdate-${TENANT}-${language}`;
+const refreshDateUniqueKey = `refreshdate-${BRAND}`;
 let configUrl;
 
 // All placeholder labels centralized
@@ -81,6 +80,7 @@ const fetchRecallFields = async () => {
  * @returns {string} The formatted date string in the local format (e.g., 'en' or 'fr').
  */
 const formatDateWithLocale = (date) => {
+  const language = getLocale().split('-')[0] || 'en';
   const formattedDate = new Date(date).toLocaleDateString(language, { year: 'numeric', month: 'short', day: 'numeric' });
   return formattedDate;
 };
