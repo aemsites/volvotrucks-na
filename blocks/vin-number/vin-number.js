@@ -422,9 +422,9 @@ export default async function decorate(block) {
         class="${blockName}__input"
         pattern="${formValidationPattern}"
       />
-      <label for="vin_number" class="${blockName}__label">${getTextLabel(LABELS.label)}</label>
+      <label for="vin_number" class="${blockName}__label">${LABELS.label}</label>
     </div>
-    <button class="button primary ${blockName}__submit" type="submit" name="submit">${getTextLabel(LABELS.submit)}</button>
+    <button class="button primary ${blockName}__submit" type="submit" name="submit">${LABELS.submit}</button>
   `);
 
   const vinResultsContainer = createElement('div', { classes: `${blockName}__results-container` });
@@ -445,10 +445,10 @@ export default async function decorate(block) {
 
   vinInput.oninvalid = (e) => {
     if (e.target.value.length < e.target.maxLength) {
-      e.target.setCustomValidity(getTextLabel(LABELS.formatLength));
+      e.target.setCustomValidity(LABELS.formatLength);
       return;
     }
-    e.target.setCustomValidity(getTextLabel(LABELS.format));
+    e.target.setCustomValidity(LABELS.format);
   };
 
   if (!refreshDate) {
