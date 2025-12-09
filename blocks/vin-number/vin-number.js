@@ -11,22 +11,21 @@ const refreshDateUniqueKey = `refresh-date-${BRAND}`;
 let configUrl;
 
 // Populates the LABELS global object with the values from the placeholder file
-const LABELS = {};
-const populateLabels = () => {
-  LABELS.resultText = getTextLabel('vin_number:result_text');
-  LABELS.modelYear = getTextLabel('vin_number:model_year');
-  LABELS.make = getTextLabel('vin_number:make');
-  LABELS.model = getTextLabel('vin_number:model');
-  LABELS.recalls = getTextLabel('vin_number:recalls');
-  LABELS.oldestInfo = getTextLabel('vin_number:recall_oldest_info');
-  LABELS.format = getTextLabel('vin_number:format');
-  LABELS.formatLength = getTextLabel('vin_number:format_length');
-  LABELS.availableInfo = getTextLabel('vin_number:recall_available_info');
-  LABELS.loadingRecalls = getTextLabel('vin_number:loading_recalls');
-  LABELS.noRecalls = getTextLabel('vin_number:no_recalls');
-  LABELS.publishedInfo = getTextLabel('vin_number:published_info');
-  LABELS.label = getTextLabel('vin_number:label');
-  LABELS.submit = getTextLabel('vin_number:submit');
+const LABELS = {
+  resultText: getTextLabel('vin_number:result_text'),
+  modelYear: getTextLabel('vin_number:model_year'),
+  make: getTextLabel('vin_number:make'),
+  model: getTextLabel('vin_number:model'),
+  recalls: getTextLabel('vin_number:recalls'),
+  oldestInfo: getTextLabel('vin_number:recall_oldest_info'),
+  format: getTextLabel('vin_number:format'),
+  formatLength: getTextLabel('vin_number:format_length'),
+  availableInfo: getTextLabel('vin_number:recall_available_info'),
+  loadingRecalls: getTextLabel('vin_number:loading_recalls'),
+  noRecalls: getTextLabel('vin_number:no_recalls'),
+  publishedInfo: getTextLabel('vin_number:published_info'),
+  label: getTextLabel('vin_number:label'),
+  submit: getTextLabel('vin_number:submit'),
 };
 
 const apiConfig = {
@@ -381,7 +380,6 @@ const fetchRecalls = async (e) => {
 export default async function decorate(block) {
   try {
     await getPlaceholders(); 
-    populateLabels();
         
     const blockCongfig = readBlockConfig(block);
     configUrl = blockCongfig?.path;
