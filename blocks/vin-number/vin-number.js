@@ -4,6 +4,7 @@ import { getTextLabel, createElement, getJsonFromUrl, getPlaceholders, getLocale
 // Only these 2 variables are brand-specific
 const BRAND = 'volvo';
 const formValidationPattern = '^[1,2,3,4][c,C,N,n,R,r,P,p,V,v][1,2,4,5,9,C,c,e,E,K,k,V,v][B-C,E-H,J-N,R-T,V-Y,b-c,e-h,j-n,r-t,v-y][A-Za-z0-9]{13}$';
+const brandBtnClasses = 'button primary';
 
 const docRange = document.createRange();
 const blockName = 'vin-number';
@@ -424,7 +425,7 @@ export default async function decorate(block) {
       />
       <label for="vin_number" class="${blockName}__label">${LABELS.label}</label>
     </div>
-    <button class="button primary ${blockName}__submit" type="submit" name="submit">${LABELS.submit}</button>
+    <button class="${brandBtnClasses} ${blockName}__submit" type="submit" name="submit">${LABELS.submit}</button>
   `);
 
   const vinResultsContainer = createElement('div', { classes: `${blockName}__results-container` });
