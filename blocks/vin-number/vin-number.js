@@ -398,7 +398,7 @@ export default async function decorate(block) {
   const refresDateWrapper = createElement('div', {
     classes: `${blockName}__refresh-date-wrapper`,
   });
-  console.log(LABELS);
+
   const refreshFragment = docRange.createContextualFragment(`<span>
     ${LABELS.publishedInfo}:
     </span>
