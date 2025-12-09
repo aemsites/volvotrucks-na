@@ -379,17 +379,14 @@ const fetchRecalls = async (e) => {
 
 export default async function decorate(block) {
   await getPlaceholders();
-  try {
-    const blockCongfig = readBlockConfig(block);
-    configUrl = blockCongfig?.path;
 
-    if (!configUrl) {
-      throw new Error('Required configuration path is missing.');
-    }
-    block.innerHTML = '';
-  } catch (error) {
-    console.error('Configuration error in vin block:', error.message, 'Attempted Path:', configUrl);
+  const blockCongfig = readBlockConfig(block);
+  configUrl = blockCongfig?.path;
+  if (!configUrl) {
+    console.log('Required configuration path is missing.');
   }
+
+  block.innerHTML = '';
 
   const refreshDate = getStorageItem(refreshDateUniqueKey) || '';
   const refresDateWrapper = createElement('div', {
