@@ -91,7 +91,6 @@ const formatDateWithLocale = (date) => {
 /**
  * Determines the appropriate API configuration based on the current hostname
  * environment (dev, qa, or prod).
- * 
  * @function getAPIConfig
  * @returns {Object} The configuration object corresponding to the current environment.
  */
@@ -120,7 +119,20 @@ const getAPIConfig = () => {
  * otherwise returns null.
  */
 const getStorageItem = (key) => {
-  const result = JSON.parse(window.localStorage.getItem(key));
+  const storedValue = window.localStorage.getItem(key);
+  if (!storedValue) {
+    return null;
+  }
+
+  let result = null;
+  try {
+    result = JSON.parse(storedValue);
+  } catch (error) {
+    console.error(`Error parsing localStorage key: "${key}"`, error);
+    window.localStorage.removeItem(key);
+    return null;
+  }
+
   if (result) {
     if (result.expireTime <= Date.now()) {
       window.localStorage.removeItem(key);
@@ -153,7 +165,7 @@ const setStorageItem = (key, value) => {
 };
 
 /**
- * Fetches the latest data refresh date, prioritizing a cached version from 
+ * Fetches the latest data refresh date, prioritizing a cached version from
  * localStorage that has not yet expired.
  * * If the cached item is missing or expired, it fetches the date from the API,
  * stores it in localStorage with a new expiration time, and then formats it.
@@ -166,22 +178,19 @@ const fetchRefreshDate = async () => {
   const refreshDate = getStorageItem(refreshDateUniqueKey);
   if (!refreshDate) {
     const { url, key } = getAPIConfig();
-    try {
-      const response = await getJsonFromUrl(`${url}refreshdate?api_key=${key}`);
-      setStorageItem(refreshDateUniqueKey, response.refresh_date);
-      return formatDateWithLocale(response.refresh_date);
-    } catch (error) {
-      console.error('Error fetching refresh date:', error);
-    }
+    const response = await getJsonFromUrl(`${url}refreshdate?api_key=${key}`);
+    setStorageItem(refreshDateUniqueKey, response.refresh_date);
+
+    return formatDateWithLocale(response.refresh_date);
   }
   return refreshDate;
 };
 
 /**
  * Checks if a value is a valid date string (e.g., 'Aug 25, 2023', '9/11/2024', '17 févr. 2016')
- * This function explicitly excludes simple numeric inputs (like 0, 11, or 12) 
+ * This function explicitly excludes simple numeric inputs (like 0, 11, or 12)
  * which could be the value for 'mfr_recall_status' field
- * 
+ *
  * * @param {string} value - The value to test. Expected to be a date string.
  * @returns {boolean} True if the value is a valid date string, false otherwise.
  */
@@ -195,9 +204,9 @@ function isValidDateString(value) {
 
 /**
  * Processes and transforms field values based on the field key and a configurable
- * text string. 
- * It handles two major transformations: 
- * - Mapping 'mfr_recall_status' numeric code to descriptive text 
+ * text string.
+ * It handles two major transformations:
+ * - Mapping 'mfr_recall_status' numeric code to descriptive text
  * - Formatting/labeling 'recall_effective_date'
  *
  * @function handleConfigurableFields
@@ -237,9 +246,7 @@ const handleConfigurableFields = (key, value, text) => {
 
 const renderRecalls = async (recallsData, recallFields) => {
   const resultText = document.querySelector(`.${blockName}__results-text`);
-  let resultContent = LABELS.resultText
-    .replace(/\${count}/, recallsData.number_of_recalls)
-    .replace(/\${vin}/, recallsData.vin);
+  let resultContent = LABELS.resultText.replace(/\${count}/, recallsData.number_of_recalls).replace(/\${vin}/, recallsData.vin);
 
   const blockEl = document.querySelector(`.${blockName}__recalls-wrapper`);
 
@@ -380,13 +387,8 @@ export default async function decorate(block) {
       throw new Error('Required configuration path is missing.');
     }
     block.innerHTML = '';
-
   } catch (error) {
-    console.error(
-      'Configuration error in vin block:',
-      error.message,
-      'Attempted Path:', configUrl,
-    );
+    console.error('Configuration error in vin block:', error.message, 'Attempted Path:', configUrl);
   }
 
   const refreshDate = getStorageItem(refreshDateUniqueKey) || '';
