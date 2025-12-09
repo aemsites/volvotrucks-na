@@ -53,20 +53,28 @@ export const getLanguagePath = () => {
  * // placeholders global variable is now populated
  */
 export async function getPlaceholders() {
-  if (!placeholders && !placeholdersPromise) {
-    const url = `${getLanguagePath()}placeholder.json`;
-    placeholdersPromise = fetch(url)
-      .then((resp) => resp.json())
-      .then((data) => {
+  if (placeholders) {
+    return placeholders;
+  }
+
+  if (!placeholdersPromise) {
+    placeholdersPromise = (async () => {
+      const url = `${getLanguagePath()}placeholder.json`;
+
+      try {
+        const resp = await fetch(url);
+        const data = await resp.json();
+
         placeholders = data;
-        placeholdersPromise = null;
-      })
-      .catch((error) => {
+        return data;
+      } catch (error) {
         console.error('Error fetching placeholders:', error);
         placeholdersPromise = null;
-      });
+        throw error; 
+      }
+    })();
   }
-  await placeholdersPromise;
+  return await placeholdersPromise; 
 }
 
 /**
