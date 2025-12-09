@@ -88,6 +88,22 @@
       "Text": "Please enter valid value"
     },
     {
+      "Key": "vin_number:recall_available_info",
+      "Text": "since:"
+    },
+    {
+      "Key": "vin_number:make",
+      "Text": "Make"
+    },
+    {
+      "Key": "vin_number:model",
+      "Text": "Model"
+    },
+    {
+      "Key": "vin_number:model_year",
+      "Text": "Model Year"
+    },
+    {
       "Key": "vin_number:label",
       "Text": "Enter your 17-digit VIN (Vehicle Identification Number)"
     },
@@ -102,10 +118,6 @@
     {
       "Key": "vin_number:recalls",
       "Text": "Recalls"
-    },
-    {
-      "Key": "vin_number:recall_effective_text",
-      "Text": "The remedy for this recall is currently available.//The remedy for this recall is estimated to be available"
     },
     {
       "Key": "vin_number:published_info",
@@ -126,10 +138,6 @@
     {
       "Key": "vin_number:recall_oldest_info",
       "Text": "Recall information available since:"
-    },
-    {
-      "Key": "vin_number:no_french_info",
-      "Text": "L'anglais est affiché là où le français n'est pas disponible."
     },
     {
       "Key": "vin_number:format_length",
@@ -214,22 +222,6 @@
     {
       "Key": "v2_resource_gallery:view_less",
       "Text": "View less"
-    },
-    {
-      "Key": "vin_number:recall_available_info",
-      "Text": "since:"
-    },
-    {
-      "Key": "vin_number:make",
-      "Text": "Make"
-    },
-    {
-      "Key": "vin_number:model",
-      "Text": "Model"
-    },
-    {
-      "Key": "vin_number:model_year",
-      "Text": "Model Year"
     },
     {
       "Key": "footer:go_to_top",
