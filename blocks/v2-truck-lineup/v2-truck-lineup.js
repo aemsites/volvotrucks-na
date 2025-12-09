@@ -339,6 +339,20 @@ const getTruckCarousel = (container) => {
   return container.dataset.truckCarousel || defaultTruckCarousel;
 };
 
+const wrapTextInContainer = (tabContent) => {
+  const descriptions = tabContent.querySelectorAll('p:not(.button-container)');
+  [...descriptions].forEach((description) => description.classList.add(`${blockName}__description`));
+
+  // Wrap text in container
+  const textContainer = createElement('div', { classes: `${blockName}__text` });
+  const text = tabContent.querySelector('.default-content-wrapper')?.querySelectorAll(':scope > *:not(.button-container)');
+  if (text.length > 0) {
+    const parentTextContainer = text[0].parentNode;
+    textContainer.append(...text);
+    parentTextContainer.appendChild(textContainer);
+  }
+};
+
 export default function decorate(block) {
   const buttonNavigation = block.closest('main').classList.contains('truck-lineup-buttons');
   const descriptionContainer = block.querySelector(':scope > div');
@@ -452,17 +466,8 @@ export default function decorate(block) {
       stripEmptyTags(tabContent, item);
     });
 
-    const descriptions = tabContent.querySelectorAll('p:not(.button-container)');
-    [...descriptions].forEach((description) => description.classList.add(`${blockName}__description`));
-
     // Wrap text in container
-    const textContainer = createElement('div', { classes: `${blockName}__text` });
-    const text = tabContent.querySelector('.default-content-wrapper')?.querySelectorAll(':scope > *:not(.button-container)');
-    if (text) {
-      const parentTextContainer = text[0].parentNode;
-      textContainer.append(...text);
-      parentTextContainer.appendChild(textContainer);
-    }
+    wrapTextInContainer(tabContent);
 
     // Wrap links in container
     const buttonContainer = createElement('div', { classes: `${blockName}__buttons-container` });

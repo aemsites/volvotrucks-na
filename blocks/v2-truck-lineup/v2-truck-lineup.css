@@ -131,7 +131,7 @@ body .section.v2-truck-lineup-container .v2-truck-lineup-wrapper {
 .v2-truck-lineup .default-content-wrapper .v2-truck-lineup__text h2{
   font-size: 1.5rem;
   font-weight: 300;
-  font-family: var(--ff-volvo-novum);
+  font-family: var(--font-family-body);
 }
 
 .v2-truck-lineup .default-content-wrapper .v2-truck-lineup__text p {
