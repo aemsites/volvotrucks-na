@@ -127,23 +127,20 @@ const getStorageItem = (key) => {
     return null;
   }
 
-  let result = null;
   try {
-    result = JSON.parse(storedValue);
+    const result = JSON.parse(storedValue);
+
+    if (result.expireTime <= Date.now()) {
+      window.localStorage.removeItem(key);
+      return null;
+    }
+
+    return formatDateWithLocale(result.data);
   } catch (error) {
     console.error(`Error parsing localStorage key: "${key}"`, error);
     window.localStorage.removeItem(key);
     return null;
   }
-
-  if (result) {
-    if (result.expireTime <= Date.now()) {
-      window.localStorage.removeItem(key);
-      return null;
-    }
-    return formatDateWithLocale(result.data);
-  }
-  return null;
 };
 
 /**
