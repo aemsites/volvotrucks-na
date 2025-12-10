@@ -109,7 +109,7 @@
 
 .vin-number__detail-title,
 .vin-number__recalls-md-title {
-  font-family: var(--ff-volvo-novum-medium);
+  font-family: var(--font-family-heading);
   font-size: var(--f-subtitle-1-font-size);
   line-height: var(--f-subtitle-1-line-height);
   letter-spacing: var(--f-subtitle-1-letter-spacing);
