@@ -96,15 +96,17 @@ const formatDateWithLocale = (date) => {
  * @returns {Object} The configuration object corresponding to the current environment.
  */
 const getAPIConfig = () => {
-  let env = 'prod';
+  const host = window.location.host;
 
-  if (window.location.host.includes('aem.page')) {
-    env = 'qa';
-  } else if (window.location.host.includes('localhost')) {
-    env = 'dev';
+  if (host.includes('aem.page')) {
+    return apiConfig['qa'];
   }
 
-  return apiConfig[env];
+  if (host.includes('localhost')) {
+    return apiConfig['dev'];
+  }
+
+  return apiConfig['prod']; 
 };
 
 /**
