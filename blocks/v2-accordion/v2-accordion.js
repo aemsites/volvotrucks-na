@@ -46,6 +46,19 @@ const enableSingleOpenBehavior = (block) => {
   });
 };
 
+/**
+ * Forces all links inside the block to open in a new tab.
+ * Adds target="_blank" and rel="noopener noreferrer" to every <a>.
+ *
+ * @param {HTMLElement} block - Element containing links to update.
+ */
+const setLinksToOpenInNewTab = (block) => {
+  block.querySelectorAll('a[href]').forEach((a) => {
+    a.target = '_blank';
+    a.rel = 'noopener noreferrer';
+  });
+};
+
 export default function decorate(block) {
   const fragment = document.createDocumentFragment();
 
@@ -61,5 +74,6 @@ export default function decorate(block) {
   block.innerHTML = '';
   block.append(fragment);
 
+  setLinksToOpenInNewTab(block);
   enableSingleOpenBehavior(block);
 }
