@@ -8,6 +8,9 @@
     "npm": ">=10.8.2"
   },
   "scripts": {
+    "build": "webpack --config ./webpack.config.js",
+    "build:dev": "cross-env SOURCEMAPS=true webpack --config ./webpack.config.js",
+    "watch": "cross-env SOURCEMAPS=true webpack --watch --config ./webpack.config.js",
     "dev": "aem up",
     "dev:ca": "aem up --url https://main--volvotrucks-ca--volvogroup.aem.page/en-ca/",
     "dev:mx": "aem up --url https://main--volvotrucks-mx--volvogroup.aem.page",
@@ -44,16 +47,28 @@
     "@types/node": "^24.10.0",
     "cheerio": "^1.1.2",
     "copyfiles": "^2.4.1",
+    "css-loader": "^7.1.2",
     "cross-env": "^10.1.0",
     "eslint": "^9.38.0",
     "eslint-config-prettier": "^10.1.8",
     "eslint-plugin-prettier": "^5.5.4",
+    "glob": "^11.0.1",
     "globals": "^16.4.0",
     "husky": "^9.1.7",
+    "html-webpack-plugin": "^5.6.3",
     "lint-staged": "^16.2.6",
+    "mini-css-extract-plugin": "^2.9.2",
     "playwright": "^1.56.1",
     "stylelint": "16.25.0",
     "stylelint-config-standard": "39.0.1",
-    "video.js": "8.23.4"
+    "terser-webpack-plugin": "^5.3.14",
+    "video.js": "8.23.4",
+    "webpack": "^5.99.8",
+    "webpack-cli": "^6.0.1"
+  },
+  "dependencies": {
+    "@volvo/vcdk": "^9.14.7",
+    "@volvo/vcdk-assets": "1.1.0",
+    "@volvo/vcdk-tokens": "1.1.0"
   }
 }
