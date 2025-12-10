@@ -181,7 +181,7 @@ function constructPayload(form) {
         payload[fe.name] = payload[fe.name] ? `${payload[fe.name]},${fe.value}` : fe.value;
       } else if (fe.type === 'select-one' && fe.value.includes(':')) {
         // Read only the value to be sent to the server
-        payload[fe.name] = fe.value.split(':')[1];
+        payload[fe.name] = fe.value.split(':')[0];
       } else if (fe.type !== 'file' && fe.type !== 'checkbox' && fe.type !== 'radio') {
         payload[fe.name] = fe.value;
       } 
