@@ -309,8 +309,10 @@ Select.prototype.createOption = function createOption(option, index) {
   let normalizedOption = option;
 
   if (typeof option === 'string' && option.includes(':')) {
-    const label = option.split(';')[0]?.split(':')[1];
-    const value = option.split(';')[1]?.split(':')[1];
+    // first value in the array is the translated label
+    const label = option.split(':')[0];
+    // second value is the actual information sent to the server
+    const value = option.split(':')[1];
     normalizedOption = { label, value };
   }
 
