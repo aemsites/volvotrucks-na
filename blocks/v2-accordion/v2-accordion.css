@@ -1,0 +1,7 @@
+.accordion__content ul {
+  padding-left: 30px;
+}
+
+.accordion__content li:not(:last-child) {
+  margin-bottom: 10px;
+}
