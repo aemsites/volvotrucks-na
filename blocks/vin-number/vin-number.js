@@ -83,9 +83,20 @@ const fetchRecallFields = async () => {
  * @param {string | Date} date - The date value to format (e.g., "2023-08-25" or a Date object).
  * @returns {string} The formatted date string in the local format (e.g., 'en' or 'fr').
  */
-const formatDateWithLocale = (date) => {
+const formatDateWithLocale = (timestamp) => {
+  const dateObject = new Date(timestamp); 
+
+  if (isNaN(dateObject.getTime())) {
+      return null;
+  }
+  
   const language = getLocale().split('-')[0] || 'en';
-  const formattedDate = new Date(date).toLocaleDateString(language, { year: 'numeric', month: 'short', day: 'numeric' });
+  const formattedDate = dateObject.toLocaleDateString(language, { 
+    year: 'numeric', 
+    month: 'short', 
+    day: 'numeric', 
+  });
+  
   return formattedDate;
 };
 
@@ -135,7 +146,8 @@ const getStorageItem = (key) => {
       return null;
     }
 
-    return formatDateWithLocale(result.data);
+    return formatDateWithLocale(result.data); 
+
   } catch (error) {
     console.error(`Error parsing localStorage key: "${key}"`, error);
     window.localStorage.removeItem(key);
@@ -157,10 +169,18 @@ const getStorageItem = (key) => {
  * @returns {void}
  */
 const setStorageItem = (key, value) => {
+  const timestamp = new Date(value).getTime(); 
+
+  if (isNaN(timestamp)) {
+      console.error(`Attempted to set invalid date for key: ${key}`);
+      return; 
+  }
+
   const result = {
-    data: value,
+    data: timestamp,
     expireTime: Date.now() + 60 * 60 * 1000,
   };
+  
   window.localStorage.setItem(key, JSON.stringify(result));
 };
 
