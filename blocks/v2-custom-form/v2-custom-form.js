@@ -1,6 +1,6 @@
 import { loadScript, sampleRUM } from '../../scripts/aem.js';
 import { getTextLabel, createElement, variantsClassesToBEM, normalizeUrlText, isHttp, HOLIDAYS } from '../../scripts/common.js';
-import { getCustomDropdown } from '../../../common/custom-dropdown/custom-dropdown.js';
+import { getCustomDropdown } from '../../common/custom-dropdown/custom-dropdown.js';
 
 const blockName = 'v2-custom-form';
 const variantClasses = ['double-column', 'redirect-new-tab'];

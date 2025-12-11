@@ -15,6 +15,8 @@ tools/importer/import.js
 tools/importer/sub-nav.js
 config.json
 
+/dist
+
 # Playwright
 /test-results/
 /playwright-report/

@@ -1,8 +1,33 @@
-import { getTextLabel, createElement, getJsonFromUrl, getPlaceholders } from '../../scripts/common.js';
+import { readBlockConfig } from '../../scripts/aem.js';
+import { getTextLabel, createElement, getJsonFromUrl, getPlaceholders, getLocale } from '../../scripts/common.js';
+
+// Only these 3 variables are brand-specific
+const BRAND = 'volvo';
+const formValidationPattern = '^[1,2,3,4][c,C,N,n,R,r,P,p,V,v][1,2,4,5,9,C,c,e,E,K,k,V,v][B-C,E-H,J-N,R-T,V-Y,b-c,e-h,j-n,r-t,v-y][A-Za-z0-9]{13}$';
+const brandBtnClasses = 'button primary';
 
 const docRange = document.createRange();
-const isFrench = window.location.href.indexOf('/fr') > -1;
 const blockName = 'vin-number';
+const refreshDateUniqueKey = `refresh-date-${BRAND}`;
+let configUrl;
+
+// All placeholder label values
+const LABELS = {
+  resultText: 'vin_number:result_text',
+  modelYear: 'vin_number:model_year',
+  make: 'vin_number:make',
+  model: 'vin_number:model',
+  recalls: 'vin_number:recalls',
+  oldestInfo: 'vin_number:recall_oldest_info',
+  format: 'vin_number:format',
+  formatLength: 'vin_number:format_length',
+  availableInfo: 'vin_number:recall_available_info',
+  loadingRecalls: 'vin_number:loading_recalls',
+  noRecalls: 'vin_number:no_recalls',
+  publishedInfo: 'vin_number:published_info',
+  label: 'vin_number:label',
+  submit: 'vin_number:submit',
+};
 
 const apiConfig = {
   dev: {
@@ -19,95 +44,224 @@ const apiConfig = {
   },
 };
 
-// list of things to be display for each recall
-const valueDisplayList = [
-  {
-    key: 'recall_date',
-  },
-  {
-    key: 'tc_recall_date',
-  },
-  {
-    key: 'mfr_recall_number',
-  },
-  {
-    key: 'nhtsa_recall_number',
-  },
-  {
-    key: 'tc_recall_nbr',
-  },
-  {
-    key: 'mfr_recall_status',
-  },
-  {
-    key: 'recall_description',
-    frenchKey: 'recall_description_french',
-    class: `${blockName}__detail-item--column`,
-  },
-  {
-    key: 'safety_risk_description',
-    frenchKey: 'safety_risk_description_french',
-    class: `${blockName}__detail-item--column`,
-  },
-  {
-    key: 'interim_precautions',
-    frenchKey: 'interim_precautions_french',
-    class: `${blockName}__detail-item--column`,
-    displayIfEmpty: true,
-  },
-  {
-    key: 'remedy_description',
-    frenchKey: 'remedy_description_french',
-    class: `${blockName}__detail-item--column`,
-  },
-  {
-    key: 'recall_effective_date',
-    class: `${blockName}__detail-item--column`,
-    text: 'recall_effective_text',
-    frenchText: 'vin_number:recall_effective_text_french',
-    displayIfEmpty: true,
-  },
-  {
-    key: 'mfr_notes',
-    frenchKey: 'mfr_notes_french',
-    class: `${blockName}__detail-item--column`,
-  },
-];
-
-// use this to map values from API
-const recallStatus = {
-  11: 'recall-incomplete',
-  0: 'recall-complete',
-  12: 'recall-incomplete-no-remedy',
+// For the 'mfr_recall_status' field, these are the 3 possible responses
+const recallStatusCodes = {
+  0: { arrayPosition: 0, status: 'complete' },
+  11: { arrayPosition: 1, status: 'incomplete' },
+  12: { arrayPosition: 2, status: 'incomplete-no-remedy' },
 };
 
-const formatFrenchDate = (date) => {
-  const formattedDate = new Date(date).toLocaleDateString('fr-FR', { year: 'numeric', month: 'short', day: 'numeric' });
+/**
+ * Fetches configuration data for recall fields from a remote JSON file.
+ * This function assumes 'configUrl' is a string variable defined in the outer scope
+ * which holds the URL to the block's configuration file.
+ *
+ * @async
+ * @function fetchRecallFields
+ * @returns {Promise<Object|undefined>} A Promise that resolves with the parsed JSON object
+ * @throws {Error} Errors are logged to the console.
+ */
+const fetchRecallFields = async () => {
+  try {
+    const { pathname } = new URL(configUrl);
+    const response = await fetch(pathname);
+
+    if (response.ok) {
+      return response.json();
+    } else {
+      console.error('Error fetching recall fields file', response.statusText);
+    }
+  } catch (error) {
+    console.error('Error with recall fields file', error);
+  }
+};
+
+/**
+ * Formats a date string into a localized format (e.g., "Aug 25, 2023").
+ * Uses language variable to determine the current locale like 'en' or 'fr'.
+ *
+ * @param {string | Date} date - The date value to format (e.g., "2023-08-25" or a Date object).
+ * @returns {string} The formatted date string in the local format (e.g., 'en' or 'fr').
+ */
+const formatDateWithLocale = (date) => {
+  const language = getLocale().split('-')[0] || 'en';
+  const formattedDate = new Date(date).toLocaleDateString(language, { year: 'numeric', month: 'short', day: 'numeric' });
   return formattedDate;
 };
 
-function renderRecalls(recallsData) {
-  const resultTextEle = document.querySelector(`.${blockName}__results-text`);
-  let resultContent = getTextLabel('vin_number:result_text')
-    .replace(/\${count}/, recallsData.number_of_recalls)
-    .replace(/\${vin}/, recallsData.vin);
-  let noFrenchInfo = false;
+/**
+ * Determines the appropriate API configuration based on the current hostname
+ * environment (dev, qa, or prod).
+ * @function getAPIConfig
+ * @returns {Object} The configuration object corresponding to the current environment.
+ */
+const getAPIConfig = () => {
+  const host = window.location.host;
 
-  const recallsOldestDate = isFrench ? formatFrenchDate(recallsData.recalls_since) : recallsData.recalls_since;
+  if (host.includes('aem.page')) {
+    return apiConfig['qa'];
+  }
+
+  if (host.includes('localhost')) {
+    return apiConfig['dev'];
+  }
+
+  return apiConfig['prod']; 
+};
+
+/**
+ * Retrieves an item from localStorage, checks for expiration, removes it if expired,
+ * and formats the data using the utility function formatDateWithLocale.
+ *
+ * It is assumed that items are stored as JSON objects with the structure:
+ * { data: '...', expireTime: <timestamp> }.
+ *
+ * @function getStorageItem
+ * @param {string} key - The localStorage key to look up.
+ * @returns {string | null} The formatted date string if the item is found and not expired,
+ * otherwise returns null.
+ */
+const getStorageItem = (key) => {
+  const storedValue = window.localStorage.getItem(key);
+  if (!storedValue) {
+    return null;
+  }
+
+  try {
+    const result = JSON.parse(storedValue);
+
+    if (result.expireTime <= Date.now()) {
+      window.localStorage.removeItem(key);
+      return null;
+    }
+
+    return formatDateWithLocale(result.data);
+  } catch (error) {
+    console.error(`Error parsing localStorage key: "${key}"`, error);
+    window.localStorage.removeItem(key);
+    return null;
+  }
+};
+
+/**
+ * Saves a value to the browser's localStorage, wrapping it in a structure
+ * that includes an expiration timestamp.
+ *
+ * The stored object structure is: { data: value, expireTime: <timestamp> }.
+ * The expiration time is currently set to 1 hour (60 * 60 * 1000 milliseconds)
+ * from the time the function is called.
+ *
+ * @function setStorageItem
+ * @param {string} key - The key under which to store the item in localStorage.
+ * @param {*} value - The data to be stored. This value will be JSON stringified.
+ * @returns {void}
+ */
+const setStorageItem = (key, value) => {
+  const result = {
+    data: value,
+    expireTime: Date.now() + 60 * 60 * 1000,
+  };
+  window.localStorage.setItem(key, JSON.stringify(result));
+};
+
+/**
+ * Fetches the latest data refresh date, prioritizing a cached version from
+ * localStorage that has not yet expired.
+ * * If the cached item is missing or expired, it fetches the date from the API,
+ * stores it in localStorage with a new expiration time, and then formats it.
+ * @async
+ * @function fetchRefreshDate
+ * @returns {Promise<string|undefined>} A promise that resolves with the formatted
+ * date string (e.g., "Aug 25, 2023"). Returns undefined if the API call fails.
+ */
+const fetchRefreshDate = async () => {
+  const refreshDate = getStorageItem(refreshDateUniqueKey);
+  if (!refreshDate) {
+    const { url, key } = getAPIConfig();
+    const response = await getJsonFromUrl(`${url}refreshdate?api_key=${key}`);
+    setStorageItem(refreshDateUniqueKey, response.refresh_date);
+
+    return formatDateWithLocale(response.refresh_date);
+  }
+  return refreshDate;
+};
+
+/**
+ * Checks if a value is a valid date string (e.g., 'Aug 25, 2023', '9/11/2024', '17 févr. 2016')
+ * This function explicitly excludes simple numeric inputs (like 0, 11, or 12)
+ * which could be the value for 'mfr_recall_status' field
+ *
+ * * @param {string} value - The value to test. Expected to be a date string.
+ * @returns {boolean} True if the value is a valid date string, false otherwise.
+ */
+function isValidDateString(value) {
+  if (typeof value !== 'string' || value.trim() === '') {
+    return false;
+  }
+  const date = new Date(value);
+  return !isNaN(date.getTime());
+}
+
+/**
+ * Processes and transforms field values based on the field key and a configurable
+ * text string.
+ * It handles two major transformations:
+ * - Mapping 'mfr_recall_status' numeric code to descriptive text
+ * - Formatting/labeling 'recall_effective_date'
+ *
+ * @function handleConfigurableFields
+ * @param {string} key - The key identifying the field being processed (e.g., 'mfr_recall_status').
+ * @param {*} value - The raw value of the field (e.g., a number for status, or a date string).
+ * @param {string} text - A configurable string containing delimited text labels (expected to use '//' as delimiter).
+ * @returns {string | * | undefined} The transformed string (status text or date label), the original
+ * value (if lookup fails or input is invalid), or undefined if the key is unmatched.
+ */
+const handleConfigurableFields = (key, value, text) => {
+  const textArray = text?.split('//');
+
+  // MFR RECALL STATUS
+  if (key === 'mfr_recall_status') {
+    if (!textArray || textArray.length < 3) {
+      console.warn(`Recall configurable text format invalid or inexistent. Input: "${text}"`);
+      return value;
+    }
+    const statusObject = recallStatusCodes[value];
+    const recallStatus = textArray[statusObject.arrayPosition];
+    if (recallStatus !== undefined) {
+      return recallStatus;
+    }
+    console.warn(`Recall status code "${value}" not found in map.`);
+    return value;
+  }
+
+  // RECALL EFFECTIVE DATE
+  if (key === 'recall_effective_date') {
+    const recallDate = new Date(value).setHours(0, 0, 0, 0);
+    const today = new Date().setHours(0, 0, 0, 0);
+    return recallDate > today ? `${textArray[1]} ${formatDateWithLocale(value)}.` : textArray[0];
+  }
+
+  return undefined;
+};
+
+const renderRecalls = async (recallsData, recallFields) => {
+  const resultText = document.querySelector(`.${blockName}__results-text`);
+  let resultContent = getTextLabel(LABELS.resultText).replace(/\${count}/, recallsData.number_of_recalls).replace(/\${vin}/, recallsData.vin);
+
   const blockEl = document.querySelector(`.${blockName}__recalls-wrapper`);
 
   const recallsMake = createElement('div', { classes: `${blockName}__recalls-make-wrapper` });
   const makeFragment = docRange.createContextualFragment(`
-    <div class="${blockName}__recalls-model-year">
-      <span class="${blockName}__recalls-make subtitle-1">${getTextLabel('vin_number:model_year')}</span>
+    <div class="${blockName}__recalls-md-row">
+      <h5 class="${blockName}__recalls-md-title">${getTextLabel(LABELS.modelYear)}</h5>
       <span> ${recallsData.year}</span>
     </div>
-    <div class="${blockName}__recalls-make">
-      <span class="${blockName}__recalls-make subtitle-1">${getTextLabel('vin_number:make')}</span>
+    <div class="${blockName}__recalls-md-row">
+      <h5 class="${blockName}__recalls-md-title">${getTextLabel(LABELS.make)}</h5>
       <span> ${recallsData.make}</span>
     </div>
-    <div class="${blockName}__recalls-model">
-      <span class="${blockName}__recalls-model subtitle-1">${getTextLabel('vin_number:model')}</span>
+    <div class="${blockName}__recalls-md-row">
+      <h5 class="${blockName}__recalls-md-title">${getTextLabel(LABELS.model)}</h5>
       <span> ${recallsData.model}</span>
     </div>
   `);
@@ -118,11 +272,13 @@ function renderRecalls(recallsData) {
   if (recallsData.recalls_available) {
     const listWrapperFragment = docRange.createContextualFragment(`
       <div class="${blockName}__recalls-heading-wrapper">
-        <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M12.537 2.77441C12.4523 2.60503 12.2792 2.49804 12.0898 2.49805C11.9004 2.49805 11.7273 2.60506 11.6426 2.77445L2.14458 21.7711C2.06709 21.9261 2.07537 22.1102 2.16647 22.2576C2.25758 22.405 2.41851 22.4947 2.5918 22.4947H21.5897C21.7629 22.4947 21.9239 22.405 22.015 22.2576C22.1061 22.1102 22.1144 21.9261 22.0369 21.7711L12.537 2.77441ZM3.4008 21.4947L12.0898 4.11603L20.7806 21.4947H3.4008ZM12.9995 14.6796V15.7512C12.9995 15.8619 12.9046 15.9974 12.7538 15.9974L12.4304 15.9969C12.2549 15.9965 12.0583 15.9961 11.9556 15.9961H11.2484C11.0976 15.9961 11.0027 15.8606 11.0027 15.7499V14.6796L11.0027 8.24501C11.0027 8.13425 11.0976 7.99874 11.2484 7.99874H11.9556C12.0581 7.99874 12.2545 7.99834 12.4299 7.99798H12.43L12.4304 7.99798L12.7538 7.99744C12.9046 7.99744 12.9995 8.13295 12.9995 8.2437L12.9995 14.6796ZM12.9964 18.8443V19.7512C12.9964 19.8619 12.9015 19.9974 12.7507 19.9974L12.4273 19.9969C12.2517 19.9965 12.0551 19.9961 11.9524 19.9961H11.2452C11.0944 19.9961 10.9995 19.8606 10.9995 19.7499V18.8443V18.2437C10.9995 18.1329 11.0944 17.9974 11.2452 17.9974H11.9524C12.0551 17.9974 12.2517 17.997 12.4273 17.9967L12.7507 17.9961C12.9015 17.9961 12.9964 18.1316 12.9964 18.2424L12.9964 18.8443Z" fill="currentColor"/>
-        </svg>
-        <h4 class="${blockName}__recalls-heading">${getTextLabel('vin_number:recalls')}  &nbsp; &nbsp;</h4>
-        <span> [${getTextLabel('vin_number:recall_oldest_info')} ${recallsOldestDate}] </span>
+        <span class="${blockName}__recalls-alert-icon">
+          <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none">
+            <path fill-rule="evenodd" clip-rule="evenodd" d="M12.537 2.77441C12.4523 2.60503 12.2792 2.49804 12.0898 2.49805C11.9004 2.49805 11.7273 2.60506 11.6426 2.77445L2.14458 21.7711C2.06709 21.9261 2.07537 22.1102 2.16647 22.2576C2.25758 22.405 2.41851 22.4947 2.5918 22.4947H21.5897C21.7629 22.4947 21.9239 22.405 22.015 22.2576C22.1061 22.1102 22.1144 21.9261 22.0369 21.7711L12.537 2.77441ZM3.4008 21.4947L12.0898 4.11603L20.7806 21.4947H3.4008ZM12.9995 14.6796V15.7512C12.9995 15.8619 12.9046 15.9974 12.7538 15.9974L12.4304 15.9969C12.2549 15.9965 12.0583 15.9961 11.9556 15.9961H11.2484C11.0976 15.9961 11.0027 15.8606 11.0027 15.7499V14.6796L11.0027 8.24501C11.0027 8.13425 11.0976 7.99874 11.2484 7.99874H11.9556C12.0581 7.99874 12.2545 7.99834 12.4299 7.99798H12.43L12.4304 7.99798L12.7538 7.99744C12.9046 7.99744 12.9995 8.13295 12.9995 8.2437L12.9995 14.6796ZM12.9964 18.8443V19.7512C12.9964 19.8619 12.9015 19.9974 12.7507 19.9974L12.4273 19.9969C12.2517 19.9965 12.0551 19.9961 11.9524 19.9961H11.2452C11.0944 19.9961 10.9995 19.8606 10.9995 19.7499V18.8443V18.2437C10.9995 18.1329 11.0944 17.9974 11.2452 17.9974H11.9524C12.0551 17.9974 12.2517 17.997 12.4273 17.9967L12.7507 17.9961C12.9015 17.9961 12.9964 18.1316 12.9964 18.2424L12.9964 18.8443Z" fill="var(--color-icon, #000)"/>
+          </svg>
+        </span>
+        <h4 class="${blockName}__recalls-heading" >${getTextLabel(LABELS.recalls)}  &nbsp; &nbsp;</h4>
+        <p class="${blockName}__recalls-refresh-date"> [${getTextLabel(LABELS.oldestInfo)} ${formatDateWithLocale(recallsData.recalls_since)}] </p>
       </div>
     `);
 
@@ -133,41 +289,41 @@ function renderRecalls(recallsData) {
         classes: `${blockName}__list-item`,
       });
 
-      // map the number from api to correct status
-      recall.mfr_recall_status = recallStatus[recall.mfr_recall_status];
       const recallDetailsList = createElement('ul', { classes: `${blockName}__detail-list` });
-      valueDisplayList.forEach((item) => {
-        if (recall[item.key] || item.displayIfEmpty) {
-          const recallClass = item.key === 'mfr_recall_status' ? `${blockName}__${recall.mfr_recall_status.replace(/_/g, '-').toLowerCase()}` : '';
-          let itemValue = recall[item.key] || '';
-          if (recallClass) {
-            itemValue = getTextLabel(recall[item.key]);
-          } else if (item.key === 'recall_date' || item.key === 'tc_recall_date') {
-            itemValue = isFrench ? formatFrenchDate(recall[item.key]) : recall[item.key];
-          } else if (isFrench && item.frenchKey) {
-            if (recall[item.frenchKey]) {
-              itemValue = recall[item.frenchKey];
-            } else if (!noFrenchInfo) {
-              const noFrenchInoEl = document.querySelector(`.${blockName}__no-french-info`);
-              noFrenchInoEl.textContent = getTextLabel('vin_number:no_french_info');
-              noFrenchInfo = true;
-            }
-          }
+      recallFields.forEach((field) => {
+        const { name, api_key, configurable_text, mandatory, display } = field;
 
-          if (itemValue && item.key === 'recall_effective_date') {
-            const recallText = getTextLabel(isFrench ? 'vin_number:recall_effective_text_french' : 'vin_number:recall_effective_text').split('//');
-            const recallDate = new Date(itemValue).setHours(0, 0, 0, 0);
-            const today = new Date().setHours(0, 0, 0, 0);
-            itemValue = recallDate > today ? ` ${recallText[1]} ${isFrench ? formatFrenchDate(itemValue) : itemValue} .` : recallText[0];
-          }
+        let recallValue = recall[api_key];
 
-          const itemFragment = docRange.createContextualFragment(`<li class="${blockName}__detail-item ${item.class ? item.class : ''}" >
-            <h5 class="${blockName}__detail-title subtitle-1">${getTextLabel(item.key)}</h5>
-            <span class="${blockName}__detail-value ${recallClass}">${itemValue}</span>
-          </li>`);
-          recallDetailsList.append(...itemFragment.children);
+        const noRecallValue = recallValue === null || recallValue === undefined || recallValue === '';
+        if (noRecallValue && !mandatory) {
+          return;
         }
+
+        const isDateValue = isValidDateString(recallValue);
+        if (isDateValue) {
+          recallValue = formatDateWithLocale(recallValue);
+        }
+
+        const hasConfigurableText = configurable_text;
+        if (hasConfigurableText && hasConfigurableText.length > 0) {
+          recallValue = handleConfigurableFields(api_key, recallValue, configurable_text);
+        }
+
+        const directionToDisplay = display && `${blockName}__detail-item--${display}`;
+        const statusClass = api_key === 'mfr_recall_status' && `${blockName}__recall-${recallStatusCodes[recall[api_key]].status}`;
+
+        const itemFragment = docRange.createContextualFragment(`
+          <li class="${blockName}__detail-item ${directionToDisplay}" >
+            <h5 class="${blockName}__detail-title">${name}</h5>
+            <span class="${blockName}__detail-value ${statusClass}">
+              ${noRecallValue ? '' : recallValue}
+            </span>
+          </li>
+        `);
+        recallDetailsList.append(...itemFragment.children);
       });
+
       liEl.append(recallDetailsList);
       list.append(liEl);
     });
@@ -175,97 +331,40 @@ function renderRecalls(recallsData) {
     blockEl.append(listWrapperFragment);
     blockEl.appendChild(list);
   } else {
-    resultContent = `${resultContent} [${getTextLabel('vin_number:recall_available_info')} ${recallsOldestDate}]`;
+    resultContent = `${resultContent} [${getTextLabel(LABELS.availableInfo)} ${formatDateWithLocale(recallsData.recalls_since)}]`;
   }
+  resultText.innerText = resultContent;
+};
 
-  resultTextEle.innerText = resultContent;
-}
-
-function getAPIConfig() {
-  let env = 'prod';
-
-  if (['hlx.page', 'aem.page'].some((host) => window.location.host.includes(host))) {
-    env = 'qa';
-  } else if (window.location.host.includes('localhost')) {
-    env = 'dev';
-  }
-  return apiConfig[env];
-}
-
-function getStorageItem(key) {
-  // get the parsed value of the given key
-  const result = JSON.parse(window.localStorage.getItem(key));
-
-  // if the key has value
-  if (result) {
-    // if the entry is expired remove the entry and return null
-    if (result.expireTime <= Date.now()) {
-      window.localStorage.removeItem(key);
-      return null;
-    }
-    // else return the value
-    return result.data;
-  }
-  // if the key does not have value
-  return null;
-}
-
-function setStorageItem(key, value) {
-  // store the value as object along with expiry date
-  const result = {
-    data: value,
-    expireTime: Date.now() + 60 * 60 * 1000, // set the expiry from the current date for a day
-  };
-
-  // stringify the result and the data in original storage
-  window.localStorage.setItem(key, JSON.stringify(result));
-}
-
-async function fetchRefreshDate() {
-  const refreshDate = getStorageItem('refreshDate');
-  if (!refreshDate) {
-    const { url, key } = getAPIConfig();
-    try {
-      const response = await getJsonFromUrl(`${url}refreshdate?api_key=${key}`);
-      setStorageItem('refreshDate', response.refresh_date);
-      return response.refresh_date;
-    } catch (error) {
-      console.error('Error fetching refresh date:', error);
-    }
-  }
-  return refreshDate;
-}
-
-function fetchRecalls(e) {
+const fetchRecalls = async (e) => {
   e.preventDefault();
   if (e && e.target) {
-    // disable submit while fetching data
     const submitBtn = e.target.querySelector('button');
     submitBtn.disabled = true;
 
     const recalls = document.querySelector(`.${blockName}__recalls-wrapper`);
     recalls.innerHTML = '';
 
-    const noFrenchInoEl = document.querySelector(`.${blockName}__no-french-info`);
-    noFrenchInoEl.textContent = '';
-
     const resultText = document.querySelector(`.${blockName}__results-text`);
-    resultText.innerText = getTextLabel('vin_number:loading_recalls');
+    resultText.innerText = getTextLabel(LABELS.loadingRecalls);
 
     const formData = new FormData(e.target);
     const vin = formData.get('vin');
 
-    if (vin) {
-      const { url, key } = getAPIConfig();
+    // Recall fields are now configurable
+    const { data: recallFields } = await fetchRecallFields();
+    if (vin && recallFields) {
       try {
+        const { url, key } = getAPIConfig();
         getJsonFromUrl(`${url}vin/${vin}?api_key=${key}&mode=company`).then((response) => {
           if (response.error_code) {
-            resultText.innerHTML = `${getTextLabel('vin_number:no_recalls')} ${vin}`;
+            resultText.innerHTML = `${getTextLabel(LABELS.noRecalls)} ${vin}`;
           } else {
-            renderRecalls(response);
+            response.recalls.sort((a, b) => b.mfr_recall_status - a.mfr_recall_status || new Date(b.date) - new Date(a.date));
+            renderRecalls(response, recallFields);
           }
 
-          const vinInput = document.querySelector(`.${blockName}__input`);
+          const vinInput = document.querySelector('.vin-number__input');
           vinInput.value = '';
           submitBtn.disabled = false;
         });
@@ -276,75 +375,84 @@ function fetchRecalls(e) {
     }
   }
   return null;
-}
+};
 
 export default async function decorate(block) {
-  await getPlaceholders();
-  fetchRefreshDate().then((response) => {
-    let refreshDate = response || 'XX-XX-XXXX';
-    if (response && isFrench) {
-      refreshDate = formatFrenchDate(response);
+  try {
+    await getPlaceholders(); 
+        
+    const blockCongfig = readBlockConfig(block);
+    configUrl = blockCongfig?.path;
+
+    if (!configUrl) {
+      throw new Error('Required configuration path is missing.');
     }
+    block.innerHTML = '';
+  } catch (error) {
+    console.error('Configuration error in vin block:', error.message, 'Attempted Path:', configUrl);
+  }
 
-    const refresDateWrapper = createElement('div', {
-      classes: `${blockName}__refresh-date-wrapper`,
-    });
-    const refreshFragment = docRange.createContextualFragment(`<span>
-      ${getTextLabel('vin_number:published_info')}:
-    </span>
-    <span class="${blockName}__refresh-date">
-      ${refreshDate}
-    </span>`);
-
-    const form = createElement('form', {
-      classes: [`${blockName}__form`],
-    });
-    const formChildren = docRange.createContextualFragment(`
-      <div class="${blockName}__input-wrapper">
-        <input
-          type="text"
-          name="vin"
-          id="vin_number"
-          autocomplete="off"
-          placeholder=" "
-          minlength="17"
-          maxlength="17"
-          required
-          class="${blockName}__input"
-          pattern="^[1,2,3,4][c,C,N,n,R,r,P,p,V,v][1,2,4,5,9,C,c,e,E,K,k,V,v][B-C,E-H,J-N,R-T,V-Y,b-c,e-h,j-n,r-t,v-y][A-Za-z0-9]{13}$"
-        />
-        <label for="vin_number" class="${blockName}__label">${getTextLabel('vin_number:label')}</label>
-      </div>
-      <button class="button primary ${blockName}__submit" type="submit" name="submit">${getTextLabel('vin_number:submit')}</button>
-    `);
-
-    const vinResultsContainer = createElement('div', { classes: `${blockName}__results-container` });
-    const innerContent = docRange.createContextualFragment(`
-      <span class="${blockName}__results-text"></span>
-      <div class="${blockName}__no-french-info"></div>
-      <div class="${blockName}__recalls-wrapper"></div>
-    `);
-
-    vinResultsContainer.append(innerContent);
-
-    form.addEventListener('submit', fetchRecalls, false);
-    form.append(...formChildren.children);
-    refresDateWrapper.append(...refreshFragment.children);
-    block.append(form, refresDateWrapper);
-    block.append(vinResultsContainer);
-
-    const vinInput = block.querySelector(`.${blockName}__input`);
-
-    vinInput.oninvalid = (e) => {
-      if (e.target.value.length < e.target.maxLength) {
-        e.target.setCustomValidity(getTextLabel('vin_number:format_length'));
-        return;
-      }
-      e.target.setCustomValidity(getTextLabel('vin_number:format'));
-    };
-
-    vinInput.oninput = (e) => {
-      e.target.setCustomValidity('');
-    };
+  const refreshDate = getStorageItem(refreshDateUniqueKey) || '';
+  const refresDateWrapper = createElement('div', {
+    classes: `${blockName}__refresh-date-wrapper`,
   });
+
+  const refreshFragment = docRange.createContextualFragment(`<span>
+    ${getTextLabel(LABELS.publishedInfo)}:
+    </span>
+    <strong class="${blockName}__refresh-date">${formatDateWithLocale(refreshDate)}</strong>
+  `);
+
+  const form = createElement('form', {
+    classes: [`${blockName}__form`],
+  });
+  const formChildren = docRange.createContextualFragment(`
+    <div class="${blockName}__input-wrapper">
+      <input
+        type="text"
+        name="vin"
+        id="vin_number"
+        autocomplete="off"
+        placeholder=" "
+        minlength="17"
+        maxlength="17"
+        required
+        class="${blockName}__input"
+        pattern="${formValidationPattern}"
+      />
+      <label for="vin_number" class="${blockName}__label">${getTextLabel(LABELS.label)}</label>
+    </div>
+    <button class="${brandBtnClasses} ${blockName}__submit" type="submit" name="submit">${getTextLabel(LABELS.submit)}</button>
+  `);
+
+  const vinResultsContainer = createElement('div', { classes: `${blockName}__results-container` });
+  const innerContent = docRange.createContextualFragment(`
+    <span class="${blockName}__results-text"></span>
+    <div class="${blockName}__recalls-wrapper"></div>
+  `);
+
+  vinResultsContainer.append(innerContent);
+
+  form.addEventListener('submit', fetchRecalls, false);
+  form.append(...formChildren.children);
+  refresDateWrapper.append(...refreshFragment.children);
+  block.append(form, refresDateWrapper);
+  block.append(vinResultsContainer);
+
+  const vinInput = block.querySelector(`.${blockName}__input`);
+
+  vinInput.oninvalid = (e) => {
+    if (e.target.value.length < e.target.maxLength) {
+      e.target.setCustomValidity(getTextLabel(LABELS.formatLength));
+      return;
+    }
+    e.target.setCustomValidity(getTextLabel(LABELS.format));
+  };
+
+  if (!refreshDate) {
+    fetchRefreshDate().then((response) => {
+      const refreshEle = block.querySelector(`.${blockName}__refresh-date`);
+      refreshEle.textContent = response;
+    });
+  }
 }

@@ -233,7 +233,7 @@ async function loadTiktokPixel() {
   !(function loadTiktokPixelInit(w, d, t) {
     w.TiktokAnalyticsObject = t;
     const ttq = (w[t] = w[t] || []);
-    (ttq.methods = [
+    ((ttq.methods = [
       'page',
       'track',
       'identify',
@@ -252,11 +252,11 @@ async function loadTiktokPixel() {
         t[e] = function loadTiktokPixelInitSetAndDeferPush() {
           t.push([e].concat(Array.prototype.slice.call(arguments, 0)));
         };
-      });
+      }));
     for (let i = 0; i < ttq.methods.length; i++) {
       ttq.setAndDefer(ttq, ttq.methods[i]);
     }
-    (ttq.instance = function loadTiktokPixelInitI(t) {
+    ((ttq.instance = function loadTiktokPixelInitI(t) {
       let e;
       let n;
       for (e = ttq._i[t] || [], n = 0; n < ttq.methods.length; n++) {
@@ -266,18 +266,18 @@ async function loadTiktokPixel() {
     }),
       (ttq.load = function loadTiktokPixelInitSetAndDeferLoad(e, n) {
         const i = 'https://analytics.tiktok.com/i18n/pixel/events.js';
-        (ttq._i = ttq._i || {}),
+        ((ttq._i = ttq._i || {}),
           (ttq._i[e] = []),
           (ttq._i[e]._u = i),
           (ttq._t = ttq._t || {}),
           (ttq._t[e] = +new Date()),
           (ttq._o = ttq._o || {}),
-          (ttq._o[e] = n || {});
+          (ttq._o[e] = n || {}));
         const o = document.createElement('script');
-        (o.type = 'text/javascript'), (o.async = !0), (o.src = `${i}?sdkid=${e}&lib=${t}`);
+        ((o.type = 'text/javascript'), (o.async = !0), (o.src = `${i}?sdkid=${e}&lib=${t}`));
         const a = document.getElementsByTagName('script')[0];
         a.parentNode.insertBefore(o, a);
-      });
+      }));
     ttq.load(TIKTOK_PIXEL_ID);
     ttq.page();
 
