@@ -134,9 +134,8 @@ const getLocaleDateFromTimestamp = (timestamp) => {
         return 'Invalid Date';
     }
 
-    const language = getLocale();
-
-    const formattedDate = dateObject.toLocaleDateString(language, { 
+    const locale = getLocale();
+    const formattedDate = dateObject.toLocaleDateString(locale, { 
         year: 'numeric', 
         month: 'short', 
         day: 'numeric', 
