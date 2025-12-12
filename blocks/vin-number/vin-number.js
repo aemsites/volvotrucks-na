@@ -400,7 +400,7 @@ export default async function decorate(block) {
   const refreshFragment = docRange.createContextualFragment(`<span>
     ${getTextLabel(LABELS.publishedInfo)}:
     </span>
-    <strong class="${blockName}__refresh-date">${formatDateWithLocale(refreshDate)}</strong>
+    <strong class="${blockName}__refresh-date">${refreshDate}</strong>
   `);
 
   const form = createElement('form', {
