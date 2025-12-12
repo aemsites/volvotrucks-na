@@ -130,10 +130,11 @@ const getLocaleDateFromTimestamp = (timestamp) => {
     const dateObject = new Date(timestamp); 
 
     if (isNaN(dateObject.getTime())) {
+        console.warn('Invalid Date: ', dateObject);
         return 'Invalid Date';
     }
 
-    const language = getLocale().split('-')[0] || 'en';
+    const language = getLocale();
 
     const formattedDate = dateObject.toLocaleDateString(language, { 
         year: 'numeric', 
