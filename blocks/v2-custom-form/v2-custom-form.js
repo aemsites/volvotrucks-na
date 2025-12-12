@@ -179,9 +179,12 @@ function constructPayload(form) {
         payload[fe.name] = fe.value;
       } else if (fe.type === 'checkbox' && fe.checked) {
         payload[fe.name] = payload[fe.name] ? `${payload[fe.name]},${fe.value}` : fe.value;
+      } else if (fe.type === 'select-one' && fe.value.includes(':')) {
+        // Read only the value to be sent to the server
+        payload[fe.name] = fe.value.split(':')[0];
       } else if (fe.type !== 'file' && fe.type !== 'checkbox' && fe.type !== 'radio') {
         payload[fe.name] = fe.value;
-      }
+      } 
     }
   });
   payload.callback = 'showResult';
@@ -747,7 +750,7 @@ async function createCustomDropdown(fd) {
   };
 
   if (fd.onChangeCallback) {
-    configFd.onChangeCallback = (value) => fd.onChangeCallback({ value, name: fd.Name });
+    configFd.onChangeCallback = (label, value) => fd.onChangeCallback({ label, value, name: fd.Name });
   }
 
   const customDropdown = await getCustomDropdown(configFd);
