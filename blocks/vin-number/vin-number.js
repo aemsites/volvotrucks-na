@@ -76,17 +76,72 @@ const fetchRecallFields = async () => {
   }
 };
 
+const MONTH_MAP = {
+    'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 
+    'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08', 
+    'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12',
+};
+
 /**
- * Formats a date string into a localized format (e.g., "Aug 25, 2023").
+ * Transforms a human-readable date string into a reliable UNIX timestamp (milliseconds).
+ * It appends ' UTC' to the string to ensure the date is parsed consistently 
+ * across different client time zones, assuming the string means midnight UTC.
+ * * @param {string} dateString - The date string (e.g., "Dec 11, 2025").
+ * @returns {number | null} The UNIX timestamp in milliseconds, or null if parsing fails.
+ */
+const dateStringToTimestamp = (dateString) => {
+    if (typeof dateString !== 'string' || !dateString) {
+        return null;
+    }
+    const cleanedString = dateString.replace(/[.,]/g, '').trim(); 
+    const parts = cleanedString.split(/\s+/); 
+
+    if (parts.length !== 3) {
+        console.error(`[Conversion Error] Incorrect date string structure: ${dateString}`);
+        return null;
+    }
+
+    const monthAbbr = parts[0];
+    const day = parts[1];
+    const year = parts[2];
+    const month = MONTH_MAP[monthAbbr];
+
+    if (!month) {
+        console.error(`[Conversion Error] Unrecognized month: ${monthAbbr}`);
+        return null;
+    }
+
+    const isoString = `${year}-${month}-${day.padStart(2, '0')}T12:00:00.000Z`; 
+
+    const dateObject = new Date(isoString);
+    const timestamp = dateObject.getTime();
+
+    return isNaN(timestamp) ? null : timestamp;
+};
+
+/**
+ * Formats a date timestamp into a localized format (e.g., "Aug 25, 2023").
  * Uses language variable to determine the current locale like 'en' or 'fr'.
  *
- * @param {string | Date} date - The date value to format (e.g., "2023-08-25" or a Date object).
+ * @param {string | Date} timestamp - The date timestamp to format (e.g., "2023-08-25" or a Date object).
  * @returns {string} The formatted date string in the local format (e.g., 'en' or 'fr').
  */
-const formatDateWithLocale = (date) => {
-  const language = getLocale().split('-')[0] || 'en';
-  const formattedDate = new Date(date).toLocaleDateString(language, { year: 'numeric', month: 'short', day: 'numeric' });
-  return formattedDate;
+const getLocaleDateFromTimestamp = (timestamp) => {
+    const dateObject = new Date(timestamp); 
+
+    if (isNaN(dateObject.getTime())) {
+        console.warn('Invalid Date: ', dateObject);
+        return 'Invalid Date';
+    }
+
+    const locale = getLocale();
+    const formattedDate = dateObject.toLocaleDateString(locale, { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric', 
+    });
+
+    return formattedDate;
 };
 
 /**
@@ -111,14 +166,14 @@ const getAPIConfig = () => {
 
 /**
  * Retrieves an item from localStorage, checks for expiration, removes it if expired,
- * and formats the data using the utility function formatDateWithLocale.
+ * and formats the data using the utility function getLocaleDateFromTimestamp.
  *
  * It is assumed that items are stored as JSON objects with the structure:
- * { data: '...', expireTime: <timestamp> }.
+ * { data: '<timestamp>', expireTime: <timestamp> }.
  *
  * @function getStorageItem
  * @param {string} key - The localStorage key to look up.
- * @returns {string | null} The formatted date string if the item is found and not expired,
+ * @returns {string | null} The timestamp if the item is found and not expired,
  * otherwise returns null.
  */
 const getStorageItem = (key) => {
@@ -135,7 +190,10 @@ const getStorageItem = (key) => {
       return null;
     }
 
-    return formatDateWithLocale(result.data);
+    const date = getLocaleDateFromTimestamp(result.data);
+
+    return date; 
+
   } catch (error) {
     console.error(`Error parsing localStorage key: "${key}"`, error);
     window.localStorage.removeItem(key);
@@ -157,10 +215,18 @@ const getStorageItem = (key) => {
  * @returns {void}
  */
 const setStorageItem = (key, value) => {
+  const timestamp = new Date(value).getTime(); 
+
+  if (isNaN(timestamp)) {
+      console.error(`Attempted to set invalid date for key: ${key}`);
+      return; 
+  }
+
   const result = {
-    data: value,
+    data: timestamp,
     expireTime: Date.now() + 60 * 60 * 1000,
   };
+  
   window.localStorage.setItem(key, JSON.stringify(result));
 };
 
@@ -181,7 +247,9 @@ const fetchRefreshDate = async () => {
     const response = await getJsonFromUrl(`${url}refreshdate?api_key=${key}`);
     setStorageItem(refreshDateUniqueKey, response.refresh_date);
 
-    return formatDateWithLocale(response.refresh_date);
+    const timestamp = dateStringToTimestamp(response.refresh_date);
+
+    return getLocaleDateFromTimestamp(timestamp);
   }
   return refreshDate;
 };
@@ -238,7 +306,8 @@ const handleConfigurableFields = (key, value, text) => {
   if (key === 'recall_effective_date') {
     const recallDate = new Date(value).setHours(0, 0, 0, 0);
     const today = new Date().setHours(0, 0, 0, 0);
-    return recallDate > today ? `${textArray[1]} ${formatDateWithLocale(value)}.` : textArray[0];
+    const timestamp = dateStringToTimestamp(value);
+    return recallDate > today ? `${textArray[1]} ${getLocaleDateFromTimestamp(timestamp)}.` : textArray[0];
   }
 
   return undefined;
@@ -278,7 +347,7 @@ const renderRecalls = async (recallsData, recallFields) => {
           </svg>
         </span>
         <h4 class="${blockName}__recalls-heading" >${getTextLabel(LABELS.recalls)}  &nbsp; &nbsp;</h4>
-        <p class="${blockName}__recalls-refresh-date"> [${getTextLabel(LABELS.oldestInfo)} ${formatDateWithLocale(recallsData.recalls_since)}] </p>
+        <p class="${blockName}__recalls-refresh-date"> [${getTextLabel(LABELS.oldestInfo)} ${getLocaleDateFromTimestamp(recallsData.recalls_since)}] </p>
       </div>
     `);
 
@@ -302,7 +371,8 @@ const renderRecalls = async (recallsData, recallFields) => {
 
         const isDateValue = isValidDateString(recallValue);
         if (isDateValue) {
-          recallValue = formatDateWithLocale(recallValue);
+          const timestamp = dateStringToTimestamp(recallValue);
+          recallValue = getLocaleDateFromTimestamp(timestamp);
         }
 
         const hasConfigurableText = configurable_text;
@@ -331,7 +401,8 @@ const renderRecalls = async (recallsData, recallFields) => {
     blockEl.append(listWrapperFragment);
     blockEl.appendChild(list);
   } else {
-    resultContent = `${resultContent} [${getTextLabel(LABELS.availableInfo)} ${formatDateWithLocale(recallsData.recalls_since)}]`;
+    const timestamp = dateStringToTimestamp(recallsData.recalls_since);
+    resultContent = `${resultContent} [${getTextLabel(LABELS.availableInfo)} ${getLocaleDateFromTimestamp(timestamp)}]`;
   }
   resultText.innerText = resultContent;
 };
@@ -392,7 +463,7 @@ export default async function decorate(block) {
     console.error('Configuration error in vin block:', error.message, 'Attempted Path:', configUrl);
   }
 
-  const refreshDate = getStorageItem(refreshDateUniqueKey) || '';
+  const refreshDateTimestamp = getStorageItem(refreshDateUniqueKey) || '';
   const refresDateWrapper = createElement('div', {
     classes: `${blockName}__refresh-date-wrapper`,
   });
@@ -400,7 +471,7 @@ export default async function decorate(block) {
   const refreshFragment = docRange.createContextualFragment(`<span>
     ${getTextLabel(LABELS.publishedInfo)}:
     </span>
-    <strong class="${blockName}__refresh-date">${formatDateWithLocale(refreshDate)}</strong>
+    <strong class="${blockName}__refresh-date">${getLocaleDateFromTimestamp(refreshDateTimestamp)}</strong>
   `);
 
   const form = createElement('form', {
@@ -449,7 +520,7 @@ export default async function decorate(block) {
     e.target.setCustomValidity(getTextLabel(LABELS.format));
   };
 
-  if (!refreshDate) {
+  if (!refreshDateTimestamp) {
     fetchRefreshDate().then((response) => {
       const refreshEle = block.querySelector(`.${blockName}__refresh-date`);
       refreshEle.textContent = response;
