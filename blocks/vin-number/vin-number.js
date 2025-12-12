@@ -76,6 +76,12 @@ const fetchRecallFields = async () => {
   }
 };
 
+const MONTH_MAP = {
+    'Jan': '01', 'Feb': '02', 'Mar': '03', 'Apr': '04', 
+    'May': '05', 'Jun': '06', 'Jul': '07', 'Aug': '08', 
+    'Sep': '09', 'Oct': '10', 'Nov': '11', 'Dec': '12',
+};
+
 /**
  * Transforms a human-readable date string into a reliable UNIX timestamp (milliseconds).
  * It appends ' UTC' to the string to ensure the date is parsed consistently 
@@ -84,19 +90,33 @@ const fetchRecallFields = async () => {
  * @returns {number | null} The UNIX timestamp in milliseconds, or null if parsing fails.
  */
 const dateStringToTimestamp = (dateString) => {
-  if (typeof dateString !== 'string' || !dateString) {
-    return null;
-  }
+    if (typeof dateString !== 'string' || !dateString) {
+        return null;
+    }
+    const cleanedString = dateString.replace(/[.,]/g, '').trim(); 
+    const parts = cleanedString.split(/\s+/); 
 
-  const dateObject = new Date(`${dateString} UTC`);
-  const timestamp = dateObject.getTime();
+    if (parts.length !== 3) {
+        console.error(`[Conversion Error] Incorrect date string structure: ${dateString}`);
+        return null;
+    }
 
-  if (isNaN(timestamp)) {
-    console.warn(`Failed to transform date string to timestamp: "${dateString}"`);
-    return null;
-  }
+    const monthAbbr = parts[0];
+    const day = parts[1];
+    const year = parts[2];
+    const month = MONTH_MAP[monthAbbr];
 
-  return timestamp;
+    if (!month) {
+        console.error(`[Conversion Error] Unrecognized month: ${monthAbbr}`);
+        return null;
+    }
+
+    const isoString = `${year}-${month}-${day.padStart(2, '0')}T12:00:00.000Z`; 
+
+    const dateObject = new Date(isoString);
+    const timestamp = dateObject.getTime();
+
+    return isNaN(timestamp) ? null : timestamp;
 };
 
 /**
@@ -107,20 +127,21 @@ const dateStringToTimestamp = (dateString) => {
  * @returns {string} The formatted date string in the local format (e.g., 'en' or 'fr').
  */
 const getLocaleDateFromTimestamp = (timestamp) => {
-  const dateObject = new Date(timestamp); 
+    const dateObject = new Date(timestamp); 
 
-  if (isNaN(dateObject.getTime())) {
-      return null;
-  }
-  
-  const language = getLocale().split('-')[0] || 'en';
-  const formattedDate = dateObject.toLocaleDateString(language, { 
-    year: 'numeric', 
-    month: 'short', 
-    day: 'numeric', 
-  });
-  
-  return formattedDate;
+    if (isNaN(dateObject.getTime())) {
+        return 'Invalid Date';
+    }
+
+    const language = getLocale().split('-')[0] || 'en';
+
+    const formattedDate = dateObject.toLocaleDateString(language, { 
+        year: 'numeric', 
+        month: 'short', 
+        day: 'numeric', 
+    });
+
+    return formattedDate;
 };
 
 /**
