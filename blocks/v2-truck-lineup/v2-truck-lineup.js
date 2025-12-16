@@ -346,7 +346,7 @@ const wrapTextInContainer = (tabContent) => {
   // Wrap text in container
   const textContainer = createElement('div', { classes: `${blockName}__text` });
   const text = tabContent.querySelector('.default-content-wrapper')?.querySelectorAll(':scope > *:not(.button-container)');
-  if (text.length > 0) {
+  if (text && text.length > 0) {
     const parentTextContainer = text[0].parentNode;
     textContainer.append(...text);
     parentTextContainer.appendChild(textContainer);
