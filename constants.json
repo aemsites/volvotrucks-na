@@ -91,14 +91,6 @@
         "value": "C0005"
       },
       {
-        "name": "FACEBOOK_PIXEL_ID",
-        "value": "620334125252675"
-      },
-      {
-        "name": "HOTJAR_ID",
-        "value": "1139895"
-      },
-      {
         "name": "GTM_ID",
         "value": "GTM-KP9KZWR"
       },
@@ -109,14 +101,6 @@
       {
         "name": "ACC_ENG_TRACKING",
         "value": "[\"piAId: 1039333\",\"piCId: 25825\",\"piHostname: pi.pardot.com\"]"
-      },
-      {
-        "name": "TIKTOK_PIXEL_ID",
-        "value": "COGKTO3C77U0VOQQGM8G"
-      },
-      {
-        "name": "MNTN_PIXEL_ID",
-        "value": "39860"
       }
     ],
     "columns": [
