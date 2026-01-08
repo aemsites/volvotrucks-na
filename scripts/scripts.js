@@ -26,6 +26,7 @@ import {
   variantsClassesToBEM,
   formatStringToArray,
   TRUCK_CONFIGURATOR_URLS,
+  pushToDataLayer,
 } from './common.js';
 
 import {
@@ -487,6 +488,15 @@ function handleFetchError(statusCode, mainElement) {
   document.dispatchEvent(modalEvent, { bubbles: true });
 }
 
+function pushModalViewToDataLayer(modalContentLink, modalInnerText) {
+  pushToDataLayer({
+    'event': 'modalPageview',
+    'pageUrl': `${window.location.origin}${modalContentLink}`,
+    'pageTitle': `${document.title} - ${modalInnerText}`,
+    'previousUrl': window.location.href,
+  });
+}
+
 function handleModalLinks(link) {
   if (!modal) {
     loadModalScript();
@@ -494,6 +504,7 @@ function handleModalLinks(link) {
   link.addEventListener('click', async (event) => {
     event.preventDefault();
     const modalContentLink = link.getAttribute('data-modal-content');
+    const modalInnerText = link.textContent || '';
     const resp = await fetch(`${modalContentLink}.plain.html`);
     const main = document.createElement('main');
 
@@ -509,6 +520,8 @@ function handleModalLinks(link) {
         },
       });
       document.dispatchEvent(modalEvent, { bubbles: true });
+
+      pushModalViewToDataLayer(modalContentLink, modalInnerText);
     } else {
       handleFetchError(resp.status, main);
     }
