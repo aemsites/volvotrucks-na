@@ -116,6 +116,7 @@
 .v2-resource-gallery__document-link-wrapper {
   display: flex;
   flex-flow: column;
+  justify-content: center;
   gap: 8px;
   margin: 0;
 }
