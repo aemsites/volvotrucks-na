@@ -11,6 +11,10 @@
   flex-direction: column;
 }
 
+main .section > div.search-wrapper .search.block > div {
+  max-width: unset;
+}
+
 #sf-widget-custom .sf-btn,
 .search-box-container .btn {
   line-height: 1.5;
@@ -161,6 +165,10 @@
     padding-top: 15px;
   }
 
+  main .section > div.search-wrapper .search.block > div .list-wrapper {
+    padding-left: 0;
+  }
+
   .header-search-icon {
     width: auto;
     float: right;
@@ -190,7 +198,7 @@
     font-size: 16px;
     background-color: var(--c-cta-blue-default);
     color: #fff;
-    margin-left: 10px !important;
+    margin-left: 0px !important;
     border-radius: 0 !important;
   }
 }
@@ -378,19 +386,13 @@
   }
 }
 
-@media (max-width: 767px) {
-  .search-results-summary-options-wrapper {
-    margin-left: 10px;
-  }
-}
-
 @media (max-width: 991px) {
   .search-results-wrapper {
     margin-left: 0;
   }
 
   .search-results-summary-options-wrapper {
-    margin-left: 10px;
+    margin-left: 0px;
   }
 
   .dealer-header .studio-search-widget .search-wrapper .studio-widget-autosuggest-results {
@@ -418,15 +420,6 @@
     width: 100%;
     padding-left: 0;
     padding-right: 0;
-  }
-}
-
-@media (min-width: 1300px) {
-  .search-results-summary-options-wrapper,
-  .search-results-wrapper,
-  .search-input-wrapper {
-    padding-left: 15px !important;
-    padding-right: 15px !important;
   }
 }
 
