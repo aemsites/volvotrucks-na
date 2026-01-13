@@ -712,3 +712,12 @@ export const normalizeUrlText = (s) =>
  * @returns {boolean} `true` if the protocol is HTTP/HTTPS, otherwise `false`.
  */
 export const isHttp = (protocol) => /^https?:$/i.test(protocol);
+
+/** Pushes data to the global dataLayer array.
+ * Initializes dataLayer if it doesn't exist.
+ * @param {Object} data - The data object to push to the dataLayer.
+ */
+export function pushToDataLayer(data) {
+  window.dataLayer = window.dataLayer || [];
+  window.dataLayer.push(data);
+}
