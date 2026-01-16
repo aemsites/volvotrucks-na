@@ -339,6 +339,20 @@ const getTruckCarousel = (container) => {
   return container.dataset.truckCarousel || defaultTruckCarousel;
 };
 
+const wrapTextInContainer = (tabContent) => {
+  const descriptions = tabContent.querySelectorAll('p:not(.button-container)');
+  [...descriptions].forEach((description) => description.classList.add(`${blockName}__description`));
+
+  // Wrap text in container
+  const textContainer = createElement('div', { classes: `${blockName}__text` });
+  const text = tabContent.querySelector('.default-content-wrapper')?.querySelectorAll(':scope > *:not(.button-container)');
+  if (text && text.length > 0) {
+    const parentTextContainer = text[0].parentNode;
+    textContainer.append(...text);
+    parentTextContainer.appendChild(textContainer);
+  }
+};
+
 export default function decorate(block) {
   const buttonNavigation = block.closest('main').classList.contains('truck-lineup-buttons');
   const descriptionContainer = block.querySelector(':scope > div');
@@ -423,6 +437,8 @@ export default function decorate(block) {
 
     tabItem.classList.add(`${blockName}__desc-item`);
     const tabContent = tabItem.querySelector(':scope > div');
+    const headings = tabContent.querySelectorAll('h1, h2, h3, h4, h5, h6');
+    [...headings].forEach((heading) => heading.classList.add(`${blockName}__title`));
 
     // Create div for image and append inside image div container
     const picture = tabItem.querySelector('picture');
@@ -449,6 +465,9 @@ export default function decorate(block) {
     tabContent.querySelectorAll('p, div').forEach((item) => {
       stripEmptyTags(tabContent, item);
     });
+
+    // Wrap text in container
+    wrapTextInContainer(tabContent);
 
     // Wrap links in container
     const buttonContainer = createElement('div', { classes: `${blockName}__buttons-container` });

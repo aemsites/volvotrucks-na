@@ -52,10 +52,6 @@
     padding: 10px 0 !important;
   }
 
-  .dealer-header .header-search-icon {
-    top: 10px !important;
-  }
-
   .dealer-header .studio-search-widget .search-wrapper input {
     width: calc(100% - 40px) !important;
     border: none;
@@ -123,47 +119,14 @@
   background-repeat: no-repeat;
 }
 
-.header-search-icon {
-  z-index: 99;
-  position: relative;
-  right: 7%;
-  width: 290px;
-  cursor: pointer;
-}
-
-.header-search-icon img {
-  float: right !important;
-}
-
 .form-inline {
   display: block;
-}
-
-.dealer-header .header-search-icon {
-  z-index: 99;
-  position: relative;
-  right: 3%;
-  width: 100%;
-  cursor: pointer;
 }
 
 @media (max-width: 991px) {
   .search-container .studio-search-widget .search-wrapper {
     top: -8px;
     padding-top: 15px;
-  }
-
-  .header-search-icon {
-    width: auto;
-    float: right;
-  }
-
-  .header-search-icon img {
-    float: none !important;
-  }
-
-  .dealer-header .header-search-icon img {
-    float: right !important;
   }
 
   .studio-search-widget .search-wrapper input {
