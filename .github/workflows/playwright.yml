@@ -16,7 +16,7 @@ jobs:
         with:
           node-version: 20
       - name: Update .npmrc with Azure PAT token
-      run: |
+        run: |
           echo "; begin auth token
           //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/:username=volvogroup
           //pkgs.dev.azure.com/volvogroup/_packaging/VES/npm/registry/:_password=[BASE64_ENCODED_PERSONAL_ACCESS_TOKEN]
@@ -27,7 +27,7 @@ jobs:
           ; end auth token" > .npmrc
           sed -i 's/\[BASE64_ENCODED_PERSONAL_ACCESS_TOKEN\]/${{ env.AZURE_PAT_TOKEN_BASE64 }}/g' .npmrc
         env:
-        AZURE_PAT_TOKEN_BASE64: ${{ secrets.VOLVO_PAT }}
+          AZURE_PAT_TOKEN_BASE64: ${{ secrets.VOLVO_PAT }}
       - name: Install dependencies
         run: npm ci
       - name: Install Playwright Browsers
