@@ -113,10 +113,17 @@
   gap: 40px 32px;
 }
 
+.v2-resource-gallery__document-list > :only-child {
+  position: absolute;
+  width: 100VW;
+  left: 0;
+  justify-content: center;
+  display: flex;
+}
+
 .v2-resource-gallery__document-link-wrapper {
   display: flex;
   flex-flow: column;
-  justify-content: center;
   gap: 8px;
   margin: 0;
 }
