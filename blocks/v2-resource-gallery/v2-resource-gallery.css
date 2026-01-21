@@ -113,12 +113,9 @@
   gap: 40px 32px;
 }
 
-.v2-resource-gallery__document-list > :only-child {
-  position: absolute;
-  width: 100VW;
-  left: 0;
+.v2-resource-gallery__document-list:has(> :only-child) {
+  grid-template-columns: minmax(0, max-content);
   justify-content: center;
-  display: flex;
 }
 
 .v2-resource-gallery__document-link-wrapper {
