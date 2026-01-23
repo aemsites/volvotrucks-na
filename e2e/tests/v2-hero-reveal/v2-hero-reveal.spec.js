@@ -86,11 +86,15 @@ test.describe('V2 timer', () => {
 test.describe('V2 Hero Reveal', () => {
   test('should have the component in the page', async ({ page }) => {
     await page.clock.fastForward(7200001);
-    const component = page.locator('.v2-hero-reveal-wrapper');
-    const innerComponent = page.locator('.v2-hero-reveal-wrapper .v2-hero');
+    const heading = page.locator('.v2-hero-reveal-wrapper .v2-hero__title');
+    const link = page.locator('.v2-hero-reveal-wrapper .v2-hero a');
+    const image = page.locator('.v2-hero-reveal-wrapper img');
 
-    await expect(component).toBeVisible();
-    await expect(innerComponent).toBeVisible();
+    await expect(heading).toHaveText('VOLVO I-TORQUE After Reveal text');
+    await expect(link).toHaveAttribute('href', 'https://www.youtube.com/embed/D-DbrC4Jp08?color=white&rel=0&playsinline=1&enablejsapi=1&autoplay=1');
+    await expect(link).toHaveText('Watch Now');
+    await expect(image).toHaveAttribute('src', './media_1d490182ae8f4d283e12aa81005990780a7c7da81.jpg?width=750&format=jpg&optimize=medium');
+  
   });
 
   test('should have the PRE reveal content', async ({ page }) => {
