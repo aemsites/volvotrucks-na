@@ -1,6 +1,11 @@
 import { test, expect } from '@playwright/test';
 import * as cheerio from 'cheerio';
 
+// Define your custom values
+const url = '/e2e/v2-hero-reveal/v2-hero-reveal';
+const newCountdownDate = '2030-01-01T11:00:00-00:00';
+const newRevealDate = '2030-01-01T10:00:00-00:00';
+
 function customiseResponseWithCustomSectionMetadataValues(body, customSectionMetadataValues) { 
   // Load HTML with cheerio
   const $ = cheerio.load(body);
@@ -18,7 +23,7 @@ function customiseResponseWithCustomSectionMetadataValues(body, customSectionMet
   return $.html();
 }
 
-function interceptRequest(page, url, customSectionMetadataValues = null) {
+function interceptRequest(page, customSectionMetadataValues = null) {  
   // Intercept request
   if (customSectionMetadataValues) {
     page.route(url, async (route, request) => {
@@ -38,26 +43,49 @@ function interceptRequest(page, url, customSectionMetadataValues = null) {
 }
 
 test.beforeEach(async ({ page }) => {
-  const pageUrl = '/e2e/v2-hero-reveal/v2-hero-reveal';
-  await page.clock.install({ time: new Date('2030-01-01T09:00:00-00:00') });
-
-  // Define your custom values
-  const newCountdownDate = '2030-01-01T11:00:00-00:00';
-  const newRevealDate = '2030-01-01T10:00:00-00:00';
+  await page.clock.pauseAt(new Date('2030-01-01T09:00:00-00:00'));
 
   const customSectionMetadataValues = {
     'Countdown date': newCountdownDate,
     'Reveal date': newRevealDate,
   };
 
-  // Intercept request
-  interceptRequest(page, pageUrl, customSectionMetadataValues);
+  interceptRequest(page, customSectionMetadataValues);
 
-  await page.goto(pageUrl);
+  await page.goto(url);
+});
+
+test.describe('V2 timer', () => {
+  test('Check timer text on pages', async ({ page }) => {
+    const labels = page.locator('.v2-hero-reveal-wrapper .v2-hero__countdown-label');
+        
+    await expect(labels.nth(0)).toHaveText('days');
+    await expect(labels.nth(1)).toHaveText('hours');
+    await expect(labels.nth(2)).toHaveText('minutes');
+    await expect(labels.nth(3)).toHaveText('seconds');
+  });
+
+  test('Check clock values on pages', async ({ page }) => {
+    const time = page.locator('.v2-hero-reveal-wrapper .v2-hero__countdown-number');
+    await page.clock.fastForward(5000);
+
+    await expect(time.nth(0)).toHaveText('00');
+    await expect(time.nth(1)).toHaveText('01');
+    await expect(time.nth(2)).toHaveText('59');
+    await expect(time.nth(3)).toHaveText('55');
+
+    await page.clock.fastForward(4000);
+
+    await expect(time.nth(0)).toHaveText('00');
+    await expect(time.nth(1)).toHaveText('01');
+    await expect(time.nth(2)).toHaveText('59');
+    await expect(time.nth(3)).toHaveText('51');
+  });
 });
 
 test.describe('V2 Hero Reveal', () => {
   test('should have the component in the page', async ({ page }) => {
+    await page.clock.fastForward(7200001);
     const component = page.locator('.v2-hero-reveal-wrapper');
     const innerComponent = page.locator('.v2-hero-reveal-wrapper .v2-hero');
 
@@ -74,42 +102,5 @@ test.describe('V2 Hero Reveal', () => {
     await expect(link).toHaveAttribute('href', '/block-library/blocks/v2-hero-reveal');
     await expect(link).toHaveText('Go to Event');
     await expect(image).toHaveAttribute('src', './media_1ecec526fc4ecc1673d9c14e6c0536e52107f1f23.jpg?width=750&format=jpg&optimize=medium');
-  });
-
-  test.describe('- Countdown -', () => {
-    test('should have the countdown', async ({ page }) => {
-      const countdown = page.locator('.v2-hero-reveal-wrapper .v2-hero__countdown');
-
-      await expect(countdown).toBeVisible();
-    });
-
-    test('should have the right countdown time and labels', async ({ page }) => {
-      const time = page.locator('.v2-hero-reveal-wrapper .v2-hero__countdown-number');
-      const labels = page.locator('.v2-hero-reveal-wrapper .v2-hero__countdown-label');
-      
-      await expect(labels.nth(0)).toHaveText('days');
-      await expect(labels.nth(1)).toHaveText('hour');
-      await expect(labels.nth(2)).toHaveText('minutes');
-      await expect(labels.nth(3)).toHaveText('seconds');
-
-      await expect(time.nth(0)).toHaveText('00');
-      await expect(time.nth(1)).toHaveText('01');
-      await expect(time.nth(2)).toHaveText('59');
-      await expect(time.nth(3)).toHaveText('59');
-
-      await page.clock.fastForward(4000);
-
-      await expect(time.nth(0)).toHaveText('00');
-      await expect(time.nth(1)).toHaveText('01');
-      await expect(time.nth(2)).toHaveText('59');
-      await expect(time.nth(3)).toHaveText('55');
-
-      await page.clock.fastForward(4000);
-
-      await expect(time.nth(0)).toHaveText('00');
-      await expect(time.nth(1)).toHaveText('01');
-      await expect(time.nth(2)).toHaveText('59');
-      await expect(time.nth(3)).toHaveText('50');
-    });
   });
 });
