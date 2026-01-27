@@ -185,14 +185,14 @@ export default async function decorate(block) {
         <div class="dealer-details-header">
             <div class="detail detail-website">
                 <a target="_blank">
-                    <img src="/blocks/dealer-locator/images/google-maps.svg"/>
+                    <img src="/blocks/dealer-locator/images/Globe-4.png"/>
                     <p>Website</p>
                 </a>
             </div>
 
             <div class="detail detail-direction">
                 <a id="directions"">
-                    <img src="/blocks/dealer-locator/images/GPS-2.png"/>
+                    <img src="/blocks/dealer-locator/images/google-maps.svg"/>
                     <p>Google Maps</p>
                 </a>
             </div>
