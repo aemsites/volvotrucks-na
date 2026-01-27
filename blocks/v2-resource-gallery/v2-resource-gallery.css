@@ -141,6 +141,16 @@
   padding-left: 32px;
 }
 
+.v2-resource-gallery__document-list:has(> :only-child) {
+  grid-template-columns: minmax(0, max-content);
+  justify-content: center;
+  
+  a, p {
+    padding-left: 0;
+    justify-content: center;
+  }
+}
+
 .v2-resource-gallery__document-list-item--hide,
 .v2-resource-gallery__video-list-item--hide {
   display: none;

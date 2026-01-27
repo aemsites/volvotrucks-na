@@ -503,6 +503,7 @@ function handleModalLinks(link) {
   }
   link.addEventListener('click', async (event) => {
     event.preventDefault();
+    const placeholdersReady = getPlaceholders();
     const modalContentLink = link.getAttribute('data-modal-content');
     const modalInnerText = link.textContent || '';
     const resp = await fetch(`${modalContentLink}.plain.html`);
@@ -510,7 +511,7 @@ function handleModalLinks(link) {
 
     if (resp.ok) {
       main.innerHTML = await resp.text();
-
+      await placeholdersReady;
       decorateMain(main, main);
       await loadSections(main);
       const modalEvent = new CustomEvent('open-modal', {
@@ -808,6 +809,7 @@ export function decorateMain(main, head) {
 async function loadEager(doc) {
   decorateTemplateAndTheme();
 
+  const placeholdersReady = getPlaceholders();
   const disableHeader = getMetadata('disable-header').toLowerCase() === 'true';
   const main = doc.querySelector('main');
   const { head } = doc;
@@ -816,6 +818,8 @@ async function loadEager(doc) {
     const header = doc.querySelector('header');
     header && loadHeader(header);
   }
+
+  await placeholdersReady;
 
   if (main) {
     decorateMain(main, head);
@@ -830,8 +834,6 @@ async function loadEager(doc) {
   } else {
     document.documentElement.lang = 'en';
   }
-
-  await getPlaceholders();
 }
 
 export const MEDIA_BREAKPOINTS = {

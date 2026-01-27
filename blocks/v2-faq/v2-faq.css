@@ -1,0 +1,13 @@
+.v2-faq .accordion__content ul {
+  margin-top: 16px;
+  margin-bottom: 24px;
+  padding-left: 40px;
+}
+
+.v2-faq .accordion__content > :first-child {
+  margin-top: 0;
+}
+
+.v2-faq .accordion__content > :last-child {
+  margin-bottom: 0;
+}
