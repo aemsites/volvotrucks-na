@@ -55,7 +55,7 @@ test.beforeEach(async ({ page }) => {
   await page.goto(url);
 });
 
-test.describe('V2 timer', () => {
+test.describe('Check hero timer values on page', () => {
   test('Check timer text on pages', async ({ page }) => {
     const labels = page.locator('.v2-hero-reveal-wrapper .v2-hero__countdown-label');
         
@@ -85,6 +85,7 @@ test.describe('V2 timer', () => {
 
 test.describe('V2 Hero Reveal', () => {
   test('should have the component in the page', async ({ page }) => {
+    // Check if the component is present by adding 2:00:01 to the clock to go past the reveal date
     await page.clock.fastForward(7200001);
     const heading = page.locator('.v2-hero-reveal-wrapper .v2-hero__title');
     const link = page.locator('.v2-hero-reveal-wrapper .v2-hero a');
