@@ -117,7 +117,7 @@ export function createCustomOptimizedPicture(
 
 function buildHeroBlock(main) {
   // switching off hero autoblock for redesign
-  if (document.querySelector('main').classList.contains('redesign-v2')) {
+  if (document.documentElement.classList.contains('redesign-v2')) {
     return;
   }
 
@@ -784,6 +784,7 @@ export function decorateMain(main, head) {
       .map((style) => toClassName(style.trim()))
       .forEach((style) => main.classList.add(style));
   }
+  moveClassToHtmlEl('redesign-v2');
   // hopefully forward compatible button decoration
   decorateButtons(main);
   decorateIcons(main);
@@ -875,9 +876,10 @@ export function getImageForBreakpoint(imagesList, onChange = () => {}) {
 }
 
 const moveClassToHtmlEl = (className, elementSelector = 'main') => {
-  if (document.querySelector(elementSelector).classList.contains(className)) {
-    document.querySelector('html').classList.add(className);
-    document.querySelector(elementSelector).classList.remove(className);
+  const el = document.querySelector(elementSelector);
+  if (el?.classList.contains(className)) {
+    document.documentElement.classList.add(className);
+    el.classList.remove(className);
   }
 };
 
@@ -938,9 +940,6 @@ async function loadPage() {
 }
 
 loadPage();
-
-/* REDESIGN CLASS CHECK */
-moveClassToHtmlEl('redesign-v2');
 
 /* MODAL */
 async function loadModalScript() {
