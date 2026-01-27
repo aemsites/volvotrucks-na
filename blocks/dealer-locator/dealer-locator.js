@@ -185,7 +185,7 @@ export default async function decorate(block) {
         <div class="dealer-details-header">
             <div class="detail detail-website">
                 <a target="_blank">
-                    <img src="/blocks/dealer-locator/images/Globe-4.png"/>
+                    <img src="/blocks/dealer-locator/images/google-maps.svg"/>
                     <p>Website</p>
                 </a>
             </div>
