@@ -325,6 +325,7 @@ main .section.dealer-locator-container > div {
 
 .dealer-locator .nearby-pins-load-more {
   padding: 10px 20px;
+  margin: 5px 0;
   width: 100%;
   box-sizing: border-box;
   background-color: var(--c-grey-1);
