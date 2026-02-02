@@ -282,8 +282,6 @@ export default async function decorate(block) {
                     <div class="teaser-top" onclick="$.fn.switchSidebarPane('sidebar-pin', this);">
                         <div class="heading">
                             <p></p>
-
-                            <div class="distance"></div>
                         </div>
                         <div class="info">
                             <div class="hours"></div>
