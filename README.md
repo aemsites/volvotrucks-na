@@ -29,7 +29,7 @@ npm i
 
 1. Install the [Helix CLI](https://github.com/adobe/helix-cli): `npm install -g @adobe/aem-cli`
 2. Start the AEM proxy: `aem up` (opens your browser at http://localhost:3000)
-3. Run `npm run watch` to start the local development build with automatic rebuilding and sourcemaps enabled.
+3. Run `npm run watch` in a different terminal window to start the local development build with automatic rebuilding and sourcemaps enabled.
 4. Open the `{repo}` directory in your favorite IDE and start coding :)
 
 
