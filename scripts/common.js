@@ -54,7 +54,7 @@ export const getLanguagePath = () => {
  */
 export async function getPlaceholders() {
   if (!placeholders && !placeholdersPromise) {
-    const url = `${getLanguagePath()}placeholder.json`;
+    const url = 'https://main--volvotrucks-us--volvogroup.aem.page/placeholder.json';
     placeholdersPromise = fetch(url)
       .then((resp) => resp.json())
       .then((data) => {
@@ -68,6 +68,23 @@ export async function getPlaceholders() {
   }
   await placeholdersPromise;
 }
+
+// export async function testFetchPlaceholders(url) {
+//   try {
+//     console.info('From page:', window.location.href);
+//     console.info('Fetching:', url);
+//     const resp = await fetch(url);
+//     console.info('Status:', resp.status, resp.statusText);
+//     const text = await resp.text();
+//     console.info('Body (first 200 chars):', text.slice(0, 200));
+//     return resp.status;
+//   } catch (err) {
+//     console.error('Fetch failed:', err);
+//     return 'error';
+//   }
+// }
+
+// testFetchPlaceholders('https://main--volvotrucks-us--volvogroup.aem.page/placeholder.json');
 
 /**
  * Returns the text label for the given key from the placeholders data.
