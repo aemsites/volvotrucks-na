@@ -207,13 +207,18 @@ export async function decorateIcons(element) {
     .join('\n');
   svgSprite.innerHTML += symbols;
 
-  icons.forEach((span) => {
+  const updatedIconsList = [...element.querySelectorAll('span.icon:not(.icon-loaded)')];
+  updatedIconsList.forEach((span) => {
     const iconName = Array.from(span.classList)
       .find((c) => c.startsWith('icon-'))
       .substring(5);
     const parent = span.firstElementChild?.tagName === 'A' ? span.firstElementChild : span;
+
+    // Prevent re-processing
+    parent.classList.add('icon-loaded');
+
     // Styled icons need to be inlined as-is, while unstyled ones can leverage the sprite
-    if (ICONS_CACHE[iconName].styled) {
+    if (ICONS_CACHE[iconName] && ICONS_CACHE[iconName].styled) {
       parent.innerHTML = ICONS_CACHE[iconName].html;
     } else {
       parent.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg"><use href="#icons-sprite-${iconName}"/></svg>`;
