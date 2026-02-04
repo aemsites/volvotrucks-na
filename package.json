@@ -1,7 +1,7 @@
 {
   "name": "volvotrucks-na",
   "private": true,
-  "version": "55.0.0",
+  "version": "55.0.1",
   "description": "Volvo Trucks North America",
   "engines": {
     "node": ">=20.19.5 <23",
