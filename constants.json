@@ -224,6 +224,21 @@
       "value"
     ]
   },
+  "placeholdersConfig": {
+    "total": 2,
+    "offset": 0,
+    "limit": 2,
+    "data": [
+      {
+        "name": "PLACEHOLDERS_URL",
+        "value": "https://www.volvotrucks.us/placeholders-test.json"
+      }
+    ],
+    "columns": [
+      "name",
+      "value"
+    ]
+  },
   ":version": 3,
   ":names": [
     "newsFeedConfig",
@@ -233,7 +248,8 @@
     "magazineConfig",
     "cookieValues",
     "holidays",
-    "tools"
+    "tools",
+    "placeholdersConfig"
   ],
   ":type": "multi-sheet"
 }
