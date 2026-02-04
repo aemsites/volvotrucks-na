@@ -54,7 +54,7 @@ export const getLanguagePath = () => {
  */
 export async function getPlaceholders() {
   if (!placeholders && !placeholdersPromise) {
-    const url = 'https://main--volvotrucks-us--volvogroup.aem.page/placeholder.json';
+    const url = 'https://main--volvotrucks-us--volvogroup.aem.live/placeholder.json';
     placeholdersPromise = fetch(url)
       .then((resp) => resp.json())
       .then((data) => {
