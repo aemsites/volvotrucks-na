@@ -1,6 +1,7 @@
 import { decorateIcons } from '../../scripts/common.js';
 
 const BLOCK_NAME = 'v2-specifications';
+const EMPTY_CELL = { text: '', html: '' };
 
 /**
  * Normalize text content from a DOM node.
@@ -9,7 +10,7 @@ const BLOCK_NAME = 'v2-specifications';
  * @param {Element | null | undefined} el
  * @returns {string}
  */
-const normalizeTextContent = (el) => (el?.textContent || '').replace(/\s+/g, ' ').trim();
+const normalizeWhitespace = (el) => (el?.textContent || '').replace(/\s+/g, ' ').trim();
 
 /**
  * Create a unique id fragment for block-scoped DOM ids.
@@ -37,17 +38,21 @@ const createBlockId = () => `${BLOCK_NAME}-${createStableId()}`;
  * into rows that align items by column index horizontally.
  *
  * Security note:
- * - HTML content is treated as trusted from the authoring pipeline (EDS).
- * - Sanitize if assumption changes.
+ * - Assumes HTML is trusted from the EDS authoring pipeline. Sanitize here if that assumption changes.
  *
  * @param {HTMLElement} block - The DOM block containing labeled rows with data cells
  * @returns {{ accordionTitle: string, accordionObservation: string, rows: Array<Array<{ text: string, html: string }>>, columnCount: number }}
  */
-const extractTableItens = (block) => {
+const extractTableItems = (block) => {
   const allRows = [...block.children];
 
   if (allRows.length < 1) {
-    return { title: '<h2></h2>', accordionObservation: '', columns: [] };
+    return {
+      accordionTitle: '<h2></h2>',
+      accordionObservation: '',
+      rows: [],
+      columnCount: 1,
+    };
   }
 
   let accordionTitle = '';
@@ -59,9 +64,9 @@ const extractTableItens = (block) => {
   let maxColumnsSeen = 0;
 
   allRows.forEach((row) => {
-    const labelCell = row.children[0];
-    const contentCell = row?.children[1];
-    const labelText = normalizeTextContent(labelCell);
+    const cells = [...row.children];
+    const [labelCell, contentCell] = cells;
+    const labelText = normalizeWhitespace(labelCell);
 
     if (labelText === 'Title') {
       const titleHeading = contentCell.querySelector('h1, h2, h3, h4, h5, h6, p');
@@ -74,8 +79,8 @@ const extractTableItens = (block) => {
       return;
     }
 
-    Array.from(row.children).forEach((cell, colIndex) => {
-      const text = normalizeTextContent(cell);
+    cells.forEach((cell, colIndex) => {
+      const text = normalizeWhitespace(cell);
       const html = (cell.innerHTML || '').trim();
 
       // Keep track of how many columns we've seen (colIndex is zero-based)
@@ -91,7 +96,7 @@ const extractTableItens = (block) => {
       if (!rows[insertionRowIndex]) {rows[insertionRowIndex] = [];}
 
       // Insert the parsed cell into the correct column slot for that row
-      rows[insertionRowIndex][colIndex] = text ? { text, html } : { text: '', html: '' };
+      rows[insertionRowIndex][colIndex] = text ? { text, html } : EMPTY_CELL;
 
       // Advance the per-column counter so next cell in this column goes to the next row
       columnCounts[colIndex] += 1;
@@ -99,14 +104,12 @@ const extractTableItens = (block) => {
   });
 
   // Normalize rows: ensure each row has an entry for every column
-  const MIN_COLUMNS = 1;
-  const columnCount = Math.max(MIN_COLUMNS, maxColumnsSeen);
+  const columnCount = Math.max(1, maxColumnsSeen);
 
   // Ensure every output row has a cell for each column.
   const normalizedRows = rows.map((inputRow) => {
-    const emptyCell = { text: '', html: '' };
     const normalized = Array.from({ length: columnCount }, (_unused, columnIndex) => {
-      const cellData = inputRow && inputRow[columnIndex] ? inputRow[columnIndex] : emptyCell;
+      const cellData = inputRow && inputRow[columnIndex] ? inputRow[columnIndex] : EMPTY_CELL;
       return cellData;
     });
     return normalized;
@@ -151,8 +154,13 @@ const renderAccordionItem = (title, bodyHTML, columnCount, observation) => {
  */
 const columnsToRowsHtml = (rows, columnCount) => (
   (rows || []).map((row) => {
-    // Determine non-empty cells in this row
-    const nonEmptyCells = (row || []).map((cell, idx) => ({ cell, idx })).filter(({ cell }) => cell && cell.text);
+    
+    // IMPORTANT: row is a sparse array. We must preserve original column indexes.
+    // Do NOT use filter() here because it reindexes the array and breaks column alignment.
+    const nonEmptyCells = row.reduce((acc, cell, idx) => {
+      if (cell?.text) { acc.push({ cell, idx }); }
+      return acc;
+    }, []);
 
     // If only one non-empty cell, render it as a single cell that spans all columns
     if (nonEmptyCells.length === 1 && columnCount > 1) {
@@ -203,6 +211,6 @@ const renderSpecificationsItems = (block, {accordionTitle, accordionObservation,
 export default function decorate(block) {
   const blockId = createBlockId();
   block.id = blockId;
-  const accordionInformation = extractTableItens(block);
-  renderSpecificationsItems(block, accordionInformation);
+  const specData = extractTableItems(block);
+  renderSpecificationsItems(block, specData);
 }
