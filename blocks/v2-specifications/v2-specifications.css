@@ -129,10 +129,6 @@
         column-gap: 32px;
     }
 
-    .v2-specifications-container .accordion__content {
-        flex-wrap: wrap;
-    }
-
     /* tabblet specifications for each accordion depending on the number of columns, from 1 to 3 */
     .v2-specifications-container .accordion__content.number--columns-1 .v2-specifications__cell {
         width: 100%;
