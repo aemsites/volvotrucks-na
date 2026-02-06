@@ -181,10 +181,9 @@ const columnsToRowsHtml = (rows, columnCount) => (
  *
  * @param {HTMLElement} block - DOM container to render into
  * @param {{ accordionTitle: string, accordionObservation: string, rows: Array, columnCount: number }} specData - Parsed specifications data
- * @param {string} blockId - Unique block instance ID (for scoping)
  * @returns {void}
  */
-const renderSpecificationsItems = (block, {accordionTitle, accordionObservation, rows, columnCount}, blockId) => {
+const renderSpecificationsItems = (block, {accordionTitle, accordionObservation, rows, columnCount}) => {
   const rowsHtml = columnsToRowsHtml(rows, columnCount);
   const accordionFragment = renderAccordionItem(accordionTitle, rowsHtml, columnCount, accordionObservation);
   block.innerHTML = '';
@@ -202,7 +201,8 @@ const renderSpecificationsItems = (block, {accordionTitle, accordionObservation,
  * @returns {void}
  */
 export default function decorate(block) {
-  const blockId = createBlockId(block);
-  const accordeonInformation = extractTableItens(block);
-  renderSpecificationsItems(block, accordeonInformation, blockId);
+  const blockId = createBlockId();
+  block.id = blockId;
+  const accordionInformation = extractTableItens(block);
+  renderSpecificationsItems(block, accordionInformation);
 }
