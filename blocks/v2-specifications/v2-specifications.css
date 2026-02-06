@@ -6,6 +6,10 @@
     margin: 0;
 }
 
+.v2-specifications__cell .content {
+  padding-block: 0;
+}
+
 .v2-specifications-container .v2-specifications__row {
     display: flex;
     flex-wrap: wrap;
@@ -16,7 +20,8 @@
     font-size: var(--f-heading-6-font-size);
     letter-spacing: var(--f-heading-6-letter-spacing);
     line-height: var(--f-heading-6-line-height);
-    font-weight: 600;
+    font-weight: 500;
+    color: var(--text-color);
 }
 
 .v2-specifications-container .accordion__observation p{
@@ -30,23 +35,23 @@
 }
 
 .v2-specifications-container .v2-specifications__cell {
-    margin-bottom: 40px;
+    margin-bottom: 24px;
 }
 
 .redesign-v2 .v2-specifications-container .v2-specifications__cell p {
     color: var(--text-color);
     font-family: var(--font-family-body);
-    font-size: var(--f-body-font-size-desktop);
-    line-height: var(--f-subtitle-1-line-height);
-    letter-spacing: var(--f-subtitle-1-letter-spacing);
+    font-size: var(--f-body-2-font-size);
+    line-height: var(--f-body-2-line-height);
+    letter-spacing: var(--f-body-2-letter-spacing);
     margin: 0;
 }
 
 .redesign-v2 .v2-specifications-container .v2-specifications__cell p:first-of-type {
     color: var(--text-subtle);
     font-size: var(--f-subtitle-1-font-size);
-    line-height: var(--f-body-line-height-desktop);
-    letter-spacing: var(--f-body-letter-spacing-desktop);
+    line-height: var(--f-subtitle-1-line-height);
+    letter-spacing: var(--f-subtitle-1-letter-spacing);
     margin: 0 0 8px;
 }
     
@@ -69,7 +74,8 @@
 }
 
 .v2-specifications-container .v2-specifications__cell :is(h1, h2, h3, h4, h5, h6) {
-    font-weight: 600;
+    font-weight: 500;
+    color: var(--text-color);
 }
 
 .v2-specifications-container div.v2-specifications__row .v2-specifications__cell.v2-specifications__only-cell {
@@ -96,6 +102,11 @@
 
 .v2-specifications-container .accordion__content.number--columns-3 .v2-specifications__cell {
     width: 30%;
+    margin-bottom: 40px;
+}
+
+.v2-specifications-container .accordion__content.number--columns-3 .v2-specifications__cell p:first-of-type {
+    letter-spacing: var(--f-body-letter-spacing);
 }
 
 @media (min-width:744px) {
@@ -115,6 +126,7 @@
         display: flex;
         flex-wrap: wrap;
         gap: 32px;
+        column-gap: 32px;
     }
 
     .v2-specifications-container .accordion__content {
@@ -127,11 +139,15 @@
     }
     
     .v2-specifications-container .accordion__content.number--columns-1 .v2-specifications__row {
-        width: 47%;
+        width: 47.5%;
     }
 
     .v2-specifications-container .accordion__content.number--columns-1 {
         flex-flow: row wrap;
+    }
+
+    .v2-specifications-container .accordion__content.number--columns-3 .v2-specifications__cell {
+        margin-bottom: 32px;
     }
 }
 
@@ -159,5 +175,6 @@
 
     .v2-specifications-container .accordion__content.number--columns-3 .v2-specifications__cell {
         width: 28.6%;
+        margin-bottom: 40px;
     }
 }
