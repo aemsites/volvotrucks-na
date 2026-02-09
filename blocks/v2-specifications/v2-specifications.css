@@ -1,3 +1,14 @@
+:root {
+  --gap: 16px;
+  --large-gap: 32px;
+  --columns-2: 2;
+  --columns-3: 3;
+  --width-value-2col: calc((100% / var(--columns-2)) - (var(--gap) / var(--columns-2)));
+  --width-value-3col: calc((100% / var(--columns-3)) - ((var(--gap) * 2) / var(--columns-3)));
+  --width-value-large-2col: calc((100% / var(--columns-2)) - (var(--large-gap) / var(--columns-2)));
+  --width-value-large-3col: calc((100% / var(--columns-3)) - ((var(--large-gap) * 2) / var(--columns-3)));
+}
+
 .section.v2-specifications-container .v2-specifications__accordion details > *{
     padding: 24px 0;
 }
@@ -13,7 +24,7 @@
 .v2-specifications-container .v2-specifications__row {
     display: flex;
     flex-wrap: wrap;
-    column-gap: 5%;
+    column-gap: var(--gap);
 }
 
 .v2-specifications-container .accordion__title :is(h1, h2, h3, h4, h5, h6) {
@@ -84,7 +95,7 @@
 
 .v2-specifications-container .accordion__content {
     display: flex;
-    column-gap: 16px;
+    column-gap: var(--gap);
     padding-top: 12px;
     flex-direction: column;
 }
@@ -97,11 +108,11 @@
 
 /* mobile specifications for each accordion depending on the number of columns, from 1 to 3 */
 .v2-specifications-container .accordion__content.number--columns-2 .v2-specifications__cell {
-    width: 47%;
+    width: var(--width-value-2col);
 }
 
 .v2-specifications-container .accordion__content.number--columns-3 .v2-specifications__cell {
-    width: 30%;
+    width: var(--width-value-3col);
     margin-bottom: 40px;
 }
 
@@ -117,16 +128,11 @@
     .v2-specifications-container .v2-specifications__cell ul li {
         width: 30%;
     }
-    
-    .v2-specifications-container .v2-specifications__cell ul li::marker {
-        margin-left: 10px;
-    }
 
     .v2-specifications-container .v2-specifications__cell-list {
         display: flex;
         flex-wrap: wrap;
-        gap: 32px;
-        column-gap: 32px;
+        gap: var(--large-gap);
     }
 
     /* tabblet specifications for each accordion depending on the number of columns, from 1 to 3 */
@@ -135,7 +141,7 @@
     }
     
     .v2-specifications-container .accordion__content.number--columns-1 .v2-specifications__row {
-        width: 47.5%;
+        width: var(--width-value-2col);
     }
 
     .v2-specifications-container .accordion__content.number--columns-1 {
@@ -152,25 +158,23 @@
         margin-bottom: 40px;
     }
 
-    .v2-specifications-container .accordion__content {
-        column-gap: 3.6%;
+    .v2-specifications-container .accordion__content,
+    .v2-specifications-container .accordion__content.number--columns-2 .v2-specifications__row,
+    .v2-specifications-container .accordion__content.number--columns-3 .v2-specifications__row {
+        column-gap: var(--large-gap);
     }
 
     /* desktop specifications for each accordion depending on the number of columns, from 1 to 3 */
-    .v2-specifications-container .accordion__content.number--columns-1 .v2-specifications__cell {
-        width: 100%;
-    }
-    
     .v2-specifications-container .accordion__content.number--columns-1 .v2-specifications__row {
-        width: 30.9%;
+        width: var(--width-value-large-3col);
     }
 
-    .v2-specifications-container .accordion__content.number--columns-3 .v2-specifications__row {
-        column-gap: 7.1%;
+    .v2-specifications-container .accordion__content.number--columns-2 .v2-specifications__cell {
+        width: var(--width-value-large-2col);
     }
 
     .v2-specifications-container .accordion__content.number--columns-3 .v2-specifications__cell {
-        width: 28.6%;
+        width: var(--width-value-large-3col);
         margin-bottom: 40px;
     }
 }

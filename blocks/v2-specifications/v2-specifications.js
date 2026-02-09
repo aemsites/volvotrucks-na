@@ -13,25 +13,6 @@ const EMPTY_CELL = { text: '', html: '' };
 const normalizeWhitespace = (el) => (el?.textContent || '').replace(/\s+/g, ' ').trim();
 
 /**
- * Create a unique id fragment for block-scoped DOM ids.
- * Prefers `crypto.randomUUID()` when available; falls back to a random hex string.
- * @returns {string}
- */
-const createStableId = () => {
-  if (window.crypto?.randomUUID) {
-    return window.crypto.randomUUID();
-  }
-  return Math.random().toString(16).slice(2);
-};
-
-/**
- * Create a unique block id.
- * Used to scope DOM ids (aria-controls / aria-labelledby) per block instance.
- * @returns {string}
- */
-const createBlockId = () => `${BLOCK_NAME}-${createStableId()}`;
-
-/**
  * Extract table data from authored markup and transpose into aligned rows.
  *
  * Parses block rows to find Title and Observation labels, then organizes remaining data
@@ -41,7 +22,7 @@ const createBlockId = () => `${BLOCK_NAME}-${createStableId()}`;
  * - Assumes HTML is trusted from the EDS authoring pipeline. Sanitize here if that assumption changes.
  *
  * @param {HTMLElement} block - The DOM block containing labeled rows with data cells
- * @returns {{ accordionTitle: string, accordionObservation: string, rows: Array<Array<{ text: string, html: string }>>, columnCount: number }}
+ * @returns {{ accordionTitle: string, rows: Array<Array<{ text: string, html: string }>>, columnCount: number }}
  */
 const extractTableItems = (block) => {
   const allRows = [...block.children];
@@ -49,37 +30,38 @@ const extractTableItems = (block) => {
   if (allRows.length < 1) {
     return {
       accordionTitle: '<h2></h2>',
-      accordionObservation: '',
       rows: [],
       columnCount: 1,
     };
   }
 
   let accordionTitle = '';
-  let accordionObservation = '';
 
   // Build rows directly while iterating — this aligns items by their index across columns
   const rows = [];
   const columnCounts = []; // track how many items we've added per column
   let maxColumnsSeen = 0;
+  accordionTitle = normalizeWhitespace(allRows[0].querySelector('h1, h2, h3, h4, h5, h6, p'));
+  console.log('accordionTitle', accordionTitle);
+  // accordionTitle.querySelector('h1, h2, h3, h4, h5, h6, p').outerHTML;
+  allRows.forEach((row, colIndex) => {
+    const allChildrens = [...row.children];
+    // if (labelText === 'Title') {
+    //   const titleHeading = contentCell.querySelector('h1, h2, h3, h4, h5, h6, p');
+    //   if (titleHeading) { accordionTitle = titleHeading.outerHTML; }
+    //   return;
+    // }
 
-  allRows.forEach((row) => {
-    const cells = [...row.children];
-    const [labelCell, contentCell] = cells;
-    const labelText = normalizeWhitespace(labelCell);
+    // if (labelText === 'Observation') {
+    //   accordionObservation = (contentCell.innerHTML || '').trim();
+    //   return;
+    // }
 
-    if (labelText === 'Title') {
-      const titleHeading = contentCell.querySelector('h1, h2, h3, h4, h5, h6, p');
-      if (titleHeading) { accordionTitle = titleHeading.outerHTML; }
+    if(colIndex === 0) {
       return;
     }
-
-    if (labelText === 'Observation') {
-      accordionObservation = (contentCell.innerHTML || '').trim();
-      return;
-    }
-
-    cells.forEach((cell, colIndex) => {
+    
+    allChildrens.forEach((cell, colIndex) => { 
       const text = normalizeWhitespace(cell);
       const html = (cell.innerHTML || '').trim();
 
@@ -115,7 +97,7 @@ const extractTableItems = (block) => {
     return normalized;
   });
 
-  return { accordionTitle, accordionObservation, rows: normalizedRows, columnCount };
+  return { accordionTitle, rows: normalizedRows, columnCount };
 };
 
 /**
@@ -127,15 +109,13 @@ const extractTableItems = (block) => {
  * @param {string} title - Accordion heading (HTML-safe, typically a heading tag)
  * @param {string} bodyHTML - Inner accordion content (HTML markup for rows)
  * @param {number} columnCount - Number of columns (applied as class for CSS layout)
- * @param {string} observation - Optional observation text/HTML to display before content
  * @returns {DocumentFragment} Accordion DOM fragment ready to insert
  */
-const renderAccordionItem = (title, bodyHTML, columnCount, observation) => {
+const renderAccordionItem = (title, bodyHTML, columnCount) => {
   const html = `
     <vcdk-accordion class="${BLOCK_NAME}__accordion">
       <span slot="title" class="accordion__title">${title}</span>
       <div class="accordion__content number--columns-${columnCount}">${bodyHTML}</div>
-      ${observation !== '' ? `<div class="accordion__observation">${observation}</div>` : ''}
     </vcdk-accordion>
   `;
   return document.createRange().createContextualFragment(html);
@@ -188,12 +168,12 @@ const columnsToRowsHtml = (rows, columnCount) => (
  * Decorates icons within the block and clears previous content.
  *
  * @param {HTMLElement} block - DOM container to render into
- * @param {{ accordionTitle: string, accordionObservation: string, rows: Array, columnCount: number }} specData - Parsed specifications data
+ * @param {{ accordionTitle: string, rows: Array, columnCount: number }} specData - Parsed specifications data
  * @returns {void}
  */
-const renderSpecificationsItems = (block, {accordionTitle, accordionObservation, rows, columnCount}) => {
+const renderSpecificationsItems = (block, {accordionTitle, rows, columnCount}) => {
   const rowsHtml = columnsToRowsHtml(rows, columnCount);
-  const accordionFragment = renderAccordionItem(accordionTitle, rowsHtml, columnCount, accordionObservation);
+  const accordionFragment = renderAccordionItem(accordionTitle, rowsHtml, columnCount);
   block.innerHTML = '';
   block.appendChild(accordionFragment);
   decorateIcons(block);
@@ -209,8 +189,6 @@ const renderSpecificationsItems = (block, {accordionTitle, accordionObservation,
  * @returns {void}
  */
 export default function decorate(block) {
-  const blockId = createBlockId();
-  block.id = blockId;
   const specData = extractTableItems(block);
   renderSpecificationsItems(block, specData);
 }
