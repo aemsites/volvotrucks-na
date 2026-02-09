@@ -42,20 +42,8 @@ const extractTableItems = (block) => {
   const columnCounts = []; // track how many items we've added per column
   let maxColumnsSeen = 0;
   accordionTitle = normalizeWhitespace(allRows[0].querySelector('h1, h2, h3, h4, h5, h6, p'));
-  console.log('accordionTitle', accordionTitle);
-  // accordionTitle.querySelector('h1, h2, h3, h4, h5, h6, p').outerHTML;
   allRows.forEach((row, colIndex) => {
     const allChildrens = [...row.children];
-    // if (labelText === 'Title') {
-    //   const titleHeading = contentCell.querySelector('h1, h2, h3, h4, h5, h6, p');
-    //   if (titleHeading) { accordionTitle = titleHeading.outerHTML; }
-    //   return;
-    // }
-
-    // if (labelText === 'Observation') {
-    //   accordionObservation = (contentCell.innerHTML || '').trim();
-    //   return;
-    // }
 
     if(colIndex === 0) {
       return;
