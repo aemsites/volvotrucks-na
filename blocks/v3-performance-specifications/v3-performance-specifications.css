@@ -1,0 +1,88 @@
+.v3-performance-specifications {
+    --chart-power: var(--c-cta-blue-hover);
+    --chart-torque: var(--c-grey-900);
+    --chart-grid: var(--c-grey-1);
+    --chart-text: var(--c-grey-4);
+    --chart-font: 'VolvoNovum', arial, sans-serif;
+}
+
+.v3-performance-specifications__title-section .v3-performance-specifications__title {
+  font-size: var(--heading-font-size-xxl);
+}
+
+.v3-performance-specifications__dropdown-section {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.v3-performance-specifications__chart-and-specs-section {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+}
+
+.v3-performance-specifications__chart-section {
+  width: 100%;
+  height: 600px;
+}
+
+.v3-performance-specifications__specs-section ul {
+  background-color: var(--c-grey-50);
+  display: flex;
+  flex-wrap: wrap;
+  border-radius: 8px;
+  padding: 24px;
+  gap: 40px;
+}
+
+.v3-performance-specifications__specs-section p,
+.v3-performance-specifications__specs-section li {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.v3-performance-specifications__specs-section li {
+  width: calc(50% - 20px);
+}
+
+.v3-performance-specifications__specs-section .v3-performance-specifications__specs-key {
+  color: #53565a;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 400;
+  line-height: 130%;
+  letter-spacing: 0.5px;
+}
+
+.v3-performance-specifications__specs-section .v3-performance-specifications__specs-value {
+  font-size: 16px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: 130%;
+  letter-spacing: 0.5px;
+}
+
+@media (min-width: 990px) {
+  .v3-performance-specifications__chart-and-specs-section {
+    flex-direction: row;
+  }
+
+  .v3-performance-specifications__chart-section {
+    width: 80%;
+  }
+
+  .v3-performance-specifications__specs-section {
+    width: 20%;
+  }
+
+  .v3-performance-specifications__specs-section ul {
+    flex-direction: column;
+  }
+
+  .v3-performance-specifications__specs-section .v3-performance-specifications__specs-key,
+  .v3-performance-specifications__specs-section .v3-performance-specifications__specs-value {
+    white-space: nowrap;
+  }
+}
