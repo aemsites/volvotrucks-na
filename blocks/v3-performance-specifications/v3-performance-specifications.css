@@ -48,20 +48,15 @@
 }
 
 .v3-performance-specifications__specs-section .v3-performance-specifications__specs-key {
-  color: #53565a;
-  font-size: 14px;
-  font-style: normal;
-  font-weight: 400;
-  line-height: 130%;
-  letter-spacing: 0.5px;
+  font-family: var(--ff-volvo-novum);
+  color: var(--c-grey-4);
+  font-size: var(--body-font-size-xs);
 }
 
 .v3-performance-specifications__specs-section .v3-performance-specifications__specs-value {
-  font-size: 16px;
-  font-style: normal;
-  font-weight: 500;
-  line-height: 130%;
-  letter-spacing: 0.5px;
+  font-family: var(--ff-volvo-novum-medium);
+  color: var(--c-cta-blue-default);
+  font-size: var(--body-font-size-s);
 }
 
 @media (min-width: 990px) {

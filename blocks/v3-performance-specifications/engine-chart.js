@@ -43,7 +43,7 @@ export async function createEnginePerformanceChart(entry, container, LABELS) {
     }
 
     const theme = getThemeFromCSS(container);
-    
+
     const { echarts } = window;
     let myChart = echarts.getInstanceByDom(container);
     if (!myChart) {
@@ -55,9 +55,29 @@ export async function createEnginePerformanceChart(entry, container, LABELS) {
         resizeObserver.observe(container);
     }
 
-    const rpm = JSON.parse(entry.rpm);
-    const hp = JSON.parse(entry.horsepower);
-    const torque = JSON.parse(entry.torque);
+    let rpm;
+    let hp;
+    let torque;
+    
+    try {
+        if (!entry) {throw new Error('No data entry found');}
+
+        rpm = JSON.parse(entry.rpm);
+        hp = JSON.parse(entry.horsepower);
+        torque = JSON.parse(entry.torque);
+
+        if (!Array.isArray(rpm) || !Array.isArray(hp) || !Array.isArray(torque)) {
+            throw new Error('Performance data must be provided as arrays');
+        }
+
+        if (rpm.length !== hp.length || rpm.length !== torque.length) {
+            console.warn('Data arrays have mismatched lengths');
+        }
+
+    } catch (err) {
+        console.error('Failed to parse chart data:', err);
+        return;
+    }
 
     const allSameLength = rpm?.length === hp?.length && rpm?.length === torque?.length;
     if (!allSameLength) {
@@ -72,7 +92,6 @@ export async function createEnginePerformanceChart(entry, container, LABELS) {
         power: 50,
         torque: 200,
     };
-
 
     const option = {
         backgroundColor: theme.colors.background,
@@ -89,11 +108,6 @@ export async function createEnginePerformanceChart(entry, container, LABELS) {
                 color: theme.colors.legendText,
                 fontWeight: theme.fonts.weightBold,
                 fontSize: theme.fonts.sizeLegend,
-                rich: {
-                    a: {
-                        letterSpacing: theme.fonts.letterSpacing,
-                    },
-                },
             },
         },
         grid: {
@@ -115,7 +129,6 @@ export async function createEnginePerformanceChart(entry, container, LABELS) {
                 fontWeight: theme.fonts.weightMedium,
                 formatter: (value) => Math.round(value),
                 fontFamily: theme.fonts.family,
-                letterSpacing: theme.fonts.letterSpacing,
             },
             axisLine: { show: false },
             axisTick: { show: false },
@@ -138,7 +151,6 @@ export async function createEnginePerformanceChart(entry, container, LABELS) {
                     fontWeight: theme.fonts.weightBold,
                     align: 'right',
                     padding: [0, 20, 0, 0],
-                    letterSpacing: theme.fonts.letterSpacing,
                 },
                 position: 'left',
                 min: 0,
@@ -147,7 +159,6 @@ export async function createEnginePerformanceChart(entry, container, LABELS) {
                 axisLabel: {
                     color: theme.colors.text,
                     margin: 20,
-                    letterSpacing: theme.fonts.letterSpacing,
                     formatter: function (value) {
                         return (value % intervals.torque === 0) ? value : '';
                     },
@@ -167,7 +178,6 @@ export async function createEnginePerformanceChart(entry, container, LABELS) {
                     fontWeight: theme.fonts.weightBold,
                     align: 'left',
                     padding: [0, 0, 0, 20],
-                    letterSpacing: theme.fonts.letterSpacing,
                 },
                 position: 'right',
                 min: 0,
@@ -176,7 +186,6 @@ export async function createEnginePerformanceChart(entry, container, LABELS) {
                 axisLabel: {
                     color: theme.colors.text,
                     margin: 20,
-                    letterSpacing: theme.fonts.letterSpacing,
                     formatter: function (value) {
                         return (value % intervals.power === 0) ? value : '';
                     },
@@ -213,11 +222,6 @@ export async function createEnginePerformanceChart(entry, container, LABELS) {
     };
 
     myChart.setOption(option);
-
-    const resizeObserver = new ResizeObserver(() => {
-        myChart.resize();
-    });
-    resizeObserver.observe(container);
 
     return container;
 }

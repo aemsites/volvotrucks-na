@@ -83,27 +83,41 @@ const renderChart = async (data, container) => {
  * of engine specifications (Peak Power, Torque, etc.).
  */
 const getSpecs = (data) => {
-    // TODO missing RPM peaks from data
-    const peaks = JSON.parse(data.peaks);
+    let peaks;
+    let rpmPeaks;
+
+    try {
+        peaks = JSON.parse(data.peaks);
+        rpmPeaks = JSON.parse(data.rpmPeaks);
+    } catch (error) {
+        console.error('Error parsing peak specifications:', error);
+        return;
+    }
+
+    const powerPeak = `${peaks[0]} ${LABELS.powerUnit}`;
+    const rpmPowerPeak = `${rpmPeaks[0]} - ${rpmPeaks[1]} ${LABELS.rpmUnit}`;
+    
+    const torquePeak = `${peaks[1]} ${LABELS.torqueUnit}`;
+    const rpmTorquePeak = `${rpmPeaks[2]} - ${rpmPeaks[3]} ${LABELS.rpmUnit}`;
 
     const specsSection = docRange.createContextualFragment(`
         <div class="${blockName}__specs">
             <ul>
                 <li>
                     <p class="${blockName}__specs-key">${LABELS.peakPower}</p>
-                    <p class="${blockName}__specs-value">${peaks[0]} ${LABELS.powerUnit}</p>
+                    <p class="${blockName}__specs-value">${powerPeak}</p>
                 </li>
                 <li>
                     <p class="${blockName}__specs-key">${LABELS.peakPowerRpm}</p>
-                    <p class="${blockName}__specs-value">1,200 - 1,800 ${LABELS.rpmUnit}</p>
+                    <p class="${blockName}__specs-value">${rpmPowerPeak}</p>
                 </li>
                 <li>
                     <p class="${blockName}__specs-key">${LABELS.peakTorque}</p>
-                    <p class="${blockName}__specs-value">${peaks[1]} ${LABELS.torqueUnit}</p>
+                    <p class="${blockName}__specs-value">${torquePeak}</p>
                 </li>
                 <li>
                     <p class="${blockName}__specs-key">${LABELS.peakTorqueRpm}</p>
-                    <p class="${blockName}__specs-value">900 - 1,300 ${LABELS.rpmUnit}</p>
+                    <p class="${blockName}__specs-value">${rpmTorquePeak}</p>
                 </li>
             </ul>
         </div>`);
