@@ -45,12 +45,12 @@ export async function createEnginePerformanceChart(entry, container, LABELS) {
     const theme = getThemeFromCSS(container);
 
     const { echarts } = window;
-    let myChart = echarts.getInstanceByDom(container);
-    if (!myChart) {
-        myChart = echarts.init(container);
+    let engineChart = echarts.getInstanceByDom(container);
+    if (!engineChart) {
+        engineChart = echarts.init(container);
 
         const resizeObserver = new ResizeObserver(() => {
-            myChart.resize();
+            engineChart.resize();
         });
         resizeObserver.observe(container);
     }
@@ -221,7 +221,7 @@ export async function createEnginePerformanceChart(entry, container, LABELS) {
         ],
     };
 
-    myChart.setOption(option);
+    engineChart.setOption(option);
 
     return container;
 }
