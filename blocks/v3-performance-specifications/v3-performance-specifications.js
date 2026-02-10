@@ -6,8 +6,9 @@ const blockName = 'v3-performance-specifications';
 const docRange = document.createRange();
 let engineData;
 let activeRatings;
+let blockIdentifier = 1;
 
-// TODO get all from placeholders
+// TODO get all these values from placeholders in next task since some might be still modified.
 const LABELS = {
     power: 'POWER',
     torque: 'TORQUE',
@@ -25,21 +26,21 @@ const renderDropdowns = (data) => {
     activeRatings = data[0].rating.split('-');
 
     const dropdowns = `
-        <div id='hp-dropdown' class="${blockName}__dropdown">
-            <label for="horsepower">${LABELS.power}</label>
-            <select name="" id="horsepower">
-                <option value="405">405 ${LABELS.powerUnit}</option>
-                <option value="425">425 ${LABELS.powerUnit}</option>
+        <div data-id='hp-dropdown-${blockIdentifier}' class='${blockName}__dropdown'>
+            <label for='horsepower'>${LABELS.power}</label>
+            <select name='' id='horsepower'>
+                <option value='405'>405 ${LABELS.powerUnit}</option>
+                <option value='425'>425 ${LABELS.powerUnit}</option>
             </select>
         </div>         
-        <div id='torque-dropdown' class="${blockName}__dropdown">
-            <label for="torque">${LABELS.torque}</label>
-            <select name="" id="torque">
-                <option value="1450">1450 ${LABELS.torqueUnit}</option>
-                <option value="1650">1650 ${LABELS.torqueUnit}</option>
-                <option value="1550">1550 ${LABELS.torqueUnit}</option>
-                <option value="1750">1750 ${LABELS.torqueUnit}</option>
-                <option value="1650">1650 ${LABELS.torqueUnit}</option>
+        <div data-id='torque-dropdown-${blockIdentifier}' class='${blockName}__dropdown'>
+            <label for='torque'>${LABELS.torque}</label>
+            <select name='' id='torque'>
+                <option value='1450'>1450 ${LABELS.torqueUnit}</option>
+                <option value='1650'>1650 ${LABELS.torqueUnit}</option>
+                <option value='1550'>1550 ${LABELS.torqueUnit}</option>
+                <option value='1750'>1750 ${LABELS.torqueUnit}</option>
+                <option value='1650'>1650 ${LABELS.torqueUnit}</option>
             </select>
         </div>`;
 
@@ -58,7 +59,7 @@ const getSpecificEngineData = (ratings) => {
     const selectedEngine = engineData.find((item) => item.rating === searchRating);
 
     if (!selectedEngine) {
-        console.warn(`Performance Specifications: No match found for "${searchRating}". Falling back to default.`);
+        console.warn(`Performance Specifications: No match found for '${searchRating}'. Falling back to default.`);
         return engineData[0];
     }
 
@@ -101,23 +102,23 @@ const getSpecs = (data) => {
     const rpmTorquePeak = `${rpmPeaks[2]} - ${rpmPeaks[3]} ${LABELS.rpmUnit}`;
 
     const specsSection = docRange.createContextualFragment(`
-        <div class="${blockName}__specs">
+        <div class='${blockName}__specs'>
             <ul>
                 <li>
-                    <p class="${blockName}__specs-key">${LABELS.peakPower}</p>
-                    <p class="${blockName}__specs-value">${powerPeak}</p>
+                    <p class='${blockName}__specs-key'>${LABELS.peakPower}</p>
+                    <p class='${blockName}__specs-value'>${powerPeak}</p>
                 </li>
                 <li>
-                    <p class="${blockName}__specs-key">${LABELS.peakPowerRpm}</p>
-                    <p class="${blockName}__specs-value">${rpmPowerPeak}</p>
+                    <p class='${blockName}__specs-key'>${LABELS.peakPowerRpm}</p>
+                    <p class='${blockName}__specs-value'>${rpmPowerPeak}</p>
                 </li>
                 <li>
-                    <p class="${blockName}__specs-key">${LABELS.peakTorque}</p>
-                    <p class="${blockName}__specs-value">${torquePeak}</p>
+                    <p class='${blockName}__specs-key'>${LABELS.peakTorque}</p>
+                    <p class='${blockName}__specs-value'>${torquePeak}</p>
                 </li>
                 <li>
-                    <p class="${blockName}__specs-key">${LABELS.peakTorqueRpm}</p>
-                    <p class="${blockName}__specs-value">${rpmTorquePeak}</p>
+                    <p class='${blockName}__specs-key'>${LABELS.peakTorqueRpm}</p>
+                    <p class='${blockName}__specs-value'>${rpmTorquePeak}</p>
                 </li>
             </ul>
         </div>`);
@@ -206,17 +207,17 @@ export default async function decorate(block) {
 
     const specsFragment = docRange.createContextualFragment(`
     ${title ? `
-        <div class="${blockName}__title-section">
-            <h4 class="${blockName}__title">${title}</h4>
+        <div class='${blockName}__title-section'>
+            <h4 class='${blockName}__title'>${title}</h4>
         </div>`
             : ''}   
-      <div class="${blockName}__dropdown-section">
+      <div class='${blockName}__dropdown-section'>
           ${renderDropdowns(engineData)}
       </div>
     
-      <div class="${blockName}__chart-and-specs-section">
-        <div class="${blockName}__chart-section"></div>
-        <div class="${blockName}__specs-section"></div>
+      <div class='${blockName}__chart-and-specs-section'>
+        <div class='${blockName}__chart-section'></div>
+        <div class='${blockName}__specs-section'></div>
       </div>
     
     `);
@@ -226,8 +227,9 @@ export default async function decorate(block) {
     block.innerHTML = '';
     block.append(specsWrapper);
 
-    block.querySelector('#hp-dropdown').addEventListener('change', () => updateChartAndSpecs(block));
-    block.querySelector('#torque-dropdown').addEventListener('change', () => updateChartAndSpecs(block));
+    block.querySelector(`[data-id='hp-dropdown-${blockIdentifier}']`).addEventListener('change', () => updateChartAndSpecs(block));
+    block.querySelector(`[data-id='torque-dropdown-${blockIdentifier}']`).addEventListener('change', () => updateChartAndSpecs(block));
+    blockIdentifier++;
 
     updateChartAndSpecs(block);
 }
