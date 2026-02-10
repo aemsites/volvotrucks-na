@@ -1555,9 +1555,14 @@ $.fn.showPin = function (pin) {
 
 // initial dealers list
 $.fn.tmpPins = function (tmpPinList) {
+  const pinCount = tmpPinList.length;
+  let pinsToShow = 0;
   var pinIndex = 1;
   var nearbyHtml = $('.nearby-pins').empty();
-  tmpPinList.forEach(async function (pin) {
+  function createPinsLoop(startPoint) {
+    pinsToShow += 5;
+    const PinListToShowOnSideBar = tmpPinList.slice(startPoint, pinsToShow);
+    PinListToShowOnSideBar.forEach(async function (pin) {
     if (!$.fn.showPin(pin)) {
       return true;
     }
@@ -1787,6 +1792,24 @@ $.fn.tmpPins = function (tmpPinList) {
     }).appendTo(nearbyHtml);
 
   });
+  };
+
+  createPinsLoop(0);
+
+  // Ensure the load more button is rebound to the current scope: remove existing and recreate
+  $('#loadMorePinsBtn').remove();
+  $("<button/>", {
+    text: "View More",
+    class: "nearby-pins-load-more",
+    id: "loadMorePinsBtn",
+
+    click: function () {
+      createPinsLoop(pinsToShow);
+      if (pinsToShow >= pinCount) {
+        $(this).remove();
+      }
+    }
+  }).appendTo(nearbyHtml.parent());
 };
 // Creates pin result item
 $.fn.filterNearbyPins = function () {

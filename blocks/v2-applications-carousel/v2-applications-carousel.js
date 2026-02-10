@@ -1,4 +1,4 @@
-import { createElement, createResponsivePicture, unwrapDivs, debounce } from '../../scripts/common.js';
+import { createElement, createResponsivePicture, unwrapDivs, debounce, decorateIcons } from '../../scripts/common.js';
 
 const blockName = 'v2-applications-carousel';
 
@@ -286,6 +286,7 @@ export default async function decorate(block) {
   unwrapDivs(block);
   updateInpageNavHeight();
   initializeCarouselScroll();
+  decorateIcons(block);
   window.addEventListener(
     'resize',
     debounce(() => {
