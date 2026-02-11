@@ -26,14 +26,14 @@ const renderDropdowns = (data) => {
     activeRatings = data[0].rating.split('-');
 
     const dropdowns = `
-        <div data-uuid='hp-dropdown-${uuid}' class='${blockName}__dropdown'>
+        <div class='${blockName}__power-dropdown'>
             <label for='horsepower'>${LABELS.power}</label>
             <select name='' id='horsepower'>
                 <option value='405'>405 ${LABELS.powerUnit}</option>
                 <option value='425'>425 ${LABELS.powerUnit}</option>
             </select>
         </div>         
-        <div data-uuid='torque-dropdown-${uuid}' class='${blockName}__dropdown'>
+        <div class='${blockName}__torque-dropdown'>
             <label for='torque'>${LABELS.torque}</label>
             <select name='' id='torque'>
                 <option value='1450'>1450 ${LABELS.torqueUnit}</option>
@@ -211,7 +211,7 @@ export default async function decorate(block) {
             <h4 class='${blockName}__title'>${title}</h4>
         </div>`
             : ''}   
-      <div class='${blockName}__dropdown-section'>
+      <div data-uuid="dropdown-${uuid}" class='${blockName}__dropdown-section'>
           ${renderDropdowns(engineData)}
       </div>
     
@@ -227,8 +227,10 @@ export default async function decorate(block) {
     block.innerHTML = '';
     block.append(specsWrapper);
 
-    block.querySelector(`[data-uuid='hp-dropdown-${uuid}']`).addEventListener('change', () => updateChartAndSpecs(block));
-    block.querySelector(`[data-uuid='torque-dropdown-${uuid}']`).addEventListener('change', () => updateChartAndSpecs(block));
+    block.querySelector(`[data-uuid='dropdown-${uuid}'] .${blockName}__power-dropdown`)
+    .addEventListener('change', () => updateChartAndSpecs(block));
+    block.querySelector(`[data-uuid='dropdown-${uuid}'] .${blockName}__torque-dropdown`)
+    .addEventListener('change', () => updateChartAndSpecs(block));
 
     updateChartAndSpecs(block);
 }
