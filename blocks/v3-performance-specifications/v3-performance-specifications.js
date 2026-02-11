@@ -6,7 +6,7 @@ const blockName = 'v3-performance-specifications';
 const docRange = document.createRange();
 let engineData;
 let activeRatings;
-let blockIdentifier = 1;
+const uuid = self.crypto.randomUUID();
 
 // TODO get all these values from placeholders in next task since some might be still modified.
 const LABELS = {
@@ -26,14 +26,14 @@ const renderDropdowns = (data) => {
     activeRatings = data[0].rating.split('-');
 
     const dropdowns = `
-        <div data-id='hp-dropdown-${blockIdentifier}' class='${blockName}__dropdown'>
+        <div data-uuid='hp-dropdown-${uuid}' class='${blockName}__dropdown'>
             <label for='horsepower'>${LABELS.power}</label>
             <select name='' id='horsepower'>
                 <option value='405'>405 ${LABELS.powerUnit}</option>
                 <option value='425'>425 ${LABELS.powerUnit}</option>
             </select>
         </div>         
-        <div data-id='torque-dropdown-${blockIdentifier}' class='${blockName}__dropdown'>
+        <div data-uuid='torque-dropdown-${uuid}' class='${blockName}__dropdown'>
             <label for='torque'>${LABELS.torque}</label>
             <select name='' id='torque'>
                 <option value='1450'>1450 ${LABELS.torqueUnit}</option>
@@ -227,9 +227,8 @@ export default async function decorate(block) {
     block.innerHTML = '';
     block.append(specsWrapper);
 
-    block.querySelector(`[data-id='hp-dropdown-${blockIdentifier}']`).addEventListener('change', () => updateChartAndSpecs(block));
-    block.querySelector(`[data-id='torque-dropdown-${blockIdentifier}']`).addEventListener('change', () => updateChartAndSpecs(block));
-    blockIdentifier++;
+    block.querySelector(`[data-uuid='hp-dropdown-${uuid}']`).addEventListener('change', () => updateChartAndSpecs(block));
+    block.querySelector(`[data-uuid='torque-dropdown-${uuid}']`).addEventListener('change', () => updateChartAndSpecs(block));
 
     updateChartAndSpecs(block);
 }
