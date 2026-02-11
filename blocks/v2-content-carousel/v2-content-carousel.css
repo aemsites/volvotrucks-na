@@ -213,6 +213,18 @@ ul.v2-content-carousel__arrowcontrols {
   padding-bottom: 32px;
 }
 
+.v2-content-carousel.cards-interactive .v2-content-carousel__media-item {
+  position: relative;
+}
+
+.v2-content-carousel.cards-interactive .v2-content-carousel__media-item a {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  position: absolute;
+  top: 0;
+}
+
 .v2-content-carousel.interactive .icon-plus {
   background: var(--c-white);
   color: var(--c-main-black);
