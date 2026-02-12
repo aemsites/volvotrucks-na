@@ -18,21 +18,6 @@ www.volvotrucks.us
 - Live: https://main--volvotrucks-mx--volvogroup.aem.live/
 
 
-## Installation
-
-```sh
-npm i
-```
-
-
-## Local Development
-
-1. Install the [Helix CLI](https://github.com/adobe/helix-cli): `npm install -g @adobe/aem-cli`
-2. Start the AEM proxy: `aem up` (opens your browser at http://localhost:3000)
-3. Run `npm run watch` to start the local development build with automatic rebuilding and sourcemaps enabled.
-4. Open the `{repo}` directory in your favorite IDE and start coding :)
-
-
 ## Volvo Design System Setup
 
 1. Configure your local environment to be able to install the Volvo Design System packages. Follow the guide [here](https://developer.designsystem.volvogroup.com/?path=/docs/web-getting-started-installation--docs).
@@ -44,6 +29,21 @@ To follow the “Copy the token and base64 encode the string” step from the in
 echo -n YOUR_PAT_HERE | base64
 ```
 Use the resulting string as the value for the `_password` field in your `.npmrc`.
+
+
+## Installation
+
+```sh
+npm i
+```
+
+
+## Local Development
+
+1. Install the [Helix CLI](https://github.com/adobe/helix-cli): `npm install -g @adobe/aem-cli`
+2. Start the AEM proxy: `aem up` (opens your browser at http://localhost:3000)
+3. Run `npm run watch` in a different terminal window/tab to start the local development build with automatic rebuilding and sourcemaps enabled.
+4. Open the `{repo}` directory in your favorite IDE and start coding :)
 
 
 ## Debugging Production Code Using Local Sourcemaps
