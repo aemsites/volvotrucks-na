@@ -83,8 +83,8 @@ function interceptRequest(page, customSectionMetadataValues = null) {
  * ============================================================
  */
 
-test.describe('V2 Hero Reveal - component', () => {
-  test.describe('Countdown / review content', () => {
+test.describe('V2 Hero Reveal', () => {
+  test.describe('Content review', () => {
     /**
      * Runs before each test in this describe block.
      * - Freezes time so countdown logic is deterministic
@@ -111,7 +111,7 @@ test.describe('V2 Hero Reveal - component', () => {
      * Countdown value tests
      * ============================================================
      */
-    test.describe('Check hero timer values on page (strings / times values / etc)', () => {
+    test.describe('Values on page', () => {
       test('Check strings days / hours / minutes / seconds', async ({ page }) => {
         const labels = page.locator('.v2-hero-reveal-wrapper .v2-hero__countdown-label');
             
@@ -146,7 +146,7 @@ test.describe('V2 Hero Reveal - component', () => {
      * Pre-reveal and post-reveal content tests
      * ============================================================
      */
-    test.describe('Should appear previous and revealed content', () => {
+    test.describe('Previous and Revealed content', () => {
       test('should have the PRE reveal content', async ({ page }) => {
         const heading = page.locator('.v2-hero-reveal-wrapper .v2-hero__title');
         const link = page.locator('.v2-hero-reveal-wrapper .v2-hero a');
