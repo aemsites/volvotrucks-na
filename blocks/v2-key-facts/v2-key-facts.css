@@ -78,6 +78,10 @@
   margin-bottom: 0;
 }
 
+.v2-key-facts__key-title > span.small {
+  display: block;
+}
+
 .v2-key-facts .v2-key-facts__row--with-text .v2-key-facts__key-subtitle {
   font-size: var(--f-subtitle-2-font-size);
   letter-spacing: var(--f-subtitle-2-letter-spacing);
