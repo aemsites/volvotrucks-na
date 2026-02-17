@@ -79,7 +79,7 @@
 }
 
 .v2-key-facts__key-title > span.small {
-  display: block;
+  display: inline-block;
 }
 
 .v2-key-facts .v2-key-facts__row--with-text .v2-key-facts__key-subtitle {
