@@ -287,6 +287,7 @@ then we change it for the next section item in main */
     padding: 0;
     display: flex;
     align-items: center;
+    transform: translateY(0);
 
     /* fix overlap issue for focus state of CTA */
     background-color: transparent;
