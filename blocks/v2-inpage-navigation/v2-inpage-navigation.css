@@ -332,4 +332,8 @@ then we change it for the next section item in main */
   .redesign-v2 a.button.v2-inpage-navigation__marketing:any-link {
     padding: 10px 20px;
   }
+
+  .v2-inpage-navigation__cta-floating {
+    display: none;
+  }
 }
