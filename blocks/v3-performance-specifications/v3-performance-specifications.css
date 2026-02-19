@@ -39,6 +39,8 @@
 }
 
 .v3-performance-specifications__specs-section ul {
+  --specs-gap: 32px;
+
   background-color: var(--c-grey-50);
   display: flex;
   flex-wrap: wrap;
@@ -59,11 +61,11 @@
 }
 
 .v3-performance-specifications__specs-section li:nth-child(odd) {
-  width: calc(40% - 16px);
+  width: calc(40% - var(--specs-gap) / 2);
 }
 
 .v3-performance-specifications__specs-section li:nth-child(even) {
-  width: calc(60% - 16px);
+  width: calc(60% - var(--specs-gap) / 2);
 }
 
 .v3-performance-specifications__specs-section .v3-performance-specifications__specs-key {
@@ -127,6 +129,8 @@
   }
 
   .v3-performance-specifications__specs-section ul {
+    --specs-gap: 40px;
+
     flex-direction: column;
     padding: 40px;
   }

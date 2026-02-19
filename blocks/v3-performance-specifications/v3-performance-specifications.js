@@ -29,7 +29,7 @@ const LABELS = {
  * @param {string} data[].rating - The hyphen-separated rating (e.g., "405-1450").
  * @returns {Array<Object>} An array of grouped engine objects.
  */
-const transformEngineData = (data) => {
+const groupDataByPower = (data) => {
     const grouped = data.reduce((acc, item) => {
         // Split "405-1450" into [405, 1450]
         const [power, torque] = item.rating.split('-').map(Number);
@@ -53,11 +53,13 @@ const transformEngineData = (data) => {
  * @param {string} data[].rating - Hyphenated rating string (e.g. "405-1450").
  * @returns {string} The HTML template literal containing the vcdk-dropdown components.
  */
-const renderDropdownPair = (data) => { 
-    const initialValues = data[0].rating.split('-');
-    activeRatings = initialValues;
+const renderDropdownPair = (data, initialValues) => {
+    if (!data || data.length === 0) {
+        console.warn('No engine data provided');
+        return;
+    }
 
-    const transformedEngineData = transformEngineData(data);
+    const groupedByPower = groupDataByPower(data);
 
     return `
         <vcdk-dropdown
@@ -66,7 +68,7 @@ const renderDropdownPair = (data) => {
             label='${LABELS.power}'
             floatingLabel='true' 
         >
-            ${transformedEngineData.map((item, idx) => `
+            ${groupedByPower.map((item, idx) => `
                 <vcdk-dropdown-option
                     class='dropdown-option'
                     value='${item.power}' ${idx === 0 ? 'selected' : ''}
@@ -82,11 +84,12 @@ const renderDropdownPair = (data) => {
             label='${LABELS.torque}'
             floatingLabel='true'
         >
-            ${transformedEngineData.flatMap(item =>
+            ${groupedByPower.flatMap(item =>
                 item.torque.map((torque, i) => `
                     <vcdk-dropdown-option 
                         class='dropdown-option'
-                        ${item.power !== parseInt(activeRatings[0]) ? 'hidden' : ''}
+                        data-power="${item.power}"
+                        ${item.power !== parseInt(initialValues[0]) ? 'hidden' : ''}
                         value='${item.power}-${torque}' ${i === 0 ? 'selected' : ''}
                     >
                         ${torque} ${LABELS.torqueUnit}
@@ -227,8 +230,7 @@ const updateTorqueOptions = (dropdown, powerValue) => {
     const options = dropdown.querySelectorAll('.dropdown-option');
     
     options.forEach(option => {
-        // Assumes value format "power-torque" (e.g., "405-1450")
-        const relatedPower = option.value.split('-')[0];
+        const relatedPower = option.dataset.power;
         
         if (relatedPower === powerValue) {
             validOptions.push(option.value);
@@ -280,6 +282,8 @@ export default async function decorate(block) {
     engineData = await getAllEngineData(link);
     if (!engineData) { throw new Error('No data retrieved'); }
 
+    activeRatings = engineData[0].rating.split('-');
+
     const specsWrapper = createElement('div', {
         classes: `${blockName}__chart-container`,
         props: { id: blockConfig.rating },
@@ -292,7 +296,7 @@ export default async function decorate(block) {
         </div>`
             : ''}   
       <div data-uuid='dropdown-${uuid}' class='${blockName}__dropdown-section'>
-          ${renderDropdownPair(engineData)}
+          ${renderDropdownPair(engineData, activeRatings)}
       </div>
     
       <div class='${blockName}__chart-and-specs-section'>
