@@ -30,7 +30,7 @@ const LABELS = {
  * @returns {Array<Object>} An array of grouped engine objects.
  */
 const groupDataByPower = (data) => {
-    const grouped = data.reduce((acc, item) => {
+    const dataGroupedByPower = data.reduce((acc, item) => {
         // Split "405-1450" into [405, 1450]
         const [power, torque] = item.rating.split('-').map(Number);
 
@@ -42,7 +42,7 @@ const groupDataByPower = (data) => {
         return acc;
     }, {});
 
-    return Object.values(grouped);
+    return Object.values(dataGroupedByPower);
 };
 
 /**
