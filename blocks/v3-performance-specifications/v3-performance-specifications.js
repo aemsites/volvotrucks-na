@@ -292,7 +292,7 @@ export default async function decorate(block) {
     const specsFragment = docRange.createContextualFragment(`
     ${title ? `
         <div class='${blockName}__title-section'>
-            <h4 class='${blockName}__title'>${title}</h4>
+            <h2 class='${blockName}__title'>${title}</h2>
         </div>`
             : ''}   
       <div data-uuid='dropdown-${uuid}' class='${blockName}__dropdown-section'>

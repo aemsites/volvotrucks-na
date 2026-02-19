@@ -13,7 +13,9 @@
 }
 
 .v3-performance-specifications__title-section .v3-performance-specifications__title {
-  font-size: var(--heading-font-size-xxl);
+  font-size: var(--f-heading-4-font-size);
+  letter-spacing: var(--f-heading-4-letter-spacing);
+  line-height: var(--f-heading-4-line-height);
   color: var(--text-color);
   text-align: center;
   text-transform: unset;
@@ -119,7 +121,13 @@
   .v3-performance-specifications {
     padding-bottom: 32px;
   }
-  
+
+  .v3-performance-specifications__title-section .v3-performance-specifications__title {
+    font-size: var(--f-heading-3-font-size);
+    letter-spacing: var(--f-heading-3-letter-spacing);
+    line-height: var(--f-heading-3-line-height);
+  }
+
   .v3-performance-specifications__dropdown-section .dropdown {
     max-width: 30%;
   }
