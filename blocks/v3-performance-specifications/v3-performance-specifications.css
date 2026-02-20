@@ -3,7 +3,7 @@
   --chart-torque: var(--c-grey-900);
   --chart-grid: var(--c-grey-1);
   --chart-text: var(--c-grey-4);
-  --chart-font: 'VolvoNovum', arial, sans-serif;
+  --chart-font: var(--ff-volvo-novum);
 }
 
 .v3-performance-specifications__chart-container {
