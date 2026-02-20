@@ -1,19 +1,32 @@
 .v3-performance-specifications {
-    --chart-power: var(--c-cta-blue-hover);
-    --chart-torque: var(--c-grey-900);
-    --chart-grid: var(--c-grey-1);
-    --chart-text: var(--c-grey-4);
-    --chart-font: 'VolvoNovum', arial, sans-serif;
+  --chart-power: var(--c-cta-blue-hover);
+  --chart-torque: var(--c-grey-900);
+  --chart-grid: var(--c-grey-1);
+  --chart-text: var(--c-grey-4);
+  --chart-font: var(--ff-volvo-novum);
+}
+
+.v3-performance-specifications__chart-container {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
 }
 
 .v3-performance-specifications__title-section .v3-performance-specifications__title {
-  font-size: var(--heading-font-size-xxl);
+  font-size: var(--f-heading-4-font-size);
+  letter-spacing: var(--f-heading-4-letter-spacing);
+  line-height: var(--f-heading-4-line-height);
+  color: var(--text-color);
+  text-align: center;
+  text-transform: unset;
+  padding-top: 32px;
+  margin-bottom: 0;
 }
 
 .v3-performance-specifications__dropdown-section {
   display: flex;
-  justify-content: center;
-  gap: 40px;
+  flex-direction: column;
+  gap: 32px;
 }
 
 .v3-performance-specifications__chart-and-specs-section {
@@ -28,40 +41,106 @@
 }
 
 .v3-performance-specifications__specs-section ul {
+  --specs-gap: 32px;
+
   background-color: var(--c-grey-50);
   display: flex;
   flex-wrap: wrap;
   border-radius: 8px;
   padding: 24px;
-  gap: 40px;
+  gap: 32px;
+  margin: 0;
 }
 
 .v3-performance-specifications__specs-section p,
 .v3-performance-specifications__specs-section li {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
   list-style: none;
   margin: 0;
   padding: 0;
 }
 
-.v3-performance-specifications__specs-section li {
-  width: calc(50% - 20px);
+.v3-performance-specifications__specs-section li:nth-child(odd) {
+  width: calc(40% - var(--specs-gap) / 2);
+}
+
+.v3-performance-specifications__specs-section li:nth-child(even) {
+  width: calc(60% - var(--specs-gap) / 2);
 }
 
 .v3-performance-specifications__specs-section .v3-performance-specifications__specs-key {
   font-family: var(--ff-volvo-novum);
   color: var(--c-grey-4);
-  font-size: var(--body-font-size-xs);
+  font-size: var(--body-font-size-xxs);
 }
 
 .v3-performance-specifications__specs-section .v3-performance-specifications__specs-value {
   font-family: var(--ff-volvo-novum-medium);
   color: var(--c-cta-blue-default);
-  font-size: var(--body-font-size-s);
+  font-size: var(--body-font-size-xs);
+}
+
+@media (min-width: 744px) {
+  .v3-performance-specifications__title-section .v3-performance-specifications__title {
+    padding-top: 72px;
+    padding-bottom: 40px;
+  }
+
+  .v3-performance-specifications__dropdown-section {
+    flex-direction: row;
+    justify-content: center;
+  }
+
+  .v3-performance-specifications__dropdown-section .dropdown {
+    width: 100%;
+  }
+
+  .v3-performance-specifications__specs-section ul {
+    flex-wrap: nowrap;
+    justify-content: space-evenly;
+    padding: 32px;
+  }
+
+  .v3-performance-specifications__specs-section li:nth-child(odd),
+  .v3-performance-specifications__specs-section li:nth-child(even) {
+    width: unset;
+  }
+
+  .v3-performance-specifications__specs-section .v3-performance-specifications__specs-key {
+    font-size: var(--body-font-size-xs);
+  }
+
+  .v3-performance-specifications__specs-section .v3-performance-specifications__specs-value {
+    font-size: var(--body-font-size-s);
+  }
 }
 
 @media (min-width: 990px) {
+  .v3-performance-specifications {
+    padding-bottom: 32px;
+  }
+
+  .v3-performance-specifications__title-section .v3-performance-specifications__title {
+    font-size: var(--f-heading-3-font-size);
+    letter-spacing: var(--f-heading-3-letter-spacing);
+    line-height: var(--f-heading-3-line-height);
+  }
+
+  .v3-performance-specifications__dropdown-section .dropdown {
+    max-width: 30%;
+  }
+
   .v3-performance-specifications__chart-and-specs-section {
     flex-direction: row;
+  }
+
+  .v3-performance-specifications__specs-section ul {
+    --specs-gap: 40px;
+
+    flex-direction: column;
+    padding: 40px;
   }
 
   .v3-performance-specifications__chart-section {
@@ -70,10 +149,6 @@
 
   .v3-performance-specifications__specs-section {
     width: 20%;
-  }
-
-  .v3-performance-specifications__specs-section ul {
-    flex-direction: column;
   }
 
   .v3-performance-specifications__specs-section .v3-performance-specifications__specs-key,
