@@ -178,7 +178,7 @@ export const fetchMagazineArticles = async ({
       query: magazineSearchQuery(),
       variables,
     });
-    return rawData?.data?.edssearch || null;
+    return rawData?.data?.edsrecommend || null;
   } catch (error) {
     console.error('Error fetching magazine articles:', error);
     return null;

@@ -8,6 +8,8 @@ const PAGE_SIZE = 10;
 let paginationCssOnce;
 const pageDataCache = new Map();
 
+const getSortForParams = (params = {}) => (params?.q ? 'BEST_MATCH' : 'PUBLISH_DATE_DESC');
+
 const parsePressRelease = (item) => {
   const isImageLink = (link) => `${link}`.split('?')[0].match(/\.(jpeg|jpg|gif|png|svg|bmp|webp)$/) !== null;
 
@@ -102,7 +104,7 @@ const makePageLoader =
     }
     const { items = [] } = await fetchPressReleases({
       ...baseParams,
-      sort: 'PUBLISH_DATE_DESC',
+      sort: getSortForParams(baseParams),
       limit: PAGE_SIZE,
       offset: pageIndex * PAGE_SIZE,
     });
@@ -120,7 +122,7 @@ const makePageLoader =
 const fetchCountAndPrimeCache = async (baseParams = {}) => {
   const first = await fetchPressReleases({
     ...baseParams,
-    sort: 'PUBLISH_DATE_DESC',
+    sort: getSortForParams(baseParams),
     limit: PAGE_SIZE,
     offset: 0,
   });
