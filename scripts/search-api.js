@@ -84,10 +84,9 @@ query EdsWordPhraseSuggest($term: String!, $tenant: String!, $language: EdsLocal
 `;
 
 export const magazineSearchQuery = () => `
-query Edssearch($tenant: String!, $language: EdsLocaleEnum!, $q: String, $limit: Int, $offset: Int,
-$category: [String], $facets: [EdsFieldEnum], $article: ArticleFilter, $sort: EdsSortOptionsEnum) {
-  edssearch(tenant: $tenant, language: $language, q: $q, limit: $limit, offset: $offset,
-  category: $category, facets: $facets, article: $article, sort: $sort) {
+query Edsrecommend($tenant: String!, $language: EdsLocaleEnum!, $limit: Int, $offset: Int, $category: String, $article: ArticleFilter, $sort: EdsSortOptionsEnum, $facets: [EdsFieldEnum]) {
+  edsrecommend(tenant: $tenant, language: $language, limit: $limit, offset: $offset, category: $category, article: $article, sort: $sort, facets: $facets) {
+
     count
     items {
       uuid

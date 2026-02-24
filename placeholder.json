@@ -390,6 +390,42 @@
     {
       "Key": "v2_custom_form:invalid_form_holiday_label",
       "Text": "The selected date falls on a holiday. Please choose a different date."
+    },
+    {
+      "Key": "v3_performance_specifications:power",
+      "Text": "POWER"
+    },
+    {
+      "Key": "v3_performance_specifications:torque",
+      "Text": "TORQUE"
+    },
+    {
+      "Key": "v3_performance_specifications:power_unit",
+      "Text": "HP"
+    },
+    {
+      "Key": "v3_performance_specifications:torque_unit",
+      "Text": "LB-FT"
+    },
+    {
+      "Key": "v3_performance_specifications:rpm_unit",
+      "Text": "RPM"
+    },
+    {
+      "Key": "v3_performance_specifications:peak_power",
+      "Text": "Peak Power"
+    },
+    {
+      "Key": "v3_performance_specifications:peak_power_rpm",
+      "Text": "Peak Power RPM"
+    },
+    {
+      "Key": "v3_performance_specifications:peak_torque",
+      "Text": "Peak Torque"
+    },
+    {
+      "Key": "v3_performance_specifications:peak_torque_rpm",
+      "Text": "Peak Torque RPM"
     }
   ],
   ":type": "sheet"
