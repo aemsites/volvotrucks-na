@@ -547,7 +547,6 @@ main .section.dealer-locator-container > div {
     flex-wrap: wrap;
     row-gap: 8px;
     column-gap: 4px;
-    margin-left: 4px;
   }
 }
 
