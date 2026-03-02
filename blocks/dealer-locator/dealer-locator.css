@@ -485,7 +485,6 @@ main .section.dealer-locator-container > div {
   .dealer-locator .nearby-pins article.teaser .teaser-bottom .right .direction,
   .dealer-locator .nearby-pins article.teaser .teaser-bottom .right .more {
     width: 56px;
-    margin-left: 4px;
   }
 
   .dealer-locator .nearby-pins article.teaser .teaser-bottom .left .call:hover,
@@ -547,6 +546,8 @@ main .section.dealer-locator-container > div {
   .dealer-locator .nearby-select article.teaser .teaser-bottom {
     flex-wrap: wrap;
     row-gap: 8px;
+    column-gap: 4px;
+    margin-left: 4px;
   }
 }
 
