@@ -43,16 +43,14 @@ const DEFAULT_PLACEHOLDER_LOCALE = 'en';
  * Resolves the localized text for a single placeholder row.
  *
  * Fallback order:
- * 1. Exact locale match (e.g. "fr-ca")
- * 2. Base language match (e.g. "fr")
- * 3. Language variant match (e.g. any "fr-*", chosen deterministically)
+ * 1. Exact locale (e.g. "fr-ca")
+ * 2. Base language (e.g. "fr")
+ * 3. Any matching language variant (e.g. "fr-*", deterministic)
  * 4. Default locale (DEFAULT_PLACEHOLDER_LOCALE)
  *
- * Returns an empty string if no valid value is found.
- *
- * @param {Object} placeholderRow - A row from the placeholder payload containing locale columns.
- * @param {string} pageLocale - Current page locale (e.g. "fr-ca").
- * @returns {string} The resolved localized text, or an empty string.
+ * @param {Object} placeholderRow
+ * @param {string} pageLocale
+ * @returns {string}
  */
 export function resolveTextForLocale(placeholderRow, pageLocale) {
   if (!placeholderRow || typeof placeholderRow !== 'object') {
@@ -66,14 +64,7 @@ export function resolveTextForLocale(placeholderRow, pageLocale) {
     if (typeof value !== 'string') {
       return '';
     }
-
-    const trimmed = value.trim();
-
-    if (!trimmed) {
-      return '';
-    }
-
-    return value;
+    return value.trim() || '';
   };
 
   const findBestVariantColumnKey = (row, languageVariantPrefix) => {
@@ -82,11 +73,9 @@ export function resolveTextForLocale(placeholderRow, pageLocale) {
 
     for (const columnKey of Object.keys(row)) {
       const columnKeyNormalized = String(columnKey).toLowerCase();
-
       if (!columnKeyNormalized.startsWith(languageVariantPrefix)) {
         continue;
       }
-
       if (!bestVariantColumnKey || columnKeyNormalized < bestVariantColumnKeyNormalized) {
         bestVariantColumnKey = columnKey;
         bestVariantColumnKeyNormalized = columnKeyNormalized;
@@ -98,46 +87,38 @@ export function resolveTextForLocale(placeholderRow, pageLocale) {
 
   if (pageLocaleNormalized) {
     const exactLocaleText = readText(placeholderRow[pageLocaleNormalized]);
-
     if (exactLocaleText) {
       return exactLocaleText;
     }
   }
 
   if (languageCode) {
-    const languageText = readText(placeholderRow[languageCode]);
-
-    if (languageText) {
-      return languageText;
+    const baseLanguageText = readText(placeholderRow[languageCode]);
+    if (baseLanguageText) {
+      return baseLanguageText;
     }
 
-    const languageVariantPrefix = `${languageCode}-`;
-    const variantColumnKey = findBestVariantColumnKey(placeholderRow, languageVariantPrefix);
-
+    const variantColumnKey = findBestVariantColumnKey(placeholderRow, `${languageCode}-`);
     if (variantColumnKey) {
       const variantText = readText(placeholderRow[variantColumnKey]);
-
       if (variantText) {
         return variantText;
       }
     }
   }
 
-  return readText(placeholderRow[DEFAULT_PLACEHOLDER_LOCALE]) || '';
+  return readText(placeholderRow[DEFAULT_PLACEHOLDER_LOCALE]);
 }
 
 /**
- * Builds a map of placeholder keys to localized text values.
+ * Builds a map of placeholder keys to resolved localized values.
  *
- * Each row in the payload must contain a "Key" (or "key") column and
- * one or more locale columns. Invalid or empty keys are ignored.
- * Rows that do not resolve to a localized value are skipped.
+ * Rows without a valid key or resolved text are ignored.
+ * Duplicate keys overwrite previous values and log a warning.
  *
- * Duplicate keys overwrite previous values and trigger a console warning.
- *
- * @param {Object} placeholdersPayload - The parsed JSON payload containing a "data" array.
- * @param {string} pageLocale - Current page locale used for text resolution.
- * @returns {Map<string, string>} A map of placeholder keys to resolved text.
+ * @param {Object} placeholdersPayload
+ * @param {string} pageLocale
+ * @returns {Map<string, string>}
  */
 export function buildPlaceholdersMap(placeholdersPayload, pageLocale) {
   const dataRows = Array.isArray(placeholdersPayload?.data) ? placeholdersPayload.data : [];
@@ -145,20 +126,17 @@ export function buildPlaceholdersMap(placeholdersPayload, pageLocale) {
 
   for (const dataRow of dataRows) {
     const authoredKey = dataRow?.Key ?? dataRow?.key;
-
     if (authoredKey === undefined || authoredKey === null) {
       continue;
     }
 
     const placeholderKey = String(authoredKey).trim();
-
     if (!placeholderKey) {
       continue;
     }
 
-    const labelText = resolveTextForLocale(dataRow, pageLocale);
-
-    if (!labelText) {
+    const resolvedText = resolveTextForLocale(dataRow, pageLocale);
+    if (!resolvedText) {
       continue;
     }
 
@@ -166,7 +144,7 @@ export function buildPlaceholdersMap(placeholdersPayload, pageLocale) {
       console.warn('[placeholders] Duplicate placeholder key:', placeholderKey);
     }
 
-    placeholdersByKey.set(placeholderKey, labelText);
+    placeholdersByKey.set(placeholderKey, resolvedText);
   }
 
   return placeholdersByKey;
@@ -174,14 +152,9 @@ export function buildPlaceholdersMap(placeholdersPayload, pageLocale) {
 
 /**
  * Loads and caches the placeholders map for the current locale.
+ * Ensures a single in-flight request. On failure, an empty map is stored.
  *
- * Fetches the centralized placeholder file defined by PLACEHOLDERS_URL,
- * resolves localized values, and stores the result in module-level state.
- *
- * Ensures a single in-flight request at a time. On failure, an empty map
- * is stored to prevent repeated network attempts.
- *
- * @returns {Promise<void>} Resolves when placeholders have been loaded.
+ * @returns {Promise<void>}
  */
 export async function getPlaceholders() {
   if (placeholders) {
@@ -204,22 +177,19 @@ export async function getPlaceholders() {
   placeholdersPromise = (async () => {
     try {
       const response = await fetch(placeholdersUrl);
-
       if (!response.ok) {
-        throw new Error(`Failed to fetch placeholders (${response.status})`);
+        throw new Error(`Failed to fetch placeholders (${response.status} ${response.statusText})`);
       }
 
       const placeholdersPayload = await response.json();
       const dataRows = Array.isArray(placeholdersPayload?.data) ? placeholdersPayload.data : [];
 
-      if (!dataRows.length) {
-        console.warn('[placeholders] Placeholder payload has no data rows.');
-      } else {
-        const hasExactLocaleColumn = dataRows.some((dataRow) => {
+      if (dataRows.length) {
+        const hasLocaleColumn = dataRows.some((dataRow) => {
           return dataRow && typeof dataRow === 'object' && pageLocale in dataRow;
         });
 
-        if (!hasExactLocaleColumn) {
+        if (!hasLocaleColumn) {
           console.warn('[placeholders] Locale column missing in placeholder file:', pageLocale);
         }
       }
