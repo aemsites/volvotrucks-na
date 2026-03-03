@@ -154,7 +154,7 @@ export function buildPlaceholdersMap(placeholdersPayload, pageLocale) {
  */
 export async function getPlaceholders() {
   if (placeholders) {
-    return;
+    return Promise.resolve();
   }
 
   if (placeholdersPromise) {
@@ -167,7 +167,7 @@ export async function getPlaceholders() {
   if (!placeholdersUrl) {
     console.error('[placeholders] Missing PLACEHOLDERS_URL.');
     placeholders = new Map();
-    return;
+    return Promise.resolve();
   }
 
   placeholdersPromise = (async () => {
