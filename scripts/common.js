@@ -40,91 +40,193 @@ export const getLanguagePath = () => {
 const DEFAULT_PLACEHOLDER_LOCALE = 'en';
 
 /**
- * Resolve placeholder text for the given locale with fallbacks.
- * Order: exact locale → language → language variant → default.
+ * Resolves the localized text for a single placeholder row.
  *
- * @param {Object} row Placeholder row keyed by locale.
- * @param {string} pageLocale Current page locale (e.g. "fr-ca").
- * @returns {string} Resolved text or empty string.
+ * Fallback order:
+ * 1. Exact locale match (e.g. "fr-ca")
+ * 2. Base language match (e.g. "fr")
+ * 3. Language variant match (e.g. any "fr-*", chosen deterministically)
+ * 4. Default locale (DEFAULT_PLACEHOLDER_LOCALE)
+ *
+ * Returns an empty string if no valid value is found.
+ *
+ * @param {Object} placeholderRow - A row from the placeholder payload containing locale columns.
+ * @param {string} pageLocale - Current page locale (e.g. "fr-ca").
+ * @returns {string} The resolved localized text, or an empty string.
  */
-export function resolveTextForLocale(row, pageLocale) {
-  if (!row) {return '';}
+export function resolveTextForLocale(placeholderRow, pageLocale) {
+  if (!placeholderRow || typeof placeholderRow !== 'object') {
+    return '';
+  }
 
-  const locale = (pageLocale || '').toLowerCase();
-  const language = locale.split('-')[0];
+  const pageLocaleNormalized = String(pageLocale || '').toLowerCase().trim();
+  const languageCode = pageLocaleNormalized ? pageLocaleNormalized.split('-')[0] : '';
 
-  if (row[locale]) {return row[locale];}
-  if (row[language]) {return row[language];}
+  const readText = (value) => {
+    if (typeof value !== 'string') {
+      return '';
+    }
 
-  if (language) {
-    const prefix = `${language}-`;
-    for (const key in row) {
-      if (key.startsWith(prefix) && row[key]) {return row[key];}
+    const trimmed = value.trim();
+
+    if (!trimmed) {
+      return '';
+    }
+
+    return value;
+  };
+
+  const findBestVariantColumnKey = (row, languageVariantPrefix) => {
+    let bestVariantColumnKey = '';
+    let bestVariantColumnKeyNormalized = '';
+
+    for (const columnKey of Object.keys(row)) {
+      const columnKeyNormalized = String(columnKey).toLowerCase();
+
+      if (!columnKeyNormalized.startsWith(languageVariantPrefix)) {
+        continue;
+      }
+
+      if (!bestVariantColumnKey || columnKeyNormalized < bestVariantColumnKeyNormalized) {
+        bestVariantColumnKey = columnKey;
+        bestVariantColumnKeyNormalized = columnKeyNormalized;
+      }
+    }
+
+    return bestVariantColumnKey;
+  };
+
+  if (pageLocaleNormalized) {
+    const exactLocaleText = readText(placeholderRow[pageLocaleNormalized]);
+
+    if (exactLocaleText) {
+      return exactLocaleText;
     }
   }
 
-  return row[DEFAULT_PLACEHOLDER_LOCALE] || '';
-}
+  if (languageCode) {
+    const languageText = readText(placeholderRow[languageCode]);
 
-/**
- * Build a lookup map of placeholder keys to localized text.
- *
- * @param {Object} json Placeholder JSON payload.
- * @param {string} locale Current page locale.
- * @returns {Map<string, string>} Map of placeholder keys to resolved text.
- */
-export function buildPlaceholdersMap(json, locale) {
-  const rows = Array.isArray(json?.data) ? json.data : [];
-  const placeholdersMap = new Map();
+    if (languageText) {
+      return languageText;
+    }
 
-  for (const row of rows) {
-    const key = row?.Key || row?.key;
-    if (!key) {continue;}
+    const languageVariantPrefix = `${languageCode}-`;
+    const variantColumnKey = findBestVariantColumnKey(placeholderRow, languageVariantPrefix);
 
-    const text = resolveTextForLocale(row, locale);
-    if (!text) {continue;}
+    if (variantColumnKey) {
+      const variantText = readText(placeholderRow[variantColumnKey]);
 
-    placeholdersMap.set(key, text);
+      if (variantText) {
+        return variantText;
+      }
+    }
   }
 
-  return placeholdersMap;
+  return readText(placeholderRow[DEFAULT_PLACEHOLDER_LOCALE]) || '';
 }
 
 /**
- * Load and cache placeholders for the current locale.
+ * Builds a map of placeholder keys to localized text values.
  *
- * @returns {Promise<void>}
+ * Each row in the payload must contain a "Key" (or "key") column and
+ * one or more locale columns. Invalid or empty keys are ignored.
+ * Rows that do not resolve to a localized value are skipped.
+ *
+ * Duplicate keys overwrite previous values and trigger a console warning.
+ *
+ * @param {Object} placeholdersPayload - The parsed JSON payload containing a "data" array.
+ * @param {string} pageLocale - Current page locale used for text resolution.
+ * @returns {Map<string, string>} A map of placeholder keys to resolved text.
+ */
+export function buildPlaceholdersMap(placeholdersPayload, pageLocale) {
+  const dataRows = Array.isArray(placeholdersPayload?.data) ? placeholdersPayload.data : [];
+  const placeholdersByKey = new Map();
+
+  for (const dataRow of dataRows) {
+    const authoredKey = dataRow?.Key ?? dataRow?.key;
+
+    if (authoredKey === undefined || authoredKey === null) {
+      continue;
+    }
+
+    const placeholderKey = String(authoredKey).trim();
+
+    if (!placeholderKey) {
+      continue;
+    }
+
+    const labelText = resolveTextForLocale(dataRow, pageLocale);
+
+    if (!labelText) {
+      continue;
+    }
+
+    if (placeholdersByKey.has(placeholderKey)) {
+      console.warn('[placeholders] Duplicate placeholder key:', placeholderKey);
+    }
+
+    placeholdersByKey.set(placeholderKey, labelText);
+  }
+
+  return placeholdersByKey;
+}
+
+/**
+ * Loads and caches the placeholders map for the current locale.
+ *
+ * Fetches the centralized placeholder file defined by PLACEHOLDERS_URL,
+ * resolves localized values, and stores the result in module-level state.
+ *
+ * Ensures a single in-flight request at a time. On failure, an empty map
+ * is stored to prevent repeated network attempts.
+ *
+ * @returns {Promise<void>} Resolves when placeholders have been loaded.
  */
 export async function getPlaceholders() {
-  if (placeholders) {return;}
-  if (placeholdersPromise) {return placeholdersPromise;}
+  if (placeholders) {
+    return;
+  }
 
-  const locale = (getLocale() || DEFAULT_PLACEHOLDER_LOCALE).toLowerCase();
-  const url = typeof PLACEHOLDERS_URL === 'string' ? PLACEHOLDERS_URL.trim() : '';
+  if (placeholdersPromise) {
+    return placeholdersPromise;
+  }
 
-  if (!url) {
-    console.error('[placeholders] Missing PLACEHOLDERS_URL (required in new setup).');
+  const pageLocale = String(getLocale() || DEFAULT_PLACEHOLDER_LOCALE).toLowerCase().trim();
+  const placeholdersUrl = typeof PLACEHOLDERS_URL === 'string' ? PLACEHOLDERS_URL.trim() : '';
+
+  if (!placeholdersUrl) {
+    console.error('[placeholders] Missing PLACEHOLDERS_URL.');
     placeholders = new Map();
-    return Promise.resolve();
+    return;
   }
 
   placeholdersPromise = (async () => {
     try {
-      const resp = await fetch(url);
-      if (!resp.ok) {
-        throw new Error(`Failed to fetch placeholders (${resp.status})`);
+      const response = await fetch(placeholdersUrl);
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch placeholders (${response.status})`);
       }
 
-      const json = await resp.json();
+      const placeholdersPayload = await response.json();
+      const dataRows = Array.isArray(placeholdersPayload?.data) ? placeholdersPayload.data : [];
 
-      const hasLocaleColumn = json?.data?.some((row) => row && locale in row);
-      if (json?.data?.length && !hasLocaleColumn) {
-        console.warn('[placeholders] Locale column missing in placeholder file:', locale);
+      if (!dataRows.length) {
+        console.warn('[placeholders] Placeholder payload has no data rows.');
+      } else {
+        const hasExactLocaleColumn = dataRows.some((dataRow) => {
+          return dataRow && typeof dataRow === 'object' && pageLocale in dataRow;
+        });
+
+        if (!hasExactLocaleColumn) {
+          console.warn('[placeholders] Locale column missing in placeholder file:', pageLocale);
+        }
       }
 
-      placeholders = buildPlaceholdersMap(json, locale);
+      placeholders = buildPlaceholdersMap(placeholdersPayload, pageLocale);
     } catch (error) {
-      console.error('[placeholders] fetch failed:', { url, error });
+      console.error('[placeholders] Fetch failed:', { url: placeholdersUrl, error });
       placeholders = new Map();
     } finally {
       placeholdersPromise = null;
