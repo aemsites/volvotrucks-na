@@ -231,7 +231,7 @@
     "data": [
       {
         "name": "PLACEHOLDERS_URL",
-        "value": "https://www.volvotrucks.us/placeholders-test.json"
+        "value": "https://www.volvotrucks.us/placeholder.json"
       }
     ],
     "columns": [
