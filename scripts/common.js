@@ -67,24 +67,6 @@ export function resolveTextForLocale(placeholderRow, pageLocale) {
     return value.trim() || '';
   };
 
-  const findBestVariantColumnKey = (row, languageVariantPrefix) => {
-    let bestVariantColumnKey = '';
-    let bestVariantColumnKeyNormalized = '';
-
-    for (const columnKey of Object.keys(row)) {
-      const columnKeyNormalized = String(columnKey).toLowerCase();
-      if (!columnKeyNormalized.startsWith(languageVariantPrefix)) {
-        continue;
-      }
-      if (!bestVariantColumnKey || columnKeyNormalized < bestVariantColumnKeyNormalized) {
-        bestVariantColumnKey = columnKey;
-        bestVariantColumnKeyNormalized = columnKeyNormalized;
-      }
-    }
-
-    return bestVariantColumnKey;
-  };
-
   if (pageLocaleNormalized) {
     const exactLocaleText = readText(placeholderRow[pageLocaleNormalized]);
     if (exactLocaleText) {
@@ -98,9 +80,23 @@ export function resolveTextForLocale(placeholderRow, pageLocale) {
       return baseLanguageText;
     }
 
-    const variantColumnKey = findBestVariantColumnKey(placeholderRow, `${languageCode}-`);
-    if (variantColumnKey) {
-      const variantText = readText(placeholderRow[variantColumnKey]);
+    const languageVariantPrefix = `${languageCode}-`;
+    let bestVariantColumnKey = '';
+    let bestVariantColumnKeyNormalized = '';
+
+    for (const columnKey of Object.keys(placeholderRow)) {
+      const columnKeyNormalized = String(columnKey).toLowerCase();
+      if (!columnKeyNormalized.startsWith(languageVariantPrefix)) {
+        continue;
+      }
+      if (!bestVariantColumnKey || columnKeyNormalized < bestVariantColumnKeyNormalized) {
+        bestVariantColumnKey = columnKey;
+        bestVariantColumnKeyNormalized = columnKeyNormalized;
+      }
+    }
+
+    if (bestVariantColumnKey) {
+      const variantText = readText(placeholderRow[bestVariantColumnKey]);
       if (variantText) {
         return variantText;
       }
