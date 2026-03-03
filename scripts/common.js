@@ -506,18 +506,19 @@ export const slugify = (text) =>
  * loads the constants file where configuration values are stored
  */
 async function getConstantValues() {
-  const url = `${getLanguagePath()}constants.json`;
+  const constantsUrl = `${getLanguagePath()}constants.json`;
 
   try {
-    const resp = await fetch(url);
-    if (!resp.ok) {
-      console.error('[constants] Failed to fetch constants:', resp.status, resp.statusText);
+    const response = await fetch(constantsUrl);
+
+    if (!response.ok) {
+      console.error('[constants] Failed to fetch constants:', response.status, response.statusText, constantsUrl);
       return {};
     }
 
-    return await resp.json();
+    return await response.json();
   } catch (error) {
-    console.error('[constants] Error fetching constants file', error);
+    console.error('[constants] Error fetching constants file:', constantsUrl, error);
     return {};
   }
 }
