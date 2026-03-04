@@ -161,7 +161,8 @@ export async function getPlaceholders() {
     return placeholdersPromise;
   }
 
-  const pageLocale = String(getLocale() || DEFAULT_PLACEHOLDER_LOCALE).toLowerCase().trim();
+  const locale = getLocale();
+  const pageLocale = locale ? locale.toLowerCase().trim() : DEFAULT_PLACEHOLDER_LOCALE;
   const placeholdersUrl = typeof PLACEHOLDERS_URL === 'string' ? PLACEHOLDERS_URL.trim() : '';
 
   if (!placeholdersUrl) {
