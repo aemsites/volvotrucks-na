@@ -1,10 +1,17 @@
 import { loadCSS, getMetadata } from './aem.js';
 
 /**
+ * Default locale used when resolving placeholders.
+ * Used as a fallback when no locale (or no matching locale column) is available.
+ */
+const DEFAULT_PLACEHOLDER_LOCALE = 'en';
+
+/**
  * Placeholders data for the application and the translations
  * @type {Object|null}
  */
 let placeholders = null;
+
 /**
  * Promise that resolves to the placeholders data.
  * Used to cache and share the placeholders loading operation across multiple requests.
@@ -36,8 +43,6 @@ export const getLanguagePath = () => {
   const langCodeMatch = pathname.match('^(/[a-z]{2}(-[a-z]{2})?/).*');
   return langCodeMatch ? langCodeMatch[1] : '/';
 };
-
-const DEFAULT_PLACEHOLDER_LOCALE = 'en';
 
 /**
  * Resolves the localized text for a single placeholder row.
