@@ -21,7 +21,7 @@
     },
     {
       "Key": "search:no_results",
-      "Text": "sorry, your search for $0 returned no results!"
+      "Text": "No results found for $0."
     },
     {
       "Key": "v2_article_cards:no_results",
@@ -29,7 +29,7 @@
     },
     {
       "Key": "search:refine",
-      "Text": "let's refine, or try searching by different search keywords instead."
+      "Text": "Please check your spelling or try a different keyword."
     },
     {
       "Key": "search:showing_results_for",
