@@ -2,6 +2,12 @@ import { sampleRUM } from './aem.js';
 import { getTextLabel } from './common.js';
 import './scripts.js';
 
+
+// TODO: Verify why this is needed and also present in the Adobe eds boilerplate:
+// https://github.com/adobe/aem-boilerplate/blob/main/404.html
+window.isErrorPage = true;
+window.errorCode = '404';
+
 window.addEventListener('load', () => {
   sampleRUM('404', { source: document.referrer, target: window.location.href });
 
