@@ -36,7 +36,10 @@ if (enableSourceMaps) {
 module.exports = {
   mode: 'production',
 
-  entry: './scripts/entrypoint.js',
+  entry: {
+    main: './scripts/entrypoint.js',
+    'page-404': './scripts/404-entrypoint.js',
+  },
 
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -82,7 +85,7 @@ module.exports = {
         },
         default: {
           name: 'main',
-          chunks: 'all',
+          chunks: (chunk) => chunk.name !== 'page-404',
           minSize: 100, // Allow splitting for files of all sizes
           minChunks: 2,
         },
