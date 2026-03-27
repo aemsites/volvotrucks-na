@@ -5,7 +5,6 @@
  */
 
 import { decorateMain } from '../../scripts/scripts.js';
-// import { getLanguagePath } from '../../scripts/common.js';
 
 import { loadSections } from '../../scripts/aem.js';
 
@@ -39,11 +38,9 @@ export async function loadFragment(path) {
 }
 
 export default async function decorate(block) {
-  // const language = getLanguagePath();
   const link = block.querySelector('a');
   const path = link ? link.getAttribute('href') : block.textContent.trim();
-  // const localisedPath = (language + path).replace(/\/+/g, '/');
-  // const fragment = await loadFragment(localisedPath);
+  console.log('fragment load start', path);
   const fragment = await loadFragment(path);
   if (fragment) {
     block.replaceChildren(...fragment.childNodes);
