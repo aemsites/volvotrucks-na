@@ -5,7 +5,6 @@
  */
 
 import { decorateMain } from '../../scripts/scripts.js';
-
 import { loadSections } from '../../scripts/aem.js';
 
 /**
@@ -40,7 +39,6 @@ export async function loadFragment(path) {
 export default async function decorate(block) {
   const link = block.querySelector('a');
   const path = link ? link.getAttribute('href') : block.textContent.trim();
-  console.log('fragment load start', path);
   const fragment = await loadFragment(path);
   if (fragment) {
     block.replaceChildren(...fragment.childNodes);
