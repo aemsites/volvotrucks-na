@@ -1,5 +1,6 @@
 import { sampleRUM } from './aem.js';
 import { getTextLabel, getLanguagePath} from './common.js';
+import './scripts.js';
 
 // TODO: Verify why this is needed and also present in the Adobe eds boilerplate:
 // https://github.com/adobe/aem-boilerplate/blob/main/404.html
@@ -14,7 +15,7 @@ if (document.referrer) {
     const main = document.querySelector('main.error');
 
     const observer = new MutationObserver((mutations, observer) => {
-      const fragmentContainer = document.querySelector('.fragment');
+      const fragmentContainer = document.querySelector('.fragment-wrapper');
       if (fragmentContainer) {
         const backLinkTitle = getTextLabel('404:back_link_title');
         const btnContainer = document.createElement('p');
@@ -42,7 +43,4 @@ const path = link ? link.getAttribute('href') : fragmentBlock.textContent.trim()
 const language = getLanguagePath();
 const localisedPath = (language + path).replace(/\/+/g, '/');
 
-console.log('404 logic run');
 link.href = localisedPath;
-
-import './scripts.js';

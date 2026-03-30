@@ -9,9 +9,9 @@
   },
   "scripts": {
     "build": "webpack --config ./webpack.config.js",
-    "build:dev": "cross-env SOURCEMAPS=true webpack --config ./webpack.config.js",
-    "watch": "cross-env SOURCEMAPS=true webpack --watch --config ./webpack.config.js",
-    "start": "run-p dev watch",
+    "build:dev": "cross-env PROD=false webpack --config ./webpack.config.js",
+    "watch": "cross-env PROD=false webpack --watch --config ./webpack.config.js",
+    "start": "run-p dev:ca watch",
     "dev": "aem up",
     "dev:ca": "aem up --url https://main--volvotrucks-ca--volvogroup.aem.page/en-ca/",
     "dev:mx": "aem up --url https://main--volvotrucks-mx--volvogroup.aem.page",
