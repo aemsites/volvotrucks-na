@@ -1,5 +1,5 @@
 import { sampleRUM } from './aem.js';
-import { getTextLabel, getLanguagePath} from './common.js';
+import { getTextLabel } from './common.js';
 import './scripts.js';
 
 // TODO: Verify why this is needed and also present in the Adobe eds boilerplate:
@@ -36,11 +36,3 @@ if (document.referrer) {
     });
   }
 }
-
-const fragmentBlock = document.querySelector('.fragment');
-const link = fragmentBlock.querySelector('a');
-const path = link ? link.getAttribute('href') : fragmentBlock.textContent.trim();
-const language = getLanguagePath();
-const localisedPath = (language + path).replace(/\/+/g, '/');
-
-link.href = localisedPath;
