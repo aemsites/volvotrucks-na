@@ -7,4 +7,5 @@
   border: 0;
   aspect-ratio: var(--video-aspect-ratio);
   display: block;
+  position: relative;
 }

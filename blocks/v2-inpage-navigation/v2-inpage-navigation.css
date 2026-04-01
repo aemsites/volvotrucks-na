@@ -176,13 +176,11 @@ then we change it for the next section item in main */
   gap: 8px;
 }
 
-.v2-inpage-navigation__selected-item-wrapper .icon svg {
-  width: 24px;
-  height: 24px;
+.v2-inpage-navigation__selected-item-wrapper .v2-inpage-navigation__filter-dropdown-icon {
   transition: transform var(--duration-small) var(--easing-standard);
 }
 
-.v2-inpage-navigation__dropdown--open .v2-inpage-navigation__selected-item-wrapper svg {
+.v2-inpage-navigation__dropdown--open .v2-inpage-navigation__selected-item-wrapper .v2-inpage-navigation__filter-dropdown-icon {
   transform: rotate(180deg);
 }
 

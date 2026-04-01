@@ -2,15 +2,20 @@ import { readBlockConfig, getMetadata } from '../../scripts/aem.js';
 import { createElement, decorateIcons, getLanguagePath, getTextLabel } from '../../scripts/common.js';
 
 function addScrollToTopButton(mainEl) {
+  const label = getTextLabel('footer:go_to_top');
+
   const scrollToTopButton = document.createRange().createContextualFragment(`
     <div class="scroll-to-top-container">
-      <a href="#" class="scroll-to-top" title=${getTextLabel('footer:go_to_top')}>
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M11.9999 20C11.7237 20 11.4999 19.7761 11.4999 19.5L11.4999 5.70711L6.35341 10.8536C6.15815 11.0488 5.84157 11.0488 5.6463 10.8536C5.45104 10.6583 5.45104 10.3417 5.6463 10.1464L11.6463 4.14645C11.8416 3.95119 12.1581 3.95118 12.3534 4.14644L18.3535 10.1464C18.5488 10.3417 18.5488 10.6583 18.3536 10.8535C18.1583 11.0488 17.8417 11.0488 17.6465 10.8536L12.4999 5.70709L12.4999 19.5C12.4999 19.7761 12.276 20 11.9999 20Z" fill="currentColor"/>
-        </svg>
+      <a href="#" class="scroll-to-top" title="${label}" aria-label="${label}">
+        <vcdk-system-icon
+          icon="arrow-up"
+          size="24"
+          icon-set="auto">
+        </vcdk-system-icon>
       </a>
     </div>
   `);
+
   mainEl.append(scrollToTopButton);
 }
 

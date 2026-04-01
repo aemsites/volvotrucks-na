@@ -44,6 +44,19 @@ const createMainLinks = (mainLinksWrapper) => {
 
     list.querySelectorAll('li > a').forEach((link) => {
       link.classList.add(`${blockClass}__main-nav-link`, `${blockClass}__link`, `${blockClass}__link-accordion`);
+      if (!link.querySelector('vcdk-system-icon')) {
+        const chevronIcon = document.createRange().createContextualFragment(`
+          <vcdk-system-icon
+            class="${blockClass}__link-accordion-icon"
+            icon="chevron-down"
+            size="24"
+            icon-set="auto"
+            aria-hidden="true">
+          </vcdk-system-icon>
+        `);
+
+        link.append(chevronIcon);
+      }
     });
     return list;
   }
@@ -83,7 +96,12 @@ const createActions = (actionsWrapper) => {
         aria-expanded="false"
         aria-controls="header-main-nav, header-actions-list"
       >
-        <span class="icon icon-close" aria-hidden="true" />
+        <vcdk-system-icon
+          icon="close"
+          size="24"
+          icon-set="auto"
+          aria-hidden="true">
+        </vcdk-system-icon>
       </button>
     </li>
   `);
@@ -100,7 +118,12 @@ const mobileActions = () => {
   const searchResults = `${getLanguagePath()}search-results`;
 
   const searchEl = `<a href="${searchResults}" aria-label="${searchLabel}" class="${blockClass}__search-button ${blockClass}__action-link ${blockClass}__link">
-    <span class="icon icon-search-icon" aria-hidden="true"></span>
+    <vcdk-system-icon
+      icon="search"
+      size="24"
+      icon-set="auto"
+      aria-hidden="true">
+    </vcdk-system-icon>
   </a>`;
 
   const actions = document.createRange().createContextualFragment(`
@@ -111,7 +134,12 @@ const mobileActions = () => {
       aria-expanded="false"
       aria-controls="header-main-nav, header-actions-list"
     >
-      <span class="icon icon-hamburger-icon" aria-hidden="true"></span>
+      <vcdk-system-icon
+        icon="hamburger-menu"
+        size="24"
+        icon-set="auto"
+        aria-hidden="true">
+      </vcdk-system-icon>
     </button>
   `);
 
