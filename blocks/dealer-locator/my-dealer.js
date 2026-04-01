@@ -58,14 +58,7 @@ function MyDealer() {
 
       if (todayAtDealer) {
         var startTime = todayAtDealer.Start;
-        if (startTime.toLowerCase() === 'midnight') {
-          startTime = '12:00 AM';
-        }
-
         var endTime = todayAtDealer.End;
-        if (endTime.toLowerCase() === 'midnight') {
-          endTime = '11:59 PM';
-        }
 
         if (startTime.toLowerCase().indexOf('24') > -1) {
           startTime = '12:00 AM';
@@ -77,14 +70,6 @@ function MyDealer() {
           endTime = '12:00 AM';
           //dealer is open 24 hours
           return { open: true, endTime: null, closeSoon: null, alwaysOpen: true };
-        }
-
-        if (startTime.toLowerCase() === 'noon') {
-          startTime = '12:00 PM';
-        }
-
-        if (endTime.toLowerCase() === 'noon') {
-          endTime = '12:00 PM';
         }
 
         var start = new Date();
