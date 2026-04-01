@@ -1,0 +1,1067 @@
+/**
+ * Do not edit directly
+ * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ */
+
+:root, :host, .vcdk-theme-volvo {
+  --vcdk-color-bg: #ffffff;
+  --vcdk-color-bg-base: #f7f7f7;
+  --vcdk-color-bg-button-marketing: #2a609d;
+  --vcdk-color-bg-button-marketing-hover: #4781c4;
+  --vcdk-color-bg-button-marketing-pressed: #234d7d;
+  --vcdk-color-bg-button-primary: #212121;
+  --vcdk-color-bg-button-primary-hover: #333333;
+  --vcdk-color-bg-button-primary-pressed: #3d3d3d;
+  --vcdk-color-bg-button-secondary: rgba(255, 255, 255, 0);
+  --vcdk-color-bg-button-secondary-hover: rgba(20, 20, 20, 0.04);
+  --vcdk-color-bg-button-secondary-pressed: rgba(20, 20, 20, 0.12);
+  --vcdk-color-bg-button-tertiary: rgba(255, 255, 255, 0);
+  --vcdk-color-bg-button-tertiary-hover: rgba(20, 20, 20, 0.04);
+  --vcdk-color-bg-button-tertiary-pressed: rgba(20, 20, 20, 0.12);
+  --vcdk-color-bg-category-1: #4781c4;
+  --vcdk-color-bg-category-1-subtle: #a7cdfa;
+  --vcdk-color-bg-category-2: #50a294;
+  --vcdk-color-bg-category-2-subtle: #abd6cf;
+  --vcdk-color-bg-category-3: #8252c7;
+  --vcdk-color-bg-category-3-subtle: #d6b8f5;
+  --vcdk-color-bg-category-4: #e77352;
+  --vcdk-color-bg-category-4-subtle: #fdcb9d;
+  --vcdk-color-bg-category-5: #1fa2c2;
+  --vcdk-color-bg-category-5-subtle: #abe0ed;
+  --vcdk-color-bg-category-6: #d45b95;
+  --vcdk-color-bg-category-6-subtle: #f4b2da;
+  --vcdk-color-bg-disabled: #e1e1e1;
+  --vcdk-color-bg-error: #bf2012;
+  --vcdk-color-bg-error-subtle: #f8dddb;
+  --vcdk-color-bg-handle: #ffffff;
+  --vcdk-color-bg-handle-disabled: #a9a9a9;
+  --vcdk-color-bg-highlight: #2a609d;
+  --vcdk-color-bg-hover: #f7f7f7;
+  --vcdk-color-bg-info: #2a609d;
+  --vcdk-color-bg-info-subtle: #d5e6ff;
+  --vcdk-color-bg-inverse: #212121;
+  --vcdk-color-bg-notification-badge: #bf2012;
+  --vcdk-color-bg-pressed: #ededed;
+  --vcdk-color-bg-renault-brand-element: rgba(255, 255, 255, 0);
+  --vcdk-color-bg-scrim: rgba(20, 20, 20, 0.6);
+  --vcdk-color-bg-scrollbar-handle: #8d8d8d;
+  --vcdk-color-bg-scrollbar-handle-hover: #575757;
+  --vcdk-color-bg-selected: #212121;
+  --vcdk-color-bg-selected-disabled: #a9a9a9;
+  --vcdk-color-bg-selected-hover: #333333;
+  --vcdk-color-bg-selected-pressed: #3d3d3d;
+  --vcdk-color-bg-selected-subtle: #ededed;
+  --vcdk-color-bg-shadow: rgba(0, 0, 0, 0.2);
+  --vcdk-color-bg-success: #177844;
+  --vcdk-color-bg-success-subtle: #d8efde;
+  --vcdk-color-bg-switch-off: #d0d0d0;
+  --vcdk-color-bg-track: #d0d0d0;
+  --vcdk-color-bg-track-disabled: #e1e1e1;
+  --vcdk-color-bg-variant: #ededed;
+  --vcdk-color-bg-variant-subtle: #f7f7f7;
+  --vcdk-color-bg-warning: #ffa000;
+  --vcdk-color-bg-warning-subtle: #fff3de;
+  --vcdk-color-border: #a9a9a9;
+  --vcdk-color-border-button-secondary: rgba(20, 20, 20, 0.7);
+  --vcdk-color-border-button-secondary-disabled: rgba(20, 20, 20, 0.12);
+  --vcdk-color-border-category-1: #4781c4;
+  --vcdk-color-border-category-2: #50a294;
+  --vcdk-color-border-category-3: #8252c7;
+  --vcdk-color-border-category-4: #e77352;
+  --vcdk-color-border-category-5: #1fa2c2;
+  --vcdk-color-border-category-6: #d45b95;
+  --vcdk-color-border-error: #bf2012;
+  --vcdk-color-border-focus: #4781c4;
+  --vcdk-color-border-highlight: #2a609d;
+  --vcdk-color-border-hover: #4781c4;
+  --vcdk-color-border-info: #2a609d;
+  --vcdk-color-border-input-active: #2a609d;
+  --vcdk-color-border-selected: #212121;
+  --vcdk-color-border-subtle: #e1e1e1;
+  --vcdk-color-border-success: #177844;
+  --vcdk-color-border-warning: #e06900;
+  --vcdk-color-chart: #376fb0;
+  --vcdk-color-chart-category-1: #4781c4;
+  --vcdk-color-chart-category-2: #50a294;
+  --vcdk-color-chart-category-3: #8252c7;
+  --vcdk-color-chart-category-4: #e77352;
+  --vcdk-color-chart-category-5: #1fa2c2;
+  --vcdk-color-chart-category-6: #d45b95;
+  --vcdk-color-chart-empty: #e1e1e1;
+  --vcdk-color-chart-error: #e03c2d;
+  --vcdk-color-chart-success: #338f58;
+  --vcdk-color-chart-transparent: rgba(55, 111, 176, 0);
+  --vcdk-color-chart-warning: #f06f05;
+  --vcdk-color-icon: #212121;
+  --vcdk-color-icon-disabled: #a9a9a9;
+  --vcdk-color-icon-error: #bf2012;
+  --vcdk-color-icon-highlight: #376fb0;
+  --vcdk-color-icon-info: #376fb0;
+  --vcdk-color-icon-link: #376fb0;
+  --vcdk-color-icon-link-hover: #4781c4;
+  --vcdk-color-icon-link-pressed: #234d7d;
+  --vcdk-color-icon-link-visited: #396976;
+  --vcdk-color-icon-on-button-marketing: #ffffff;
+  --vcdk-color-icon-on-button-primary: #ffffff;
+  --vcdk-color-icon-on-button-secondary: #212121;
+  --vcdk-color-icon-on-button-tertiary: #212121;
+  --vcdk-color-icon-on-category-1-subtle: #234d7d;
+  --vcdk-color-icon-on-category-2-subtle: #345d56;
+  --vcdk-color-icon-on-category-3-subtle: #563f6e;
+  --vcdk-color-icon-on-category-4-subtle: #904735;
+  --vcdk-color-icon-on-category-5-subtle: #14667a;
+  --vcdk-color-icon-on-category-6-subtle: #84365c;
+  --vcdk-color-icon-on-error: #ffffff;
+  --vcdk-color-icon-on-highlight: #ffffff;
+  --vcdk-color-icon-on-info: #ffffff;
+  --vcdk-color-icon-on-inverse: #ffffff;
+  --vcdk-color-icon-on-selected: #ffffff;
+  --vcdk-color-icon-on-success: #ffffff;
+  --vcdk-color-icon-on-warning: #212121;
+  --vcdk-color-icon-selected: #212121;
+  --vcdk-color-icon-subtle: #575757;
+  --vcdk-color-icon-subtlest: #6b6b6b;
+  --vcdk-color-icon-success: #338f58;
+  --vcdk-color-icon-warning: #e06900;
+  --vcdk-color-text: #212121;
+  --vcdk-color-text-disabled: #a9a9a9;
+  --vcdk-color-text-error: #bf2012;
+  --vcdk-color-text-highlight: #2a609d;
+  --vcdk-color-text-info: #2a609d;
+  --vcdk-color-text-link: #2a609d;
+  --vcdk-color-text-link-hover: #4781c4;
+  --vcdk-color-text-link-pressed: #234d7d;
+  --vcdk-color-text-link-visited: #396976;
+  --vcdk-color-text-on-button-marketing: #ffffff;
+  --vcdk-color-text-on-button-primary: #ffffff;
+  --vcdk-color-text-on-button-secondary: #212121;
+  --vcdk-color-text-on-button-tertiary: #212121;
+  --vcdk-color-text-on-category-1-subtle: #234d7d;
+  --vcdk-color-text-on-category-2-subtle: #345d56;
+  --vcdk-color-text-on-category-3-subtle: #563f6e;
+  --vcdk-color-text-on-category-4-subtle: #904735;
+  --vcdk-color-text-on-category-5-subtle: #14667a;
+  --vcdk-color-text-on-category-6-subtle: #84365c;
+  --vcdk-color-text-on-error: #ffffff;
+  --vcdk-color-text-on-highlight: #ffffff;
+  --vcdk-color-text-on-info: #ffffff;
+  --vcdk-color-text-on-inverse: #ffffff;
+  --vcdk-color-text-on-selected: #ffffff;
+  --vcdk-color-text-on-success: #ffffff;
+  --vcdk-color-text-on-warning: #212121;
+  --vcdk-color-text-selected: #212121;
+  --vcdk-color-text-subtle: #575757;
+  --vcdk-color-text-subtlest: #6b6b6b;
+  --vcdk-color-text-success: #177844;
+  --vcdk-color-text-warning: #ad5100;
+}
+/**
+ * Do not edit directly
+ * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ */
+
+:root, :host, .vcdk-theme-volvo {
+  --vcdk-typography-display-statement-font-family-large-screens: "Volvo Broad", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-display-statement-font-family-small-screens: "Volvo Broad", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-display-statement-weight-large-screens: 400;
+  --vcdk-typography-display-statement-weight-small-screens: 400;
+  --vcdk-typography-display-statement-size-large-screens: 4.375rem;
+  --vcdk-typography-display-statement-size-small-screens: 3.125rem;
+  --vcdk-typography-display-statement-line-height-large-screens: 3.75rem;
+  --vcdk-typography-display-statement-line-height-small-screens: 2.75rem;
+  --vcdk-typography-display-statement-letter-spacing-large-screens: 0.21875rem;
+  --vcdk-typography-display-statement-letter-spacing-small-screens: 0.15625rem;
+  --vcdk-typography-display-1-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-display-1-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-display-2-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-display-2-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-display-2-weight-large-screens: 700;
+  --vcdk-typography-display-2-weight-small-screens: 700;
+  --vcdk-typography-display-2-size-large-screens: 3.5rem;
+  --vcdk-typography-display-2-size-small-screens: 2.5rem;
+  --vcdk-typography-display-2-line-height-large-screens: 4rem;
+  --vcdk-typography-display-2-line-height-small-screens: 3rem;
+  --vcdk-typography-display-2-letter-spacing-large-screens: -0.105rem;
+  --vcdk-typography-display-2-letter-spacing-small-screens: -0.075rem;
+  --vcdk-typography-display-1-weight-large-screens: 700;
+  --vcdk-typography-display-1-weight-small-screens: 700;
+  --vcdk-typography-display-1-size-large-screens: 4.5rem;
+  --vcdk-typography-display-1-size-small-screens: 3.25rem;
+  --vcdk-typography-display-1-line-height-large-screens: 5rem;
+  --vcdk-typography-display-1-line-height-small-screens: 3.75rem;
+  --vcdk-typography-display-1-letter-spacing-large-screens: -0.135rem;
+  --vcdk-typography-display-1-letter-spacing-small-screens: -0.0975rem;
+  --vcdk-typography-heading-1-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-1-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-1-weight-large-screens: 700;
+  --vcdk-typography-heading-1-weight-small-screens: 700;
+  --vcdk-typography-heading-1-size-large-screens: 3rem;
+  --vcdk-typography-heading-1-size-small-screens: 2.375rem;
+  --vcdk-typography-heading-1-line-height-large-screens: 3.5rem;
+  --vcdk-typography-heading-1-line-height-small-screens: 2.875rem;
+  --vcdk-typography-heading-1-letter-spacing-large-screens: -0.03rem;
+  --vcdk-typography-heading-1-letter-spacing-small-screens: -0.02375rem;
+  --vcdk-typography-heading-2-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-2-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-2-weight-large-screens: 700;
+  --vcdk-typography-heading-2-weight-small-screens: 700;
+  --vcdk-typography-heading-2-size-large-screens: 2rem;
+  --vcdk-typography-heading-2-size-small-screens: 1.875rem;
+  --vcdk-typography-heading-2-line-height-large-screens: 2.5rem;
+  --vcdk-typography-heading-2-line-height-small-screens: 2.25rem;
+  --vcdk-typography-heading-2-letter-spacing-large-screens: -0.02rem;
+  --vcdk-typography-heading-2-letter-spacing-small-screens: -0.01875rem;
+  --vcdk-typography-heading-3-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-3-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-3-weight-large-screens: 700;
+  --vcdk-typography-heading-3-weight-small-screens: 700;
+  --vcdk-typography-heading-3-size-large-screens: 1.5rem;
+  --vcdk-typography-heading-3-size-small-screens: 1.375rem;
+  --vcdk-typography-heading-3-line-height-large-screens: 2rem;
+  --vcdk-typography-heading-3-line-height-small-screens: 1.75rem;
+  --vcdk-typography-heading-3-letter-spacing-large-screens: -0.015rem;
+  --vcdk-typography-heading-3-letter-spacing-small-screens: -0.01375rem;
+  --vcdk-typography-heading-4-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-4-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-4-weight-large-screens: 700;
+  --vcdk-typography-heading-4-weight-small-screens: 700;
+  --vcdk-typography-heading-4-size-large-screens: 1.25rem;
+  --vcdk-typography-heading-4-size-small-screens: 1.25rem;
+  --vcdk-typography-heading-4-line-height-large-screens: 1.625rem;
+  --vcdk-typography-heading-4-line-height-small-screens: 1.625rem;
+  --vcdk-typography-heading-4-letter-spacing-large-screens: -0.0125rem;
+  --vcdk-typography-heading-4-letter-spacing-small-screens: -0.0125rem;
+  --vcdk-typography-large-body-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-large-body-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-large-body-weight-large-screens: 400;
+  --vcdk-typography-large-body-weight-small-screens: 400;
+  --vcdk-typography-large-body-size-large-screens: 1.5rem;
+  --vcdk-typography-large-body-size-small-screens: 1.375rem;
+  --vcdk-typography-large-body-line-height-large-screens: 2rem;
+  --vcdk-typography-large-body-line-height-small-screens: 1.75rem;
+  --vcdk-typography-large-body-letter-spacing-large-screens: 0rem;
+  --vcdk-typography-large-body-letter-spacing-small-screens: 0rem;
+  --vcdk-typography-subtitle-1-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-subtitle-1-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-subtitle-1-weight-large-screens: 700;
+  --vcdk-typography-subtitle-1-weight-small-screens: 700;
+  --vcdk-typography-subtitle-1-size-large-screens: 1rem;
+  --vcdk-typography-subtitle-1-size-small-screens: 1rem;
+  --vcdk-typography-subtitle-1-line-height-large-screens: 1.5rem;
+  --vcdk-typography-subtitle-1-line-height-small-screens: 1.5rem;
+  --vcdk-typography-subtitle-1-letter-spacing-large-screens: 0rem;
+  --vcdk-typography-subtitle-1-letter-spacing-small-screens: 0rem;
+  --vcdk-typography-subtitle-2-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-subtitle-2-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-subtitle-2-weight-large-screens: 700;
+  --vcdk-typography-subtitle-2-weight-small-screens: 700;
+  --vcdk-typography-subtitle-2-size-large-screens: 0.875rem;
+  --vcdk-typography-subtitle-2-size-small-screens: 0.875rem;
+  --vcdk-typography-subtitle-2-line-height-large-screens: 1.25rem;
+  --vcdk-typography-subtitle-2-line-height-small-screens: 1.25rem;
+  --vcdk-typography-subtitle-2-letter-spacing-large-screens: 0rem;
+  --vcdk-typography-subtitle-2-letter-spacing-small-screens: 0rem;
+  --vcdk-typography-body-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-body-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-body-weight-large-screens: 400;
+  --vcdk-typography-body-weight-small-screens: 400;
+  --vcdk-typography-body-size-large-screens: 1rem;
+  --vcdk-typography-body-size-small-screens: 1rem;
+  --vcdk-typography-body-line-height-large-screens: 1.5rem;
+  --vcdk-typography-body-line-height-small-screens: 1.5rem;
+  --vcdk-typography-body-letter-spacing-large-screens: 0rem;
+  --vcdk-typography-body-letter-spacing-small-screens: 0rem;
+  --vcdk-typography-body-italic-style: italic;
+  --vcdk-typography-body-underlined-decoration: underlined;
+  --vcdk-typography-button-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-button-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-button-weight-large-screens: 400;
+  --vcdk-typography-button-weight-small-screens: 400;
+  --vcdk-typography-button-size-large-screens: 0.875rem;
+  --vcdk-typography-button-size-small-screens: 0.875rem;
+  --vcdk-typography-button-line-height-large-screens: 1.25rem;
+  --vcdk-typography-button-line-height-small-screens: 1.25rem;
+  --vcdk-typography-button-letter-spacing-large-screens: 0.0175rem;
+  --vcdk-typography-button-letter-spacing-small-screens: 0.0175rem;
+  --vcdk-typography-caption-1-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-caption-1-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-caption-1-weight-large-screens: 400;
+  --vcdk-typography-caption-1-weight-small-screens: 400;
+  --vcdk-typography-caption-1-size-large-screens: 0.875rem;
+  --vcdk-typography-caption-1-size-small-screens: 0.875rem;
+  --vcdk-typography-caption-1-line-height-large-screens: 1.25rem;
+  --vcdk-typography-caption-1-line-height-small-screens: 1.25rem;
+  --vcdk-typography-caption-1-letter-spacing-large-screens: 0.0175rem;
+  --vcdk-typography-caption-1-letter-spacing-small-screens: 0.0175rem;
+  --vcdk-typography-caption-1-italic-style: italic;
+  --vcdk-typography-caption-2-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-caption-2-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-caption-2-weight-large-screens: 400;
+  --vcdk-typography-caption-2-weight-small-screens: 400;
+  --vcdk-typography-caption-2-size-large-screens: 0.75rem;
+  --vcdk-typography-caption-2-size-small-screens: 0.75rem;
+  --vcdk-typography-caption-2-line-height-large-screens: 1rem;
+  --vcdk-typography-caption-2-line-height-small-screens: 1rem;
+  --vcdk-typography-caption-2-letter-spacing-large-screens: 0.015rem;
+  --vcdk-typography-caption-2-letter-spacing-small-screens: 0.015rem;
+  --vcdk-typography-caption-2-italic-style: italic;
+}
+/**
+ * Do not edit directly
+ * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ */
+
+:root, :host, .vcdk-theme-volvo {
+  --vcdk-spacing-1: 2px;
+  --vcdk-spacing-2: 4px;
+  --vcdk-spacing-3: 6px;
+  --vcdk-spacing-4: 8px;
+  --vcdk-spacing-5: 12px;
+  --vcdk-spacing-6: 16px;
+  --vcdk-spacing-7: 20px;
+  --vcdk-spacing-8: 24px;
+  --vcdk-spacing-9: 32px;
+  --vcdk-spacing-10: 40px;
+  --vcdk-spacing-11: 48px;
+  --vcdk-spacing-12: 64px;
+  --vcdk-spacing-13: 80px;
+  --vcdk-spacing-14: 96px;
+  --vcdk-spacing-15: 128px;
+}
+/**
+ * Do not edit directly
+ * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ */
+
+:root, :host, .vcdk-theme-volvo {
+  --vcdk-radius-small: 2px;
+  --vcdk-radius-default: 4px;
+  --vcdk-radius-large: 8px;
+  --vcdk-radius-xlarge: 20px;
+  --vcdk-radius-circular: 99px;
+}
+/**
+ * Do not edit directly
+ * Generated on Wed, 06 Aug 2025 13:33:16 GMT
+ */
+
+:root, :host, .vcdk-theme-volvo {
+  --vcdk-motion-easing-entrance: cubic-bezier(0, 0, 0.4, 1);
+  --vcdk-motion-easing-exit: cubic-bezier(0.2, 0, 1, 1);
+  --vcdk-motion-easing-standard: cubic-bezier(0.2, 0, 0.1, 1);
+  --vcdk-motion-duration-small: 160ms;
+  --vcdk-motion-duration-medium: 240ms;
+  --vcdk-motion-duration-large: 320ms;
+}
+/**
+ * Do not edit directly
+ * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ */
+
+.vcdk-theme-volvo.vcdk-mode-dark {
+  --vcdk-color-bg: #212121;
+  --vcdk-color-bg-base: #1a1a1a;
+  --vcdk-color-bg-button-marketing: #61a0e8;
+  --vcdk-color-bg-button-marketing-hover: #7ab3f5;
+  --vcdk-color-bg-button-marketing-pressed: #4781c4;
+  --vcdk-color-bg-button-primary: #ffffff;
+  --vcdk-color-bg-button-primary-hover: #e1e1e1;
+  --vcdk-color-bg-button-primary-pressed: #a9a9a9;
+  --vcdk-color-bg-button-secondary: rgba(255, 255, 255, 0);
+  --vcdk-color-bg-button-secondary-hover: rgba(255, 255, 255, 0.1);
+  --vcdk-color-bg-button-secondary-pressed: rgba(255, 255, 255, 0.2);
+  --vcdk-color-bg-button-tertiary: rgba(255, 255, 255, 0);
+  --vcdk-color-bg-button-tertiary-hover: rgba(255, 255, 255, 0.1);
+  --vcdk-color-bg-button-tertiary-pressed: rgba(255, 255, 255, 0.2);
+  --vcdk-color-bg-category-1: #4781c4;
+  --vcdk-color-bg-category-1-subtle: #234d7d;
+  --vcdk-color-bg-category-2: #50a294;
+  --vcdk-color-bg-category-2-subtle: #345d56;
+  --vcdk-color-bg-category-3: #8252c7;
+  --vcdk-color-bg-category-3-subtle: #563f6e;
+  --vcdk-color-bg-category-4: #e77352;
+  --vcdk-color-bg-category-4-subtle: #904735;
+  --vcdk-color-bg-category-5: #1fa2c2;
+  --vcdk-color-bg-category-5-subtle: #14667a;
+  --vcdk-color-bg-category-6: #d45b95;
+  --vcdk-color-bg-category-6-subtle: #84365c;
+  --vcdk-color-bg-disabled: #3d3d3d;
+  --vcdk-color-bg-error: #ff6b54;
+  --vcdk-color-bg-error-subtle: #4c2821;
+  --vcdk-color-bg-handle: #ffffff;
+  --vcdk-color-bg-handle-disabled: #8d8d8d;
+  --vcdk-color-bg-highlight: #61a0e8;
+  --vcdk-color-bg-hover: #292929;
+  --vcdk-color-bg-info: #61a0e8;
+  --vcdk-color-bg-info-subtle: #1a3554;
+  --vcdk-color-bg-inverse: #ffffff;
+  --vcdk-color-bg-notification-badge: #ff6b54;
+  --vcdk-color-bg-pressed: #333333;
+  --vcdk-color-bg-renault-brand-element: rgba(255, 255, 255, 0);
+  --vcdk-color-bg-scrim: rgba(20, 20, 20, 0.6);
+  --vcdk-color-bg-scrollbar-handle: #8d8d8d;
+  --vcdk-color-bg-scrollbar-handle-hover: #d0d0d0;
+  --vcdk-color-bg-selected: #ffffff;
+  --vcdk-color-bg-selected-disabled: #575757;
+  --vcdk-color-bg-selected-hover: #e1e1e1;
+  --vcdk-color-bg-selected-pressed: #a9a9a9;
+  --vcdk-color-bg-selected-subtle: #333333;
+  --vcdk-color-bg-shadow: rgba(0, 0, 0, 0.56);
+  --vcdk-color-bg-success: #6cc17a;
+  --vcdk-color-bg-success-subtle: #2c4730;
+  --vcdk-color-bg-switch-off: #575757;
+  --vcdk-color-bg-track: #575757;
+  --vcdk-color-bg-track-disabled: #3d3d3d;
+  --vcdk-color-bg-variant: #333333;
+  --vcdk-color-bg-variant-subtle: #292929;
+  --vcdk-color-bg-warning: #ffb54d;
+  --vcdk-color-bg-warning-subtle: #593c11;
+  --vcdk-color-border: #6b6b6b;
+  --vcdk-color-border-button-secondary: rgba(255, 255, 255, 0.7);
+  --vcdk-color-border-button-secondary-disabled: rgba(255, 255, 255, 0.1);
+  --vcdk-color-border-category-1: #4781c4;
+  --vcdk-color-border-category-2: #50a294;
+  --vcdk-color-border-category-3: #8252c7;
+  --vcdk-color-border-category-4: #e77352;
+  --vcdk-color-border-category-5: #1fa2c2;
+  --vcdk-color-border-category-6: #d45b95;
+  --vcdk-color-border-error: #ff6b54;
+  --vcdk-color-border-focus: #7ab3f5;
+  --vcdk-color-border-highlight: #61a0e8;
+  --vcdk-color-border-hover: #7ab3f5;
+  --vcdk-color-border-info: #61a0e8;
+  --vcdk-color-border-input-active: #61a0e8;
+  --vcdk-color-border-selected: #ffffff;
+  --vcdk-color-border-subtle: #3d3d3d;
+  --vcdk-color-border-success: #6cc17a;
+  --vcdk-color-border-warning: #ffb54d;
+  --vcdk-color-chart: #61a0e8;
+  --vcdk-color-chart-category-1: #4781c4;
+  --vcdk-color-chart-category-2: #50a294;
+  --vcdk-color-chart-category-3: #8252c7;
+  --vcdk-color-chart-category-4: #e77352;
+  --vcdk-color-chart-category-5: #1fa2c2;
+  --vcdk-color-chart-category-6: #d45b95;
+  --vcdk-color-chart-empty: #3d3d3d;
+  --vcdk-color-chart-error: #ff6b54;
+  --vcdk-color-chart-success: #6cc17a;
+  --vcdk-color-chart-transparent: rgba(97, 160, 232, 0);
+  --vcdk-color-chart-warning: #ffb54d;
+  --vcdk-color-icon: #ffffff;
+  --vcdk-color-icon-disabled: #6b6b6b;
+  --vcdk-color-icon-error: #ff6b54;
+  --vcdk-color-icon-highlight: #61a0e8;
+  --vcdk-color-icon-info: #7ab3f5;
+  --vcdk-color-icon-link: #61a0e8;
+  --vcdk-color-icon-link-hover: #7ab3f5;
+  --vcdk-color-icon-link-pressed: #4781c4;
+  --vcdk-color-icon-link-visited: #66b3a6;
+  --vcdk-color-icon-on-button-marketing: #212121;
+  --vcdk-color-icon-on-button-primary: #212121;
+  --vcdk-color-icon-on-button-secondary: #ffffff;
+  --vcdk-color-icon-on-button-tertiary: #ffffff;
+  --vcdk-color-icon-on-category-1-subtle: #a7cdfa;
+  --vcdk-color-icon-on-category-2-subtle: #abd6cf;
+  --vcdk-color-icon-on-category-3-subtle: #d6b8f5;
+  --vcdk-color-icon-on-category-4-subtle: #fdcb9d;
+  --vcdk-color-icon-on-category-5-subtle: #abe0ed;
+  --vcdk-color-icon-on-category-6-subtle: #f4b2da;
+  --vcdk-color-icon-on-error: #212121;
+  --vcdk-color-icon-on-highlight: #212121;
+  --vcdk-color-icon-on-info: #212121;
+  --vcdk-color-icon-on-inverse: #212121;
+  --vcdk-color-icon-on-selected: #212121;
+  --vcdk-color-icon-on-success: #212121;
+  --vcdk-color-icon-on-warning: #212121;
+  --vcdk-color-icon-selected: #ffffff;
+  --vcdk-color-icon-subtle: #d0d0d0;
+  --vcdk-color-icon-subtlest: #a9a9a9;
+  --vcdk-color-icon-success: #6cc17a;
+  --vcdk-color-icon-warning: #ffb54d;
+  --vcdk-color-text: #ffffff;
+  --vcdk-color-text-disabled: #6b6b6b;
+  --vcdk-color-text-error: #ff6b54;
+  --vcdk-color-text-highlight: #61a0e8;
+  --vcdk-color-text-info: #7ab3f5;
+  --vcdk-color-text-link: #61a0e8;
+  --vcdk-color-text-link-hover: #7ab3f5;
+  --vcdk-color-text-link-pressed: #4781c4;
+  --vcdk-color-text-link-visited: #66b3a6;
+  --vcdk-color-text-on-button-marketing: #212121;
+  --vcdk-color-text-on-button-primary: #212121;
+  --vcdk-color-text-on-button-secondary: #ffffff;
+  --vcdk-color-text-on-button-tertiary: #ffffff;
+  --vcdk-color-text-on-category-1-subtle: #a7cdfa;
+  --vcdk-color-text-on-category-2-subtle: #abd6cf;
+  --vcdk-color-text-on-category-3-subtle: #d6b8f5;
+  --vcdk-color-text-on-category-4-subtle: #fdcb9d;
+  --vcdk-color-text-on-category-5-subtle: #abe0ed;
+  --vcdk-color-text-on-category-6-subtle: #f4b2da;
+  --vcdk-color-text-on-error: #212121;
+  --vcdk-color-text-on-highlight: #212121;
+  --vcdk-color-text-on-info: #212121;
+  --vcdk-color-text-on-inverse: #212121;
+  --vcdk-color-text-on-selected: #212121;
+  --vcdk-color-text-on-success: #212121;
+  --vcdk-color-text-on-warning: #212121;
+  --vcdk-color-text-selected: #ffffff;
+  --vcdk-color-text-subtle: #d0d0d0;
+  --vcdk-color-text-subtlest: #a9a9a9;
+  --vcdk-color-text-success: #6cc17a;
+  --vcdk-color-text-warning: #ffb54d;
+}
+/**
+ * Do not edit directly
+ * Generated on Wed, 06 Aug 2025 13:33:16 GMT
+ */
+
+.vcdk-theme-volvo.vcdk-mode-dark {
+  --vcdk-typography-display-statement-font-family-large-screens: "Volvo Broad", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-display-statement-font-family-small-screens: "Volvo Broad", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-display-statement-weight-large-screens: 400;
+  --vcdk-typography-display-statement-weight-small-screens: 400;
+  --vcdk-typography-display-statement-size-large-screens: 4.375rem;
+  --vcdk-typography-display-statement-size-small-screens: 3.125rem;
+  --vcdk-typography-display-statement-line-height-large-screens: 3.75rem;
+  --vcdk-typography-display-statement-line-height-small-screens: 2.75rem;
+  --vcdk-typography-display-statement-letter-spacing-large-screens: 0.21875rem;
+  --vcdk-typography-display-statement-letter-spacing-small-screens: 0.15625rem;
+  --vcdk-typography-display-1-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-display-1-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-display-2-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-display-2-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-display-2-weight-large-screens: 700;
+  --vcdk-typography-display-2-weight-small-screens: 700;
+  --vcdk-typography-display-2-size-large-screens: 3.5rem;
+  --vcdk-typography-display-2-size-small-screens: 2.5rem;
+  --vcdk-typography-display-2-line-height-large-screens: 4rem;
+  --vcdk-typography-display-2-line-height-small-screens: 3rem;
+  --vcdk-typography-display-2-letter-spacing-large-screens: -0.105rem;
+  --vcdk-typography-display-2-letter-spacing-small-screens: -0.075rem;
+  --vcdk-typography-display-1-weight-large-screens: 700;
+  --vcdk-typography-display-1-weight-small-screens: 700;
+  --vcdk-typography-display-1-size-large-screens: 4.5rem;
+  --vcdk-typography-display-1-size-small-screens: 3.25rem;
+  --vcdk-typography-display-1-line-height-large-screens: 5rem;
+  --vcdk-typography-display-1-line-height-small-screens: 3.75rem;
+  --vcdk-typography-display-1-letter-spacing-large-screens: -0.135rem;
+  --vcdk-typography-display-1-letter-spacing-small-screens: -0.0975rem;
+  --vcdk-typography-heading-1-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-1-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-1-weight-large-screens: 700;
+  --vcdk-typography-heading-1-weight-small-screens: 700;
+  --vcdk-typography-heading-1-size-large-screens: 3rem;
+  --vcdk-typography-heading-1-size-small-screens: 2.375rem;
+  --vcdk-typography-heading-1-line-height-large-screens: 3.5rem;
+  --vcdk-typography-heading-1-line-height-small-screens: 2.875rem;
+  --vcdk-typography-heading-1-letter-spacing-large-screens: -0.03rem;
+  --vcdk-typography-heading-1-letter-spacing-small-screens: -0.02375rem;
+  --vcdk-typography-heading-2-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-2-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-2-weight-large-screens: 700;
+  --vcdk-typography-heading-2-weight-small-screens: 700;
+  --vcdk-typography-heading-2-size-large-screens: 2rem;
+  --vcdk-typography-heading-2-size-small-screens: 1.875rem;
+  --vcdk-typography-heading-2-line-height-large-screens: 2.5rem;
+  --vcdk-typography-heading-2-line-height-small-screens: 2.25rem;
+  --vcdk-typography-heading-2-letter-spacing-large-screens: -0.02rem;
+  --vcdk-typography-heading-2-letter-spacing-small-screens: -0.01875rem;
+  --vcdk-typography-heading-3-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-3-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-3-weight-large-screens: 700;
+  --vcdk-typography-heading-3-weight-small-screens: 700;
+  --vcdk-typography-heading-3-size-large-screens: 1.5rem;
+  --vcdk-typography-heading-3-size-small-screens: 1.375rem;
+  --vcdk-typography-heading-3-line-height-large-screens: 2rem;
+  --vcdk-typography-heading-3-line-height-small-screens: 1.75rem;
+  --vcdk-typography-heading-3-letter-spacing-large-screens: -0.015rem;
+  --vcdk-typography-heading-3-letter-spacing-small-screens: -0.01375rem;
+  --vcdk-typography-heading-4-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-4-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-4-weight-large-screens: 700;
+  --vcdk-typography-heading-4-weight-small-screens: 700;
+  --vcdk-typography-heading-4-size-large-screens: 1.25rem;
+  --vcdk-typography-heading-4-size-small-screens: 1.25rem;
+  --vcdk-typography-heading-4-line-height-large-screens: 1.625rem;
+  --vcdk-typography-heading-4-line-height-small-screens: 1.625rem;
+  --vcdk-typography-heading-4-letter-spacing-large-screens: -0.0125rem;
+  --vcdk-typography-heading-4-letter-spacing-small-screens: -0.0125rem;
+  --vcdk-typography-large-body-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-large-body-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-large-body-weight-large-screens: 400;
+  --vcdk-typography-large-body-weight-small-screens: 400;
+  --vcdk-typography-large-body-size-large-screens: 1.5rem;
+  --vcdk-typography-large-body-size-small-screens: 1.375rem;
+  --vcdk-typography-large-body-line-height-large-screens: 2rem;
+  --vcdk-typography-large-body-line-height-small-screens: 1.75rem;
+  --vcdk-typography-large-body-letter-spacing-large-screens: 0rem;
+  --vcdk-typography-large-body-letter-spacing-small-screens: 0rem;
+  --vcdk-typography-subtitle-1-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-subtitle-1-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-subtitle-1-weight-large-screens: 700;
+  --vcdk-typography-subtitle-1-weight-small-screens: 700;
+  --vcdk-typography-subtitle-1-size-large-screens: 1rem;
+  --vcdk-typography-subtitle-1-size-small-screens: 1rem;
+  --vcdk-typography-subtitle-1-line-height-large-screens: 1.5rem;
+  --vcdk-typography-subtitle-1-line-height-small-screens: 1.5rem;
+  --vcdk-typography-subtitle-1-letter-spacing-large-screens: 0rem;
+  --vcdk-typography-subtitle-1-letter-spacing-small-screens: 0rem;
+  --vcdk-typography-subtitle-2-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-subtitle-2-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-subtitle-2-weight-large-screens: 700;
+  --vcdk-typography-subtitle-2-weight-small-screens: 700;
+  --vcdk-typography-subtitle-2-size-large-screens: 0.875rem;
+  --vcdk-typography-subtitle-2-size-small-screens: 0.875rem;
+  --vcdk-typography-subtitle-2-line-height-large-screens: 1.25rem;
+  --vcdk-typography-subtitle-2-line-height-small-screens: 1.25rem;
+  --vcdk-typography-subtitle-2-letter-spacing-large-screens: 0rem;
+  --vcdk-typography-subtitle-2-letter-spacing-small-screens: 0rem;
+  --vcdk-typography-body-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-body-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-body-weight-large-screens: 400;
+  --vcdk-typography-body-weight-small-screens: 400;
+  --vcdk-typography-body-size-large-screens: 1rem;
+  --vcdk-typography-body-size-small-screens: 1rem;
+  --vcdk-typography-body-line-height-large-screens: 1.5rem;
+  --vcdk-typography-body-line-height-small-screens: 1.5rem;
+  --vcdk-typography-body-letter-spacing-large-screens: 0rem;
+  --vcdk-typography-body-letter-spacing-small-screens: 0rem;
+  --vcdk-typography-body-italic-style: italic;
+  --vcdk-typography-body-underlined-decoration: underlined;
+  --vcdk-typography-button-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-button-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-button-weight-large-screens: 400;
+  --vcdk-typography-button-weight-small-screens: 400;
+  --vcdk-typography-button-size-large-screens: 0.875rem;
+  --vcdk-typography-button-size-small-screens: 0.875rem;
+  --vcdk-typography-button-line-height-large-screens: 1.25rem;
+  --vcdk-typography-button-line-height-small-screens: 1.25rem;
+  --vcdk-typography-button-letter-spacing-large-screens: 0.0175rem;
+  --vcdk-typography-button-letter-spacing-small-screens: 0.0175rem;
+  --vcdk-typography-caption-1-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-caption-1-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-caption-1-weight-large-screens: 400;
+  --vcdk-typography-caption-1-weight-small-screens: 400;
+  --vcdk-typography-caption-1-size-large-screens: 0.875rem;
+  --vcdk-typography-caption-1-size-small-screens: 0.875rem;
+  --vcdk-typography-caption-1-line-height-large-screens: 1.25rem;
+  --vcdk-typography-caption-1-line-height-small-screens: 1.25rem;
+  --vcdk-typography-caption-1-letter-spacing-large-screens: 0.0175rem;
+  --vcdk-typography-caption-1-letter-spacing-small-screens: 0.0175rem;
+  --vcdk-typography-caption-1-italic-style: italic;
+  --vcdk-typography-caption-2-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-caption-2-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-caption-2-weight-large-screens: 400;
+  --vcdk-typography-caption-2-weight-small-screens: 400;
+  --vcdk-typography-caption-2-size-large-screens: 0.75rem;
+  --vcdk-typography-caption-2-size-small-screens: 0.75rem;
+  --vcdk-typography-caption-2-line-height-large-screens: 1rem;
+  --vcdk-typography-caption-2-line-height-small-screens: 1rem;
+  --vcdk-typography-caption-2-letter-spacing-large-screens: 0.015rem;
+  --vcdk-typography-caption-2-letter-spacing-small-screens: 0.015rem;
+  --vcdk-typography-caption-2-italic-style: italic;
+}
+/**
+ * Do not edit directly
+ * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ */
+
+.vcdk-theme-volvo.vcdk-mode-dark {
+  --vcdk-spacing-1: 2px;
+  --vcdk-spacing-2: 4px;
+  --vcdk-spacing-3: 6px;
+  --vcdk-spacing-4: 8px;
+  --vcdk-spacing-5: 12px;
+  --vcdk-spacing-6: 16px;
+  --vcdk-spacing-7: 20px;
+  --vcdk-spacing-8: 24px;
+  --vcdk-spacing-9: 32px;
+  --vcdk-spacing-10: 40px;
+  --vcdk-spacing-11: 48px;
+  --vcdk-spacing-12: 64px;
+  --vcdk-spacing-13: 80px;
+  --vcdk-spacing-14: 96px;
+  --vcdk-spacing-15: 128px;
+}
+/**
+ * Do not edit directly
+ * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ */
+
+.vcdk-theme-volvo.vcdk-mode-dark {
+  --vcdk-radius-small: 2px;
+  --vcdk-radius-default: 4px;
+  --vcdk-radius-large: 8px;
+  --vcdk-radius-xlarge: 20px;
+  --vcdk-radius-circular: 99px;
+}
+/**
+ * Do not edit directly
+ * Generated on Wed, 06 Aug 2025 13:33:16 GMT
+ */
+
+.vcdk-theme-volvo.vcdk-mode-dark {
+  --vcdk-motion-easing-entrance: cubic-bezier(0, 0, 0.4, 1);
+  --vcdk-motion-easing-exit: cubic-bezier(0.2, 0, 1, 1);
+  --vcdk-motion-easing-standard: cubic-bezier(0.2, 0, 0.1, 1);
+  --vcdk-motion-duration-small: 160ms;
+  --vcdk-motion-duration-medium: 240ms;
+  --vcdk-motion-duration-large: 320ms;
+}
+
+/**
+ * Do not edit directly
+ * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ */
+
+:root, :host, .vcdk-theme-volvo {
+  --vcdk-color-bg: #ffffff;
+  --vcdk-color-bg-base: #f7f7f7;
+  --vcdk-color-bg-button-marketing: #2a609d;
+  --vcdk-color-bg-button-marketing-hover: #4781c4;
+  --vcdk-color-bg-button-marketing-pressed: #234d7d;
+  --vcdk-color-bg-button-primary: #212121;
+  --vcdk-color-bg-button-primary-hover: #333333;
+  --vcdk-color-bg-button-primary-pressed: #3d3d3d;
+  --vcdk-color-bg-button-secondary: rgba(255, 255, 255, 0);
+  --vcdk-color-bg-button-secondary-hover: rgba(20, 20, 20, 0.04);
+  --vcdk-color-bg-button-secondary-pressed: rgba(20, 20, 20, 0.12);
+  --vcdk-color-bg-button-tertiary: rgba(255, 255, 255, 0);
+  --vcdk-color-bg-button-tertiary-hover: rgba(20, 20, 20, 0.04);
+  --vcdk-color-bg-button-tertiary-pressed: rgba(20, 20, 20, 0.12);
+  --vcdk-color-bg-category-1: #4781c4;
+  --vcdk-color-bg-category-1-subtle: #a7cdfa;
+  --vcdk-color-bg-category-2: #50a294;
+  --vcdk-color-bg-category-2-subtle: #abd6cf;
+  --vcdk-color-bg-category-3: #8252c7;
+  --vcdk-color-bg-category-3-subtle: #d6b8f5;
+  --vcdk-color-bg-category-4: #e77352;
+  --vcdk-color-bg-category-4-subtle: #fdcb9d;
+  --vcdk-color-bg-category-5: #1fa2c2;
+  --vcdk-color-bg-category-5-subtle: #abe0ed;
+  --vcdk-color-bg-category-6: #d45b95;
+  --vcdk-color-bg-category-6-subtle: #f4b2da;
+  --vcdk-color-bg-disabled: #e1e1e1;
+  --vcdk-color-bg-error: #bf2012;
+  --vcdk-color-bg-error-subtle: #f8dddb;
+  --vcdk-color-bg-handle: #ffffff;
+  --vcdk-color-bg-handle-disabled: #a9a9a9;
+  --vcdk-color-bg-highlight: #2a609d;
+  --vcdk-color-bg-hover: #f7f7f7;
+  --vcdk-color-bg-info: #2a609d;
+  --vcdk-color-bg-info-subtle: #d5e6ff;
+  --vcdk-color-bg-inverse: #212121;
+  --vcdk-color-bg-notification-badge: #bf2012;
+  --vcdk-color-bg-pressed: #ededed;
+  --vcdk-color-bg-renault-brand-element: rgba(255, 255, 255, 0);
+  --vcdk-color-bg-scrim: rgba(20, 20, 20, 0.6);
+  --vcdk-color-bg-scrollbar-handle: #8d8d8d;
+  --vcdk-color-bg-scrollbar-handle-hover: #575757;
+  --vcdk-color-bg-selected: #212121;
+  --vcdk-color-bg-selected-disabled: #a9a9a9;
+  --vcdk-color-bg-selected-hover: #333333;
+  --vcdk-color-bg-selected-pressed: #3d3d3d;
+  --vcdk-color-bg-selected-subtle: #ededed;
+  --vcdk-color-bg-shadow: rgba(0, 0, 0, 0.2);
+  --vcdk-color-bg-success: #177844;
+  --vcdk-color-bg-success-subtle: #d8efde;
+  --vcdk-color-bg-switch-off: #d0d0d0;
+  --vcdk-color-bg-track: #d0d0d0;
+  --vcdk-color-bg-track-disabled: #e1e1e1;
+  --vcdk-color-bg-variant: #ededed;
+  --vcdk-color-bg-variant-subtle: #f7f7f7;
+  --vcdk-color-bg-warning: #ffa000;
+  --vcdk-color-bg-warning-subtle: #fff3de;
+  --vcdk-color-border: #a9a9a9;
+  --vcdk-color-border-button-secondary: rgba(20, 20, 20, 0.7);
+  --vcdk-color-border-button-secondary-disabled: rgba(20, 20, 20, 0.12);
+  --vcdk-color-border-category-1: #4781c4;
+  --vcdk-color-border-category-2: #50a294;
+  --vcdk-color-border-category-3: #8252c7;
+  --vcdk-color-border-category-4: #e77352;
+  --vcdk-color-border-category-5: #1fa2c2;
+  --vcdk-color-border-category-6: #d45b95;
+  --vcdk-color-border-error: #bf2012;
+  --vcdk-color-border-focus: #4781c4;
+  --vcdk-color-border-highlight: #2a609d;
+  --vcdk-color-border-hover: #4781c4;
+  --vcdk-color-border-info: #2a609d;
+  --vcdk-color-border-input-active: #2a609d;
+  --vcdk-color-border-selected: #212121;
+  --vcdk-color-border-subtle: #e1e1e1;
+  --vcdk-color-border-success: #177844;
+  --vcdk-color-border-warning: #e06900;
+  --vcdk-color-chart: #376fb0;
+  --vcdk-color-chart-category-1: #4781c4;
+  --vcdk-color-chart-category-2: #50a294;
+  --vcdk-color-chart-category-3: #8252c7;
+  --vcdk-color-chart-category-4: #e77352;
+  --vcdk-color-chart-category-5: #1fa2c2;
+  --vcdk-color-chart-category-6: #d45b95;
+  --vcdk-color-chart-empty: #e1e1e1;
+  --vcdk-color-chart-error: #e03c2d;
+  --vcdk-color-chart-success: #338f58;
+  --vcdk-color-chart-transparent: rgba(55, 111, 176, 0);
+  --vcdk-color-chart-warning: #f06f05;
+  --vcdk-color-icon: #212121;
+  --vcdk-color-icon-disabled: #a9a9a9;
+  --vcdk-color-icon-error: #bf2012;
+  --vcdk-color-icon-highlight: #376fb0;
+  --vcdk-color-icon-info: #376fb0;
+  --vcdk-color-icon-link: #376fb0;
+  --vcdk-color-icon-link-hover: #4781c4;
+  --vcdk-color-icon-link-pressed: #234d7d;
+  --vcdk-color-icon-link-visited: #396976;
+  --vcdk-color-icon-on-button-marketing: #ffffff;
+  --vcdk-color-icon-on-button-primary: #ffffff;
+  --vcdk-color-icon-on-button-secondary: #212121;
+  --vcdk-color-icon-on-button-tertiary: #212121;
+  --vcdk-color-icon-on-category-1-subtle: #234d7d;
+  --vcdk-color-icon-on-category-2-subtle: #345d56;
+  --vcdk-color-icon-on-category-3-subtle: #563f6e;
+  --vcdk-color-icon-on-category-4-subtle: #904735;
+  --vcdk-color-icon-on-category-5-subtle: #14667a;
+  --vcdk-color-icon-on-category-6-subtle: #84365c;
+  --vcdk-color-icon-on-error: #ffffff;
+  --vcdk-color-icon-on-highlight: #ffffff;
+  --vcdk-color-icon-on-info: #ffffff;
+  --vcdk-color-icon-on-inverse: #ffffff;
+  --vcdk-color-icon-on-selected: #ffffff;
+  --vcdk-color-icon-on-success: #ffffff;
+  --vcdk-color-icon-on-warning: #212121;
+  --vcdk-color-icon-selected: #212121;
+  --vcdk-color-icon-subtle: #575757;
+  --vcdk-color-icon-subtlest: #6b6b6b;
+  --vcdk-color-icon-success: #338f58;
+  --vcdk-color-icon-warning: #e06900;
+  --vcdk-color-text: #212121;
+  --vcdk-color-text-disabled: #a9a9a9;
+  --vcdk-color-text-error: #bf2012;
+  --vcdk-color-text-highlight: #2a609d;
+  --vcdk-color-text-info: #2a609d;
+  --vcdk-color-text-link: #2a609d;
+  --vcdk-color-text-link-hover: #4781c4;
+  --vcdk-color-text-link-pressed: #234d7d;
+  --vcdk-color-text-link-visited: #396976;
+  --vcdk-color-text-on-button-marketing: #ffffff;
+  --vcdk-color-text-on-button-primary: #ffffff;
+  --vcdk-color-text-on-button-secondary: #212121;
+  --vcdk-color-text-on-button-tertiary: #212121;
+  --vcdk-color-text-on-category-1-subtle: #234d7d;
+  --vcdk-color-text-on-category-2-subtle: #345d56;
+  --vcdk-color-text-on-category-3-subtle: #563f6e;
+  --vcdk-color-text-on-category-4-subtle: #904735;
+  --vcdk-color-text-on-category-5-subtle: #14667a;
+  --vcdk-color-text-on-category-6-subtle: #84365c;
+  --vcdk-color-text-on-error: #ffffff;
+  --vcdk-color-text-on-highlight: #ffffff;
+  --vcdk-color-text-on-info: #ffffff;
+  --vcdk-color-text-on-inverse: #ffffff;
+  --vcdk-color-text-on-selected: #ffffff;
+  --vcdk-color-text-on-success: #ffffff;
+  --vcdk-color-text-on-warning: #212121;
+  --vcdk-color-text-selected: #212121;
+  --vcdk-color-text-subtle: #575757;
+  --vcdk-color-text-subtlest: #6b6b6b;
+  --vcdk-color-text-success: #177844;
+  --vcdk-color-text-warning: #ad5100;
+}
+/**
+ * Do not edit directly
+ * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ */
+
+:root, :host, .vcdk-theme-volvo {
+  --vcdk-typography-display-statement-font-family-large-screens: "Volvo Broad", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-display-statement-font-family-small-screens: "Volvo Broad", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-display-statement-weight-large-screens: 400;
+  --vcdk-typography-display-statement-weight-small-screens: 400;
+  --vcdk-typography-display-statement-size-large-screens: 4.375rem;
+  --vcdk-typography-display-statement-size-small-screens: 3.125rem;
+  --vcdk-typography-display-statement-line-height-large-screens: 3.75rem;
+  --vcdk-typography-display-statement-line-height-small-screens: 2.75rem;
+  --vcdk-typography-display-statement-letter-spacing-large-screens: 0.21875rem;
+  --vcdk-typography-display-statement-letter-spacing-small-screens: 0.15625rem;
+  --vcdk-typography-display-1-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-display-1-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-display-2-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-display-2-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-display-2-weight-large-screens: 700;
+  --vcdk-typography-display-2-weight-small-screens: 700;
+  --vcdk-typography-display-2-size-large-screens: 3.5rem;
+  --vcdk-typography-display-2-size-small-screens: 2.5rem;
+  --vcdk-typography-display-2-line-height-large-screens: 4rem;
+  --vcdk-typography-display-2-line-height-small-screens: 3rem;
+  --vcdk-typography-display-2-letter-spacing-large-screens: -0.105rem;
+  --vcdk-typography-display-2-letter-spacing-small-screens: -0.075rem;
+  --vcdk-typography-display-1-weight-large-screens: 700;
+  --vcdk-typography-display-1-weight-small-screens: 700;
+  --vcdk-typography-display-1-size-large-screens: 4.5rem;
+  --vcdk-typography-display-1-size-small-screens: 3.25rem;
+  --vcdk-typography-display-1-line-height-large-screens: 5rem;
+  --vcdk-typography-display-1-line-height-small-screens: 3.75rem;
+  --vcdk-typography-display-1-letter-spacing-large-screens: -0.135rem;
+  --vcdk-typography-display-1-letter-spacing-small-screens: -0.0975rem;
+  --vcdk-typography-heading-1-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-1-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-1-weight-large-screens: 700;
+  --vcdk-typography-heading-1-weight-small-screens: 700;
+  --vcdk-typography-heading-1-size-large-screens: 3rem;
+  --vcdk-typography-heading-1-size-small-screens: 2.375rem;
+  --vcdk-typography-heading-1-line-height-large-screens: 3.5rem;
+  --vcdk-typography-heading-1-line-height-small-screens: 2.875rem;
+  --vcdk-typography-heading-1-letter-spacing-large-screens: -0.03rem;
+  --vcdk-typography-heading-1-letter-spacing-small-screens: -0.02375rem;
+  --vcdk-typography-heading-2-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-2-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-2-weight-large-screens: 700;
+  --vcdk-typography-heading-2-weight-small-screens: 700;
+  --vcdk-typography-heading-2-size-large-screens: 2rem;
+  --vcdk-typography-heading-2-size-small-screens: 1.875rem;
+  --vcdk-typography-heading-2-line-height-large-screens: 2.5rem;
+  --vcdk-typography-heading-2-line-height-small-screens: 2.25rem;
+  --vcdk-typography-heading-2-letter-spacing-large-screens: -0.02rem;
+  --vcdk-typography-heading-2-letter-spacing-small-screens: -0.01875rem;
+  --vcdk-typography-heading-3-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-3-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-3-weight-large-screens: 700;
+  --vcdk-typography-heading-3-weight-small-screens: 700;
+  --vcdk-typography-heading-3-size-large-screens: 1.5rem;
+  --vcdk-typography-heading-3-size-small-screens: 1.375rem;
+  --vcdk-typography-heading-3-line-height-large-screens: 2rem;
+  --vcdk-typography-heading-3-line-height-small-screens: 1.75rem;
+  --vcdk-typography-heading-3-letter-spacing-large-screens: -0.015rem;
+  --vcdk-typography-heading-3-letter-spacing-small-screens: -0.01375rem;
+  --vcdk-typography-heading-4-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-4-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-heading-4-weight-large-screens: 700;
+  --vcdk-typography-heading-4-weight-small-screens: 700;
+  --vcdk-typography-heading-4-size-large-screens: 1.25rem;
+  --vcdk-typography-heading-4-size-small-screens: 1.25rem;
+  --vcdk-typography-heading-4-line-height-large-screens: 1.625rem;
+  --vcdk-typography-heading-4-line-height-small-screens: 1.625rem;
+  --vcdk-typography-heading-4-letter-spacing-large-screens: -0.0125rem;
+  --vcdk-typography-heading-4-letter-spacing-small-screens: -0.0125rem;
+  --vcdk-typography-large-body-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-large-body-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-large-body-weight-large-screens: 400;
+  --vcdk-typography-large-body-weight-small-screens: 400;
+  --vcdk-typography-large-body-size-large-screens: 1.5rem;
+  --vcdk-typography-large-body-size-small-screens: 1.375rem;
+  --vcdk-typography-large-body-line-height-large-screens: 2rem;
+  --vcdk-typography-large-body-line-height-small-screens: 1.75rem;
+  --vcdk-typography-large-body-letter-spacing-large-screens: 0rem;
+  --vcdk-typography-large-body-letter-spacing-small-screens: 0rem;
+  --vcdk-typography-subtitle-1-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-subtitle-1-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-subtitle-1-weight-large-screens: 700;
+  --vcdk-typography-subtitle-1-weight-small-screens: 700;
+  --vcdk-typography-subtitle-1-size-large-screens: 1rem;
+  --vcdk-typography-subtitle-1-size-small-screens: 1rem;
+  --vcdk-typography-subtitle-1-line-height-large-screens: 1.5rem;
+  --vcdk-typography-subtitle-1-line-height-small-screens: 1.5rem;
+  --vcdk-typography-subtitle-1-letter-spacing-large-screens: 0rem;
+  --vcdk-typography-subtitle-1-letter-spacing-small-screens: 0rem;
+  --vcdk-typography-subtitle-2-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-subtitle-2-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-subtitle-2-weight-large-screens: 700;
+  --vcdk-typography-subtitle-2-weight-small-screens: 700;
+  --vcdk-typography-subtitle-2-size-large-screens: 0.875rem;
+  --vcdk-typography-subtitle-2-size-small-screens: 0.875rem;
+  --vcdk-typography-subtitle-2-line-height-large-screens: 1.25rem;
+  --vcdk-typography-subtitle-2-line-height-small-screens: 1.25rem;
+  --vcdk-typography-subtitle-2-letter-spacing-large-screens: 0rem;
+  --vcdk-typography-subtitle-2-letter-spacing-small-screens: 0rem;
+  --vcdk-typography-body-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-body-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-body-weight-large-screens: 400;
+  --vcdk-typography-body-weight-small-screens: 400;
+  --vcdk-typography-body-size-large-screens: 1rem;
+  --vcdk-typography-body-size-small-screens: 1rem;
+  --vcdk-typography-body-line-height-large-screens: 1.5rem;
+  --vcdk-typography-body-line-height-small-screens: 1.5rem;
+  --vcdk-typography-body-letter-spacing-large-screens: 0rem;
+  --vcdk-typography-body-letter-spacing-small-screens: 0rem;
+  --vcdk-typography-body-italic-style: italic;
+  --vcdk-typography-body-underlined-decoration: underlined;
+  --vcdk-typography-button-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-button-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-button-weight-large-screens: 400;
+  --vcdk-typography-button-weight-small-screens: 400;
+  --vcdk-typography-button-size-large-screens: 0.875rem;
+  --vcdk-typography-button-size-small-screens: 0.875rem;
+  --vcdk-typography-button-line-height-large-screens: 1.25rem;
+  --vcdk-typography-button-line-height-small-screens: 1.25rem;
+  --vcdk-typography-button-letter-spacing-large-screens: 0.0175rem;
+  --vcdk-typography-button-letter-spacing-small-screens: 0.0175rem;
+  --vcdk-typography-caption-1-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-caption-1-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-caption-1-weight-large-screens: 400;
+  --vcdk-typography-caption-1-weight-small-screens: 400;
+  --vcdk-typography-caption-1-size-large-screens: 0.875rem;
+  --vcdk-typography-caption-1-size-small-screens: 0.875rem;
+  --vcdk-typography-caption-1-line-height-large-screens: 1.25rem;
+  --vcdk-typography-caption-1-line-height-small-screens: 1.25rem;
+  --vcdk-typography-caption-1-letter-spacing-large-screens: 0.0175rem;
+  --vcdk-typography-caption-1-letter-spacing-small-screens: 0.0175rem;
+  --vcdk-typography-caption-1-italic-style: italic;
+  --vcdk-typography-caption-2-font-family-large-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-caption-2-font-family-small-screens: "Volvo Novum", "Noto Sans", system-ui, sans-serif;
+  --vcdk-typography-caption-2-weight-large-screens: 400;
+  --vcdk-typography-caption-2-weight-small-screens: 400;
+  --vcdk-typography-caption-2-size-large-screens: 0.75rem;
+  --vcdk-typography-caption-2-size-small-screens: 0.75rem;
+  --vcdk-typography-caption-2-line-height-large-screens: 1rem;
+  --vcdk-typography-caption-2-line-height-small-screens: 1rem;
+  --vcdk-typography-caption-2-letter-spacing-large-screens: 0.015rem;
+  --vcdk-typography-caption-2-letter-spacing-small-screens: 0.015rem;
+  --vcdk-typography-caption-2-italic-style: italic;
+}
+/**
+ * Do not edit directly
+ * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ */
+
+:root, :host, .vcdk-theme-volvo {
+  --vcdk-spacing-1: 2px;
+  --vcdk-spacing-2: 4px;
+  --vcdk-spacing-3: 6px;
+  --vcdk-spacing-4: 8px;
+  --vcdk-spacing-5: 12px;
+  --vcdk-spacing-6: 16px;
+  --vcdk-spacing-7: 20px;
+  --vcdk-spacing-8: 24px;
+  --vcdk-spacing-9: 32px;
+  --vcdk-spacing-10: 40px;
+  --vcdk-spacing-11: 48px;
+  --vcdk-spacing-12: 64px;
+  --vcdk-spacing-13: 80px;
+  --vcdk-spacing-14: 96px;
+  --vcdk-spacing-15: 128px;
+}
+/**
+ * Do not edit directly
+ * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ */
+
+:root, :host, .vcdk-theme-volvo {
+  --vcdk-radius-small: 2px;
+  --vcdk-radius-default: 4px;
+  --vcdk-radius-large: 8px;
+  --vcdk-radius-xlarge: 20px;
+  --vcdk-radius-circular: 99px;
+}
+/**
+ * Do not edit directly
+ * Generated on Wed, 06 Aug 2025 13:33:16 GMT
+ */
+
+:root, :host, .vcdk-theme-volvo {
+  --vcdk-motion-easing-entrance: cubic-bezier(0, 0, 0.4, 1);
+  --vcdk-motion-easing-exit: cubic-bezier(0.2, 0, 1, 1);
+  --vcdk-motion-easing-standard: cubic-bezier(0.2, 0, 0.1, 1);
+  --vcdk-motion-duration-small: 160ms;
+  --vcdk-motion-duration-medium: 240ms;
+  --vcdk-motion-duration-large: 320ms;
+}
+
