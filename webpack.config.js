@@ -6,7 +6,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
-const enableSourceMaps = process.env.SOURCEMAPS === 'true';
+const isProd = process.env.PROD === 'true';
+const enableSourceMaps = !isProd;
 
 // List of files to ignore
 const ignoreFiles = [
@@ -35,8 +36,12 @@ if (enableSourceMaps) {
 
 module.exports = {
   mode: 'production',
+  devtool: enableSourceMaps ? 'source-map' : false,
 
-  entry: './scripts/entrypoint.js',
+  entry: {
+    main: './scripts/entrypoint.js',
+    'page-404': './scripts/404-entrypoint.js',
+  },
 
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -82,7 +87,7 @@ module.exports = {
         },
         default: {
           name: 'main',
-          chunks: 'all',
+          chunks: (chunk) => chunk.name !== 'page-404',
           minSize: 100, // Allow splitting for files of all sizes
           minChunks: 2,
         },
@@ -93,8 +98,8 @@ module.exports = {
       new TerserPlugin({
         extractComments: false,
         terserOptions: {
-          compress: true,
-          mangle: true,
+          compress: isProd,
+          mangle: isProd,
           format: { comments: false },
         },
       }),

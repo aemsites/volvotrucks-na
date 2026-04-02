@@ -1,64 +1,31 @@
 <!DOCTYPE html>
 <html>
+  <head>
+    <title>Page not found</title>
+    <meta
+      http-equiv="Content-Security-Policy"
+      content="script-src 'nonce-aem' 'strict-dynamic' http: https:; base-uri 'self'; object-src 'none';"
+      move-to-http-header="true"
+    >
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer-when-downgrade">
+    <meta property="og:title" content="Page not found">
 
-<head>
-  <title>Page not found</title>
-  <script type="text/javascript">
-    window.isErrorPage = true;
-    window.errorCode = '404';
-  </script>
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta property="og:title" content="Page not found">
-  <script nonce="aem" src="/scripts/scripts.js" type="module" crossorigin="use-credentials"></script>
-  <script nonce="aem" type="module">
-    import { sampleRUM } from '/scripts/aem.js';
-    import { getTextLabel } from '/scripts/common.js';
+    <script nonce="aem" src="/dist/page-404.js" type="module"></script>
+    <link rel="preload" href="/constants.json" as="fetch" type="application/json" crossorigin="anonymous">
+    <link rel="stylesheet" href="/styles/styles.css">
+    <link rel="stylesheet" href="/styles/lazy-styles.css">
+  </head>
 
-    window.addEventListener('load', () => {
-      if (document.referrer) {
-        const { origin, pathname } = new URL(document.referrer);
-        if (origin === window.location.origin) {
-          const main = document.querySelector('main.error');
-
-          const observer = new MutationObserver((mutations, observer) => {
-            const fragmentContainer = document.querySelector('.fragment');
-            if (fragmentContainer) {
-              const backLinkTitle = getTextLabel('404:back_link_title');
-              const btnContainer = document.createElement('p');
-              const backBtn = document.createElement('a');
-              backBtn.classList.add('button', 'button--primary');
-              backBtn.href = pathname;
-              backBtn.textContent = backLinkTitle;
-              backBtn.title = backLinkTitle;
-              btnContainer.append(backBtn);
-              fragmentContainer.append(btnContainer);
-              observer.disconnect();
-            }
-          });
-
-          observer.observe(main, {
-            childList: true,
-            subtree: true
-          });
-        }
-      }
-      sampleRUM('404', { source: document.referrer, target: window.location.href });
-    });
-  </script>
-  <link rel="stylesheet" href="/styles/styles.css">
-  <link rel="stylesheet" href="/styles/lazy-styles.css">
-</head>
-
-<body>
-  <header></header>
-  <main class="error">
-    <div>
-      <div class="fragment" style="--section-padding-top: ">
-        <a href="/404" style="visibility: hidden;">/404</a>
+  <body>
+    <header></header>
+    <main class="error">
+      <div>
+        <div class="fragment">
+          <a href="/404" style="visibility: hidden;">/404</a>
+        </div>
       </div>
-    </div>
-  </main>
-  <footer></footer>
-</body>
-
+    </main>
+    <footer></footer>
+  </body>
 </html>

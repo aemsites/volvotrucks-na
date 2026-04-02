@@ -649,26 +649,6 @@ $.fn.getOpenHours = function (pin) {
     var { Start: start, End: end } = time;
     var compareDate = '1/1/2000 '
 
-    switch (start.toLowerCase()) {
-      case 'midnight':
-      case '24':
-        start = '12:00 AM';
-        break;
-      case 'noon':
-        start = '12:00 PM';
-        break;
-    }
-
-    switch (end.toLowerCase()) {
-      case 'midnight':
-      case '24':
-        end = '11:59 PM';
-        break;
-      case 'noon':
-        end = '12:00 PM';
-        break;
-    }
-
     if (idx === 0) {
       earliestHour = start;
       latestHour = end;

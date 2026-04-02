@@ -1,4 +1,4 @@
-"use strict";(self.webpackChunkvolvotrucks_na=self.webpackChunkvolvotrucks_na||[]).push([[325],{1669:(e,t,i)=>{i.d(t,{FB:()=>d,IT:()=>l,UN:()=>c,gI:()=>n,zQ:()=>a});var o=i(8128),r=i(2618),s=i(2326);const n=r.AH`
+"use strict";(self["webpackChunkvolvotrucks_na"]=self["webpackChunkvolvotrucks_na"]||[]).push([[325],{1669:(__unused_webpack___webpack_module__,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{FB:()=>allTypographyClasses,IT:()=>typographyClasses,UN:()=>getTypographyValues,gI:()=>typographyStyles,zQ:()=>typographyVariantStyles});var _volvo_vcdk_tokens_dist_web_global_breakpoints_js__WEBPACK_IMPORTED_MODULE_0__=__webpack_require__(8128);var lit__WEBPACK_IMPORTED_MODULE_1__=__webpack_require__(2618);var lodash_es__WEBPACK_IMPORTED_MODULE_2__=__webpack_require__(2326);const typographyStyles=(0,lit__WEBPACK_IMPORTED_MODULE_1__.AH)`
   slot {
     display: inline;
     font-synthesis: none;
@@ -9,36 +9,36 @@
     font-synthesis: none;
     margin: 0;
   }
-`,a=(e,t="small")=>{const i=(0,s.A)(e);return r.AH`
+`;const typographyVariants=["display-statement","display1","display2","heading1","heading2","heading3","heading4","subtitle1","subtitle2","large-body","body","button","caption1","caption2"];const typographyVariantStyles=(variant,screenSize="small")=>{const kebabVariant=(0,lodash_es__WEBPACK_IMPORTED_MODULE_2__.A)(variant);return(0,lit__WEBPACK_IMPORTED_MODULE_1__.AH)`
     font-family: var(
-      --vcdk-typography-${(0,r.iz)(i)}-font-family-${(0,r.iz)(t)}-screens
+      --vcdk-typography-${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(kebabVariant)}-font-family-${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(screenSize)}-screens
     );
     font-size: var(
-      --vcdk-typography-${(0,r.iz)(i)}-size-${(0,r.iz)(t)}-screens
+      --vcdk-typography-${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(kebabVariant)}-size-${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(screenSize)}-screens
     );
     line-height: var(
-      --vcdk-typography-${(0,r.iz)(i)}-line-height-${(0,r.iz)(t)}-screens
+      --vcdk-typography-${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(kebabVariant)}-line-height-${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(screenSize)}-screens
     );
     letter-spacing: var(
-      --vcdk-typography-${(0,r.iz)(i)}-letter-spacing-${(0,r.iz)(t)}-screens
+      --vcdk-typography-${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(kebabVariant)}-letter-spacing-${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(screenSize)}-screens
     );
     font-weight: var(
-      --vcdk-typography-${(0,r.iz)(i)}-weight-${(0,r.iz)(t)}-screens
+      --vcdk-typography-${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(kebabVariant)}-weight-${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(screenSize)}-screens
     );
-  `},l=["display-statement","display1","display2","heading1","heading2","heading3","heading4","subtitle1","subtitle2","large-body","body","button","caption1","caption2"].reduce((e,t)=>(e[t]=r.AH`
-      .typography-${(0,r.iz)(t)},
-        .typography-${(0,r.iz)(t)}
+  `};const typographyClasses=typographyVariants.reduce((classes,variant)=>{classes[variant]=(0,lit__WEBPACK_IMPORTED_MODULE_1__.AH)`
+      .typography-${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(variant)},
+        .typography-${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(variant)}
         ::slotted(*) {
-        ${a(t,"small")}
+        ${typographyVariantStyles(variant,"small")}
       }
-      @media (min-width: ${o.f.md.from}px) {
-        .typography-${(0,r.iz)(t)},
-          .typography-${(0,r.iz)(t)}
+      @media (min-width: ${_volvo_vcdk_tokens_dist_web_global_breakpoints_js__WEBPACK_IMPORTED_MODULE_0__.f.md.from}px) {
+        .typography-${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(variant)},
+          .typography-${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(variant)}
           ::slotted(*) {
-          ${a(t,"large")}
+          ${typographyVariantStyles(variant,"large")}
         }
       }
-    `,e),{}),d=Object.values(l),c=(e,t)=>{const i="font-size"===t?"size":t,o=(0,s.A)(e);return[`var(--vcdk-typography-${o}-${i}-small-screens)`,`var(--vcdk-typography-${o}-${i}-large-screens)`]}},2871:(e,t,i)=>{i.d(t,{l:()=>v});var o=i(767);const r=["volvo","mack","renault"];function s(e){return e.includes("light")?e.replace("light","dark"):e.replace("dark","light")}var n=i(2618),a=i(352),l=i(2302);const d=(0,o.q6)(Symbol("vcdk-theme"));if("undefined"!=typeof document){const e=new o.aU,t=()=>e.attach(document.body);document.body?t():document.addEventListener("DOMContentLoaded",t)}const c=n.AH`
+    `;return classes},{});const allTypographyClasses=Object.values(typographyClasses);const getTypographyValues=(variant,property)=>{const tokenProperty=property==="font-size"?"size":property;const kebabVariant=(0,lodash_es__WEBPACK_IMPORTED_MODULE_2__.A)(variant);return[`var(--vcdk-typography-${kebabVariant}-${tokenProperty}-small-screens)`,`var(--vcdk-typography-${kebabVariant}-${tokenProperty}-large-screens)`]}},2871:(__unused_webpack___webpack_module__,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{l:()=>VcdkElement});var context=__webpack_require__(767);const themes=null&&["volvo-light","volvo-dark","mack-light","mack-dark","renault-light","renault-dark"];const brands=["volvo","mack","renault"];const colorSchemes=null&&["light","dark"];function reverseTheme(themeId){if(themeId.includes("light")){return themeId.replace("light","dark")}return themeId.replace("dark","light")}function darkTheme(themeId){if(themeId.includes("dark")){return themeId}return reverseTheme(themeId)}var lit=__webpack_require__(2618);var decorators=__webpack_require__(352);var noop=__webpack_require__(2302);const themeContext=(0,context.q6)(Symbol("vcdk-theme"));if(typeof document!=="undefined"){const root=new context.aU;const attach=()=>root.attach(document.body);if(document.body){attach()}else{document.addEventListener("DOMContentLoaded",attach)}}const globalVariableStyles=(0,lit.AH)`
   :host {
     --vcdk-z-index-zero: 0;
     --vcdk-z-index-over-input: 1;
@@ -75,7 +75,7 @@
       0px 1px 4px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2)),
       0px 16px 32px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2));
   }
-`,p=n.AH`
+`;const normalize=(0,lit.AH)`
   *,
   *::before,
   *::after {
@@ -141,7 +141,7 @@
     outline-style: solid;
     outline-width: 2px;
   }
-`;var h=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};class v extends n.WF{constructor(){super(...arguments),this.isThemeProvider=!1,this.themeProvider=void 0,this.themeConsumer=new o.G(this,{context:d,subscribe:!0,callback:()=>{this.handleTheming()}})}static get defaultLocale(){return"undefined"!=typeof document&&document.documentElement.lang?document.documentElement.lang:"undefined"!=typeof window?window.navigator.language:"en-US"}get currentTheme(){let e=this.themeId??this.contextTheme??v.defaultTheme;return this.invertTheme&&(e=s(e)),e}get contextTheme(){return this.themeConsumer?.value?.themeId}get brandId(){return this.currentTheme?.split("-")[0]}get colorSchemeId(){return this.currentTheme?.split("-")[1]}themeChanged(){(0,l.A)()}update(e){(e.has("themeId")||e.has("invertTheme"))&&this.handleTheming(),super.update(e)}handleTheming(){if(this.currentTheme!==this.contextTheme)return this.isThemeProvider?this.themeProvider?.setValue({themeId:this.currentTheme}):(this.isThemeProvider=!0,this.themeProvider=new o.DT(this,{context:d,initialValue:{themeId:this.currentTheme}})),this.setThemeCssClasses(),void this.themeChanged();this.isThemeProvider&&this.themeProvider&&(this.isThemeProvider=!1,this.removeController(this.themeProvider),this.themeProvider=void 0,this.setThemeCssClasses(),this.themeChanged())}setThemeCssClasses(){const e=this.currentTheme!==this.contextTheme;for(const t of r)this.classList.toggle(`vcdk-theme-${t}`,e&&this.brandId===t);this.classList.toggle("vcdk-mode-dark",e&&"dark"===this.colorSchemeId)}static finalizeStyles(e){return e?Array.isArray(e)?(e.unshift(c,p),n.WF.finalizeStyles(e)):n.WF.finalizeStyles([c,p,e]):n.WF.finalizeStyles([c,p])}}v.version="9.16.0",v.defaultTheme="volvo-light",h([(0,a.MZ)({type:String,reflect:!0})],v.prototype,"themeId",void 0),h([(0,a.MZ)({type:Boolean,attribute:"invert-theme",reflect:!0})],v.prototype,"invertTheme",void 0)},2932:(e,t,i)=>{var o=i(582);const r="https://cdn.designsystem.volvogroup.com/1-2-1";var s=i(2618),n=i(352),a=i(31),l=i(8776),d=i(5664),c=i(6487),p=i(1669),h=i(6591),v=i(8128),u=i(9703),b=i(2049);const y=Object.keys(v.f),f=e=>(0,u.A)(e)?e:`${e}px`,g=(e,t)=>{if(t)return(0,b.A)(t)?t.reduce((t,i,o)=>{const r=y[o];return{...t,[`${e}-${r}`]:f(i)}},{}):{[e]:f(t)}},m=Object.entries(v.f),k=(e,t)=>{const i=`\n  ${e} {\n    ${t}: var(${t}-xs);\n  }`,o=Object.entries(v.f).splice(1).map(([i,o],r)=>{const s=m[r+2],n=s?`, var(${t}-${s[0]})`:"";return`\n    @media(min-width: ${o.from}px) {\n      ${e} {\n        ${t}: var(${t}-${i} ${n});\n      } \n    }`});return(0,s.iz)([i,o].join(""))};var x=i(302),w=i(3720),$=i(1145),z=i(4135),M=i(6260);const E=s.AH`
+`;var __decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};class VcdkElement extends lit.WF{constructor(){super(...arguments);this.isThemeProvider=false;this.themeProvider=undefined;this.themeConsumer=new context.G(this,{context:themeContext,subscribe:true,callback:()=>{this.handleTheming()}})}static get defaultLocale(){if(typeof document!=="undefined"&&document.documentElement.lang){return document.documentElement.lang}if(typeof window!=="undefined"){return window.navigator.language}return"en-US"}get currentTheme(){let themeId=this.themeId??this.contextTheme??VcdkElement.defaultTheme;if(this.invertTheme){themeId=reverseTheme(themeId)}return themeId}get contextTheme(){return this.themeConsumer?.value?.themeId}get brandId(){return this.currentTheme?.split("-")[0]}get colorSchemeId(){return this.currentTheme?.split("-")[1]}themeChanged(){(0,noop.A)()}update(changedProperties){if(changedProperties.has("themeId")||changedProperties.has("invertTheme")){this.handleTheming()}super.update(changedProperties)}handleTheming(){if(this.currentTheme!==this.contextTheme){if(!this.isThemeProvider){this.isThemeProvider=true;this.themeProvider=new context.DT(this,{context:themeContext,initialValue:{themeId:this.currentTheme}})}else{this.themeProvider?.setValue({themeId:this.currentTheme})}this.setThemeCssClasses();this.themeChanged();return}if(this.isThemeProvider&&this.themeProvider){this.isThemeProvider=false;this.removeController(this.themeProvider);this.themeProvider=undefined;this.setThemeCssClasses();this.themeChanged()}}setThemeCssClasses(){const isDifferentTheme=this.currentTheme!==this.contextTheme;for(const brand of brands){this.classList.toggle(`vcdk-theme-${brand}`,isDifferentTheme&&this.brandId===brand)}this.classList.toggle("vcdk-mode-dark",isDifferentTheme&&this.colorSchemeId==="dark")}static finalizeStyles(styles){if(!styles){return lit.WF.finalizeStyles([globalVariableStyles,normalize])}if(Array.isArray(styles)){styles.unshift(globalVariableStyles,normalize);return lit.WF.finalizeStyles(styles)}return lit.WF.finalizeStyles([globalVariableStyles,normalize,styles])}}VcdkElement.version="9.16.0";VcdkElement.defaultTheme="volvo-light";__decorate([(0,decorators.MZ)({type:String,reflect:true})],VcdkElement.prototype,"themeId",void 0);__decorate([(0,decorators.MZ)({type:Boolean,attribute:"invert-theme",reflect:true})],VcdkElement.prototype,"invertTheme",void 0)},2932:(__unused_webpack___webpack_module__,__unused_webpack___webpack_exports__,__webpack_require__)=>{var task=__webpack_require__(582);const settings_settings={rootUrl:"https://cdn.designsystem.volvogroup.com/1-2-1",domain:"https://cdn.designsystem.volvogroup.com"};function systemIconUrl({brand="volvo",type="filled",iconId}){return`${settings_settings.rootUrl}/icons/${brand}/system/${type}/${iconId}.svg`}function logotypeUrl({logotype}){return`${settings.rootUrl}/logotypes/${logotype}.svg`}function typeFaceCssUrl({brand="volvo"}){return`${settings.rootUrl}/css/${brand}/typefaces.css`}var lit=__webpack_require__(2618);var decorators=__webpack_require__(352);var if_defined=__webpack_require__(31);var unsafe_svg=__webpack_require__(8776);var uniqueId=__webpack_require__(5664);var custom_element=__webpack_require__(6487);var typography_styles=__webpack_require__(1669);var responsive_value=__webpack_require__(6591);var breakpoints=__webpack_require__(8128);var isString=__webpack_require__(9703);var isArray=__webpack_require__(2049);const breakpointKeys=Object.keys(breakpoints.f);const suffixWithPxIfUnitless=value=>{if((0,isString.A)(value))return value;return`${value}px`};const toCssVariables=(name,values)=>{if(!values)return;if(!(0,isArray.A)(values)){return{[name]:suffixWithPxIfUnitless(values)}}return values.reduce((current,next,currentIndex)=>{const breakpointKey=breakpointKeys[currentIndex];return{...current,[`${name}-${breakpointKey}`]:suffixWithPxIfUnitless(next)}},{})};const breakpointEntries=Object.entries(breakpoints.f);const responsiveValueToCssVariable=(selector,variableName)=>{const primaryVariable=`\n  ${selector} {\n    ${variableName}: var(${variableName}-xs);\n  }`;const responsiveVariables=Object.entries(breakpoints.f).splice(1).map(([breakpointKey,breakpoint],index)=>{const nextBreakpoint=breakpointEntries[index+2];const fallback=nextBreakpoint?`, var(${variableName}-${nextBreakpoint[0]})`:``;return`\n    @media(min-width: ${breakpoint.from}px) {\n      ${selector} {\n        ${variableName}: var(${variableName}-${breakpointKey} ${fallback});\n      } \n    }`});return(0,lit.iz)([primaryVariable,responsiveVariables].join(""))};var when=__webpack_require__(302);var class_map=__webpack_require__(3720);var style_map=__webpack_require__(1145);var responsive=__webpack_require__(4135);var vcdk_element=__webpack_require__(6260);const skeletonStyles=(0,lit.AH)`
   @keyframes pulse {
     0% {
       opacity: 0.12;
@@ -154,8 +154,8 @@
     }
   }
 
-  ${k(".skeleton[class*='typography-'].variant-typography","--vcdk-skeleton-line-height")}
-  ${k(".skeleton[class*='typography-'].variant-typography","--vcdk-skeleton-font-size")}
+  ${responsiveValueToCssVariable(".skeleton[class*='typography-'].variant-typography","--vcdk-skeleton-line-height")}
+  ${responsiveValueToCssVariable(".skeleton[class*='typography-'].variant-typography","--vcdk-skeleton-font-size")}
 
   .skeleton {
     display: block;
@@ -215,16 +215,16 @@
       animation: none;
     }
   }
-`;var C=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};let S=class extends((0,z.F)(M.l)){constructor(){super(...arguments),this.disableAnimation=!1,this.typographyVariant="body",this.variant="typography",this.elementAriaDescription=null}get cssVariables(){return{...this.typographyVariant&&g("--vcdk-skeleton-line-height",(0,p.UN)(this.typographyVariant,"line-height")),...this.typographyVariant&&g("--vcdk-skeleton-font-size",(0,p.UN)(this.typographyVariant,"font-size"))}}render(){return s.qy`
+`;var __decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};let Skeleton=class Skeleton extends((0,responsive.F)(vcdk_element.l)){constructor(){super(...arguments);this.disableAnimation=false;this.typographyVariant="body";this.variant="typography";this.elementAriaDescription=null}get cssVariables(){return{...this.typographyVariant&&toCssVariables("--vcdk-skeleton-line-height",(0,typography_styles.UN)(this.typographyVariant,"line-height")),...this.typographyVariant&&toCssVariables("--vcdk-skeleton-font-size",(0,typography_styles.UN)(this.typographyVariant,"font-size"))}}render(){return(0,lit.qy)`
       <div
-        class=${(0,w.H)({skeleton:1,"disable-animation":!!this.disableAnimation,"aspect-ratio":!!this.aspectRatio,[`typography-${this.typographyVariant}`]:!!this.typographyVariant,[`variant-${this.variant}`]:1})}
-        style=${(0,$.W)(this.cssVariables)}>
-        ${(0,x.z)(this.elementAriaDescription,()=>s.qy`
+        class=${(0,class_map.H)({skeleton:1,"disable-animation":!!this.disableAnimation,"aspect-ratio":!!this.aspectRatio,[`typography-${this.typographyVariant}`]:!!this.typographyVariant,[`variant-${this.variant}`]:1})}
+        style=${(0,style_map.W)(this.cssVariables)}>
+        ${(0,when.z)(this.elementAriaDescription,()=>(0,lit.qy)`
             <div class="hidden">${this.elementAriaDescription}</div>
           `)}
         <slot aria-hidden="true"></slot>
       </div>
-    `}};S.styles=[E,...p.FB],S.responsiveProperties={prefix:"vcdk-skeleton",props:["width","height","size","aspectRatio"]},C([(0,n.MZ)({attribute:"aspect-ratio",converter:h.g})],S.prototype,"aspectRatio",void 0),C([(0,n.MZ)({type:Boolean,attribute:"disable-animation"})],S.prototype,"disableAnimation",void 0),C([(0,n.MZ)({converter:h.g})],S.prototype,"height",void 0),C([(0,n.MZ)({converter:h.g})],S.prototype,"size",void 0),C([(0,n.MZ)({type:String,attribute:"typography-variant"})],S.prototype,"typographyVariant",void 0),C([(0,n.MZ)({converter:h.g})],S.prototype,"width",void 0),C([(0,n.MZ)({type:String})],S.prototype,"variant",void 0),C([(0,n.MZ)({type:String,attribute:"element-aria-description"})],S.prototype,"elementAriaDescription",void 0),S=C([(0,c.E)("vcdk-skeleton")],S);const A=s.AH`
+    `}};Skeleton.styles=[skeletonStyles,...typography_styles.FB];Skeleton.responsiveProperties={prefix:"vcdk-skeleton",props:["width","height","size","aspectRatio"]};__decorate([(0,decorators.MZ)({attribute:"aspect-ratio",converter:responsive_value.g})],Skeleton.prototype,"aspectRatio",void 0);__decorate([(0,decorators.MZ)({type:Boolean,attribute:"disable-animation"})],Skeleton.prototype,"disableAnimation",void 0);__decorate([(0,decorators.MZ)({converter:responsive_value.g})],Skeleton.prototype,"height",void 0);__decorate([(0,decorators.MZ)({converter:responsive_value.g})],Skeleton.prototype,"size",void 0);__decorate([(0,decorators.MZ)({type:String,attribute:"typography-variant"})],Skeleton.prototype,"typographyVariant",void 0);__decorate([(0,decorators.MZ)({converter:responsive_value.g})],Skeleton.prototype,"width",void 0);__decorate([(0,decorators.MZ)({type:String})],Skeleton.prototype,"variant",void 0);__decorate([(0,decorators.MZ)({type:String,attribute:"element-aria-description"})],Skeleton.prototype,"elementAriaDescription",void 0);Skeleton=__decorate([(0,custom_element.E)("vcdk-skeleton")],Skeleton);const systemIconStyles=(0,lit.AH)`
   svg {
     max-width: 100%;
     aspect-ratio: 1 / 1;
@@ -235,13 +235,13 @@
     min-width: var(--vcdk-system-icon-size, 24px);
     min-height: var(--vcdk-system-icon-size, 24px);
   }
-`;var Z=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};const O={};let I=class extends M.l{constructor(){super(...arguments),this.elementRole="presentation",this.elementAriaHidden=null,this.assetsTask=new o.YZ(this,{task:async([e,t,i])=>{if(!e)return"";const o=function({brand:e="volvo",type:t="filled",iconId:i}){return`${r}/icons/${e}/system/${t}/${i}.svg`}({type:t?"filled":"lined",brand:i,iconId:e});return void 0===O[o]&&(O[o]=fetch(o).then(e=>{if(!e.ok)throw new Error(`Response from CDN returned a non ok status: ${e.status}`);return e.text()}).then(e=>(0,l.T)(e)).catch(t=>{throw console.error(`Failed when loading icon id: "${e}". ${t}`),t})),await O[o]},args:()=>[this.icon,this.filled,this.brandId]})}render(){return this.assetsTask.render({pending:()=>s.qy`
+`;var system_icon_component_decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};const templateCache={};let SystemIcon=class SystemIcon extends vcdk_element.l{constructor(){super(...arguments);this.elementRole="presentation";this.elementAriaHidden=null;this.assetsTask=new task.YZ(this,{task:async([icon,filled,brand])=>{if(!icon)return"";const url=systemIconUrl({type:filled?"filled":"lined",brand,iconId:icon});if(templateCache[url]===undefined){templateCache[url]=fetch(url).then(response=>{if(!response.ok){throw new Error(`Response from CDN returned a non ok status: ${response.status}`)}return response.text()}).then(response=>(0,unsafe_svg.T)(response)).catch(error=>{console.error(`Failed when loading icon id: "${icon}". ${error}`);throw error})}return await templateCache[url]},args:()=>[this.icon,this.filled,this.brandId]})}render(){return this.assetsTask.render({pending:()=>(0,lit.qy)`
         <vcdk-skeleton
           variant="rounded-rectangle"
-          size=${(0,a.J)(this.size)}></vcdk-skeleton>
-      `,complete:e=>e,error:()=>s.qy`
+          size=${(0,if_defined.J)(this.size)}></vcdk-skeleton>
+      `,complete:markup=>markup,error:()=>(0,lit.qy)`
         <span style="width:${this.size}px;height:${this.size}px"></span>
-      `})}updated(e){super.updated(e),this.setAttributes(),this.extendSvg()}extendSvg(){if(this.svgElement){if(this.elementTitle){this.elementAriaLabelledBy=this.elementAriaLabelledBy||(0,d.A)("svg-title-"),this.svgElement.setAttribute("aria-labelledby",this.elementAriaLabelledBy);const e=this.svgElement.querySelector("title");if(e)e.id=this.elementAriaLabelledBy,e.textContent=this.elementTitle;else{if(!document)return void console.warn("Document is not available, cannot create title element for SVG.");const e=document.createElement("title");e.id=this.elementAriaLabelledBy,e.textContent=this.elementTitle,this.svgElement.insertBefore(e,this.svgElement.firstChild)}}if(this.description){this.elementAriaDescribedBy=this.elementAriaDescribedBy||(0,d.A)("svg-description-"),this.svgElement.setAttribute("aria-describedby",this.elementAriaDescribedBy);const e=this.svgElement.querySelector("desc");if(e)e.id=this.elementAriaDescribedBy,e.textContent=this.description;else{const e=document.createElementNS("http://www.w3.org/2000/svg","desc");e.id=this.elementAriaDescribedBy,e.textContent=this.description,this.svgElement.appendChild(e),this.elementTitle?this.svgElement.querySelector("title")?.insertAdjacentElement("afterend",e):this.svgElement.insertBefore(e,this.svgElement.firstChild)}}}}setAttributes(){this.svgElement?.setAttribute("part","svg"),this.svgElement?.setAttribute("focusable","false"),"number"==typeof this.size&&this.svgElement?.setAttribute("style",`--vcdk-system-icon-size: ${this.size}px;`),this.elementRole?this.svgElement?.setAttribute("role",this.elementRole):s.s6,this.elementAriaHidden?this.svgElement?.setAttribute("aria-hidden",this.elementAriaHidden):s.s6}};I.styles=[A],Z([(0,n.MZ)({type:Boolean})],I.prototype,"filled",void 0),Z([(0,n.MZ)({type:String})],I.prototype,"icon",void 0),Z([(0,n.MZ)({type:Number})],I.prototype,"size",void 0),Z([(0,n.MZ)({type:String,attribute:"element-aria-labelledby"})],I.prototype,"elementAriaLabelledBy",void 0),Z([(0,n.MZ)({type:String,attribute:"element-title"})],I.prototype,"elementTitle",void 0),Z([(0,n.MZ)({type:String,attribute:"element-aria-describedby"})],I.prototype,"elementAriaDescribedBy",void 0),Z([(0,n.MZ)({type:String})],I.prototype,"description",void 0),Z([(0,n.MZ)({type:String,attribute:"element-role"})],I.prototype,"elementRole",void 0),Z([(0,n.MZ)({type:String,attribute:"element-aria-hidden"})],I.prototype,"elementAriaHidden",void 0),Z([(0,n.P)("svg")],I.prototype,"svgElement",void 0),Z([(0,n.wk)()],I.prototype,"assetsTask",void 0),I=Z([(0,c.E)("vcdk-system-icon")],I)},3254:(e,t,i)=>{var o=i(6591),r=i(2618),s=i(352),n=i(3720),a=i(1145),l=i(6487),d=i(4135),c=i(6260);const p=r.AH`
+      `})}updated(changedProperties){super.updated(changedProperties);this.setAttributes();this.extendSvg()}extendSvg(){if(!this.svgElement)return;if(this.elementTitle){this.elementAriaLabelledBy=this.elementAriaLabelledBy||(0,uniqueId.A)("svg-title-");this.svgElement.setAttribute("aria-labelledby",this.elementAriaLabelledBy);const titleSelector=this.svgElement.querySelector("title");if(!titleSelector){if(!document){console.warn("Document is not available, cannot create title element for SVG.");return}const title=document.createElement("title");title.id=this.elementAriaLabelledBy;title.textContent=this.elementTitle;this.svgElement.insertBefore(title,this.svgElement.firstChild)}else{titleSelector.id=this.elementAriaLabelledBy;titleSelector.textContent=this.elementTitle}}if(this.description){this.elementAriaDescribedBy=this.elementAriaDescribedBy||(0,uniqueId.A)("svg-description-");this.svgElement.setAttribute("aria-describedby",this.elementAriaDescribedBy);const descSelector=this.svgElement.querySelector("desc");if(!descSelector){const desc=document.createElementNS("http://www.w3.org/2000/svg","desc");desc.id=this.elementAriaDescribedBy;desc.textContent=this.description;this.svgElement.appendChild(desc);if(!this.elementTitle){this.svgElement.insertBefore(desc,this.svgElement.firstChild)}else{this.svgElement.querySelector("title")?.insertAdjacentElement("afterend",desc)}}else{descSelector.id=this.elementAriaDescribedBy;descSelector.textContent=this.description}}}setAttributes(){this.svgElement?.setAttribute("part","svg");this.svgElement?.setAttribute("focusable","false");if(typeof this.size==="number"){this.svgElement?.setAttribute("style",`--vcdk-system-icon-size: ${this.size}px;`)}this.elementRole?this.svgElement?.setAttribute("role",this.elementRole):lit.s6;this.elementAriaHidden?this.svgElement?.setAttribute("aria-hidden",this.elementAriaHidden):lit.s6}};SystemIcon.styles=[systemIconStyles];system_icon_component_decorate([(0,decorators.MZ)({type:Boolean})],SystemIcon.prototype,"filled",void 0);system_icon_component_decorate([(0,decorators.MZ)({type:String})],SystemIcon.prototype,"icon",void 0);system_icon_component_decorate([(0,decorators.MZ)({type:Number})],SystemIcon.prototype,"size",void 0);system_icon_component_decorate([(0,decorators.MZ)({type:String,attribute:"element-aria-labelledby"})],SystemIcon.prototype,"elementAriaLabelledBy",void 0);system_icon_component_decorate([(0,decorators.MZ)({type:String,attribute:"element-title"})],SystemIcon.prototype,"elementTitle",void 0);system_icon_component_decorate([(0,decorators.MZ)({type:String,attribute:"element-aria-describedby"})],SystemIcon.prototype,"elementAriaDescribedBy",void 0);system_icon_component_decorate([(0,decorators.MZ)({type:String})],SystemIcon.prototype,"description",void 0);system_icon_component_decorate([(0,decorators.MZ)({type:String,attribute:"element-role"})],SystemIcon.prototype,"elementRole",void 0);system_icon_component_decorate([(0,decorators.MZ)({type:String,attribute:"element-aria-hidden"})],SystemIcon.prototype,"elementAriaHidden",void 0);system_icon_component_decorate([(0,decorators.P)("svg")],SystemIcon.prototype,"svgElement",void 0);system_icon_component_decorate([(0,decorators.wk)()],SystemIcon.prototype,"assetsTask",void 0);SystemIcon=system_icon_component_decorate([(0,custom_element.E)("vcdk-system-icon")],SystemIcon)},3254:(__unused_webpack___webpack_module__,__unused_webpack___webpack_exports__,__webpack_require__)=>{var responsive_value=__webpack_require__(6591);var lit=__webpack_require__(2618);var decorators=__webpack_require__(352);var class_map=__webpack_require__(3720);var style_map=__webpack_require__(1145);var custom_element=__webpack_require__(6487);var responsive=__webpack_require__(4135);var vcdk_element=__webpack_require__(6260);const spinnerStyles=(0,lit.AH)`
   @keyframes spinner-keyframes {
     0% {
       transform: rotate(-90deg);
@@ -277,23 +277,23 @@
   circle {
     stroke-dashoffset: 0;
   }
-`;var h=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};let v=class extends((0,d.F)(c.l)){render(){return r.JW`
+`;var __decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};let Spinner=class Spinner extends((0,responsive.F)(vcdk_element.l)){render(){return(0,lit.JW)`
     <svg
-      class=${(0,n.H)({indefinite:void 0===this.progress})}
+      class=${(0,class_map.H)({indefinite:typeof this.progress==="undefined"})}
       part="svg"
       viewBox="20 20 40 40"
       role="progressbar"
       aria-busy="true"
       aria-live="polite"
       aria-label="${this.elementAriaLabel}"
-      style=${(0,a.W)({"--vcdk-spinner-progress":"number"==typeof this.progress?this.progress+"%":void 0})}>
+      style=${(0,style_map.W)({"--vcdk-spinner-progress":typeof this.progress==="number"?this.progress+"%":undefined})}>
         <circle
           cx="40"
           cy="40"
           r="18"
           fill="none" />     
     </svg>
-    `}};v.styles=[p],v.responsiveProperties={prefix:"vcdk-spinner",props:["size"],styleTransform:(e,t,i)=>{if("size"===e&&"string"==typeof i)switch(i){case"small":return 18;case"large":return 80;default:return 38}return i}},h([(0,s.MZ)({type:Number})],v.prototype,"progress",void 0),h([(0,s.MZ)({converter:o.g})],v.prototype,"size",void 0),h([(0,s.MZ)({type:String,attribute:"element-aria-label"})],v.prototype,"elementAriaLabel",void 0),v=h([(0,l.E)("vcdk-spinner")],v);i(2932);var u=i(1669),b=i(302),y=i(7502);const f=r.AH`
+    `}};Spinner.styles=[spinnerStyles];Spinner.responsiveProperties={prefix:"vcdk-spinner",props:["size"],styleTransform:(name,_,value)=>{if(name==="size"&&typeof value==="string"){switch(value){case"small":return 18;case"large":return 80;default:return 38}}return value}};__decorate([(0,decorators.MZ)({type:Number})],Spinner.prototype,"progress",void 0);__decorate([(0,decorators.MZ)({converter:responsive_value.g})],Spinner.prototype,"size",void 0);__decorate([(0,decorators.MZ)({type:String,attribute:"element-aria-label"})],Spinner.prototype,"elementAriaLabel",void 0);Spinner=__decorate([(0,custom_element.E)("vcdk-spinner")],Spinner);var system_icon=__webpack_require__(2932);var typography_styles=__webpack_require__(1669);var when=__webpack_require__(302);var if_defined_or_string_empty=__webpack_require__(7502);const buttonStyles=(0,lit.AH)`
   .button {
     align-items: center;
     appearance: none;
@@ -456,86 +456,86 @@
   .loading .icon {
     opacity: 0;
   }
-`;var g=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};let m=class extends c.l{constructor(){super(...arguments),this.ariaLabel="",this.autofocus=!1,this.size="medium",this.variant="marketing",this.clickHandler=e=>{if(!this.href)return this.disabled?(e.preventDefault(),void e.stopPropagation()):void("submit"!==this.type||e.defaultPrevented||this.closest("form")?.requestSubmit())}}render(){const{href:e,variant:t="primary",size:i,loading:o,iconStart:s,iconEnd:a,disabled:l,fullWidth:d,ariaLabel:c,title:p,type:h}=this,v={button:!0,[`variant-${t}`]:!0,[`size-${i}`]:!0,fullWidth:!!d,loading:!!o},u={text:!0,"typography-button":!0},f=r.qy`
-      ${(0,b.z)(s,()=>r.qy`
+`;var button_component_decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};let Button=class Button extends vcdk_element.l{constructor(){super(...arguments);this.ariaLabel="";this.autofocus=false;this.size="medium";this.variant="marketing";this.clickHandler=e=>{if(this.href)return;if(this.disabled){e.preventDefault();e.stopPropagation();return}if(this.type==="submit"&&!e.defaultPrevented){this.closest("form")?.requestSubmit()}}}render(){const{href,variant="primary",size,loading,iconStart,iconEnd,disabled,fullWidth,ariaLabel,title,type}=this;const buttonClasses={button:true,[`variant-${variant}`]:true,[`size-${size}`]:true,fullWidth:fullWidth?true:false,loading:loading?true:false};const textClasses={text:true,["typography-button"]:true};const template=(0,lit.qy)`
+      ${(0,when.z)(iconStart,()=>(0,lit.qy)`
           <vcdk-system-icon
             .size=${24}
-            .icon=${s}
+            .icon=${iconStart}
             class="icon"></vcdk-system-icon>
         `)}
-      <div class=${(0,n.H)(u)}>
+      <div class=${(0,class_map.H)(textClasses)}>
         <slot></slot>
       </div>
-      ${(0,b.z)(a,()=>r.qy`
+      ${(0,when.z)(iconEnd,()=>(0,lit.qy)`
           <vcdk-system-icon
             .size=${24}
-            .icon=${a}
+            .icon=${iconEnd}
             class="icon"></vcdk-system-icon>
         `)}
-      ${(0,b.z)(o,()=>r.qy`
+      ${(0,when.z)(loading,()=>(0,lit.qy)`
           <vcdk-spinner class="spinner"></vcdk-spinner>
         `)}
-    `;return e?r.qy`
+    `;if(href)return(0,lit.qy)`
         <a
           part="button"
-          class=${(0,n.H)(v)}
-          title=${(0,y.m)(p)}
-          aria-label=${(0,y.m)(c)}
-          aria-disabled=${l?"true":r.s6}
-          href=${e}
-          download=${(0,y.m)(this.download)}
-          hreflang=${(0,y.m)(this.hreflang)}
-          ping=${(0,y.m)(this.ping)}
-          referrerpolicy=${(0,y.m)(this.referrerpolicy)}
-          rel=${(0,y.m)(this.rel)}
-          target=${(0,y.m)(this.target)}
-          type=${(0,y.m)(h)}>
-          ${f}
+          class=${(0,class_map.H)(buttonClasses)}
+          title=${(0,if_defined_or_string_empty.m)(title)}
+          aria-label=${(0,if_defined_or_string_empty.m)(ariaLabel)}
+          aria-disabled=${disabled?"true":lit.s6}
+          href=${href}
+          download=${(0,if_defined_or_string_empty.m)(this.download)}
+          hreflang=${(0,if_defined_or_string_empty.m)(this.hreflang)}
+          ping=${(0,if_defined_or_string_empty.m)(this.ping)}
+          referrerpolicy=${(0,if_defined_or_string_empty.m)(this.referrerpolicy)}
+          rel=${(0,if_defined_or_string_empty.m)(this.rel)}
+          target=${(0,if_defined_or_string_empty.m)(this.target)}
+          type=${(0,if_defined_or_string_empty.m)(type)}>
+          ${template}
         </a>
-      `:r.qy`
+      `;return(0,lit.qy)`
       <button
         part="button"
-        title=${(0,y.m)(p)}
-        aria-label=${(0,y.m)(c)}
-        aria-disabled=${l?"true":r.s6}
+        title=${(0,if_defined_or_string_empty.m)(title)}
+        aria-label=${(0,if_defined_or_string_empty.m)(ariaLabel)}
+        aria-disabled=${disabled?"true":lit.s6}
         @click=${this.clickHandler}
         ?autofocus=${this.autofocus}
-        formaction=${(0,y.m)(this.formaction)}
-        formenctype=${(0,y.m)(this.formenctype)}
-        formmethod=${(0,y.m)(this.formmethod)}
+        formaction=${(0,if_defined_or_string_empty.m)(this.formaction)}
+        formenctype=${(0,if_defined_or_string_empty.m)(this.formenctype)}
+        formmethod=${(0,if_defined_or_string_empty.m)(this.formmethod)}
         ?formnovalidate=${this.formnovalidate}
-        formtarget=${(0,y.m)(this.formtarget)}
-        name=${(0,y.m)(this.name)}
-        type=${h??"button"}
-        value=${(0,y.m)(this.value)}
-        class=${(0,n.H)(v)}>
-        ${f}
+        formtarget=${(0,if_defined_or_string_empty.m)(this.formtarget)}
+        name=${(0,if_defined_or_string_empty.m)(this.name)}
+        type=${type??"button"}
+        value=${(0,if_defined_or_string_empty.m)(this.value)}
+        class=${(0,class_map.H)(buttonClasses)}>
+        ${template}
       </button>
-    `}};m.styles=[u.IT.button,f],g([(0,s.MZ)({type:String})],m.prototype,"ariaLabel",void 0),g([(0,s.MZ)({type:Boolean})],m.prototype,"autofocus",void 0),g([(0,s.MZ)({type:String})],m.prototype,"size",void 0),g([(0,s.MZ)({type:Boolean})],m.prototype,"fullWidth",void 0),g([(0,s.MZ)({type:String})],m.prototype,"iconEnd",void 0),g([(0,s.MZ)({type:String})],m.prototype,"iconStart",void 0),g([(0,s.MZ)({type:Boolean})],m.prototype,"loading",void 0),g([(0,s.MZ)({type:String})],m.prototype,"variant",void 0),g([(0,s.MZ)({type:String})],m.prototype,"download",void 0),g([(0,s.MZ)({type:String})],m.prototype,"href",void 0),g([(0,s.MZ)({type:String})],m.prototype,"hreflang",void 0),g([(0,s.MZ)({type:String})],m.prototype,"ping",void 0),g([(0,s.MZ)({type:String})],m.prototype,"referrerpolicy",void 0),g([(0,s.MZ)({type:String})],m.prototype,"rel",void 0),g([(0,s.MZ)({type:String})],m.prototype,"target",void 0),g([(0,s.MZ)({type:Boolean})],m.prototype,"disabled",void 0),g([(0,s.MZ)({type:String})],m.prototype,"form",void 0),g([(0,s.MZ)({type:String})],m.prototype,"formaction",void 0),g([(0,s.MZ)({type:String})],m.prototype,"formenctype",void 0),g([(0,s.MZ)({type:String})],m.prototype,"formmethod",void 0),g([(0,s.MZ)({type:Boolean})],m.prototype,"formnovalidate",void 0),g([(0,s.MZ)({type:String})],m.prototype,"formtarget",void 0),g([(0,s.MZ)({type:String,reflect:!0})],m.prototype,"name",void 0),g([(0,s.MZ)({type:String})],m.prototype,"type",void 0),g([(0,s.MZ)({type:String})],m.prototype,"value",void 0),m=g([(0,l.E)("vcdk-button")],m)},4135:(e,t,i)=>{i.d(t,{F:()=>l});var o=i(8128),r=i(2618),s=i(2326),n=i(6260);const a=Object.keys(o.f),l=e=>class extends e{static fallbackVariableValue(e,t,i){if(!i.length)return"";const o=i.shift();return i.length?`var(--${e}-${t}-${o}, ${this.fallbackVariableValue(e,t,i)})`:`var(--${e}-${t}-${o})`}static responsiveVariables(e,t,i,o){return t.map(t=>{const r=(0,s.A)(t);return o?`\n    --${e}-${r}-fallback: ${this.fallbackVariableValue(e,r,[...o])};\n    --${e}-${r}: var(--${e}-${r}-${i}, var(--${e}-${r}-fallback));`:`\n    --${e}-${r}: var(--${e}-${r}-${i});`}).join("")}static responsiveStyles(e){return r.AH`
+    `}};Button.styles=[typography_styles.IT.button,buttonStyles];button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"ariaLabel",void 0);button_component_decorate([(0,decorators.MZ)({type:Boolean})],Button.prototype,"autofocus",void 0);button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"size",void 0);button_component_decorate([(0,decorators.MZ)({type:Boolean})],Button.prototype,"fullWidth",void 0);button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"iconEnd",void 0);button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"iconStart",void 0);button_component_decorate([(0,decorators.MZ)({type:Boolean})],Button.prototype,"loading",void 0);button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"variant",void 0);button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"download",void 0);button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"href",void 0);button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"hreflang",void 0);button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"ping",void 0);button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"referrerpolicy",void 0);button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"rel",void 0);button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"target",void 0);button_component_decorate([(0,decorators.MZ)({type:Boolean})],Button.prototype,"disabled",void 0);button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"form",void 0);button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"formaction",void 0);button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"formenctype",void 0);button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"formmethod",void 0);button_component_decorate([(0,decorators.MZ)({type:Boolean})],Button.prototype,"formnovalidate",void 0);button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"formtarget",void 0);button_component_decorate([(0,decorators.MZ)({type:String,reflect:true})],Button.prototype,"name",void 0);button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"type",void 0);button_component_decorate([(0,decorators.MZ)({type:String})],Button.prototype,"value",void 0);Button=button_component_decorate([(0,custom_element.E)("vcdk-button")],Button)},4135:(__unused_webpack___webpack_module__,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{F:()=>Responsive});var _volvo_vcdk_tokens_dist_web_global_breakpoints_js__WEBPACK_IMPORTED_MODULE_0__=__webpack_require__(8128);var lit__WEBPACK_IMPORTED_MODULE_1__=__webpack_require__(2618);var lodash_es__WEBPACK_IMPORTED_MODULE_2__=__webpack_require__(2326);var _web_components_vcdk_element_index_js__WEBPACK_IMPORTED_MODULE_3__=__webpack_require__(6260);const breakpointKeys=Object.keys(_volvo_vcdk_tokens_dist_web_global_breakpoints_js__WEBPACK_IMPORTED_MODULE_0__.f);const Responsive=superClass=>{class ResponsiveClass extends superClass{static fallbackVariableValue(prefix,prop,fallbacks){if(!fallbacks.length){return""}const current=fallbacks.shift();if(fallbacks.length){return`var(--${prefix}-${prop}-${current}, ${this.fallbackVariableValue(prefix,prop,fallbacks)})`}return`var(--${prefix}-${prop}-${current})`}static responsiveVariables(prefix,props,breakpoint,fallbacks){return props.map(prop=>{const name=(0,lodash_es__WEBPACK_IMPORTED_MODULE_2__.A)(prop);if(fallbacks){return`\n    --${prefix}-${name}-fallback: ${this.fallbackVariableValue(prefix,name,[...fallbacks])};\n    --${prefix}-${name}: var(--${prefix}-${name}-${breakpoint}, var(--${prefix}-${name}-fallback));`}return`\n    --${prefix}-${name}: var(--${prefix}-${name}-${breakpoint});`}).join("")}static responsiveStyles(settings){return(0,lit__WEBPACK_IMPORTED_MODULE_1__.AH)`
         :host {
-          ${(0,r.iz)(this.responsiveVariables(e.prefix,e.props,"xs"))}
+          ${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(this.responsiveVariables(settings.prefix,settings.props,"xs"))}
         }
-        @media(min-width: ${o.f.sm.from}px) {
+        @media(min-width: ${_volvo_vcdk_tokens_dist_web_global_breakpoints_js__WEBPACK_IMPORTED_MODULE_0__.f.sm.from}px) {
           :host {
-            ${(0,r.iz)(this.responsiveVariables(e.prefix,e.props,"sm",["xs"]))}
+            ${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(this.responsiveVariables(settings.prefix,settings.props,"sm",["xs"]))}
           }
         }
-        @media (min-width: ${o.f.md.from}px) {
+        @media (min-width: ${_volvo_vcdk_tokens_dist_web_global_breakpoints_js__WEBPACK_IMPORTED_MODULE_0__.f.md.from}px) {
           :host {
-            ${(0,r.iz)(this.responsiveVariables(e.prefix,e.props,"md",["sm","xs"]))}
+            ${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(this.responsiveVariables(settings.prefix,settings.props,"md",["sm","xs"]))}
           }
         }
-        @media (min-width: ${o.f.lg.from}px) {
+        @media (min-width: ${_volvo_vcdk_tokens_dist_web_global_breakpoints_js__WEBPACK_IMPORTED_MODULE_0__.f.lg.from}px) {
           :host {
-            ${(0,r.iz)(this.responsiveVariables(e.prefix,e.props,"lg",["md","sm","xs"]))}
+            ${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(this.responsiveVariables(settings.prefix,settings.props,"lg",["md","sm","xs"]))}
           }
         }
-        @media (min-width: ${o.f.xl.from}px) {
+        @media (min-width: ${_volvo_vcdk_tokens_dist_web_global_breakpoints_js__WEBPACK_IMPORTED_MODULE_0__.f.xl.from}px) {
           :host {
-            ${(0,r.iz)(this.responsiveVariables(e.prefix,e.props,"xl",["lg","md","sm","xs"]))}
+            ${(0,lit__WEBPACK_IMPORTED_MODULE_1__.iz)(this.responsiveVariables(settings.prefix,settings.props,"xl",["lg","md","sm","xs"]))}
           }
         }
-      }`}static finalizeStyles(e){if(!this.responsiveProperties)return n.l.finalizeStyles(e);const t=[this.responsiveStyles(this.responsiveProperties)];return e&&Array.isArray(e)?t.push(...e):e&&t.push(e),n.l.finalizeStyles(t)}connectedCallback(){super.connectedCallback(),this.setResponsiveVariables()}update(e){const t=this.constructor.responsiveProperties,i=t?.props;t&&i.some(t=>e.has(t))&&this.setResponsiveVariables(),super.update(e)}setResponsiveVariables(){const e=this.constructor.responsiveProperties;if(void 0===e)return;const t=e.props;for(const i of t){let t=this[i];if(t){Array.isArray(t)||(t=[t]);for(let o=0;o<t.length;o++){const r=String(i);let n=t[o];if(e.styleTransform&&(n=e.styleTransform(r,a[o],n)),void 0===n)continue;"number"==typeof n&&(n=`${n}px`);const l=a[o];this.style.setProperty(`--${e.prefix}-${(0,s.A)(r)}-${l}`,n)}}}}}},6260:(e,t,i)=>{i.d(t,{l:()=>o.l});var o=i(2871)},6487:(e,t,i)=>{i.d(t,{E:()=>o});const o=e=>(t,i)=>{const o=()=>{const i=customElements.get(e);if(!i)return void customElements.define(e,t);const o=i.version,r=t.version;o&&r&&o!==r&&console.warn(`vcdk warning: Attempted to register <${e}>v, but <${e}>v. was already registered. This could indicate that your application might contain duplicate instances of the same component.`)};i?i.addInitializer(o):o()}},6591:(e,t,i)=>{i.d(t,{g:()=>r});i(8128);var o=i(2618);const r={fromAttribute(e,t){if(!e)return null;if(e.startsWith("[")&&e.endsWith("]"))return JSON.parse(e);if(void 0===t){const t=Number(e);if(!Number.isNaN(t))return t}return o.W3.fromAttribute?.(e,t)},toAttribute:(e,t)=>Array.isArray(e)?o.W3.toAttribute?.(e,Array):o.W3.toAttribute?.(e,t)}},7118:(e,t,i)=>{var o=i(767);const r=(0,o.q6)("vcdk-checkbox-group");function s(e,t){const i={waitUntilFirstUpdate:!1,...t};return(t,o)=>{const{update:r}=t,s=Array.isArray(e)?e:[e];t.update=function(e){s.forEach(t=>{const r=t;if(e.has(r)){const t=e.get(r),s=this[r];t!==s&&(i.waitUntilFirstUpdate&&!this.hasUpdated||this[o](t,s))}}),r.call(this,e)}}}var n=i(1669),a=i(2618),l=i(352),d=i(3720),c=i(538),p=i(7832),h=i(302),v=i(5664),u=i(6487),b=i(7502),y=function(e,t,i,o){if("a"===i&&!o)throw new TypeError("Private accessor was defined without a getter");if("function"==typeof t?e!==t||!o:!t.has(e))throw new TypeError("Cannot read private member from an object whose class did not declare it");return"m"===i?o:"a"===i?o.call(e):o?o.value:t.get(e)},f=function(e,t,i,o,r){if("m"===o)throw new TypeError("Private method is not writable");if("a"===o&&!r)throw new TypeError("Private accessor was defined without a setter");if("function"==typeof t?e!==t||!r:!t.has(e))throw new TypeError("Cannot write private member to an object whose class did not declare it");return"a"===o?r.call(e,i):r?r.value=i:t.set(e,i),i};function g(e){var t,i,o,r,s,n,a,l,d,c,p,h,v,u,b,g,m,k;class x extends e{static get formAssociated(){return!0}static get validators(){return this.formControlValidators||[]}static get observedAttributes(){const e=this.validators.map(e=>e.attribute).flat(),t=super.observedAttributes||[];return[...new Set([...t,...e])]}static getValidator(e){return this.validators.find(t=>t.attribute===e)||null}static getValidators(e){return this.validators.filter(t=>{if(t.attribute===e||t.attribute?.includes(e))return!0})}get form(){return this.internals.form}get showError(){return y(this,t,"m",b).call(this)}checkValidity(){return this.internals.checkValidity()}get validity(){return this.internals.validity}get validationMessage(){return this.internals.validationMessage}constructor(...e){super(...e),t.add(this),this.internals=this.attachInternals(),i.set(this,!1),o.set(this,!1),r.set(this,!1),s.set(this,void 0),n.set(this,void 0),a.set(this,!0),l.set(this,""),d.set(this,()=>{f(this,r,!0,"f"),f(this,i,!0,"f"),y(this,t,"m",b).call(this)}),c.set(this,()=>{f(this,i,!1,"f"),y(this,t,"m",g).call(this,this.shouldFormValueUpdate()?y(this,l,"f"):""),!this.validity.valid&&y(this,r,"f")&&f(this,o,!0,"f");const e=y(this,t,"m",b).call(this);this.validationMessageCallback&&this.validationMessageCallback(e?this.internals.validationMessage:"")}),p.set(this,()=>{y(this,a,"f")&&this.validationTarget&&(this.internals.setValidity(this.validity,this.validationMessage,this.validationTarget),f(this,a,!1,"f")),f(this,r,!0,"f"),f(this,o,!0,"f"),y(this,t,"m",b).call(this),this?.validationMessageCallback?.(this.showError?this.internals.validationMessage:"")}),h.set(this,void 0),v.set(this,!1),u.set(this,Promise.resolve()),this.addEventListener?.("focus",y(this,d,"f")),this.addEventListener?.("blur",y(this,c,"f")),this.addEventListener?.("invalid",y(this,p,"f")),this.setValue(null)}attributeChangedCallback(e,t,i){super.attributeChangedCallback?.(e,t,i);const o=this.constructor.getValidators(e);o?.length&&this.validationTarget&&this.setValue(y(this,l,"f"))}setValue(e){f(this,o,!1,"f"),this.validationMessageCallback?.(""),f(this,l,e,"f");const i=this.shouldFormValueUpdate()?e:null;this.internals.setFormValue(i),y(this,t,"m",g).call(this,i),this.valueChangedCallback&&this.valueChangedCallback(i),y(this,t,"m",b).call(this)}shouldFormValueUpdate(){return!0}get validationComplete(){return new Promise(e=>e(y(this,u,"f")))}formResetCallback(){f(this,r,!1,"f"),f(this,o,!1,"f"),y(this,t,"m",b).call(this),this.resetFormControl?.(),this.validationMessageCallback?.(y(this,t,"m",b).call(this)?this.validationMessage:"")}}return i=new WeakMap,o=new WeakMap,r=new WeakMap,s=new WeakMap,n=new WeakMap,a=new WeakMap,l=new WeakMap,d=new WeakMap,c=new WeakMap,p=new WeakMap,h=new WeakMap,v=new WeakMap,u=new WeakMap,t=new WeakSet,b=function(){if(this.hasAttribute("disabled"))return!1;const e=y(this,o,"f")||y(this,r,"f")&&!this.validity.valid&&!y(this,i,"f");return e&&this.internals.states?this.internals.states.add("--show-error"):this.internals.states&&this.internals.states.delete("--show-error"),e},g=function(e){const i=this.constructor,o={},r=i.validators,a=[],l=r.some(e=>e.isValid instanceof Promise);y(this,v,"f")||(f(this,u,new Promise(e=>{f(this,h,e,"f")}),"f"),f(this,v,!0,"f")),y(this,s,"f")&&(y(this,s,"f").abort(),f(this,n,y(this,s,"f"),"f"));const d=new AbortController;let c;f(this,s,d,"f");let p=!1;r.length&&(r.forEach(i=>{const r=i.key||"customError",s=i.isValid(this,e,d.signal);s instanceof Promise?(a.push(s),s.then(s=>{null!=s&&(o[r]=!s,c=y(this,t,"m",k).call(this,i,e),y(this,t,"m",m).call(this,o,c))})):(o[r]=!s,this.validity[r]!==!s&&(p=!0),s||c||(c=y(this,t,"m",k).call(this,i,e)))}),Promise.allSettled(a).then(()=>{d?.signal.aborted||(f(this,v,!1,"f"),y(this,h,"f")?.call(this))}),!p&&l||y(this,t,"m",m).call(this,o,c))},m=function(e,t){if(this.validationTarget)this.internals.setValidity(e,t,this.validationTarget),f(this,a,!1,"f");else{if(this.internals.setValidity(e,t),this.internals.validity.valid)return;f(this,a,!0,"f")}},k=function(e,t){if(this.validityCallback){const t=this.validityCallback(e.key||"customError");if(t)return t}return e.message instanceof Function?e.message(this,t):e.message},x}const m=e=>class extends e{focus(e){this.getInputRef()?.focus(e)}blur(){this.getInputRef()?.blur()}select(){const e=this.getInputRef();if(!e||!("select"in e))throw new Error("Element is not selectable.");e?.select?.()}},k=e=>class extends e{constructor(){super(...arguments),this.hasFirstUpdateRun=!1}willUpdate(e){this.hasFirstUpdateRun||this.willFirstUpdate(e),super.willUpdate(e)}update(e){this.hasFirstUpdateRun||this.firstUpdate(e),super.update(e)}updated(e){this.hasFirstUpdateRun||(this.hasFirstUpdateRun=!0),super.updated(e)}firstUpdate(e){}willFirstUpdate(e){}};var x=i(6260);const w=a.AH`
+      }`}static finalizeStyles(styles){if(!this.responsiveProperties){return _web_components_vcdk_element_index_js__WEBPACK_IMPORTED_MODULE_3__.l.finalizeStyles(styles)}const alteredStyles=[this.responsiveStyles(this.responsiveProperties)];if(styles&&Array.isArray(styles)){alteredStyles.push(...styles)}else if(styles){alteredStyles.push(styles)}return _web_components_vcdk_element_index_js__WEBPACK_IMPORTED_MODULE_3__.l.finalizeStyles(alteredStyles)}connectedCallback(){super.connectedCallback();this.setResponsiveVariables()}update(changedProperties){const responsiveProperties=this.constructor.responsiveProperties;const props=responsiveProperties?.props;if(responsiveProperties&&props.some(prop=>changedProperties.has(prop))){this.setResponsiveVariables()}super.update(changedProperties)}setResponsiveVariables(){const responsiveProperties=this.constructor.responsiveProperties;if(typeof responsiveProperties==="undefined")return;const props=responsiveProperties.props;for(const prop of props){let value=this[prop];if(!value)continue;if(!Array.isArray(value)){value=[value]}for(let i=0;i<value.length;i++){const propName=String(prop);let breakpointValue=value[i];if(responsiveProperties.styleTransform){breakpointValue=responsiveProperties.styleTransform(propName,breakpointKeys[i],breakpointValue)}if(typeof breakpointValue==="undefined"){continue}if(typeof breakpointValue==="number"){breakpointValue=`${breakpointValue}px`}const breakpoint=breakpointKeys[i];this.style.setProperty(`--${responsiveProperties.prefix}-${(0,lodash_es__WEBPACK_IMPORTED_MODULE_2__.A)(propName)}-${breakpoint}`,breakpointValue)}}}}return ResponsiveClass}},6260:(__unused_webpack___webpack_module__,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{l:()=>_vcdk_element_js__WEBPACK_IMPORTED_MODULE_0__.l});var _vcdk_element_js__WEBPACK_IMPORTED_MODULE_0__=__webpack_require__(2871)},6487:(__unused_webpack___webpack_module__,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{E:()=>customElement});const customElement=tagName=>(target,context)=>{const initializer=()=>{const existingElement=customElements.get(tagName);if(!existingElement){customElements.define(tagName,target);return}const existingVersion=existingElement.version;const currentVersion=target.version;if(existingVersion&&currentVersion&&existingVersion!==currentVersion){console.warn(`vcdk warning: Attempted to register <${tagName}>v, but <${tagName}>v. was already registered. This could indicate that your application might contain duplicate instances of the same component.`)}};if(context){context.addInitializer(initializer)}else{initializer()}}},6591:(__unused_webpack___webpack_module__,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{g:()=>responsiveValueConverter});var _volvo_vcdk_tokens_dist_web_global_breakpoints_js__WEBPACK_IMPORTED_MODULE_0__=__webpack_require__(8128);var lit__WEBPACK_IMPORTED_MODULE_1__=__webpack_require__(2618);const responsiveValueConverter={fromAttribute(value,type){if(!value){return null}if(value.startsWith("[")&&value.endsWith("]")){return JSON.parse(value)}if(typeof type==="undefined"){const number=Number(value);if(!Number.isNaN(number)){return number}}return lit__WEBPACK_IMPORTED_MODULE_1__.W3.fromAttribute?.(value,type)},toAttribute(value,type){if(Array.isArray(value)){return lit__WEBPACK_IMPORTED_MODULE_1__.W3.toAttribute?.(value,Array)}return lit__WEBPACK_IMPORTED_MODULE_1__.W3.toAttribute?.(value,type)}};const valueInBreakpoint=(value,breakpoint)=>{const values=Array.isArray(value)?value:[value];const breakpointIndex=Object.keys(breakpoints).indexOf(breakpoint);const currentValueIndex=Math.min(values.length-1,breakpointIndex);return values[currentValueIndex]}},7118:(__unused_webpack___webpack_module__,__unused_webpack___webpack_exports__,__webpack_require__)=>{var context=__webpack_require__(767);const checkboxGroupContext=(0,context.q6)("vcdk-checkbox-group");function watch(propertyName,options){const resolvedOptions={waitUntilFirstUpdate:false,...options};return(proto,decoratedFnName)=>{const{update}=proto;const watchedProperties=Array.isArray(propertyName)?propertyName:[propertyName];proto.update=function(changedProps){watchedProperties.forEach(property=>{const key=property;if(changedProps.has(key)){const oldValue=changedProps.get(key);const newValue=this[key];if(oldValue!==newValue){if(!resolvedOptions.waitUntilFirstUpdate||this.hasUpdated){this[decoratedFnName](oldValue,newValue)}}}});update.call(this,changedProps)}}}var typography_styles=__webpack_require__(1669);var lit=__webpack_require__(2618);var decorators=__webpack_require__(352);var class_map=__webpack_require__(3720);var live=__webpack_require__(538);var ref=__webpack_require__(7832);var when=__webpack_require__(302);var uniqueId=__webpack_require__(5664);var custom_element=__webpack_require__(6487);var if_defined_or_string_empty=__webpack_require__(7502);var __classPrivateFieldGet=undefined&&undefined.__classPrivateFieldGet||function(receiver,state,kind,f){if(kind==="a"&&!f)throw new TypeError("Private accessor was defined without a getter");if(typeof state==="function"?receiver!==state||!f:!state.has(receiver))throw new TypeError("Cannot read private member from an object whose class did not declare it");return kind==="m"?f:kind==="a"?f.call(receiver):f?f.value:state.get(receiver)};var __classPrivateFieldSet=undefined&&undefined.__classPrivateFieldSet||function(receiver,state,value,kind,f){if(kind==="m")throw new TypeError("Private method is not writable");if(kind==="a"&&!f)throw new TypeError("Private accessor was defined without a setter");if(typeof state==="function"?receiver!==state||!f:!state.has(receiver))throw new TypeError("Cannot write private member to an object whose class did not declare it");return kind==="a"?f.call(receiver,value):f?f.value=value:state.set(receiver,value),value};function FormControlMixin(SuperClass){var _FormControl_instances,_a,_FormControl_focused,_FormControl_forceError,_FormControl_touched,_FormControl_abortController,_FormControl_previousAbortController,_FormControl_awaitingValidationTarget,_FormControl_formValidationGroup_get,_FormControl_value,_FormControl_onFocus,_FormControl_onBlur,_FormControl_onInvalid,_FormControl_validationCompleteResolver,_FormControl_isValidationPending,_FormControl_validationComplete,_FormControl_shouldShowError,_FormControl_runValidators,_FormControl_setValidityWithOptionalTarget,_FormControl_getValidatorMessageForValue;class FormControl extends SuperClass{static get formAssociated(){return true}static get validators(){return this.formControlValidators||[]}static get observedAttributes(){const validatorAttributes=this.validators.map(validator=>validator.attribute).flat();const observedAttributes=super.observedAttributes||[];const attributeSet=new Set([...observedAttributes,...validatorAttributes]);return[...attributeSet]}static getValidator(attribute){return this.validators.find(validator=>validator.attribute===attribute)||null}static getValidators(attribute){return this.validators.filter(validator=>{if(validator.attribute===attribute||validator.attribute?.includes(attribute)){return true}})}get form(){return this.internals.form}get showError(){return __classPrivateFieldGet(this,_FormControl_instances,"m",_FormControl_shouldShowError).call(this)}checkValidity(){return this.internals.checkValidity()}get validity(){return this.internals.validity}get validationMessage(){return this.internals.validationMessage}constructor(...args){super(...args);_FormControl_instances.add(this);this.internals=this.attachInternals();_FormControl_focused.set(this,false);_FormControl_forceError.set(this,false);_FormControl_touched.set(this,false);_FormControl_abortController.set(this,void 0);_FormControl_previousAbortController.set(this,void 0);_FormControl_awaitingValidationTarget.set(this,true);_FormControl_value.set(this,"");_FormControl_onFocus.set(this,()=>{__classPrivateFieldSet(this,_FormControl_touched,true,"f");__classPrivateFieldSet(this,_FormControl_focused,true,"f");__classPrivateFieldGet(this,_FormControl_instances,"m",_FormControl_shouldShowError).call(this)});_FormControl_onBlur.set(this,()=>{__classPrivateFieldSet(this,_FormControl_focused,false,"f");__classPrivateFieldGet(this,_FormControl_instances,"m",_FormControl_runValidators).call(this,this.shouldFormValueUpdate()?__classPrivateFieldGet(this,_FormControl_value,"f"):"");if(!this.validity.valid&&__classPrivateFieldGet(this,_FormControl_touched,"f")){__classPrivateFieldSet(this,_FormControl_forceError,true,"f")}const showError=__classPrivateFieldGet(this,_FormControl_instances,"m",_FormControl_shouldShowError).call(this);if(this.validationMessageCallback){this.validationMessageCallback(showError?this.internals.validationMessage:"")}});_FormControl_onInvalid.set(this,()=>{if(__classPrivateFieldGet(this,_FormControl_awaitingValidationTarget,"f")&&this.validationTarget){this.internals.setValidity(this.validity,this.validationMessage,this.validationTarget);__classPrivateFieldSet(this,_FormControl_awaitingValidationTarget,false,"f")}__classPrivateFieldSet(this,_FormControl_touched,true,"f");__classPrivateFieldSet(this,_FormControl_forceError,true,"f");__classPrivateFieldGet(this,_FormControl_instances,"m",_FormControl_shouldShowError).call(this);this?.validationMessageCallback?.(this.showError?this.internals.validationMessage:"")});_FormControl_validationCompleteResolver.set(this,void 0);_FormControl_isValidationPending.set(this,false);_FormControl_validationComplete.set(this,Promise.resolve());this.addEventListener?.("focus",__classPrivateFieldGet(this,_FormControl_onFocus,"f"));this.addEventListener?.("blur",__classPrivateFieldGet(this,_FormControl_onBlur,"f"));this.addEventListener?.("invalid",__classPrivateFieldGet(this,_FormControl_onInvalid,"f"));this.setValue(null)}attributeChangedCallback(name,oldValue,newValue){super.attributeChangedCallback?.(name,oldValue,newValue);const proto=this.constructor;const validators=proto.getValidators(name);if(validators?.length&&this.validationTarget){this.setValue(__classPrivateFieldGet(this,_FormControl_value,"f"))}}setValue(value){__classPrivateFieldSet(this,_FormControl_forceError,false,"f");this.validationMessageCallback?.("");__classPrivateFieldSet(this,_FormControl_value,value,"f");const valueShouldUpdate=this.shouldFormValueUpdate();const valueToUpdate=valueShouldUpdate?value:null;this.internals.setFormValue(valueToUpdate);__classPrivateFieldGet(this,_FormControl_instances,"m",_FormControl_runValidators).call(this,valueToUpdate);if(this.valueChangedCallback){this.valueChangedCallback(valueToUpdate)}__classPrivateFieldGet(this,_FormControl_instances,"m",_FormControl_shouldShowError).call(this)}shouldFormValueUpdate(){return true}get validationComplete(){return new Promise(resolve=>resolve(__classPrivateFieldGet(this,_FormControl_validationComplete,"f")))}formResetCallback(){__classPrivateFieldSet(this,_FormControl_touched,false,"f");__classPrivateFieldSet(this,_FormControl_forceError,false,"f");__classPrivateFieldGet(this,_FormControl_instances,"m",_FormControl_shouldShowError).call(this);this.resetFormControl?.();this.validationMessageCallback?.(__classPrivateFieldGet(this,_FormControl_instances,"m",_FormControl_shouldShowError).call(this)?this.validationMessage:"")}}_a=FormControl,_FormControl_focused=new WeakMap,_FormControl_forceError=new WeakMap,_FormControl_touched=new WeakMap,_FormControl_abortController=new WeakMap,_FormControl_previousAbortController=new WeakMap,_FormControl_awaitingValidationTarget=new WeakMap,_FormControl_value=new WeakMap,_FormControl_onFocus=new WeakMap,_FormControl_onBlur=new WeakMap,_FormControl_onInvalid=new WeakMap,_FormControl_validationCompleteResolver=new WeakMap,_FormControl_isValidationPending=new WeakMap,_FormControl_validationComplete=new WeakMap,_FormControl_instances=new WeakSet,_FormControl_formValidationGroup_get=function _FormControl_formValidationGroup_get(){const rootNode=this.getRootNode();const selector=`${this.localName}[name="${this.getAttribute("name")}"]`;return rootNode.querySelectorAll(selector)},_FormControl_shouldShowError=function _FormControl_shouldShowError(){if(this.hasAttribute("disabled")){return false}const showError=__classPrivateFieldGet(this,_FormControl_forceError,"f")||__classPrivateFieldGet(this,_FormControl_touched,"f")&&!this.validity.valid&&!__classPrivateFieldGet(this,_FormControl_focused,"f");if(showError&&this.internals.states){this.internals.states.add("--show-error")}else if(this.internals.states){this.internals.states.delete("--show-error")}return showError},_FormControl_runValidators=function _FormControl_runValidators(value){const proto=this.constructor;const validity={};const validators=proto.validators;const asyncValidators=[];const hasAsyncValidators=validators.some(validator=>validator.isValid instanceof Promise);if(!__classPrivateFieldGet(this,_FormControl_isValidationPending,"f")){__classPrivateFieldSet(this,_FormControl_validationComplete,new Promise(resolve=>{__classPrivateFieldSet(this,_FormControl_validationCompleteResolver,resolve,"f")}),"f");__classPrivateFieldSet(this,_FormControl_isValidationPending,true,"f")}if(__classPrivateFieldGet(this,_FormControl_abortController,"f")){__classPrivateFieldGet(this,_FormControl_abortController,"f").abort();__classPrivateFieldSet(this,_FormControl_previousAbortController,__classPrivateFieldGet(this,_FormControl_abortController,"f"),"f")}const abortController=new AbortController;__classPrivateFieldSet(this,_FormControl_abortController,abortController,"f");let validationMessage=undefined;let hasChange=false;if(!validators.length){return}validators.forEach(validator=>{const key=validator.key||"customError";const isValid=validator.isValid(this,value,abortController.signal);const isAsyncValidator=isValid instanceof Promise;if(isAsyncValidator){asyncValidators.push(isValid);isValid.then(isValidatorValid=>{if(isValidatorValid===undefined||isValidatorValid===null){return}validity[key]=!isValidatorValid;validationMessage=__classPrivateFieldGet(this,_FormControl_instances,"m",_FormControl_getValidatorMessageForValue).call(this,validator,value);__classPrivateFieldGet(this,_FormControl_instances,"m",_FormControl_setValidityWithOptionalTarget).call(this,validity,validationMessage)})}else{validity[key]=!isValid;if(this.validity[key]!==!isValid){hasChange=true}if(!isValid&&!validationMessage){validationMessage=__classPrivateFieldGet(this,_FormControl_instances,"m",_FormControl_getValidatorMessageForValue).call(this,validator,value)}}});Promise.allSettled(asyncValidators).then(()=>{if(!abortController?.signal.aborted){__classPrivateFieldSet(this,_FormControl_isValidationPending,false,"f");__classPrivateFieldGet(this,_FormControl_validationCompleteResolver,"f")?.call(this)}});if(hasChange||!hasAsyncValidators){__classPrivateFieldGet(this,_FormControl_instances,"m",_FormControl_setValidityWithOptionalTarget).call(this,validity,validationMessage)}},_FormControl_setValidityWithOptionalTarget=function _FormControl_setValidityWithOptionalTarget(validity,validationMessage){if(this.validationTarget){this.internals.setValidity(validity,validationMessage,this.validationTarget);__classPrivateFieldSet(this,_FormControl_awaitingValidationTarget,false,"f")}else{this.internals.setValidity(validity,validationMessage);if(this.internals.validity.valid){return}__classPrivateFieldSet(this,_FormControl_awaitingValidationTarget,true,"f")}},_FormControl_getValidatorMessageForValue=function _FormControl_getValidatorMessageForValue(validator,value){if(this.validityCallback){const message=this.validityCallback(validator.key||"customError");if(message){return message}}if(validator.message instanceof Function){return validator.message(this,value)}else{return validator.message}};return FormControl}const FormMethodsMixin=superClass=>{class FocusMethodsMixinClass extends superClass{focus(options){this.getInputRef()?.focus(options)}blur(){this.getInputRef()?.blur()}select(){const inputRef=this.getInputRef();if(inputRef&&"select"in inputRef){inputRef?.select?.()}else{throw new Error("Element is not selectable.")}}}return FocusMethodsMixinClass};const HasFirstUpdate=superClass=>{class HasFirstUpdateClass extends superClass{constructor(){super(...arguments);this.hasFirstUpdateRun=false}willUpdate(changedProperties){if(!this.hasFirstUpdateRun){this.willFirstUpdate(changedProperties)}super.willUpdate(changedProperties)}update(changedProperties){if(!this.hasFirstUpdateRun){this.firstUpdate(changedProperties)}super.update(changedProperties)}updated(changedProperties){if(!this.hasFirstUpdateRun){this.hasFirstUpdateRun=true}super.updated(changedProperties)}firstUpdate(changedProperties){}willFirstUpdate(changedProperties){}}return HasFirstUpdateClass};var vcdk_element=__webpack_require__(6260);const checkboxStyles=(0,lit.AH)`
   .size-small {
     --vcdk-checkbox-size: 16px;
     --vcdk-checkbox-hover-circle: 32px;
@@ -660,25 +660,25 @@
     inset-inline-start: var(--vcdk-checkbox-input-margin);
     inset-block-start: var(--vcdk-checkbox-input-margin);
   }
-`;class $ extends CustomEvent{constructor(e,t,i){super("vcdk-checkbox-change",{detail:{checked:e,value:t,nativeEvent:i},bubbles:!0,composed:!0,cancelable:!0})}}var z=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};let M=class extends(m(g(k(x.l)))){constructor(){super(...arguments),this.label="",this.checked=!1,this.size="medium",this.uniqueCheckboxId=(0,v.A)("vcdk-checkbox-"),this.input=(0,p._)(),this.groupContext=new o.G(this,{context:r,subscribe:!0}),this.checkedChanged=()=>{this.setFormValue(this.checked)},this.changeHandler=async e=>{const t=e.target;await this.setCheckedValue(t.checked,e)},this.getInputRef=()=>this.shadowRoot?.querySelector("input")??null}setFormValue(e){const t=this.getCheckboxFormValue(e);this.setValue(t)}willFirstUpdate(e){e.has("defaultChecked")&&(this.checked=this.defaultChecked)}shouldFormValueUpdate(){return!0}resetFormControl(){this.setCheckedValue(this.defaultChecked??!1),this.input.value&&(this.input.value.checked=this.defaultChecked??!1)}async setCheckedValue(e,t){this.setFormValue(e),e!==this.checked&&(this.checked=e,await this.updateComplete,this.dispatchEvent(new CustomEvent("change",{detail:{checked:e,value:this.value,nativeEvent:t},bubbles:!0,composed:!0})),this.dispatchEvent(new $(e,e.toString(),t)))}getCheckboxFormValue(e){return e?this.value||"on":null}render(){const e=this.error||this.groupContext.value?.error,t=this.disabled||this.groupContext.value?.disabled,i=this.groupContext.value?.size||this.size,{label:o,checked:r,changeHandler:s,intermediate:n}=this,l=Boolean(n||void 0===r),v=l?"mixed":r?"true":"false",u=this.id||this.uniqueCheckboxId;return a.qy`
+`;class CheckboxChangeEvent extends CustomEvent{constructor(checked,value,nativeEvent){super("vcdk-checkbox-change",{detail:{checked,value,nativeEvent},bubbles:true,composed:true,cancelable:true})}}var __decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};let Checkbox=class Checkbox extends(FormMethodsMixin(FormControlMixin(HasFirstUpdate(vcdk_element.l)))){constructor(){super(...arguments);this.label="";this.checked=false;this.size="medium";this.uniqueCheckboxId=(0,uniqueId.A)("vcdk-checkbox-");this.input=(0,ref._)();this.groupContext=new context.G(this,{context:checkboxGroupContext,subscribe:true});this.checkedChanged=()=>{this.setFormValue(this.checked)};this.changeHandler=async e=>{const target=e.target;await this.setCheckedValue(target.checked,e)};this.getInputRef=()=>this.shadowRoot?.querySelector("input")??null}setFormValue(checked){const checkboxFormValue=this.getCheckboxFormValue(checked);this.setValue(checkboxFormValue)}willFirstUpdate(changedProperties){if(changedProperties.has("defaultChecked")){this.checked=this.defaultChecked}}shouldFormValueUpdate(){return true}resetFormControl(){void this.setCheckedValue(this.defaultChecked??false);if(this.input.value){this.input.value.checked=this.defaultChecked??false}}async setCheckedValue(checked,e){this.setFormValue(checked);if(checked===this.checked){return}this.checked=checked;await this.updateComplete;this.dispatchEvent(new CustomEvent("change",{detail:{checked,value:this.value,nativeEvent:e},bubbles:true,composed:true}));this.dispatchEvent(new CheckboxChangeEvent(checked,checked.toString(),e))}getCheckboxFormValue(checked){return checked?this.value||"on":null}render(){const hasError=this.error||this.groupContext.value?.error;const isDisabled=this.disabled||this.groupContext.value?.disabled;const size=this.groupContext.value?.size||this.size;const{label,checked,changeHandler,intermediate}=this;const isIntermediate=Boolean(intermediate||checked===undefined);const ariaChecked=isIntermediate?"mixed":checked?"true":"false";const checkboxId=this.id||this.uniqueCheckboxId;return(0,lit.qy)`
       <div
-        class=${(0,d.H)({checkbox:!0,"is-disabled":!!t,"has-error":!!e,"is-intermediate":l,[`size-${i}`]:!!i})}>
+        class=${(0,class_map.H)({checkbox:true,"is-disabled":!!isDisabled,"has-error":!!hasError,"is-intermediate":isIntermediate,[`size-${size}`]:!!size})}>
         <input
-          ${(0,p.K)(this.input)}
-          id=${u}
+          ${(0,ref.K)(this.input)}
+          id=${checkboxId}
           type="checkbox"
           role="checkbox"
-          @change=${s}
-          .checked=${l?void 0:(0,c.V)(r)}
-          ?disabled=${t}
-          .value=${l?void 0:this.value}
-          aria-checked=${v}
-          aria-label=${(0,b.m)(this.ariaLabel)}
-          name=${(0,b.m)(this.name||u)}
-          ?readonly=${(0,b.m)(this.readonly)}
-          tabindex=${(0,b.m)(this.tabindex)} />
+          @change=${changeHandler}
+          .checked=${isIntermediate?undefined:(0,live.V)(checked)}
+          ?disabled=${isDisabled}
+          .value=${isIntermediate?undefined:this.value}
+          aria-checked=${ariaChecked}
+          aria-label=${(0,if_defined_or_string_empty.m)(this.ariaLabel)}
+          name=${(0,if_defined_or_string_empty.m)(this.name||checkboxId)}
+          ?readonly=${(0,if_defined_or_string_empty.m)(this.readonly)}
+          tabindex=${(0,if_defined_or_string_empty.m)(this.tabindex)} />
 
-        ${(0,h.z)(!l&&this.checked,()=>a.qy`
+        ${(0,when.z)(!isIntermediate&&this.checked,()=>(0,lit.qy)`
             <svg
               viewBox="0 0 20 17"
               fill="none"
@@ -690,7 +690,7 @@
                 d="M8 13.42L3 8.42L4.41 7.01L8 10.59L15.59 3L17 4.42L8 13.42Z" />
             </svg>
           `)}
-        ${(0,h.z)(l,()=>a.qy`
+        ${(0,when.z)(isIntermediate,()=>(0,lit.qy)`
             <svg
               viewBox="0 0 16 8"
               fill="none"
@@ -699,16 +699,16 @@
               <path d="M3 3H13V5H3V3Z" />
             </svg>
           `)}
-        ${(0,h.z)(o,()=>a.qy`
+        ${(0,when.z)(label,()=>(0,lit.qy)`
             <label
               part="label"
-              for=${u}
-              class=${(0,d.H)({"typography-body":"medium"===this.size,"typography-caption1":"small"===this.size})}>
-              ${o}
+              for=${checkboxId}
+              class=${(0,class_map.H)({"typography-body":this.size==="medium","typography-caption1":this.size==="small"})}>
+              ${label}
             </label>
           `)}
       </div>
-    `}};M.styles=[w,n.IT.caption1,n.IT.body],z([(0,l.MZ)({type:String})],M.prototype,"label",void 0),z([(0,l.MZ)({type:Boolean})],M.prototype,"error",void 0),z([(0,l.MZ)({type:Boolean,reflect:!0})],M.prototype,"checked",void 0),z([(0,l.MZ)({attribute:!1})],M.prototype,"defaultChecked",void 0),z([(0,l.MZ)({type:Boolean,reflect:!0})],M.prototype,"disabled",void 0),z([(0,l.MZ)({type:String,reflect:!0})],M.prototype,"name",void 0),z([(0,l.MZ)({type:Boolean})],M.prototype,"readonly",void 0),z([(0,l.MZ)({type:Number})],M.prototype,"tabindex",void 0),z([(0,l.MZ)({type:String})],M.prototype,"value",void 0),z([(0,l.MZ)({type:Boolean})],M.prototype,"intermediate",void 0),z([(0,l.MZ)({type:String})],M.prototype,"size",void 0),z([s("checked")],M.prototype,"checkedChanged",void 0),M=z([(0,u.E)("vcdk-checkbox")],M);i(2932);class E extends CustomEvent{constructor(e){super("vcdk-chip-click",{detail:{source:"chip",selected:e},bubbles:!0,composed:!0})}}class C extends CustomEvent{constructor(){super("vcdk-chip-remove",{detail:{source:"close-button"},bubbles:!0,composed:!0})}}const S=a.AH`
+    `}};Checkbox.styles=[checkboxStyles,typography_styles.IT.caption1,typography_styles.IT.body];__decorate([(0,decorators.MZ)({type:String})],Checkbox.prototype,"label",void 0);__decorate([(0,decorators.MZ)({type:Boolean})],Checkbox.prototype,"error",void 0);__decorate([(0,decorators.MZ)({type:Boolean,reflect:true})],Checkbox.prototype,"checked",void 0);__decorate([(0,decorators.MZ)({attribute:false})],Checkbox.prototype,"defaultChecked",void 0);__decorate([(0,decorators.MZ)({type:Boolean,reflect:true})],Checkbox.prototype,"disabled",void 0);__decorate([(0,decorators.MZ)({type:String,reflect:true})],Checkbox.prototype,"name",void 0);__decorate([(0,decorators.MZ)({type:Boolean})],Checkbox.prototype,"readonly",void 0);__decorate([(0,decorators.MZ)({type:Number})],Checkbox.prototype,"tabindex",void 0);__decorate([(0,decorators.MZ)({type:String})],Checkbox.prototype,"value",void 0);__decorate([(0,decorators.MZ)({type:Boolean})],Checkbox.prototype,"intermediate",void 0);__decorate([(0,decorators.MZ)({type:String})],Checkbox.prototype,"size",void 0);__decorate([watch("checked")],Checkbox.prototype,"checkedChanged",void 0);Checkbox=__decorate([(0,custom_element.E)("vcdk-checkbox")],Checkbox);var system_icon=__webpack_require__(2932);class ChipClickEvent extends CustomEvent{constructor(selected){super("vcdk-chip-click",{detail:{source:"chip",selected},bubbles:true,composed:true})}}class ChipRemoveEvent extends CustomEvent{constructor(){super("vcdk-chip-remove",{detail:{source:"close-button"},bubbles:true,composed:true})}}const chipStyles=(0,lit.AH)`
   :host {
     max-width: 100%;
   }
@@ -829,44 +829,44 @@
     letter-spacing: var(--vcdk-chip-letter-spacing);
     font-weight: var(--vcdk-chip-font-weight);
   }
-`;var A=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};let Z=class extends x.l{constructor(){super(...arguments),this.selected=!1,this.removable=!1,this.removeAriaLabel="",this.handleChipClick=()=>{this.dispatchEvent(new E(this.selected??!1))},this.handleRemoveClick=()=>{this.dispatchEvent(new C)},this.handleKeyDown=e=>{"Enter"!==e.key&&"Space"!==e.code||this.handleRemoveClick()}}render(){const{selected:e,iconStart:t,iconEnd:i,removable:o,removeAriaLabel:r,disabled:s,form:n,formaction:l,formenctype:c,formmethod:p,formnovalidate:v,formtarget:u,name:y,type:f,value:g,size:m}=this;return a.qy`
+`;var chip_component_decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};let Chip=class Chip extends vcdk_element.l{constructor(){super(...arguments);this.selected=false;this.removable=false;this.removeAriaLabel="";this.handleChipClick=()=>{this.dispatchEvent(new ChipClickEvent(this.selected??false))};this.handleRemoveClick=()=>{this.dispatchEvent(new ChipRemoveEvent)};this.handleKeyDown=event=>{if(event.key==="Enter"||event.code==="Space"){this.handleRemoveClick()}}}render(){const{selected,iconStart,iconEnd,removable,removeAriaLabel,disabled,form,formaction,formenctype,formmethod,formnovalidate,formtarget,name,type,value,size}=this;return(0,lit.qy)`
       <div
-        class=${(0,d.H)({"chip-wrapper":!0,"typography-caption1":"small"===m,"typography-caption2":"small"!==m,"size-small":"small"===m,selected:!!e,disabled:!!s})}>
+        class=${(0,class_map.H)({"chip-wrapper":true,"typography-caption1":size==="small","typography-caption2":size!=="small","size-small":size==="small",selected:!!selected,disabled:!!disabled})}>
         <button
-          class=${(0,d.H)({"chip-button":!0})}
+          class=${(0,class_map.H)({"chip-button":true})}
           @click=${this.handleChipClick}
-          form=${(0,b.m)(n)}
-          ?disabled=${s}
-          ?selected=${e}
-          formaction=${(0,b.m)(l)}
-          formenctype=${(0,b.m)(c)}
-          formmethod=${(0,b.m)(p)}
-          ?formnovalidate=${v}
-          formtarget=${(0,b.m)(u)}
-          name=${(0,b.m)(y)}
-          type=${f??"button"}
-          value=${(0,b.m)(g)}>
-          ${t&&a.qy`
-            <vcdk-system-icon .size=${16} .icon=${t}></vcdk-system-icon>
+          form=${(0,if_defined_or_string_empty.m)(form)}
+          ?disabled=${disabled}
+          ?selected=${selected}
+          formaction=${(0,if_defined_or_string_empty.m)(formaction)}
+          formenctype=${(0,if_defined_or_string_empty.m)(formenctype)}
+          formmethod=${(0,if_defined_or_string_empty.m)(formmethod)}
+          ?formnovalidate=${formnovalidate}
+          formtarget=${(0,if_defined_or_string_empty.m)(formtarget)}
+          name=${(0,if_defined_or_string_empty.m)(name)}
+          type=${type??"button"}
+          value=${(0,if_defined_or_string_empty.m)(value)}>
+          ${iconStart&&(0,lit.qy)`
+            <vcdk-system-icon .size=${16} .icon=${iconStart}></vcdk-system-icon>
           `}
           <slot
-            class=${(0,d.H)({text:1})}></slot>
-          ${i&&a.qy`
-            <vcdk-system-icon .size=${16} .icon=${i}></vcdk-system-icon>
+            class=${(0,class_map.H)({text:1})}></slot>
+          ${iconEnd&&(0,lit.qy)`
+            <vcdk-system-icon .size=${16} .icon=${iconEnd}></vcdk-system-icon>
           `}
         </button>
-        ${(0,h.z)(o,()=>a.qy`
+        ${(0,when.z)(removable,()=>(0,lit.qy)`
             <vcdk-icon-button
-              class=${(0,d.H)({"chip-button-close":!0,selected:!!e,disabled:!!s})}
-              ?disabled=${s}
+              class=${(0,class_map.H)({"chip-button-close":true,selected:!!selected,disabled:!!disabled})}
+              ?disabled=${disabled}
               @click=${this.handleRemoveClick}
               @keydown=${this.handleKeyDown}
-              aria-label=${(0,b.m)(r)}
+              aria-label=${(0,if_defined_or_string_empty.m)(removeAriaLabel)}
               size="extra-small"
               icon="close"></vcdk-icon-button>
           `)}
       </div>
-    `}};Z.styles=[S,n.IT.caption1,n.IT.caption2],A([(0,l.MZ)({type:Boolean})],Z.prototype,"selected",void 0),A([(0,l.MZ)({type:String})],Z.prototype,"iconEnd",void 0),A([(0,l.MZ)({type:String})],Z.prototype,"iconStart",void 0),A([(0,l.MZ)({type:String})],Z.prototype,"size",void 0),A([(0,l.MZ)({type:Boolean})],Z.prototype,"removable",void 0),A([(0,l.MZ)({type:String})],Z.prototype,"removeAriaLabel",void 0),A([(0,l.MZ)({type:Boolean})],Z.prototype,"disabled",void 0),A([(0,l.MZ)({type:String})],Z.prototype,"form",void 0),A([(0,l.MZ)({type:String})],Z.prototype,"formaction",void 0),A([(0,l.MZ)({type:String})],Z.prototype,"formenctype",void 0),A([(0,l.MZ)({type:String})],Z.prototype,"formmethod",void 0),A([(0,l.MZ)({type:Boolean})],Z.prototype,"formnovalidate",void 0),A([(0,l.MZ)({type:String})],Z.prototype,"formtarget",void 0),A([(0,l.MZ)({type:String})],Z.prototype,"name",void 0),A([(0,l.MZ)({type:String})],Z.prototype,"type",void 0),A([(0,l.MZ)({type:String})],Z.prototype,"value",void 0),Z=A([(0,u.E)("vcdk-chip")],Z);var O=i(8128);const I=a.AH`
+    `}};Chip.styles=[chipStyles,typography_styles.IT.caption1,typography_styles.IT.caption2];chip_component_decorate([(0,decorators.MZ)({type:Boolean})],Chip.prototype,"selected",void 0);chip_component_decorate([(0,decorators.MZ)({type:String})],Chip.prototype,"iconEnd",void 0);chip_component_decorate([(0,decorators.MZ)({type:String})],Chip.prototype,"iconStart",void 0);chip_component_decorate([(0,decorators.MZ)({type:String})],Chip.prototype,"size",void 0);chip_component_decorate([(0,decorators.MZ)({type:Boolean})],Chip.prototype,"removable",void 0);chip_component_decorate([(0,decorators.MZ)({type:String})],Chip.prototype,"removeAriaLabel",void 0);chip_component_decorate([(0,decorators.MZ)({type:Boolean})],Chip.prototype,"disabled",void 0);chip_component_decorate([(0,decorators.MZ)({type:String})],Chip.prototype,"form",void 0);chip_component_decorate([(0,decorators.MZ)({type:String})],Chip.prototype,"formaction",void 0);chip_component_decorate([(0,decorators.MZ)({type:String})],Chip.prototype,"formenctype",void 0);chip_component_decorate([(0,decorators.MZ)({type:String})],Chip.prototype,"formmethod",void 0);chip_component_decorate([(0,decorators.MZ)({type:Boolean})],Chip.prototype,"formnovalidate",void 0);chip_component_decorate([(0,decorators.MZ)({type:String})],Chip.prototype,"formtarget",void 0);chip_component_decorate([(0,decorators.MZ)({type:String})],Chip.prototype,"name",void 0);chip_component_decorate([(0,decorators.MZ)({type:String})],Chip.prototype,"type",void 0);chip_component_decorate([(0,decorators.MZ)({type:String})],Chip.prototype,"value",void 0);Chip=chip_component_decorate([(0,custom_element.E)("vcdk-chip")],Chip);var breakpoints=__webpack_require__(8128);const chipsStyles=(0,lit.AH)`
   slot {
     display: flex;
     flex-direction: row;
@@ -909,7 +909,7 @@
       --vcdk-typography-caption-2-weight-small-screens
     );
   }
-  @media (min-width: ${O.f.md.from}px) {
+  @media (min-width: ${breakpoints.f.md.from}px) {
     .size-default {
       --vcdk-chip-font-family: var(
         --vcdk-typography-caption-1-font-family-large-screens
@@ -945,10 +945,10 @@
       );
     }
   }
-`;var D=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};let T=class extends x.l{constructor(){super(...arguments),this.size="default"}render(){return a.qy`
+`;var chips_component_decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};let Chips=class Chips extends vcdk_element.l{constructor(){super(...arguments);this.size="default"}render(){return(0,lit.qy)`
       <slot
-        class=${(0,d.H)({[`size-${this.size}`]:!0})}></slot>
-    `}};T.styles=[I],D([(0,l.MZ)({type:String})],T.prototype,"size",void 0),T=D([(0,u.E)("vcdk-chips")],T);class R extends CustomEvent{constructor(e=!0){super("vcdk-close",{bubbles:e,composed:!0,cancelable:!0})}}var P=i(663);function V(e,t){return(i,o)=>{const r="slot"+(e?`[name=${e}]`:":not([name])");Object.defineProperty(i,o,{get(){const e=this.renderRoot?.querySelector(r),i=e?.assignedElements({flatten:!0})??[];return[...i.filter(e=>e.matches(t)),...(0,P.A)(i.filter(e=>e instanceof HTMLElement).map(e=>Array.from(e.querySelectorAll(t))))]}})}}var L=i(31);const B=a.AH`
+        class=${(0,class_map.H)({[`size-${this.size}`]:true})}></slot>
+    `}};Chips.styles=[chipsStyles];chips_component_decorate([(0,decorators.MZ)({type:String})],Chips.prototype,"size",void 0);Chips=chips_component_decorate([(0,custom_element.E)("vcdk-chips")],Chips);class CloseEvent extends CustomEvent{constructor(bubbles=true){super("vcdk-close",{bubbles,composed:true,cancelable:true})}}var flatten=__webpack_require__(663);function querySlot(slotName,selector){return(target,propertyKey)=>{const slotSelector="slot"+(slotName?`[name=${slotName}]`:":not([name])");Object.defineProperty(target,propertyKey,{get(){const slot=this.renderRoot?.querySelector(slotSelector);const elements=slot?.assignedElements({flatten:true})??[];const firstLevelDeepElements=elements.filter(node=>node.matches(selector));const nestedFilteredElements=(0,flatten.A)(elements.filter(t=>t instanceof HTMLElement).map(element=>Array.from(element.querySelectorAll(selector))));return[...firstLevelDeepElements,...nestedFilteredElements]}})}}var if_defined=__webpack_require__(31);const iconButtonStyles=(0,lit.AH)`
   a,
   button {
     align-items: center;
@@ -1071,64 +1071,64 @@
   .variant-tertiary[aria-disabled="true"] vcdk-system-icon::part(svg) {
     color: var(--vcdk-color-text-disabled);
   }
-`;var j=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};let H=class extends x.l{constructor(){super(...arguments),this.icon="home",this.size="medium",this.variant="tertiary",this.buttonAriaExpanded=!1,this.buttonAriaHaspopup=!1,this.autofocus=!1,this.clickHandler=e=>{if(this.disabled)return e.preventDefault(),void e.stopPropagation()}}render(){const{href:e,size:t,icon:i,filled:o,disabled:r,form:s,buttonAriaLabel:n,title:l,variant:c,type:p}=this,h={[`variant-${c}`]:!0,[`size-${t}`]:!0},v=a.qy`
+`;var icon_button_component_decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};let IconButton=class IconButton extends vcdk_element.l{constructor(){super(...arguments);this.icon="home";this.size="medium";this.variant="tertiary";this.buttonAriaExpanded=false;this.buttonAriaHaspopup=false;this.autofocus=false;this.clickHandler=e=>{if(this.disabled){e.preventDefault();e.stopPropagation();return}}}render(){const{href,size,icon,filled,disabled,form,buttonAriaLabel,title,variant,type}=this;const buttonClasses={[`variant-${variant}`]:true,[`size-${size}`]:true};const template=(0,lit.qy)`
       <vcdk-system-icon
         exportparts="svg"
-        .icon=${i}
-        ?filled=${o}
+        .icon=${icon}
+        ?filled=${filled}
         element-role="presentation"></vcdk-system-icon>
-    `;return e?a.qy`
+    `;if(href)return(0,lit.qy)`
         <a
           part="button"
-          title=${(0,b.m)(l)}
-          aria-label=${(0,b.m)(n)}
-          aria-disabled=${r?"true":a.s6}
-          role=${(0,b.m)(this.buttonRole)}
+          title=${(0,if_defined_or_string_empty.m)(title)}
+          aria-label=${(0,if_defined_or_string_empty.m)(buttonAriaLabel)}
+          aria-disabled=${disabled?"true":lit.s6}
+          role=${(0,if_defined_or_string_empty.m)(this.buttonRole)}
           @click=${this.clickHandler}
-          class=${(0,d.H)(h)}
-          href=${e}
-          download=${(0,b.m)(this.download)}
-          hreflang=${(0,b.m)(this.hreflang)}
-          ping=${(0,b.m)(this.ping)}
-          referrerpolicy=${(0,b.m)(this.referrerPolicy)}
-          rel=${(0,b.m)(this.rel)}
-          target=${(0,b.m)(this.target)}
-          type=${(0,b.m)(p)}
-          ?autofocus=${(0,L.J)(this.autofocus)}>
-          ${v}
+          class=${(0,class_map.H)(buttonClasses)}
+          href=${href}
+          download=${(0,if_defined_or_string_empty.m)(this.download)}
+          hreflang=${(0,if_defined_or_string_empty.m)(this.hreflang)}
+          ping=${(0,if_defined_or_string_empty.m)(this.ping)}
+          referrerpolicy=${(0,if_defined_or_string_empty.m)(this.referrerPolicy)}
+          rel=${(0,if_defined_or_string_empty.m)(this.rel)}
+          target=${(0,if_defined_or_string_empty.m)(this.target)}
+          type=${(0,if_defined_or_string_empty.m)(type)}
+          ?autofocus=${(0,if_defined.J)(this.autofocus)}>
+          ${template}
         </a>
-      `:a.qy`
+      `;return(0,lit.qy)`
       <button
         part="button"
-        title=${(0,b.m)(l)}
-        role=${(0,b.m)(this.buttonRole)}
-        aria-label=${(0,b.m)(n)}
-        aria-disabled=${r?"true":a.s6}
-        aria-controls=${(0,b.m)(this.buttonAriaControls)}
-        aria-expanded=${this.buttonAriaExpanded?"true":a.s6}
-        aria-haspopup=${this.buttonAriaHaspopup?"true":a.s6}
+        title=${(0,if_defined_or_string_empty.m)(title)}
+        role=${(0,if_defined_or_string_empty.m)(this.buttonRole)}
+        aria-label=${(0,if_defined_or_string_empty.m)(buttonAriaLabel)}
+        aria-disabled=${disabled?"true":lit.s6}
+        aria-controls=${(0,if_defined_or_string_empty.m)(this.buttonAriaControls)}
+        aria-expanded=${this.buttonAriaExpanded?"true":lit.s6}
+        aria-haspopup=${this.buttonAriaHaspopup?"true":lit.s6}
         @click=${this.clickHandler}
-        class=${(0,d.H)(h)}
-        form=${(0,b.m)(s)}
-        formaction=${(0,b.m)(this.formaction)}
-        formenctype=${(0,b.m)(this.formenctype)}
-        formmethod=${(0,b.m)(this.formmethod)}
+        class=${(0,class_map.H)(buttonClasses)}
+        form=${(0,if_defined_or_string_empty.m)(form)}
+        formaction=${(0,if_defined_or_string_empty.m)(this.formaction)}
+        formenctype=${(0,if_defined_or_string_empty.m)(this.formenctype)}
+        formmethod=${(0,if_defined_or_string_empty.m)(this.formmethod)}
         ?formnovalidate=${this.formnovalidate}
-        formtarget=${(0,b.m)(this.formtarget)}
-        name=${(0,b.m)(this.name)}
-        type=${p??"button"}
-        value=${(0,b.m)(this.value)}
-        ?autofocus=${(0,L.J)(this.autofocus)}>
-        ${v}
+        formtarget=${(0,if_defined_or_string_empty.m)(this.formtarget)}
+        name=${(0,if_defined_or_string_empty.m)(this.name)}
+        type=${type??"button"}
+        value=${(0,if_defined_or_string_empty.m)(this.value)}
+        ?autofocus=${(0,if_defined.J)(this.autofocus)}>
+        ${template}
       </button>
-    `}};H.styles=[B],j([(0,l.MZ)({type:String})],H.prototype,"icon",void 0),j([(0,l.MZ)({type:String})],H.prototype,"size",void 0),j([(0,l.MZ)({type:String})],H.prototype,"variant",void 0),j([(0,l.MZ)({type:Boolean})],H.prototype,"filled",void 0),j([(0,l.MZ)({type:String})],H.prototype,"download",void 0),j([(0,l.MZ)({type:String})],H.prototype,"href",void 0),j([(0,l.MZ)({type:String})],H.prototype,"hreflang",void 0),j([(0,l.MZ)({type:String})],H.prototype,"ping",void 0),j([(0,l.MZ)({type:String})],H.prototype,"referrerPolicy",void 0),j([(0,l.MZ)({type:String})],H.prototype,"rel",void 0),j([(0,l.MZ)({type:String})],H.prototype,"target",void 0),j([(0,l.MZ)({type:Boolean})],H.prototype,"disabled",void 0),j([(0,l.MZ)({type:String})],H.prototype,"form",void 0),j([(0,l.MZ)({type:String})],H.prototype,"formaction",void 0),j([(0,l.MZ)({type:String})],H.prototype,"formenctype",void 0),j([(0,l.MZ)({type:String})],H.prototype,"formmethod",void 0),j([(0,l.MZ)({type:Boolean})],H.prototype,"formnovalidate",void 0),j([(0,l.MZ)({type:String})],H.prototype,"formtarget",void 0),j([(0,l.MZ)({type:String,reflect:!0})],H.prototype,"name",void 0),j([(0,l.MZ)({type:String})],H.prototype,"type",void 0),j([(0,l.MZ)({type:String})],H.prototype,"value",void 0),j([(0,l.MZ)({attribute:"button-role"})],H.prototype,"buttonRole",void 0),j([(0,l.MZ)({attribute:"button-aria-label"})],H.prototype,"buttonAriaLabel",void 0),j([(0,l.MZ)({attribute:"button-aria-controls"})],H.prototype,"buttonAriaControls",void 0),j([(0,l.MZ)({type:Boolean,attribute:"button-aria-expanded"})],H.prototype,"buttonAriaExpanded",void 0),j([(0,l.MZ)({type:Boolean,attribute:"button-aria-haspopup"})],H.prototype,"buttonAriaHaspopup",void 0),j([(0,l.MZ)({type:Boolean})],H.prototype,"autofocus",void 0),H=j([(0,u.E)("vcdk-icon-button")],H);const F=(e,t)=>a.qy`
+    `}};IconButton.styles=[iconButtonStyles];icon_button_component_decorate([(0,decorators.MZ)({type:String})],IconButton.prototype,"icon",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:String})],IconButton.prototype,"size",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:String})],IconButton.prototype,"variant",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:Boolean})],IconButton.prototype,"filled",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:String})],IconButton.prototype,"download",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:String})],IconButton.prototype,"href",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:String})],IconButton.prototype,"hreflang",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:String})],IconButton.prototype,"ping",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:String})],IconButton.prototype,"referrerPolicy",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:String})],IconButton.prototype,"rel",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:String})],IconButton.prototype,"target",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:Boolean})],IconButton.prototype,"disabled",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:String})],IconButton.prototype,"form",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:String})],IconButton.prototype,"formaction",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:String})],IconButton.prototype,"formenctype",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:String})],IconButton.prototype,"formmethod",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:Boolean})],IconButton.prototype,"formnovalidate",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:String})],IconButton.prototype,"formtarget",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:String,reflect:true})],IconButton.prototype,"name",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:String})],IconButton.prototype,"type",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:String})],IconButton.prototype,"value",void 0);icon_button_component_decorate([(0,decorators.MZ)({attribute:"button-role"})],IconButton.prototype,"buttonRole",void 0);icon_button_component_decorate([(0,decorators.MZ)({attribute:"button-aria-label"})],IconButton.prototype,"buttonAriaLabel",void 0);icon_button_component_decorate([(0,decorators.MZ)({attribute:"button-aria-controls"})],IconButton.prototype,"buttonAriaControls",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:Boolean,attribute:"button-aria-expanded"})],IconButton.prototype,"buttonAriaExpanded",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:Boolean,attribute:"button-aria-haspopup"})],IconButton.prototype,"buttonAriaHaspopup",void 0);icon_button_component_decorate([(0,decorators.MZ)({type:Boolean})],IconButton.prototype,"autofocus",void 0);IconButton=icon_button_component_decorate([(0,custom_element.E)("vcdk-icon-button")],IconButton);const characterCounter=(currentLength,maxLength)=>(0,lit.qy)`
   <div
     class="character-counter typography-caption2"
     part="character-counter"
     aria-hidden="true">
-    ${`${e} / ${t}`}
+    ${`${currentLength} / ${maxLength}`}
   </div>
-`,K=a.AH`
+`;const textFieldStyles=(0,lit.AH)`
   .text-field {
     --vcdk-text-field-bg-color: var(--vcdk-color-bg);
     --vcdk-text-field-border-color: var(--vcdk-color-border);
@@ -1358,68 +1358,68 @@
   .floating-label .container {
     padding-inline: var(--vcdk-text-field-padding-inline);
   }
-`;var q=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};let U=class extends(m(g(k(x.l)))){constructor(){super(),this.size="medium",this.autocapitalize="none",this.placeholder="",this.spellcheck=!1,this.tabIndex=0,this.type="text",this.value="",this.wrap="soft",this.hasFocus=!1,this.uid=(0,v.A)("vcdk-text-field-"),this.onValueChanged=()=>{this.setValue(this.value??null)},this.eventDispatcher=(e,t)=>{e.stopPropagation();const i={detail:{value:e.target.value,nativeEvent:e},bubbles:!0,composed:!0};this.dispatchEvent(new CustomEvent(t,i)),this.dispatchEvent(new CustomEvent(`vcdk-${t}`,i)),this.value=e.target.value,this.setValue(this.value)},this.blurHandler=e=>{this.hasFocus=!1,this.eventDispatcher(e,"blur")},this.focusHandler=e=>{this.hasFocus=!0,this.eventDispatcher(e,"focus")},this.clickButtonHandler=()=>{this.dispatchEvent(new CustomEvent("click-button",{bubbles:!0,composed:!0})),this.dispatchEvent(new CustomEvent("vcdk-click-button",{bubbles:!0,composed:!0}))},this.inputRef=(0,p._)(),this.getInputRef=()=>this.inputRef.value??null,this.inputAriaDescribedBy=this.inputAriaDescribedBy||(0,v.A)("caption-")}willFirstUpdate(e){e.has("defaultValue")&&(this.value=this.defaultValue??"")}formAssociatedCallback(){this.value&&this.setValue(this.value)}resetFormControl(){this.setValue(this.defaultValue??""),this.value=this.defaultValue??""}shouldFormValueUpdate(){return!0}get counterAbove(){return!this.floatingLabel&&this.characterCounter&&this.maxlength}get counterBelow(){return this.floatingLabel&&this.characterCounter&&this.maxlength}render(){const{required:e,label:t,rows:i,helperText:o,icon:r,size:s,disabled:n,floatingLabel:l,value:c,error:v,readonly:u}=this;return a.qy`
+`;var text_field_component_decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};const exportparts="fieldset, label, input-wrapper, input, before-input, after-input, icon";let TextField=class TextField extends(FormMethodsMixin(FormControlMixin(HasFirstUpdate(vcdk_element.l)))){constructor(){super();this.size="medium";this.autocapitalize="none";this.placeholder="";this.spellcheck=false;this.tabIndex=0;this.type="text";this.value="";this.wrap="soft";this.hasFocus=false;this.uid=(0,uniqueId.A)("vcdk-text-field-");this.onValueChanged=()=>{this.setValue(this.value??null)};this.eventDispatcher=(e,type)=>{e.stopPropagation();const eventInitDict={detail:{value:e.target.value,nativeEvent:e},bubbles:true,composed:true};this.dispatchEvent(new CustomEvent(type,eventInitDict));this.dispatchEvent(new CustomEvent(`vcdk-${type}`,eventInitDict));this.value=e.target.value;this.setValue(this.value)};this.blurHandler=e=>{this.hasFocus=false;this.eventDispatcher(e,"blur")};this.focusHandler=e=>{this.hasFocus=true;this.eventDispatcher(e,"focus")};this.clickButtonHandler=()=>{this.dispatchEvent(new CustomEvent("click-button",{bubbles:true,composed:true}));this.dispatchEvent(new CustomEvent("vcdk-click-button",{bubbles:true,composed:true}))};this.inputRef=(0,ref._)();this.getInputRef=()=>this.inputRef.value??null;this.inputAriaDescribedBy=this.inputAriaDescribedBy||(0,uniqueId.A)("caption-")}willFirstUpdate(changedProperties){if(changedProperties.has("defaultValue")){this.value=this.defaultValue??""}}formAssociatedCallback(){if(this.value){this.setValue(this.value)}}resetFormControl(){this.setValue(this.defaultValue??"");this.value=this.defaultValue??""}shouldFormValueUpdate(){return true}get counterAbove(){return!this.floatingLabel&&this.characterCounter&&this.maxlength}get counterBelow(){return this.floatingLabel&&this.characterCounter&&this.maxlength}render(){const{required,label,rows,helperText,icon,size,disabled,floatingLabel,value,error,readonly}=this;return(0,lit.qy)`
       <div
-        class=${(0,d.H)({"text-field":1,"floating-label":!!l,"has-value":!!c,disabled:!!n,error:!!v,readonly:!!u,[s]:!!s})}>
+        class=${(0,class_map.H)({"text-field":1,"floating-label":!!floatingLabel,"has-value":!!value,disabled:!!disabled,error:!!error,readonly:!!readonly,[size]:!!size})}>
         <fieldset part="fieldset">
           <div class="container">
-            ${(0,h.z)(t,()=>a.qy`
+            ${(0,when.z)(label,()=>(0,lit.qy)`
                 <label
                   for=${this.uid}
-                  class=${(0,d.H)({"typography-subtitle1":!!this.floatingLabel&&!this.hasFocus&&!this.value,"typography-subtitle2":!this.floatingLabel||this.floatingLabel&&(this.hasFocus||!!this.value)})}
+                  class=${(0,class_map.H)({"typography-subtitle1":!!this.floatingLabel&&!this.hasFocus&&!this.value,"typography-subtitle2":!this.floatingLabel||this.floatingLabel&&(this.hasFocus||!!this.value)})}
                   part="label">
-                  ${t}${e?" *":""}
+                  ${label}${required?" *":""}
                 </label>
               `)}
-            ${(0,h.z)(this.counterAbove,()=>F(this.value?.length,this.maxlength))}
+            ${(0,when.z)(this.counterAbove,()=>characterCounter(this.value?.length,this.maxlength))}
           </div>
 
           <div class="input-wrapper" part="input-wrapper">
             <slot part="before-input" name="before-input"></slot>
 
-            ${(0,h.z)(i,()=>a.qy`
+            ${(0,when.z)(rows,()=>(0,lit.qy)`
                 <textarea
-                  ${(0,p.K)(this.inputRef)}
+                  ${(0,ref.K)(this.inputRef)}
                   id=${this.uid}
-                  aria-invalid=${!!this.error}
-                  aria-describedby=${(0,b.m)(this.inputAriaDescribedBy)}
+                  aria-invalid=${this.error?true:false}
+                  aria-describedby=${(0,if_defined_or_string_empty.m)(this.inputAriaDescribedBy)}
                   part="input"
-                  class=${(0,d.H)({"typography-caption1":"small"===this.size,"typography-body":"small"!==this.size})}
+                  class=${(0,class_map.H)({"typography-caption1":this.size==="small","typography-body":this.size!=="small"})}
                   @blur=${this.blurHandler}
                   @focus=${this.focusHandler}
                   @change=${e=>this.eventDispatcher(e,"change")}
                   @input=${e=>this.eventDispatcher(e,"input")}
                   @keyup=${e=>this.eventDispatcher(e,"keyup")}
                   @keydown=${e=>this.eventDispatcher(e,"keydown")}
-                  rows=${(0,b.m)(this.rows)}
+                  rows=${(0,if_defined_or_string_empty.m)(this.rows)}
                   autocapitalize=${this.autocapitalize}
-                  autocomplete=${(0,b.m)(this.autocomplete)}
-                  dirname=${(0,b.m)(this.dirname)}
+                  autocomplete=${(0,if_defined_or_string_empty.m)(this.autocomplete)}
+                  dirname=${(0,if_defined_or_string_empty.m)(this.dirname)}
                   ?disabled=${this.disabled}
-                  aria-label=${(0,b.m)(this.inputAriaLabel)}
-                  max=${(0,L.J)(this.max)}
-                  maxlength=${(0,L.J)(this.maxlength)}
-                  min=${(0,L.J)(this.min)}
-                  minlength=${(0,L.J)(this.minlength)}
-                  name=${(0,b.m)(this.name)}
+                  aria-label=${(0,if_defined_or_string_empty.m)(this.inputAriaLabel)}
+                  max=${(0,if_defined.J)(this.max)}
+                  maxlength=${(0,if_defined.J)(this.maxlength)}
+                  min=${(0,if_defined.J)(this.min)}
+                  minlength=${(0,if_defined.J)(this.minlength)}
+                  name=${(0,if_defined_or_string_empty.m)(this.name)}
                   placeholder=${this.floatingLabel&&!this.hasFocus?"":this.placeholder}
                   ?readonly=${this.readonly}
                   ?required=${this.required}
-                  tabindex=${(0,L.J)(this.tabIndex)}
+                  tabindex=${(0,if_defined.J)(this.tabIndex)}
                   spellcheck=${this.spellcheck}
-                  step=${(0,L.J)(this.step)}
-                  wrap=${(0,b.m)(this.wrap)}
+                  step=${(0,if_defined.J)(this.step)}
+                  wrap=${(0,if_defined_or_string_empty.m)(this.wrap)}
                   .value=${this.value}></textarea>
-              `,()=>a.qy`
+              `,()=>(0,lit.qy)`
                 <input
-                  ${(0,p.K)(this.inputRef)}
+                  ${(0,ref.K)(this.inputRef)}
                   data-testid="input"
                   part="input"
                   id=${this.uid}
-                  class=${(0,d.H)({"typography-caption1":"small"===this.size,"typography-body":"small"!==this.size})}
-                  aria-invalid=${!!this.error}
-                  aria-describedby=${(0,b.m)(this.inputAriaDescribedBy)}
-                  aria-label=${(0,b.m)(this.inputAriaLabel)}
+                  class=${(0,class_map.H)({"typography-caption1":this.size==="small","typography-body":this.size!=="small"})}
+                  aria-invalid=${this.error?true:false}
+                  aria-describedby=${(0,if_defined_or_string_empty.m)(this.inputAriaDescribedBy)}
+                  aria-label=${(0,if_defined_or_string_empty.m)(this.inputAriaLabel)}
                   @blur=${this.blurHandler}
                   @focus=${this.focusHandler}
                   @change=${e=>this.eventDispatcher(e,"change")}
@@ -1427,33 +1427,33 @@
                   @keyup=${e=>this.eventDispatcher(e,"keyup")}
                   @keydown=${e=>this.eventDispatcher(e,"keydown")}
                   autocapitalize=${this.autocapitalize}
-                  autocomplete=${(0,b.m)(this.autocomplete)}
-                  dirname=${(0,b.m)(this.dirname)}
+                  autocomplete=${(0,if_defined_or_string_empty.m)(this.autocomplete)}
+                  dirname=${(0,if_defined_or_string_empty.m)(this.dirname)}
                   ?disabled=${this.disabled}
-                  list=${(0,b.m)(this.list)}
-                  max=${(0,L.J)(this.max)}
-                  maxlength=${(0,L.J)(this.maxlength)}
-                  min=${(0,L.J)(this.min)}
-                  minlength=${(0,L.J)(this.minlength)}
+                  list=${(0,if_defined_or_string_empty.m)(this.list)}
+                  max=${(0,if_defined.J)(this.max)}
+                  maxlength=${(0,if_defined.J)(this.maxlength)}
+                  min=${(0,if_defined.J)(this.min)}
+                  minlength=${(0,if_defined.J)(this.minlength)}
                   ?multiple=${this.multiple}
-                  name=${(0,b.m)(this.name)}
-                  pattern=${(0,b.m)(this.pattern)}
+                  name=${(0,if_defined_or_string_empty.m)(this.name)}
+                  pattern=${(0,if_defined_or_string_empty.m)(this.pattern)}
                   placeholder=${this.floatingLabel&&!this.hasFocus?"":this.placeholder}
                   ?readonly=${this.readonly}
                   ?required=${this.required}
-                  step=${(0,L.J)(this.step)}
-                  tabindex=${(0,L.J)(this.tabIndex)}
-                  type=${(0,b.m)(this.type)}
+                  step=${(0,if_defined.J)(this.step)}
+                  tabindex=${(0,if_defined.J)(this.tabIndex)}
+                  type=${(0,if_defined_or_string_empty.m)(this.type)}
                   .value=${this.value} />
               `)}
             <slot part="after-input" name="after-input">
-              ${(0,h.z)(r&&!i,()=>a.qy`
+              ${(0,when.z)(icon&&!rows,()=>(0,lit.qy)`
                   <vcdk-icon-button
                     part="icon"
                     tabindex="-1"
                     .buttonAriaLabel=${this.iconAriaLabel}
-                    .icon=${r}
-                    ?disabled=${n}
+                    .icon=${icon}
+                    ?disabled=${disabled}
                     @click=${this.clickButtonHandler}></vcdk-icon-button>
                 `)}
             </slot>
@@ -1461,17 +1461,17 @@
         </fieldset>
 
         <div class="container">
-          ${(0,h.z)(o,()=>a.qy`
+          ${(0,when.z)(helperText,()=>(0,lit.qy)`
               <p
                 class="helper-text typography-caption2"
-                id=${(0,b.m)(this.inputAriaDescribedBy)}>
-                ${o}
+                id=${(0,if_defined_or_string_empty.m)(this.inputAriaDescribedBy)}>
+                ${helperText}
               </p>
             `)}
-          ${(0,h.z)(this.counterBelow,()=>F(this.value?.length,this.maxlength))}
+          ${(0,when.z)(this.counterBelow,()=>characterCounter(this.value?.length,this.maxlength))}
         </div>
       </div>
-    `}};U.styles=[K,n.IT.body,n.IT.caption1,n.IT.caption2,n.IT.subtitle1,n.IT.subtitle2],q([(0,l.MZ)({type:String})],U.prototype,"size",void 0),q([(0,l.MZ)({type:Boolean})],U.prototype,"error",void 0),q([(0,l.MZ)({type:Boolean})],U.prototype,"floatingLabel",void 0),q([(0,l.MZ)({type:String})],U.prototype,"helperText",void 0),q([(0,l.MZ)({type:String})],U.prototype,"icon",void 0),q([(0,l.MZ)({type:String,attribute:"icon-aria-label"})],U.prototype,"iconAriaLabel",void 0),q([(0,l.MZ)({type:String})],U.prototype,"label",void 0),q([(0,l.MZ)({type:Number})],U.prototype,"rows",void 0),q([(0,l.MZ)({type:String,attribute:"input-aria-describedby"})],U.prototype,"inputAriaDescribedBy",void 0),q([(0,l.MZ)({type:String,attribute:"input-aria-label"})],U.prototype,"inputAriaLabel",void 0),q([(0,l.MZ)({type:String})],U.prototype,"autocapitalize",void 0),q([(0,l.MZ)({type:String})],U.prototype,"autocomplete",void 0),q([(0,l.MZ)({type:String})],U.prototype,"dirname",void 0),q([(0,l.MZ)({type:Boolean})],U.prototype,"disabled",void 0),q([(0,l.MZ)({type:Object})],U.prototype,"list",void 0),q([(0,l.MZ)({type:String})],U.prototype,"max",void 0),q([(0,l.MZ)({type:Number})],U.prototype,"maxlength",void 0),q([(0,l.MZ)({type:String})],U.prototype,"min",void 0),q([(0,l.MZ)({type:Number})],U.prototype,"minlength",void 0),q([(0,l.MZ)({type:Boolean})],U.prototype,"multiple",void 0),q([(0,l.MZ)({type:String,reflect:!0})],U.prototype,"name",void 0),q([(0,l.MZ)({type:String})],U.prototype,"pattern",void 0),q([(0,l.MZ)({type:String})],U.prototype,"placeholder",void 0),q([(0,l.MZ)({type:Boolean})],U.prototype,"readonly",void 0),q([(0,l.MZ)({type:Boolean})],U.prototype,"required",void 0),q([(0,l.MZ)({type:Boolean})],U.prototype,"spellcheck",void 0),q([(0,l.MZ)({type:String})],U.prototype,"step",void 0),q([(0,l.MZ)({type:Number})],U.prototype,"tabIndex",void 0),q([(0,l.MZ)({type:String})],U.prototype,"type",void 0),q([(0,l.MZ)({type:String})],U.prototype,"value",void 0),q([(0,l.MZ)({attribute:!1})],U.prototype,"defaultValue",void 0),q([(0,l.MZ)({type:String})],U.prototype,"wrap",void 0),q([(0,l.MZ)({type:Boolean,attribute:"character-counter"})],U.prototype,"characterCounter",void 0),q([(0,l.wk)()],U.prototype,"hasFocus",void 0),q([s("value")],U.prototype,"onValueChanged",void 0),U=q([(0,u.E)("vcdk-text-field")],U);var _=i(1926),N=i(1145);const W={arrowLeft:"ArrowLeft",arrowRight:"ArrowRight",arrowUp:"ArrowUp",arrowDown:"ArrowDown",enterKey:"Enter",spaceBar:" ",escapeKey:"Escape",homeKey:"Home",endKey:"End",pageUpKey:"PageUp",pageDownKey:"PageDown",tabKey:"Tab",altKey:"Alt",ctrlKey:"Ctrl",metaKey:"Meta",shiftKey:"Shift"},J=new Set([W.altKey,W.ctrlKey,W.metaKey,W.shiftKey].map(e=>e.toLowerCase())),G={skip:["input","textarea","select"]};function Y(e){return J.has(e)}function Q(e){return"keydown"===e.type}function X(e){return"keyup"===e.type}function ee(e){return!!e&&e.includes("keydownRepeat")}function te(e){const t=function(e){return(Array.isArray(e)?e:[e]).map(e=>e.toLowerCase())}(e);return{keys:t.filter(e=>!Y(e)),modifiers:t.filter(e=>Y(e))}}function ie(e){return"key"in e?e:e.detail.nativeEvent}class oe{get _element(){return this._observedElement?this._observedElement:this._host}observeElement(e){return e.addEventListener("keydown",this),e.addEventListener("keyup",this),this._observedElement=e,{unsubscribe:()=>{this._observedElement?.removeEventListener("keydown",this),this._observedElement?.removeEventListener("keyup",this),this._observedElement=void 0}}}constructor(e,t){this.bindings=new Set,this.pressedKeys=new Set,this._host=e,this._options={...G,...t},e.addController(this)}eventModifiersMatch(e,t){e.options?.preventDefault&&t.preventDefault(),e.options?.stopPropagation&&t.stopPropagation()}keysMatch(e,t){const i=e.modifiers??[];return e.keys.every(e=>this.pressedKeys.has(e))&&i.every(e=>!!t[`${e}Key`])}bindingMatches(e,t){const i=e.options?.triggers??["keydown"];return!!this.keysMatch(e,t)&&(!(!Q(t)||!function(e){return!!e&&(e.includes("keydown")||ee(e))}(i))||!(!X(t)||!function(e){return!!e&&e.includes("keyup")}(i)))}handleEvent(e){const t=ie(e),i=t.key.toLowerCase(),o=t.composedPath();if(this._element&&o.includes(this._element)){Y(i)&&this.pressedKeys.clear(),Q(t)&&!Y(i)&&this.pressedKeys.add(i);for(const e of this.bindings)this.bindingMatches(e,t)&&(this.eventModifiersMatch(e,t),e.handler.call(this._host,t),ee(e.options?.triggers)&&this.pressedKeys.delete(i));X(t)&&!Y(i)&&this.pressedKeys.delete(i)}}set(e,t,i){return this.bindings.add({...te(e),handler:t,options:{...this._options?.bindingDefaults,...i}}),this}hostConnected(){this._host.addEventListener("keyup",this),this._host.addEventListener("keydown",this)}hostDisconnected(){this._host.removeEventListener("keyup",this),this._host.removeEventListener("keydown",this)}}const re=(0,o.q6)("vcdk-dropdown");class se extends CustomEvent{constructor(e,t=""){super(`${t}change`,{detail:e?.map(e=>({value:e.value,label:e.textContent?.trim()??""}))??[],bubbles:!0,composed:!0})}}const ne=e=>e?.text?e.text:e?.getTextContent();class ae extends CustomEvent{constructor(e,t=""){const i=ne(e);super(`${t}change`,{detail:{value:e?.value??i??"",label:i??""},bubbles:!0,composed:!0})}}class le extends CustomEvent{constructor(e){super("vcdk-dropdown-input",{detail:{value:e},bubbles:!0,composed:!0})}}const de=a.AH`
+    `}};TextField.styles=[textFieldStyles,typography_styles.IT.body,typography_styles.IT.caption1,typography_styles.IT.caption2,typography_styles.IT.subtitle1,typography_styles.IT.subtitle2];text_field_component_decorate([(0,decorators.MZ)({type:String})],TextField.prototype,"size",void 0);text_field_component_decorate([(0,decorators.MZ)({type:Boolean})],TextField.prototype,"error",void 0);text_field_component_decorate([(0,decorators.MZ)({type:Boolean})],TextField.prototype,"floatingLabel",void 0);text_field_component_decorate([(0,decorators.MZ)({type:String})],TextField.prototype,"helperText",void 0);text_field_component_decorate([(0,decorators.MZ)({type:String})],TextField.prototype,"icon",void 0);text_field_component_decorate([(0,decorators.MZ)({type:String,attribute:"icon-aria-label"})],TextField.prototype,"iconAriaLabel",void 0);text_field_component_decorate([(0,decorators.MZ)({type:String})],TextField.prototype,"label",void 0);text_field_component_decorate([(0,decorators.MZ)({type:Number})],TextField.prototype,"rows",void 0);text_field_component_decorate([(0,decorators.MZ)({type:String,attribute:"input-aria-describedby"})],TextField.prototype,"inputAriaDescribedBy",void 0);text_field_component_decorate([(0,decorators.MZ)({type:String,attribute:"input-aria-label"})],TextField.prototype,"inputAriaLabel",void 0);text_field_component_decorate([(0,decorators.MZ)({type:String})],TextField.prototype,"autocapitalize",void 0);text_field_component_decorate([(0,decorators.MZ)({type:String})],TextField.prototype,"autocomplete",void 0);text_field_component_decorate([(0,decorators.MZ)({type:String})],TextField.prototype,"dirname",void 0);text_field_component_decorate([(0,decorators.MZ)({type:Boolean})],TextField.prototype,"disabled",void 0);text_field_component_decorate([(0,decorators.MZ)({type:Object})],TextField.prototype,"list",void 0);text_field_component_decorate([(0,decorators.MZ)({type:String})],TextField.prototype,"max",void 0);text_field_component_decorate([(0,decorators.MZ)({type:Number})],TextField.prototype,"maxlength",void 0);text_field_component_decorate([(0,decorators.MZ)({type:String})],TextField.prototype,"min",void 0);text_field_component_decorate([(0,decorators.MZ)({type:Number})],TextField.prototype,"minlength",void 0);text_field_component_decorate([(0,decorators.MZ)({type:Boolean})],TextField.prototype,"multiple",void 0);text_field_component_decorate([(0,decorators.MZ)({type:String,reflect:true})],TextField.prototype,"name",void 0);text_field_component_decorate([(0,decorators.MZ)({type:String})],TextField.prototype,"pattern",void 0);text_field_component_decorate([(0,decorators.MZ)({type:String})],TextField.prototype,"placeholder",void 0);text_field_component_decorate([(0,decorators.MZ)({type:Boolean})],TextField.prototype,"readonly",void 0);text_field_component_decorate([(0,decorators.MZ)({type:Boolean})],TextField.prototype,"required",void 0);text_field_component_decorate([(0,decorators.MZ)({type:Boolean})],TextField.prototype,"spellcheck",void 0);text_field_component_decorate([(0,decorators.MZ)({type:String})],TextField.prototype,"step",void 0);text_field_component_decorate([(0,decorators.MZ)({type:Number})],TextField.prototype,"tabIndex",void 0);text_field_component_decorate([(0,decorators.MZ)({type:String})],TextField.prototype,"type",void 0);text_field_component_decorate([(0,decorators.MZ)({type:String})],TextField.prototype,"value",void 0);text_field_component_decorate([(0,decorators.MZ)({attribute:false})],TextField.prototype,"defaultValue",void 0);text_field_component_decorate([(0,decorators.MZ)({type:String})],TextField.prototype,"wrap",void 0);text_field_component_decorate([(0,decorators.MZ)({type:Boolean,attribute:"character-counter"})],TextField.prototype,"characterCounter",void 0);text_field_component_decorate([(0,decorators.wk)()],TextField.prototype,"hasFocus",void 0);text_field_component_decorate([watch("value")],TextField.prototype,"onValueChanged",void 0);TextField=text_field_component_decorate([(0,custom_element.E)("vcdk-text-field")],TextField);var map=__webpack_require__(1926);var style_map=__webpack_require__(1145);const commonKeys={arrowLeft:"ArrowLeft",arrowRight:"ArrowRight",arrowUp:"ArrowUp",arrowDown:"ArrowDown",enterKey:"Enter",spaceBar:" ",escapeKey:"Escape",homeKey:"Home",endKey:"End",pageUpKey:"PageUp",pageDownKey:"PageDown",tabKey:"Tab",altKey:"Alt",ctrlKey:"Ctrl",metaKey:"Meta",shiftKey:"Shift"};const __modifiers=new Set([commonKeys.altKey,commonKeys.ctrlKey,commonKeys.metaKey,commonKeys.shiftKey].map(key=>key.toLowerCase()));const defaultOptions={skip:["input","textarea","select"]};function normalizeKeys(keys){return(Array.isArray(keys)?keys:[keys]).map(key=>key.toLowerCase())}function isModifier(key){return __modifiers.has(key)}function isKeydown(event){return event.type==="keydown"}function isKeyup(event){return event.type==="keyup"}function isKeydownTrigger(triggers){return triggers?triggers.includes("keydown")||isKeydownRepeatTrigger(triggers):false}function isKeyupTrigger(triggers){return triggers?triggers.includes("keyup"):false}function isKeydownRepeatTrigger(triggers){return triggers?triggers.includes("keydownRepeat"):false}function parseKeys(keys){const parsed=normalizeKeys(keys);return{keys:parsed.filter(key=>!isModifier(key)),modifiers:parsed.filter(key=>isModifier(key))}}function getEvent(event){return"key"in event?event:event.detail.nativeEvent}class KeyBindingController{get _element(){if(this._observedElement){return this._observedElement}return this._host}observeElement(element){element.addEventListener("keydown",this);element.addEventListener("keyup",this);this._observedElement=element;return{unsubscribe:()=>{this._observedElement?.removeEventListener("keydown",this);this._observedElement?.removeEventListener("keyup",this);this._observedElement=undefined}}}constructor(host,options){this.bindings=new Set;this.pressedKeys=new Set;this._host=host;this._options={...defaultOptions,...options};host.addController(this)}eventModifiersMatch(binding,event){if(binding.options?.preventDefault){event.preventDefault()}if(binding.options?.stopPropagation){event.stopPropagation()}}keysMatch(binding,event){const modifiers=binding.modifiers??[];return binding.keys.every(key=>this.pressedKeys.has(key))&&modifiers.every(mod=>!!event[`${mod}Key`])}bindingMatches(binding,event){const triggers=binding.options?.triggers??["keydown"];if(!this.keysMatch(binding,event)){return false}if(isKeydown(event)&&isKeydownTrigger(triggers)){return true}if(isKeyup(event)&&isKeyupTrigger(triggers)){return true}return false}handleEvent(customEvent){const event=getEvent(customEvent);const key=event.key.toLowerCase();const path=event.composedPath();if(!this._element||!path.includes(this._element)){return}if(isModifier(key)){this.pressedKeys.clear()}if(isKeydown(event)&&!isModifier(key)){this.pressedKeys.add(key)}for(const binding of this.bindings){if(this.bindingMatches(binding,event)){this.eventModifiersMatch(binding,event);binding.handler.call(this._host,event);if(isKeydownRepeatTrigger(binding.options?.triggers)){this.pressedKeys.delete(key)}}}if(isKeyup(event)&&!isModifier(key)){this.pressedKeys.delete(key)}}set(key,fn,options){this.bindings.add({...parseKeys(key),handler:fn,options:{...this._options?.bindingDefaults,...options}});return this}hostConnected(){this._host.addEventListener("keyup",this);this._host.addEventListener("keydown",this)}hostDisconnected(){this._host.removeEventListener("keyup",this);this._host.removeEventListener("keydown",this)}}function addKeybindings(element,options){return new KeyBindingController(element,options)}const dropdownContext=(0,context.q6)("vcdk-dropdown");class MultiDropdownChangeEvent extends CustomEvent{constructor(options,prefix=""){super(`${prefix}change`,{detail:options?.map(option=>({value:option.value,label:option.textContent?.trim()??""}))??[],bubbles:true,composed:true})}}const getDropdownOptionTextContent=option=>{if(option?.text)return option.text;return option?.getTextContent()};class DropdownChangeEvent extends CustomEvent{constructor(option,prefix=""){const text=getDropdownOptionTextContent(option);super(`${prefix}change`,{detail:{value:option?.value??text??"",label:text??""},bubbles:true,composed:true})}}class DropdownInputEvent extends CustomEvent{constructor(value){super("vcdk-dropdown-input",{detail:{value},bubbles:true,composed:true})}}const dropdownStyles=(0,lit.AH)`
   :host {
     --vcdk-divider-spacing: var(--vcdk-spacing-4);
   }
@@ -1541,10 +1541,10 @@
     transform: translateY(-50%);
     top: 0;
     pointer-events: none;
-    ${(0,n.zQ)("subtitle2","small")};
+    ${(0,typography_styles.zQ)("subtitle2","small")};
     background-color: var(--vcdk-color-bg);
-    @media (min-width: ${O.f.md.from}px) {
-      ${(0,n.zQ)("subtitle2","large")}
+    @media (min-width: ${breakpoints.f.md.from}px) {
+      ${(0,typography_styles.zQ)("subtitle2","large")}
     }
   }
 
@@ -1678,7 +1678,7 @@
       -1 * var(--vcdk-typography-caption-2-line-height-large-screens)
     );
   }
-`,ce=a.AH`
+`;const optionStyles=(0,lit.AH)`
   .small {
     --vcdk-text-field-padding-block: 5px;
     --vcdk-text-field-padding-inline: 8px;
@@ -1730,7 +1730,7 @@
     outline-offset: -2px;
     outline: var(--vcdk-color-border-focus) solid 2px;
   }
-`,pe=(a.AH`
+`;const iconStyles=(0,lit.AH)`
   .small {
     --vcdk-system-icon-size: 20px;
   }
@@ -1741,7 +1741,7 @@
     inset-inline-end: 16px;
     pointer-events: none;
   }
-`,a.AH`
+`;const optionButtonStyle=(0,lit.AH)`
   .option.disabled {
     color: var(--vcdk-color-text-disabled);
     cursor: not-allowed;
@@ -1765,7 +1765,7 @@
     display: flex;
     margin-inline-end: 8px;
   }
-`),he=a.AH`
+`;const dividerStyles=(0,lit.AH)`
   .divider {
     background-color: var(--vcdk-color-border-subtle);
     height: 1px;
@@ -1776,7 +1776,7 @@
     position: relative;
     width: 100%;
   }
-`,ve=a.AH`
+`;const popoverStyles=(0,lit.AH)`
   .popover {
     display: none;
     position: fixed;
@@ -1787,24 +1787,24 @@
   .popover.open {
     display: block;
   }
-`;var ue=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};let be=class extends x.l{constructor(){super(...arguments),this.variant="body"}render(){return a.qy`
+`;var typography_component_decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};let Typography=class Typography extends vcdk_element.l{constructor(){super(...arguments);this.variant="body"}render(){return(0,lit.qy)`
       <slot
-        class=${(0,d.H)({[`typography-${this.variant}`]:1})}
+        class=${(0,class_map.H)({[`typography-${this.variant}`]:1})}
         part="slot"></slot>
-    `}};be.styles=[...n.FB,n.gI],ue([(0,l.MZ)({type:String,reflect:!0})],be.prototype,"variant",void 0),be=ue([(0,u.E)("vcdk-typography")],be);var ye=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};let fe=class extends x.l{constructor(){super(...arguments),this.active=!1,this.disabled=!1,this.selected=!1,this.hidden=!1,this.checkbox=!1,this.dropdownContext=new o.G(this,{context:re,subscribe:!0})}get _contentSlotText(){return this._content.map(e=>this.text||e.textContent?.trim()).join("")}get value(){return this._value??this._contentSlotText}set value(e){const t=this._value;this._value=e,this.requestUpdate("value",t)}getTextContent(){return this._contentSlotText}render(){const e=this.dropdownContext?.value?.size||Ae,t="small"===e;return a.qy`
+    `}};Typography.styles=[...typography_styles.FB,typography_styles.gI];typography_component_decorate([(0,decorators.MZ)({type:String,reflect:true})],Typography.prototype,"variant",void 0);Typography=typography_component_decorate([(0,custom_element.E)("vcdk-typography")],Typography);var option_component_decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};let DropdownOption=class DropdownOption extends vcdk_element.l{constructor(){super(...arguments);this.active=false;this.disabled=false;this.selected=false;this.hidden=false;this.checkbox=false;this.dropdownContext=new context.G(this,{context:dropdownContext,subscribe:true})}get _contentSlotText(){return this._content.map(node=>this.text||node.textContent?.trim()).join("")}get value(){return this._value??this._contentSlotText}set value(value){const old=this._value;this._value=value;this.requestUpdate("value",old)}getTextContent(){return this._contentSlotText}render(){const size=this.dropdownContext?.value?.size||DROPDOWN_DEFAULT_SIZE;const isSmallSize=size==="small";return(0,lit.qy)`
       <div
         role="option"
         part="option"
-        class=${(0,d.H)({option:1,disabled:this.disabled,selected:this.selected,checkbox:this.checkbox,active:this.active,"typography-body":!t,"typography-caption1":t,hidden:this.hidden,[e]:!0})}
+        class=${(0,class_map.H)({option:1,disabled:this.disabled,selected:this.selected,checkbox:this.checkbox,active:this.active,"typography-body":!isSmallSize,"typography-caption1":isSmallSize,hidden:this.hidden,[size]:true})}
         tabindex="0"
         aria-selected=${this.selected}
         aria-disabled=${this.disabled}>
-        ${(0,h.z)(this.checkbox,()=>a.qy`
+        ${(0,when.z)(this.checkbox,()=>(0,lit.qy)`
             <vcdk-checkbox
               label=""
-              size=${t?"small":"medium"}
+              size=${isSmallSize?"small":"medium"}
               tabindex="-1"
-              @change=${e=>e.stopPropagation()}
+              @change=${event=>event.stopPropagation()}
               .disabled=${this.disabled}
               role="presentation"
               .checked=${this.selected}></vcdk-checkbox>
@@ -1818,61 +1818,61 @@
         <span part="after-content">
           <slot name="after-content"></slot>
         </span>
-        ${(0,h.z)(this.selected&&!this.checkbox,()=>a.qy`
+        ${(0,when.z)(this.selected&&!this.checkbox,()=>(0,lit.qy)`
             <vcdk-system-icon icon="check" part="selected"></vcdk-system-icon>
           `)}
       </div>
-    `}};fe.styles=[n.IT.caption1,n.IT.body,ce,pe],ye([(0,l.gZ)({flatten:!0,slot:""})],fe.prototype,"_content",void 0),ye([(0,l.MZ)({type:Boolean,reflect:!0})],fe.prototype,"active",void 0),ye([(0,l.MZ)({type:Boolean,reflect:!0})],fe.prototype,"disabled",void 0),ye([(0,l.MZ)({type:Boolean,reflect:!0})],fe.prototype,"selected",void 0),ye([(0,l.MZ)({type:Boolean,reflect:!0})],fe.prototype,"hidden",void 0),ye([(0,l.MZ)({type:Boolean})],fe.prototype,"checkbox",void 0),ye([(0,l.MZ)({type:String})],fe.prototype,"text",void 0),ye([(0,l.MZ)()],fe.prototype,"value",null),fe=ye([(0,u.E)("vcdk-dropdown-option")],fe);var ge=i(7663),me=i(2871),ke=i(1708);function xe(e){return e.hasAttribute("hidden")||e.hasAttribute("aria-hidden")&&"false"!==e.getAttribute("aria-hidden")||"none"===e.style.display||"0"===e.style.opacity||"hidden"===e.style.visibility||"collapse"===e.style.visibility}function we(e){return"-1"!==e.getAttribute("tabindex")&&!xe(e)&&!function(e){return e.hasAttribute("disabled")||e.hasAttribute("aria-disabled")&&"false"!==e.getAttribute("aria-disabled")}(e)&&(e.hasAttribute("tabindex")||(e instanceof HTMLAnchorElement||e instanceof HTMLAreaElement)&&e.hasAttribute("href")||e instanceof HTMLButtonElement||e instanceof HTMLInputElement||e instanceof HTMLTextAreaElement||e instanceof HTMLSelectElement||"SUMMARY"===e.tagName||e instanceof HTMLIFrameElement)}function $e(e,t,i,o=20,r=0){const s=[];if(r>=o)return s;const n=e=>{const s=e.assignedNodes().filter(e=>1===e.nodeType);if(s.length>0){return $e(s[0].parentElement,t,i,o,r+1)}return[]},a=Array.from(e.children||[]);for(const e of a)t(e)||(i(e)&&s.push(e),null!=e.shadowRoot?s.push(...$e(e.shadowRoot,t,i,o,r+1)):"SLOT"===e.tagName?s.push(...n(e)):s.push(...$e(e,t,i,o,r+1)));return s}var ze=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};let Me=class extends me.l{getFocusableElements(){return $e(this,xe,we)}constructor(){super(),this.focusedIndex=0,this.inactive=!1,this.focused=!1,this.enableDirectionalKeys=!1,this.$backup=(0,p._)(),this.$start=(0,p._)(),this.$end=(0,p._)(),this.onKeyDown=e=>{const t=this.getFocusableElements();switch(e.key){case"ArrowUp":{e.preventDefault();const i=t[this.focusedIndex-1];i?i.focus():this.focusLastElement();break}case"ArrowDown":{e.preventDefault();const i=t[this.focusedIndex+1];i?i.focus():this.focusFirstElement();break}case"Home":e.preventDefault(),this.focusFirstElement();break;case"End":e.preventDefault(),this.focusLastElement()}},this.focusFirstElement=()=>{this.trapFocus()},this.focusLastElement=()=>{this.trapFocus(!0)},this.updateFocused=(0,ke.A)(e=>{this.dispatchFocusedEvents(e),this.focused=e},0),this.onFocusIn=this.onFocusIn.bind(this),this.onFocusOut=this.onFocusOut.bind(this)}connectedCallback(){super.connectedCallback(),this.addEventListener("focusin",this.onFocusIn),this.addEventListener("focusout",this.onFocusOut)}disconnectedCallback(){this.removeEventListener("focusin",this.onFocusIn),this.removeEventListener("focusout",this.onFocusOut),super.disconnectedCallback()}update(e){e.has("focused")&&this.enableDirectionalKeys?this.focused?document.addEventListener("keydown",this.onKeyDown):document.removeEventListener("keydown",this.onKeyDown):e.has("enableDirectionalKeys")&&!this.enableDirectionalKeys&&document.removeEventListener("keydown",this.onKeyDown),super.update(e)}trapFocus(e){if(this.inactive)return;const t=this.getFocusableElements();t.length>0?(e?t[t.length-1].focus():t[0].focus(),this.$backup.value?.setAttribute("tabindex","-1")):(this.$backup.value?.setAttribute("tabindex","0"),this.$backup.value?.focus())}onFocusIn(e){const t=this.getFocusableElements();let i=e.target;i.shadowRoot&&(i=i.shadowRoot.activeElement),this.focusedIndex=t.indexOf(i),this.updateFocused(!0)}onFocusOut(){this.updateFocused(!1)}dispatchFocusedEvents(e){!this.focused&&e&&this.dispatchEvent(new Event("vcdk-focusin",{bubbles:!0,composed:!0})),this.focused&&!e&&this.dispatchEvent(new Event("vcdk-focusout",{bubbles:!0,composed:!0}))}render(){return a.qy`
+    `}};DropdownOption.styles=[typography_styles.IT.caption1,typography_styles.IT.body,optionStyles,optionButtonStyle];option_component_decorate([(0,decorators.gZ)({flatten:true,slot:""})],DropdownOption.prototype,"_content",void 0);option_component_decorate([(0,decorators.MZ)({type:Boolean,reflect:true})],DropdownOption.prototype,"active",void 0);option_component_decorate([(0,decorators.MZ)({type:Boolean,reflect:true})],DropdownOption.prototype,"disabled",void 0);option_component_decorate([(0,decorators.MZ)({type:Boolean,reflect:true})],DropdownOption.prototype,"selected",void 0);option_component_decorate([(0,decorators.MZ)({type:Boolean,reflect:true})],DropdownOption.prototype,"hidden",void 0);option_component_decorate([(0,decorators.MZ)({type:Boolean})],DropdownOption.prototype,"checkbox",void 0);option_component_decorate([(0,decorators.MZ)({type:String})],DropdownOption.prototype,"text",void 0);option_component_decorate([(0,decorators.MZ)()],DropdownOption.prototype,"value",null);DropdownOption=option_component_decorate([(0,custom_element.E)("vcdk-dropdown-option")],DropdownOption);var floating_ui_dom=__webpack_require__(7663);var vcdk_element_vcdk_element=__webpack_require__(2871);var debounce=__webpack_require__(1708);function isHidden($elem){return $elem.hasAttribute("hidden")||$elem.hasAttribute("aria-hidden")&&$elem.getAttribute("aria-hidden")!=="false"||$elem.style.display===`none`||$elem.style.opacity===`0`||$elem.style.visibility===`hidden`||$elem.style.visibility===`collapse`}function isDisabled($elem){return $elem.hasAttribute("disabled")||$elem.hasAttribute("aria-disabled")&&$elem.getAttribute("aria-disabled")!=="false"}function isFocusable($elem){if($elem.getAttribute("tabindex")==="-1"||isHidden($elem)||isDisabled($elem)){return false}return $elem.hasAttribute("tabindex")||($elem instanceof HTMLAnchorElement||$elem instanceof HTMLAreaElement)&&$elem.hasAttribute("href")||$elem instanceof HTMLButtonElement||$elem instanceof HTMLInputElement||$elem instanceof HTMLTextAreaElement||$elem instanceof HTMLSelectElement||$elem.tagName==="SUMMARY"||$elem instanceof HTMLIFrameElement}function queryShadowRoot(root,skipNode,isMatch,maxDepth=20,depth=0){const matches=[];if(depth>=maxDepth){return matches}const traverseSlot=$slot=>{const assignedNodes=$slot.assignedNodes().filter(node=>node.nodeType===1);if(assignedNodes.length>0){const $slotParent=assignedNodes[0].parentElement;return queryShadowRoot($slotParent,skipNode,isMatch,maxDepth,depth+1)}return[]};const children=Array.from(root.children||[]);for(const $child of children){if(skipNode($child)){continue}if(isMatch($child)){matches.push($child)}if($child.shadowRoot!=null){matches.push(...queryShadowRoot($child.shadowRoot,skipNode,isMatch,maxDepth,depth+1))}else if($child.tagName==="SLOT"){matches.push(...traverseSlot($child))}else{matches.push(...queryShadowRoot($child,skipNode,isMatch,maxDepth,depth+1))}}return matches}var focus_trap_component_decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};let FocusTrap=class FocusTrap extends vcdk_element_vcdk_element.l{getFocusableElements(){return queryShadowRoot(this,isHidden,isFocusable)}constructor(){super();this.focusedIndex=0;this.inactive=false;this.focused=false;this.enableDirectionalKeys=false;this.$backup=(0,ref._)();this.$start=(0,ref._)();this.$end=(0,ref._)();this.onKeyDown=event=>{const focusableElements=this.getFocusableElements();switch(event.key){case"ArrowUp":{event.preventDefault();const element=focusableElements[this.focusedIndex-1];if(element){element.focus()}else{this.focusLastElement()}break}case"ArrowDown":{event.preventDefault();const element=focusableElements[this.focusedIndex+1];if(element){element.focus()}else{this.focusFirstElement()}break}case"Home":event.preventDefault();this.focusFirstElement();break;case"End":event.preventDefault();this.focusLastElement();break}};this.focusFirstElement=()=>{this.trapFocus()};this.focusLastElement=()=>{this.trapFocus(true)};this.updateFocused=(0,debounce.A)(value=>{this.dispatchFocusedEvents(value);this.focused=value},0);this.onFocusIn=this.onFocusIn.bind(this);this.onFocusOut=this.onFocusOut.bind(this)}connectedCallback(){super.connectedCallback();this.addEventListener("focusin",this.onFocusIn);this.addEventListener("focusout",this.onFocusOut)}disconnectedCallback(){this.removeEventListener("focusin",this.onFocusIn);this.removeEventListener("focusout",this.onFocusOut);super.disconnectedCallback()}update(changedProperties){if(changedProperties.has("focused")&&this.enableDirectionalKeys){if(this.focused){document.addEventListener("keydown",this.onKeyDown)}else{document.removeEventListener("keydown",this.onKeyDown)}}else if(changedProperties.has("enableDirectionalKeys")&&!this.enableDirectionalKeys){document.removeEventListener("keydown",this.onKeyDown)}super.update(changedProperties)}trapFocus(trapToEnd){if(this.inactive)return;const focusableElements=this.getFocusableElements();if(focusableElements.length>0){if(trapToEnd){focusableElements[focusableElements.length-1].focus()}else{focusableElements[0].focus()}this.$backup.value?.setAttribute("tabindex","-1")}else{this.$backup.value?.setAttribute("tabindex","0");this.$backup.value?.focus()}}onFocusIn(event){const focusableElements=this.getFocusableElements();let target=event.target;if(target.shadowRoot){target=target.shadowRoot.activeElement}this.focusedIndex=focusableElements.indexOf(target);this.updateFocused(true)}onFocusOut(){this.updateFocused(false)}dispatchFocusedEvents(value){if(!this.focused&&value){this.dispatchEvent(new Event("vcdk-focusin",{bubbles:true,composed:true}))}if(this.focused&&!value){this.dispatchEvent(new Event("vcdk-focusout",{bubbles:true,composed:true}))}}render(){return(0,lit.qy)`
       <div
-        ${(0,p.K)(this.$start)}
+        ${(0,ref.K)(this.$start)}
         @focus=${this.focusLastElement}
-        tabindex=${!this.focused||this.inactive?"-1":"0"}></div>
-      <div ${(0,p.K)(this.$backup)}></div>
+        tabindex=${!this.focused||this.inactive?`-1`:`0`}></div>
+      <div ${(0,ref.K)(this.$backup)}></div>
       <slot></slot>
       <div
-        ${(0,p.K)(this.$end)}
+        ${(0,ref.K)(this.$end)}
         @focus=${this.focusFirstElement}
-        tabindex=${!this.focused||this.inactive?"-1":"0"}></div>
-    `}};ze([(0,l.MZ)({type:Boolean,reflect:!0})],Me.prototype,"inactive",void 0),ze([(0,l.MZ)({type:Boolean,reflect:!0})],Me.prototype,"focused",void 0),ze([(0,l.MZ)({type:Boolean,attribute:"enable-directional-keys"})],Me.prototype,"enableDirectionalKeys",void 0),Me=ze([(0,u.E)("vcdk-focus-trap")],Me);var Ee=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};let Ce=class extends x.l{constructor(){super(...arguments),this.open=!1,this.setPositionStyle=async()=>{if(!this.open||!this.target)return;const{y:e,x:t,strategy:i}=await(0,ge.rD)(this.target,this.container,{placement:this.placement??"bottom-start",middleware:this.createMiddleware(),strategy:"fixed"});Object.assign(this.container.style,{position:i,top:`${e}px`,left:`${t}px`})},this.anchorSlotChange=async()=>{this.anchors.length<1||(this.target=this.anchors[0],await this.updateState())}}async openChange(){await(this.open?this.updatePosition():this.hide())}connectedCallback(){super.connectedCallback(),this.updateComplete.then(()=>{this.open&&this.updatePosition()})}disconnectedCallback(){this.hide().then(()=>{super.disconnectedCallback()})}updatePosition(){this.target&&(this.dispose=(0,ge.ll)(this.target,this.container,this.setPositionStyle))}async hide(){return new Promise(e=>{this.dispose?(this.dispose(),this.dispose=void 0,e()):e()})}createMiddleware(){const e=[],t=this.container.style;return e.push((0,ge.BN)({limiter:(0,ge.ER)()})),this.placement||e.push((0,ge.RK)({allowedPlacements:["top","bottom","top-start","bottom-start"]})),e.push((0,ge.Ej)({apply:({rects:e})=>{Object.assign(t,{width:`${e.reference.width}px`})}})),e}async updateState(){this.open&&(await this.hide(),this.updatePosition())}render(){return a.qy`
+        tabindex=${!this.focused||this.inactive?`-1`:`0`}></div>
+    `}};focus_trap_component_decorate([(0,decorators.MZ)({type:Boolean,reflect:true})],FocusTrap.prototype,"inactive",void 0);focus_trap_component_decorate([(0,decorators.MZ)({type:Boolean,reflect:true})],FocusTrap.prototype,"focused",void 0);focus_trap_component_decorate([(0,decorators.MZ)({type:Boolean,attribute:"enable-directional-keys"})],FocusTrap.prototype,"enableDirectionalKeys",void 0);FocusTrap=focus_trap_component_decorate([(0,custom_element.E)("vcdk-focus-trap")],FocusTrap);var popover_component_decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};let PopoverComponent=class PopoverComponent extends vcdk_element.l{constructor(){super(...arguments);this.open=false;this.setPositionStyle=async()=>{if(!this.open||!this.target){return}const{y,x,strategy}=await(0,floating_ui_dom.rD)(this.target,this.container,{placement:this.placement??"bottom-start",middleware:this.createMiddleware(),strategy:"fixed"});Object.assign(this.container.style,{position:strategy,top:`${y}px`,left:`${x}px`})};this.anchorSlotChange=async()=>{if(this.anchors.length<1)return;this.target=this.anchors[0];await this.updateState()}}async openChange(){await(this.open?this.updatePosition():this.hide())}connectedCallback(){super.connectedCallback();void this.updateComplete.then(()=>{if(this.open){this.updatePosition()}})}disconnectedCallback(){void this.hide().then(()=>{super.disconnectedCallback()})}updatePosition(){if(!this.target)return;this.dispose=(0,floating_ui_dom.ll)(this.target,this.container,this.setPositionStyle)}async hide(){return new Promise(resolve=>{if(this.dispose){this.dispose();this.dispose=undefined;resolve()}else{resolve()}})}createMiddleware(){const middleware=[];const styles=this.container.style;middleware.push((0,floating_ui_dom.BN)({limiter:(0,floating_ui_dom.ER)()}));if(!this.placement){middleware.push((0,floating_ui_dom.RK)({allowedPlacements:["top","bottom","top-start","bottom-start"]}))}middleware.push((0,floating_ui_dom.Ej)({apply:({rects})=>{Object.assign(styles,{width:`${rects.reference.width}px`})}}));return middleware}async updateState(){if(this.open){await this.hide();this.updatePosition()}}render(){return(0,lit.qy)`
       <slot name="anchor" @slotchange=${this.anchorSlotChange}></slot>
       <div
         id="container"
-        class=${(0,d.H)({popover:1,open:this.open})}>
+        class=${(0,class_map.H)({popover:1,open:this.open})}>
         <vcdk-focus-trap enable-directional-keys>
           <slot></slot>
         </vcdk-focus-trap>
       </div>
-    `}};Ce.styles=[ve],Ee([(0,l.MZ)({type:Boolean,reflect:!0})],Ce.prototype,"open",void 0),Ee([(0,l.MZ)({type:String})],Ce.prototype,"placement",void 0),Ee([(0,l.P)("#container",!0)],Ce.prototype,"container",void 0),Ee([(0,l.KN)({slot:"anchor",flatten:!0})],Ce.prototype,"anchors",void 0),Ee([s("open",{waitUntilFirstUpdate:!0})],Ce.prototype,"openChange",null),Ce=Ee([(0,u.E)("vcdk-dropdown-popover")],Ce);var Se=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};const Ae="medium";function Ze(e){return!e.hidden&&!e.disabled}let Oe=class extends(g(x.l)){connectedCallback(){super.connectedCallback(),this.initializeValue(),this.handleMultipleChange()}handleMultipleChange(){this.items.forEach(e=>e.checkbox=Boolean(this.multi))}constructor(){var e,t;super(),this.size=Ae,this.clearable=!1,this.multi=!1,this.open=!1,this.singleChip=!1,this.filterInput=!1,this.selectedItems=[],this.activeItem=null,this.lastKeyTime=0,this.searchTerm=null,this.dropdownContext={size:this.size},this.wrapperRef=(0,p._)(),this.input=(0,p._)(),this.listboxRef=(0,p._)(),this.setSize=()=>{this.dropdownContext={size:this.size}},this.initializeValue=()=>{if(!this.items.length&&!this.selectedItems.length)return;if(this.handleMultipleChange(),null!==this.value&&void 0!==this.value){const e=this.findOptionsByValue(this.value),t=this.findOptionLabels();this.setDropdownSelectedValues(e.length?e:t)}else this.initializeFromSelectedOptions();const e=this.items.some(e=>!e.hidden);this.emptyOptions.forEach(t=>{t.hidden=e});const t=this.value??null;this.setValue(Array.isArray(t)?t.join(", "):t)},this.initializeFromSelectedOptions=()=>{this.setDropdownSelectedValues(this.items.filter(e=>e.selected))},this.getInputRef=()=>this.textField??null,this.selectValue=e=>{e.length<=0?this.value=null:this.multi?this.value=e.map(({value:e})=>e).filter(e=>null!=e):this.value=e.length>0?e[0].value:null},this.onClickOutside=e=>{const t=e.composedPath();this.wrapperRef?.value&&!t.includes(this.wrapperRef.value)&&this.closePopover()},this.toggleOpen=e=>{const t=this.listboxRef?.value&&e.composedPath().includes(this.listboxRef?.value);this.readonly||t||(this.open?this.closePopover():(this.openDropdown(),this.focus()))},this.handleOptionSelected=e=>{const t=e.target instanceof fe;e.target instanceof De&&this.filterOptionsBasedOnSearch(null),t&&!e.target.disabled&&this.selectOption(e.target),this.getDisableOnCloseValue()||(this.closePopover(),this.focus())},this.clearActiveOptions=()=>{this.items.forEach(e=>{e.active=!1}),this.activeItem=null},this.publishChangeEvent=()=>{this.multi?(this.dispatchEvent(new se(this.selectedItems)),this.dispatchEvent(new se(this.selectedItems,"vcdk-dropdown-"))):(this.dispatchEvent(new ae(this.selectedItems[0])),this.dispatchEvent(new ae(this.selectedItems[0],"vcdk-dropdown-")))},this.unselectAllOptions=()=>{const e=this.items.filter(({disabled:e})=>!e);this.setDropdownSelectedValues([]),e.forEach(e=>{e.selected=!1}),this.dropdownOptionSelectAll.forEach(e=>{e.selected="unchecked"})},this.handleSingleChipClick=async e=>{e.preventDefault(),e.stopPropagation(),this.unselectAllOptions(),this.getDisableOnCloseValue()||(this.closePopover(),this.focus()),await this.updateComplete,this.publishChangeEvent()},this.handleSelectAllCLick=async()=>{const e=this.items.filter(({disabled:e})=>!e);this.selectedItems.length>=e.length?this.unselectAllOptions():(this.setDropdownSelectedValues(e),e.forEach(e=>{e.selected=!0}),this.dropdownOptionSelectAll.forEach(e=>{e.selected="checked"})),this.getDisableOnCloseValue()||(this.closePopover(),this.focus()),this.popoverContainer.updatePosition(),await this.updateComplete,this.publishChangeEvent()},this.preventDefaultKeyboardEvent=e=>{ie(e).preventDefault()},this.openDropdown=()=>{this.open||this.disabled||(this.open=!0,!this.activeItem&&this.selectedItems.length&&this.activateItem(this.selectedItems[0]),this.popoverContainer.updatePosition())},this.onSpaceBarKey=e=>{this.open&&this.filterInput||this.preventDefaultKeyboardEvent(e),this.open||this.openDropdown()},this.activateItem=e=>{this.clearActiveOptions(),this.open&&e.scrollIntoView({behavior:"auto",block:"nearest"}),this.activeItem=e,this.activeItem.active=!0},this.onAltUp=()=>{this.activeItem&&this.selectOption(this.activeItem),this.closePopover(),this.focus()},this.onAltDown=()=>{this.open||(this.openDropdown(),this.focus())},this.onEscapeKey=e=>{this.preventDefaultKeyboardEvent(e),this.open&&this.closePopover()},this.setNextActiveElement=(e,t)=>{if(this.readonly)return;const i=this.selectedItems[0]??null,o=this.open?this.activeItem:i,r="start"===e||"end"===e,s=function(e,t,i){const o=function(e,t){if(!t)return-1;if("start"===t)return 0;if("end"===t)return e.length-1;return e.indexOf(t)}(e,t),r=function(e,t,i,o){if("start"===e)return i;if("end"===e)return i;return"forward"===t?i.slice(o+1):i.slice(0,o)}(t,i,e,o);return("forward"===i?r:r.reverse()).find(e=>!e.disabled&&!e.hidden)??e[o]}(this.items,r?e:o,t);this.open?this.activateItem(s):this.selectOption(s)},this.handleSearch=e=>{if(this.filterInput||this.readonly||this.disabled)return;const t=ie(e);if(!/^.$/u.test(t.key))return;t.preventDefault();const i=Date.now();i-this.lastKeyTime>500&&(this.searchTerm=""),this.lastKeyTime=i,this.searchTerm+=t.key.toLocaleLowerCase();const o=this.items.find(e=>null!==this.searchTerm&&e.textContent?.trim().toLocaleLowerCase().startsWith(this.searchTerm));o&&(this.open?this.activateItem(o):this.selectOption(o))},this.onArrowDown=e=>{this.preventDefaultKeyboardEvent(e),this.setNextActiveElement(this.activeItem,"forward")},this.onArrowUp=e=>{this.preventDefaultKeyboardEvent(e),this.setNextActiveElement(this.activeItem,"backwards")},this.onHomeKey=e=>{this.preventDefaultKeyboardEvent(e),this.setNextActiveElement("start","forward")},this.onEndKey=e=>{this.preventDefaultKeyboardEvent(e),this.setNextActiveElement("end","backwards")},this.onEnterKey=e=>{this.preventDefaultKeyboardEvent(e),this.readonly||(this.open?this.activeItem&&Ze(this.activeItem)?(this.selectOption(this.activeItem),this.getDisableOnCloseValue()||this.closePopover()):this.filterInput&&this.searchTerm&&this.addOption?.length&&(this.addOption[0].click(),this.filterOptionsBasedOnSearch(null),this.getDisableOnCloseValue()||this.closePopover()):this.openDropdown())},this.getDisableOnCloseValue=()=>this.disableCloseOnSelect??this.multi,this.getTextContent=e=>{if(this.filterInput&&null!==this.searchTerm)return this.searchTerm;if(this.multi)return this.selectedItems.length>0?" ":"";const t=e?.[0];return t?ne(t):""},this.handleSearchInputChange=e=>{if(this.disabled||this.readonly)return;const t=(this.searchTerm?null:e.detail.nativeEvent.data??null)??e.detail.value.trimStart();this.dispatchEvent(new le(t)),this.filterOptionsBasedOnSearch(t),this.popoverContainer.updatePosition(),this.openDropdown()},this.filterOptionsBasedOnSearch=e=>{this.searchTerm=e;const t=[null,void 0,""];let i=!0;this.items.forEach(o=>{if(null===e||t.includes(e))return o.hidden=!1,void(i=!1);this.filterOptions?o.hidden=!this.filterOptions(o):o.hidden=!o.textContent?.toLowerCase().includes(e.toLowerCase()),o.hidden||(i=!1)}),this.emptyOptions.forEach(e=>{e.hidden=!i}),this.activeItem=this.activeItem&&Ze(this.activeItem)?this.activeItem:this.items.find(e=>Ze(e))??null,this.activeItem&&this.activateItem(this.activeItem)},(e=this,t={skip:()=>!!this.disabled,bindingDefaults:{triggers:["keydownRepeat"]}},new oe(e,t)).set([W.altKey,W.arrowDown],this.onAltDown).set([W.altKey,W.arrowUp],this.onAltUp).set(W.arrowDown,this.onArrowDown).set(W.arrowUp,this.onArrowUp).set(W.escapeKey,this.onEscapeKey).set(W.homeKey,this.onHomeKey).set(W.endKey,this.onEndKey).set(W.spaceBar,this.onSpaceBarKey).set(W.enterKey,this.onEnterKey),this.addEventListener("keydown",this.handleSearch)}update(e){e.has("open")&&(this.open?(document.addEventListener("mousedown",this.onClickOutside,{passive:!0}),this.eventCleanup=()=>document.removeEventListener("mousedown",this.onClickOutside)):(this.eventCleanup?.(),this.eventCleanup=void 0)),super.update(e)}disconnectedCallback(){super.disconnectedCallback(),this.eventCleanup?.()}focus(){this.updateComplete.then(()=>{this.getInputRef()?.focus()})}select(){this.getInputRef()?.select()}blur(){this.getInputRef()?.blur()}setDropdownSelectedValues(e){this.selectedItems=e,this.items.forEach(e=>e.selected=!1),e.map(e=>e.selected=!0),this.selectValue(e),this.syncSelectAllOptionCheckboxValue()}findOptionsByValue(e){return this.items.filter(t=>this.multi?e?.includes(t.value):t.value===e)}findOptionLabels(){return this.items.filter(e=>{const t=ne(e);return!!t&&(this.multi?this.value?.includes(t):this.value===t)})}closePopover(){this.dispatchEvent(new R(!1))&&(this.open=!1,this.clearActiveOptions(),this.searchTerm=null,this.filterInput&&(this.filterOptionsBasedOnSearch(null),this.input.value&&(this.input.value.value=this.getTextContent(this.selectedItems)??"")))}async selectOption(e){if(this.disabled)return;const t=this.selectedItems.find(t=>t.value===e.value);this.multi?(e.selected=!e.selected,this.setDropdownSelectedValues(t?this.selectedItems.filter(t=>t.value!==e.value):[...this.selectedItems,e])):(this.items.forEach(e=>e.selected=!1),e.selected=!0,this.clearable&&t?this.setDropdownSelectedValues([]):this.setDropdownSelectedValues([e])),this.popoverContainer.updatePosition(),await this.updateComplete,this.publishChangeEvent()}syncSelectAllOptionCheckboxValue(){const e=this.items.filter(e=>!e.disabled).length,t=this.selectedItems.length;this.dropdownOptionSelectAll.forEach(i=>{i.selected=t===e?"checked":0===t?"unchecked":"indeterminate"})}shouldFormValueUpdate(){return!0}resetFormControl(){this.value=void 0,this.unselectAllOptions(),this.setValue(null)}get cssVariables(){return{"--vcdk-dropdown-search-chars":`${this.searchTerm?.length||1}ch`}}renderInput(){const{label:e,disabled:t,required:i,placeholder:o,name:r,error:s,helperText:n,size:l,filterInput:d,readonly:c}=this,v=this.getTextContent(this.selectedItems),u=this.multi,b=this.selectedItems.length>0,y=u&&b?"":o;return a.qy`
+    `}};PopoverComponent.styles=[popoverStyles];popover_component_decorate([(0,decorators.MZ)({type:Boolean,reflect:true})],PopoverComponent.prototype,"open",void 0);popover_component_decorate([(0,decorators.MZ)({type:String})],PopoverComponent.prototype,"placement",void 0);popover_component_decorate([(0,decorators.P)("#container",true)],PopoverComponent.prototype,"container",void 0);popover_component_decorate([(0,decorators.KN)({slot:"anchor",flatten:true})],PopoverComponent.prototype,"anchors",void 0);popover_component_decorate([watch("open",{waitUntilFirstUpdate:true})],PopoverComponent.prototype,"openChange",null);PopoverComponent=popover_component_decorate([(0,custom_element.E)("vcdk-dropdown-popover")],PopoverComponent);const popover_component=null&&PopoverComponent;var dropdown_component_decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};const DROPDOWN_DEFAULT_SIZE="medium";function isOptionSelectable(item){return!item.hidden&&!item.disabled}let Dropdown=class Dropdown extends(FormControlMixin(vcdk_element.l)){connectedCallback(){super.connectedCallback();this.initializeValue();this.handleMultipleChange()}handleMultipleChange(){this.items.forEach(item=>item.checkbox=Boolean(this.multi))}constructor(){super();this.size=DROPDOWN_DEFAULT_SIZE;this.clearable=false;this.multi=false;this.open=false;this.singleChip=false;this.filterInput=false;this.selectedItems=[];this.activeItem=null;this.lastKeyTime=0;this.searchTerm=null;this.dropdownContext={size:this.size};this.wrapperRef=(0,ref._)();this.input=(0,ref._)();this.listboxRef=(0,ref._)();this.setSize=()=>{this.dropdownContext={size:this.size}};this.initializeValue=()=>{if(!this.items.length&&!this.selectedItems.length){return}this.handleMultipleChange();if(this.value!==null&&this.value!==undefined){const selectedOptionsBasedOnValue=this.findOptionsByValue(this.value);const selectedOptionsBasedOnLabel=this.findOptionLabels();this.setDropdownSelectedValues(selectedOptionsBasedOnValue.length?selectedOptionsBasedOnValue:selectedOptionsBasedOnLabel)}else{this.initializeFromSelectedOptions()}const isAnyVisible=this.items.some(item=>!item.hidden);this.emptyOptions.forEach(emptyOption=>{emptyOption.hidden=isAnyVisible});const formCompatibleValue=this.value??null;this.setValue(Array.isArray(formCompatibleValue)?formCompatibleValue.join(", "):formCompatibleValue)};this.initializeFromSelectedOptions=()=>{this.setDropdownSelectedValues(this.items.filter(option=>option.selected))};this.getInputRef=()=>this.textField??null;this.selectValue=optionsToSelect=>{if(optionsToSelect.length<=0){this.value=null;return}if(this.multi){this.value=optionsToSelect.map(({value})=>value).filter(value=>value!==undefined&&value!==null)}else{this.value=optionsToSelect.length>0?optionsToSelect[0].value:null}};this.onClickOutside=e=>{const path=e.composedPath();if(this.wrapperRef?.value&&!path.includes(this.wrapperRef.value)){this.closePopover()}};this.toggleOpen=event=>{const isFromListbox=this.listboxRef?.value&&event.composedPath().includes(this.listboxRef?.value);if(this.readonly||isFromListbox){return}if(!this.open){this.openDropdown();this.focus()}else{this.closePopover()}};this.handleOptionSelected=event=>{const isOption=event.target instanceof DropdownOption;const isAddOption=event.target instanceof DropdownAddOption;if(isAddOption){this.filterOptionsBasedOnSearch(null)}if(isOption&&!event.target.disabled){void this.selectOption(event.target)}if(!this.getDisableOnCloseValue()){this.closePopover();this.focus()}};this.clearActiveOptions=()=>{this.items.forEach(item=>{item.active=false});this.activeItem=null};this.publishChangeEvent=()=>{if(this.multi){this.dispatchEvent(new MultiDropdownChangeEvent(this.selectedItems));this.dispatchEvent(new MultiDropdownChangeEvent(this.selectedItems,"vcdk-dropdown-"))}else{this.dispatchEvent(new DropdownChangeEvent(this.selectedItems[0]));this.dispatchEvent(new DropdownChangeEvent(this.selectedItems[0],"vcdk-dropdown-"))}};this.unselectAllOptions=()=>{const notDisabledItems=this.items.filter(({disabled})=>!disabled);this.setDropdownSelectedValues([]);notDisabledItems.forEach(item=>{item.selected=false});this.dropdownOptionSelectAll.forEach(option=>{option.selected="unchecked"})};this.handleSingleChipClick=async event=>{event.preventDefault();event.stopPropagation();this.unselectAllOptions();if(!this.getDisableOnCloseValue()){this.closePopover();this.focus()}await this.updateComplete;this.publishChangeEvent()};this.handleSelectAllCLick=async()=>{const notDisabledItems=this.items.filter(({disabled})=>!disabled);if(this.selectedItems.length>=notDisabledItems.length){this.unselectAllOptions()}else{this.setDropdownSelectedValues(notDisabledItems);notDisabledItems.forEach(item=>{item.selected=true});this.dropdownOptionSelectAll.forEach(option=>{option.selected="checked"})}if(!this.getDisableOnCloseValue()){this.closePopover();this.focus()}this.popoverContainer.updatePosition();await this.updateComplete;this.publishChangeEvent()};this.preventDefaultKeyboardEvent=customEvent=>{const event=getEvent(customEvent);event.preventDefault()};this.openDropdown=()=>{const isAlreadyOpen=this.open;if(isAlreadyOpen){return}if(this.disabled){return}this.open=true;if(!this.activeItem&&this.selectedItems.length){this.activateItem(this.selectedItems[0])}this.popoverContainer.updatePosition()};this.onSpaceBarKey=customEvent=>{if(!this.open||!this.filterInput){this.preventDefaultKeyboardEvent(customEvent)}if(!this.open){this.openDropdown()}};this.activateItem=item=>{this.clearActiveOptions();if(this.open){item.scrollIntoView({behavior:"auto",block:"nearest"})}this.activeItem=item;this.activeItem.active=true};this.onAltUp=()=>{if(this.activeItem){void this.selectOption(this.activeItem)}this.closePopover();this.focus()};this.onAltDown=()=>{if(this.open){return}this.openDropdown();this.focus()};this.onEscapeKey=customEvent=>{this.preventDefaultKeyboardEvent(customEvent);if(this.open){this.closePopover()}};this.setNextActiveElement=(startOption,type)=>{if(this.readonly){return}const firstSelectedOption=this.selectedItems[0]??null;const initialOptionToStartSearching=this.open?this.activeItem:firstSelectedOption;const isGotoStartOrEnd=startOption==="start"||startOption==="end";const item=getNextActiveItem(this.items,isGotoStartOrEnd?startOption:initialOptionToStartSearching,type);if(this.open){this.activateItem(item)}else{void this.selectOption(item)}};this.handleSearch=customEvent=>{if(this.filterInput||this.readonly||this.disabled){return}const event=getEvent(customEvent);if(!/^.$/u.test(event.key)){return}event.preventDefault();const now=Date.now();if(now-this.lastKeyTime>500){this.searchTerm=""}this.lastKeyTime=now;this.searchTerm+=event.key.toLocaleLowerCase();const item=this.items.find(item=>{if(this.searchTerm===null){return false}return item.textContent?.trim().toLocaleLowerCase().startsWith(this.searchTerm)});if(item){this.open?this.activateItem(item):void this.selectOption(item)}};this.onArrowDown=customEvent=>{this.preventDefaultKeyboardEvent(customEvent);this.setNextActiveElement(this.activeItem,"forward")};this.onArrowUp=customEvent=>{this.preventDefaultKeyboardEvent(customEvent);this.setNextActiveElement(this.activeItem,"backwards")};this.onHomeKey=customEvent=>{this.preventDefaultKeyboardEvent(customEvent);this.setNextActiveElement("start","forward")};this.onEndKey=customEvent=>{this.preventDefaultKeyboardEvent(customEvent);this.setNextActiveElement("end","backwards")};this.onEnterKey=customEvent=>{this.preventDefaultKeyboardEvent(customEvent);if(this.readonly){return}if(this.open){if(this.activeItem&&isOptionSelectable(this.activeItem)){void this.selectOption(this.activeItem);if(!this.getDisableOnCloseValue()){this.closePopover()}}else{if(this.filterInput&&this.searchTerm&&this.addOption?.length){this.addOption[0].click();this.filterOptionsBasedOnSearch(null);if(!this.getDisableOnCloseValue()){this.closePopover()}}}}else{this.openDropdown()}};this.getDisableOnCloseValue=()=>this.disableCloseOnSelect??this.multi;this.getTextContent=options=>{if(this.filterInput&&this.searchTerm!==null){return this.searchTerm}if(this.multi){return this.selectedItems.length>0?" ":""}const firstOption=options?.[0];return firstOption?getDropdownOptionTextContent(firstOption):""};this.handleSearchInputChange=event=>{if(this.disabled||this.readonly){return}const nativeEventData=!this.searchTerm?event.detail.nativeEvent.data??null:null;const value=nativeEventData??event.detail.value.trimStart();this.dispatchEvent(new DropdownInputEvent(value));this.filterOptionsBasedOnSearch(value);this.popoverContainer.updatePosition();this.openDropdown()};this.filterOptionsBasedOnSearch=value=>{this.searchTerm=value;const nullishValue=[null,undefined,""];let shouldShowEmptyOption=true;this.items.forEach(item=>{if(value===null||nullishValue.includes(value)){item.hidden=false;shouldShowEmptyOption=false;return}if(this.filterOptions){item.hidden=!this.filterOptions(item)}else{item.hidden=!item.textContent?.toLowerCase().includes(value.toLowerCase())}if(!item.hidden){shouldShowEmptyOption=false}});this.emptyOptions.forEach(emptyOption=>{emptyOption.hidden=!shouldShowEmptyOption});this.activeItem=this.activeItem&&isOptionSelectable(this.activeItem)?this.activeItem:this.items.find(item=>isOptionSelectable(item))??null;if(this.activeItem){this.activateItem(this.activeItem)}};addKeybindings(this,{skip:()=>!!this.disabled,bindingDefaults:{triggers:["keydownRepeat"]}}).set([commonKeys.altKey,commonKeys.arrowDown],this.onAltDown).set([commonKeys.altKey,commonKeys.arrowUp],this.onAltUp).set(commonKeys.arrowDown,this.onArrowDown).set(commonKeys.arrowUp,this.onArrowUp).set(commonKeys.escapeKey,this.onEscapeKey).set(commonKeys.homeKey,this.onHomeKey).set(commonKeys.endKey,this.onEndKey).set(commonKeys.spaceBar,this.onSpaceBarKey).set(commonKeys.enterKey,this.onEnterKey);this.addEventListener("keydown",this.handleSearch)}update(changedProperties){if(changedProperties.has("open")){if(this.open){document.addEventListener("mousedown",this.onClickOutside,{passive:true});this.eventCleanup=()=>document.removeEventListener("mousedown",this.onClickOutside)}else{this.eventCleanup?.();this.eventCleanup=undefined}}super.update(changedProperties)}disconnectedCallback(){super.disconnectedCallback();this.eventCleanup?.()}focus(){void this.updateComplete.then(()=>{this.getInputRef()?.focus()})}select(){this.getInputRef()?.select()}blur(){this.getInputRef()?.blur()}setDropdownSelectedValues(optionsToSelect){this.selectedItems=optionsToSelect;this.items.forEach(item=>item.selected=false);optionsToSelect.map(option=>option.selected=true);this.selectValue(optionsToSelect);this.syncSelectAllOptionCheckboxValue()}findOptionsByValue(value){return this.items.filter(item=>{if(this.multi){return value?.includes(item.value)}else{return item.value===value}})}findOptionLabels(){return this.items.filter(item=>{const label=getDropdownOptionTextContent(item);if(!label){return false}if(this.multi){return this.value?.includes(label)}else{return this.value===label}})}closePopover(){const shouldCloseDropdown=this.dispatchEvent(new CloseEvent(false));if(!shouldCloseDropdown){return}this.open=false;this.clearActiveOptions();this.searchTerm=null;if(this.filterInput){this.filterOptionsBasedOnSearch(null);if(this.input.value){this.input.value.value=this.getTextContent(this.selectedItems)??""}}}async selectOption(target){if(this.disabled){return}const isAlreadySelected=this.selectedItems.find(item=>item.value===target.value);if(this.multi){target.selected=!target.selected;this.setDropdownSelectedValues(isAlreadySelected?this.selectedItems.filter(item=>item.value!==target.value):[...this.selectedItems,target])}else{this.items.forEach(item=>item.selected=false);target.selected=true;if(this.clearable&&isAlreadySelected){this.setDropdownSelectedValues([])}else{this.setDropdownSelectedValues([target])}}this.popoverContainer.updatePosition();await this.updateComplete;this.publishChangeEvent()}syncSelectAllOptionCheckboxValue(){const allAvailableOptions=this.items.filter(item=>!item.disabled).length;const numberOfSelectedOptions=this.selectedItems.length;this.dropdownOptionSelectAll.forEach(option=>{option.selected=numberOfSelectedOptions===allAvailableOptions?"checked":numberOfSelectedOptions===0?"unchecked":"indeterminate"})}shouldFormValueUpdate(){return true}resetFormControl(){this.value=undefined;this.unselectAllOptions();this.setValue(null)}get cssVariables(){return{"--vcdk-dropdown-search-chars":`${this.searchTerm?.length||1}ch`}}renderInput(){const{label,disabled,required,placeholder,name,error,helperText,size,filterInput,readonly}=this;const value=this.getTextContent(this.selectedItems);const isMultiWithChips=this.multi;const hasSelectedItems=this.selectedItems.length>0;const placeholderText=isMultiWithChips&&hasSelectedItems?"":placeholder;return(0,lit.qy)`
       <vcdk-text-field
-        ${(0,p.K)(this.input)}
-        exportparts=${"fieldset, label, input-wrapper, input, before-input, after-input, icon"}
+        ${(0,ref.K)(this.input)}
+        exportparts=${exportparts}
         id="anchor"
         slot="anchor"
         autocomplete="off"
         role="combobox"
-        aria-controls=${(0,L.J)(this.open?"menu":void 0)}
+        aria-controls=${(0,if_defined.J)(this.open?"menu":undefined)}
         aria-expanded=${this.open?"true":"false"}
         aria-haspopup="true"
-        aria-label=${(0,L.J)(e)}
+        aria-label=${(0,if_defined.J)(label)}
         .floatingLabel=${this.floatingLabel}
-        .value=${v}
-        .label=${e}
-        .inputAriaLabel=${e}
-        .disabled=${t}
-        .required=${i}
-        .placeholder=${y??""}
-        .error=${s}
-        .helperText=${n}
-        .size=${l}
-        .name=${r}
-        ?readonly=${!d||c}
+        .value=${value}
+        .label=${label}
+        .inputAriaLabel=${label}
+        .disabled=${disabled}
+        .required=${required}
+        .placeholder=${placeholderText??""}
+        .error=${error}
+        .helperText=${helperText}
+        .size=${size}
+        .name=${name}
+        ?readonly=${!filterInput||readonly}
         .icon=${this.open?"chevron-up":"chevron-down"}
         .iconAriaLabel=${this.open?"Close":"Open"}
         .tabIndex=${this.filterInput?0:-1}
         @input=${this.handleSearchInputChange}>
-        ${(0,h.z)(u,()=>a.qy`
+        ${(0,when.z)(isMultiWithChips,()=>(0,lit.qy)`
             <vcdk-chips slot="before-input">
-              ${(0,h.z)(this.singleChip&&this.selectedItems.length>0,()=>a.qy`
+              ${(0,when.z)(this.singleChip&&this.selectedItems.length>0,()=>(0,lit.qy)`
                   <vcdk-chip
                     size="small"
                     data-testid="selected-chips"
@@ -1882,42 +1882,42 @@
                       ${this.selectedItems.length}
                     </slot>
                   </vcdk-chip>
-                `,()=>(0,_.T)(this.selectedItems,e=>a.qy`
+                `,()=>(0,map.T)(this.selectedItems,item=>(0,lit.qy)`
                       <vcdk-chip
                         size="small"
                         data-testid="selected-chips"
-                        .value=${e.value}
-                        @click=${t=>{t.preventDefault(),t.stopPropagation(),this.selectOption(e)}}
+                        .value=${item.value}
+                        @click=${event=>{event.preventDefault();event.stopPropagation();void this.selectOption(item)}}
                         iconEnd="close">
-                        ${e.getTextContent()}
+                        ${item.getTextContent()}
                       </vcdk-chip>
                     `))}
             </vcdk-chips>
           `)}
       </vcdk-text-field>
-    `}render(){const{open:e,placement:t}=this;return a.qy`
+    `}render(){const{open,placement}=this;return(0,lit.qy)`
       <div
-        class=${(0,d.H)({dropdown:1,"helper-text":!!this.helperText,"filter-input":!!this.filterInput,[`size-${this.size}`]:this.size,multi:!!this.multi,disabled:!!this.disabled,readonly:!!this.readonly,open:!!this.open,"floating-label":!!this.floatingLabel,"has-selected-values":!!this.selectedItems.length,"single-chip":!!this.singleChip,error:!!this.error})}
-        style=${(0,N.W)(this.cssVariables)}
+        class=${(0,class_map.H)({dropdown:1,"helper-text":!!this.helperText,"filter-input":!!this.filterInput,[`size-${this.size}`]:this.size,multi:!!this.multi,disabled:!!this.disabled,readonly:!!this.readonly,open:!!this.open,"floating-label":!!this.floatingLabel,"has-selected-values":!!this.selectedItems.length,"single-chip":!!this.singleChip,error:!!this.error})}
+        style=${(0,style_map.W)(this.cssVariables)}
         @click=${this.toggleOpen}
         tabindex="0"
         data-testid="dropdown"
-        ${(0,p.K)(this.wrapperRef)}>
-        <vcdk-dropdown-popover ?open=${e} .placement=${t}>
+        ${(0,ref.K)(this.wrapperRef)}>
+        <vcdk-dropdown-popover ?open=${open} .placement=${placement}>
           ${this.renderInput()}
 
           <div>
             <div
               id="listbox"
               role="listbox"
-              aria-expanded=${e?"true":"false"}
-              aria-hidden=${e?"false":"true"}
+              aria-expanded=${open?"true":"false"}
+              aria-hidden=${open?"false":"true"}
               aria-multiselectable=${this.multi?"true":"false"}
               aria-labelledby="label"
               part="listbox"
               class="option-container"
               tabindex="-1"
-              ${(0,p.K)(this.listboxRef)}
+              ${(0,ref.K)(this.listboxRef)}
               @click=${this.handleOptionSelected}
               @dropdownselectalloption=${this.handleSelectAllCLick}>
               <slot @slotchange=${this.initializeValue}></slot>
@@ -1925,31 +1925,31 @@
           </div>
         </vcdk-dropdown-popover>
       </div>
-    `}};Oe.styles=[de],Se([(0,l.MZ)({type:Boolean})],Oe.prototype,"floatingLabel",void 0),Se([(0,l.MZ)({type:String})],Oe.prototype,"placement",void 0),Se([(0,l.MZ)({type:String})],Oe.prototype,"size",void 0),Se([(0,l.MZ)({type:Boolean})],Oe.prototype,"disableCloseOnSelect",void 0),Se([(0,l.MZ)({type:Boolean})],Oe.prototype,"disabled",void 0),Se([(0,l.MZ)({type:Boolean})],Oe.prototype,"readonly",void 0),Se([(0,l.MZ)({type:Boolean})],Oe.prototype,"clearable",void 0),Se([(0,l.MZ)({type:Boolean})],Oe.prototype,"error",void 0),Se([(0,l.MZ)({type:String})],Oe.prototype,"helperText",void 0),Se([(0,l.MZ)({type:String})],Oe.prototype,"label",void 0),Se([(0,l.MZ)({type:Object})],Oe.prototype,"multi",void 0),Se([(0,l.MZ)({type:String,reflect:!0})],Oe.prototype,"name",void 0),Se([(0,l.MZ)({type:Boolean,reflect:!0})],Oe.prototype,"open",void 0),Se([(0,l.MZ)({type:String})],Oe.prototype,"placeholder",void 0),Se([(0,l.MZ)({type:Boolean})],Oe.prototype,"required",void 0),Se([(0,l.MZ)({type:Boolean})],Oe.prototype,"singleChip",void 0),Se([(0,l.MZ)({type:Boolean})],Oe.prototype,"filterInput",void 0),Se([(0,l.MZ)({attribute:!1})],Oe.prototype,"filterOptions",void 0),Se([(0,l.P)("vcdk-text-field")],Oe.prototype,"textField",void 0),Se([V(null,"vcdk-dropdown-add-option")],Oe.prototype,"addOption",void 0),Se([(0,l.MZ)({type:String,reflect:!0})],Oe.prototype,"value",void 0),Se([(0,l.wk)()],Oe.prototype,"selectedItems",void 0),Se([(0,l.wk)()],Oe.prototype,"activeItem",void 0),Se([(0,l.wk)()],Oe.prototype,"lastKeyTime",void 0),Se([(0,l.wk)()],Oe.prototype,"searchTerm",void 0),Se([V(null,"vcdk-dropdown-option")],Oe.prototype,"items",void 0),Se([V(null,"vcdk-dropdown-empty-option")],Oe.prototype,"emptyOptions",void 0),Se([V(null,"vcdk-dropdown-select-all-option")],Oe.prototype,"dropdownOptionSelectAll",void 0),Se([(0,l.P)("vcdk-dropdown-popover")],Oe.prototype,"popoverContainer",void 0),Se([(0,o.Gt)({context:re})],Oe.prototype,"dropdownContext",void 0),Se([s("size")],Oe.prototype,"setSize",void 0),Se([s("value")],Oe.prototype,"initializeValue",void 0),Se([s("multi")],Oe.prototype,"handleMultipleChange",null),Oe=Se([(0,u.E)("vcdk-dropdown")],Oe);var Ie=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};let De=class extends x.l{constructor(){super(...arguments),this.dropdownContext=new o.G(this,{context:re,subscribe:!0}),this.click=()=>{this.dispatchEvent(new MouseEvent("click",{bubbles:!0,composed:!0}))}}render(){const e=this.dropdownContext?.value?.size||Ae;return a.qy`
+    `}};Dropdown.styles=[dropdownStyles];dropdown_component_decorate([(0,decorators.MZ)({type:Boolean})],Dropdown.prototype,"floatingLabel",void 0);dropdown_component_decorate([(0,decorators.MZ)({type:String})],Dropdown.prototype,"placement",void 0);dropdown_component_decorate([(0,decorators.MZ)({type:String})],Dropdown.prototype,"size",void 0);dropdown_component_decorate([(0,decorators.MZ)({type:Boolean})],Dropdown.prototype,"disableCloseOnSelect",void 0);dropdown_component_decorate([(0,decorators.MZ)({type:Boolean})],Dropdown.prototype,"disabled",void 0);dropdown_component_decorate([(0,decorators.MZ)({type:Boolean})],Dropdown.prototype,"readonly",void 0);dropdown_component_decorate([(0,decorators.MZ)({type:Boolean})],Dropdown.prototype,"clearable",void 0);dropdown_component_decorate([(0,decorators.MZ)({type:Boolean})],Dropdown.prototype,"error",void 0);dropdown_component_decorate([(0,decorators.MZ)({type:String})],Dropdown.prototype,"helperText",void 0);dropdown_component_decorate([(0,decorators.MZ)({type:String})],Dropdown.prototype,"label",void 0);dropdown_component_decorate([(0,decorators.MZ)({type:Object})],Dropdown.prototype,"multi",void 0);dropdown_component_decorate([(0,decorators.MZ)({type:String,reflect:true})],Dropdown.prototype,"name",void 0);dropdown_component_decorate([(0,decorators.MZ)({type:Boolean,reflect:true})],Dropdown.prototype,"open",void 0);dropdown_component_decorate([(0,decorators.MZ)({type:String})],Dropdown.prototype,"placeholder",void 0);dropdown_component_decorate([(0,decorators.MZ)({type:Boolean})],Dropdown.prototype,"required",void 0);dropdown_component_decorate([(0,decorators.MZ)({type:Boolean})],Dropdown.prototype,"singleChip",void 0);dropdown_component_decorate([(0,decorators.MZ)({type:Boolean})],Dropdown.prototype,"filterInput",void 0);dropdown_component_decorate([(0,decorators.MZ)({attribute:false})],Dropdown.prototype,"filterOptions",void 0);dropdown_component_decorate([(0,decorators.P)("vcdk-text-field")],Dropdown.prototype,"textField",void 0);dropdown_component_decorate([querySlot(null,"vcdk-dropdown-add-option")],Dropdown.prototype,"addOption",void 0);dropdown_component_decorate([(0,decorators.MZ)({type:String,reflect:true})],Dropdown.prototype,"value",void 0);dropdown_component_decorate([(0,decorators.wk)()],Dropdown.prototype,"selectedItems",void 0);dropdown_component_decorate([(0,decorators.wk)()],Dropdown.prototype,"activeItem",void 0);dropdown_component_decorate([(0,decorators.wk)()],Dropdown.prototype,"lastKeyTime",void 0);dropdown_component_decorate([(0,decorators.wk)()],Dropdown.prototype,"searchTerm",void 0);dropdown_component_decorate([querySlot(null,"vcdk-dropdown-option")],Dropdown.prototype,"items",void 0);dropdown_component_decorate([querySlot(null,"vcdk-dropdown-empty-option")],Dropdown.prototype,"emptyOptions",void 0);dropdown_component_decorate([querySlot(null,"vcdk-dropdown-select-all-option")],Dropdown.prototype,"dropdownOptionSelectAll",void 0);dropdown_component_decorate([(0,decorators.P)("vcdk-dropdown-popover")],Dropdown.prototype,"popoverContainer",void 0);dropdown_component_decorate([(0,context.Gt)({context:dropdownContext})],Dropdown.prototype,"dropdownContext",void 0);dropdown_component_decorate([watch("size")],Dropdown.prototype,"setSize",void 0);dropdown_component_decorate([watch("value")],Dropdown.prototype,"initializeValue",void 0);dropdown_component_decorate([watch("multi")],Dropdown.prototype,"handleMultipleChange",null);Dropdown=dropdown_component_decorate([(0,custom_element.E)("vcdk-dropdown")],Dropdown);function getStartIndex(items,from){if(!from){return-1}if(from==="start"){return 0}if(from==="end"){return items.length-1}return items.indexOf(from)}function getOptionsToIterate(from,direction,items,current){if(from==="start"){return items}if(from==="end"){return items}return direction==="forward"?items.slice(current+1):items.slice(0,current)}function getNextActiveItem(items,from,direction){const current=getStartIndex(items,from);const optionsToIterate=getOptionsToIterate(from,direction,items,current);const allOptions=direction==="forward"?optionsToIterate:optionsToIterate.reverse();return allOptions.find(option=>!option.disabled&&!option.hidden)??items[current]}var add_option_component_decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};let DropdownAddOption=class DropdownAddOption extends vcdk_element.l{constructor(){super(...arguments);this.dropdownContext=new context.G(this,{context:dropdownContext,subscribe:true});this.click=()=>{this.dispatchEvent(new MouseEvent("click",{bubbles:true,composed:true}))}}render(){const size=this.dropdownContext?.value?.size||DROPDOWN_DEFAULT_SIZE;return(0,lit.qy)`
       <div
         role="option"
-        class=${(0,d.H)({option:!0,[e]:!0})}
+        class=${(0,class_map.H)({option:true,[size]:true})}
         tabindex="0">
         <span part="content">
           <slot></slot>
         </span>
         <slot name="icon"></slot>
       </div>
-    `}};De.styles=[ce],De=Ie([(0,u.E)("vcdk-dropdown-add-option")],De);var Te=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};let Re=class extends x.l{firstUpdated(e){super.firstUpdated(e),this.setAttribute("role","separator")}render(){return a.qy`
+    `}};DropdownAddOption.styles=[optionStyles];DropdownAddOption=add_option_component_decorate([(0,custom_element.E)("vcdk-dropdown-add-option")],DropdownAddOption);var divider_component_decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};let DropdownDivider=class DropdownDivider extends vcdk_element.l{firstUpdated(changed){super.firstUpdated(changed);this.setAttribute("role","separator")}render(){return(0,lit.qy)`
       <div class="divider" role="separator"></div>
-    `}};Re.styles=[he],Re=Te([(0,u.E)("vcdk-dropdown-divider")],Re);var Pe=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};let Ve=class extends x.l{constructor(){super(...arguments),this.dropdownContext=new o.G(this,{context:re,subscribe:!0})}render(){const e=this.dropdownContext?.value?.size||Ae;return a.qy`
+    `}};DropdownDivider.styles=[dividerStyles];DropdownDivider=divider_component_decorate([(0,custom_element.E)("vcdk-dropdown-divider")],DropdownDivider);var empty_option_component_decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};let DropdownEmptyOption=class DropdownEmptyOption extends vcdk_element.l{constructor(){super(...arguments);this.dropdownContext=new context.G(this,{context:dropdownContext,subscribe:true})}render(){const size=this.dropdownContext?.value?.size||DROPDOWN_DEFAULT_SIZE;return(0,lit.qy)`
       <div
-        class=${(0,d.H)({option:1,"typography-body":1,hidden:this.hidden,[e]:!0})}
+        class=${(0,class_map.H)({option:1,[`typography-body`]:1,hidden:this.hidden,[size]:true})}
         tabindex="-1">
         <span part="content">
           <slot></slot>
         </span>
       </div>
-    `}};Ve.styles=[ce,n.IT.body],Ve=Pe([(0,u.E)("vcdk-dropdown-empty-option")],Ve);var Le=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};let Be=class extends x.l{constructor(){super(...arguments),this.active=!1,this.disabled=!1,this.selected="unchecked",this.dropdownContext=new o.G(this,{context:re,subscribe:!0}),this.handleClick=()=>{this.disabled||this.dispatchEvent(new CustomEvent("dropdownselectalloption",{bubbles:!0,composed:!0}))},this.getCheckboxValue=()=>"checked"===this.selected||"unchecked"!==this.selected&&void 0}render(){const e=this.dropdownContext?.value?.size||Ae;return a.qy`
+    `}};DropdownEmptyOption.styles=[optionStyles,typography_styles.IT.body];DropdownEmptyOption=empty_option_component_decorate([(0,custom_element.E)("vcdk-dropdown-empty-option")],DropdownEmptyOption);var select_all_component_decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};let DropdownSelectAllOption=class DropdownSelectAllOption extends vcdk_element.l{constructor(){super(...arguments);this.active=false;this.disabled=false;this.selected="unchecked";this.dropdownContext=new context.G(this,{context:dropdownContext,subscribe:true});this.handleClick=()=>{if(this.disabled)return;this.dispatchEvent(new CustomEvent("dropdownselectalloption",{bubbles:true,composed:true}))};this.getCheckboxValue=()=>{if(this.selected==="checked"){return true}if(this.selected==="unchecked"){return false}return undefined}}render(){const size=this.dropdownContext?.value?.size||DROPDOWN_DEFAULT_SIZE;return(0,lit.qy)`
       <div
         @click=${this.handleClick}
         role="option"
-        class=${(0,d.H)({option:1,disabled:this.disabled,selected:this.selected,active:this.active,"typography-body":!0,hidden:this.hidden,[e]:!0})}
+        class=${(0,class_map.H)({option:1,disabled:this.disabled,selected:this.selected,active:this.active,"typography-body":true,hidden:this.hidden,[size]:true})}
         tabindex="-1"
         aria-selected=${this.selected}
         aria-disabled=${this.disabled}>
@@ -1962,7 +1962,7 @@
           <slot></slot>
         </span>
       </div>
-    `}};Be.styles=[ce,n.IT.body],Le([(0,l.MZ)({type:Boolean,reflect:!0})],Be.prototype,"active",void 0),Le([(0,l.MZ)({type:Boolean,reflect:!0})],Be.prototype,"disabled",void 0),Le([(0,l.MZ)({type:String,reflect:!0})],Be.prototype,"selected",void 0),Be=Le([(0,u.E)("vcdk-dropdown-select-all-option")],Be)},7502:(e,t,i)=>{i.d(t,{m:()=>r});var o=i(2618);const r=e=>"number"==typeof e?e:e||o.s6},7909:(e,t,i)=>{i(2932);var o=i(1669),r=i(2618),s=i(352),n=i(302),a=i(6487),l=i(6260);const d=r.AH`
+    `}};DropdownSelectAllOption.styles=[optionStyles,typography_styles.IT.body];select_all_component_decorate([(0,decorators.MZ)({type:Boolean,reflect:true})],DropdownSelectAllOption.prototype,"active",void 0);select_all_component_decorate([(0,decorators.MZ)({type:Boolean,reflect:true})],DropdownSelectAllOption.prototype,"disabled",void 0);select_all_component_decorate([(0,decorators.MZ)({type:String,reflect:true})],DropdownSelectAllOption.prototype,"selected",void 0);DropdownSelectAllOption=select_all_component_decorate([(0,custom_element.E)("vcdk-dropdown-select-all-option")],DropdownSelectAllOption)},7502:(__unused_webpack___webpack_module__,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{m:()=>ifDefinedOrStringEmpty});var lit__WEBPACK_IMPORTED_MODULE_0__=__webpack_require__(2618);const ifDefinedOrStringEmpty=value=>{if(typeof value==="number"){return value}return value?value:lit__WEBPACK_IMPORTED_MODULE_0__.s6}},7909:(__unused_webpack___webpack_module__,__unused_webpack___webpack_exports__,__webpack_require__)=>{var system_icon=__webpack_require__(2932);var typography_styles=__webpack_require__(1669);var lit=__webpack_require__(2618);var decorators=__webpack_require__(352);var when=__webpack_require__(302);var custom_element=__webpack_require__(6487);var vcdk_element=__webpack_require__(6260);const accordionStyles=(0,lit.AH)`
   :host {
     --vcdk-accordion-summary-padding-inline: var(--vcdk-spacing-6);
   }
@@ -2033,7 +2033,7 @@
     color: var(--vcdk-color-text-subtle);
     text-align: start;
   }
-`;var c=function(e,t,i,o){var r,s=arguments.length,n=s<3?t:null===o?o=Object.getOwnPropertyDescriptor(t,i):o;if("object"==typeof Reflect&&"function"==typeof Reflect.decorate)n=Reflect.decorate(e,t,i,o);else for(var a=e.length-1;a>=0;a--)(r=e[a])&&(n=(s<3?r(n):s>3?r(t,i,n):r(t,i))||n);return s>3&&n&&Object.defineProperty(t,i,n),n};class p extends CustomEvent{constructor(e,t){super(e,{detail:t,bubbles:!0,composed:!0,cancelable:!0})}}let h=class extends l.l{constructor(){super(...arguments),this.headerTitle="",this.open=!1,this.onToggleClick=e=>{e.preventDefault();const t=!this.open,i=new p("toggle",{open:t});this.dispatchEvent(i);const o=new p("vcdk-toggle",{open:t});this.dispatchEvent(o);i.defaultPrevented||o.defaultPrevented||(this.open=t)}}render(){const{headerTitle:e,headerIcon:t}=this;return r.qy`
+`;var __decorate=undefined&&undefined.__decorate||function(decorators,target,key,desc){var c=arguments.length,r=c<3?target:desc===null?desc=Object.getOwnPropertyDescriptor(target,key):desc,d;if(typeof Reflect==="object"&&typeof Reflect.decorate==="function")r=Reflect.decorate(decorators,target,key,desc);else for(var i=decorators.length-1;i>=0;i--)if(d=decorators[i])r=(c<3?d(r):c>3?d(target,key,r):d(target,key))||r;return c>3&&r&&Object.defineProperty(target,key,r),r};class AccordionToggleEvent extends CustomEvent{constructor(type,detail){super(type,{detail,bubbles:true,composed:true,cancelable:true})}}let Accordion=class Accordion extends vcdk_element.l{constructor(){super(...arguments);this.headerTitle="";this.open=false;this.onToggleClick=e=>{e.preventDefault();const newState=!this.open;const deprecatedEvent=new AccordionToggleEvent("toggle",{open:newState});this.dispatchEvent(deprecatedEvent);const event=new AccordionToggleEvent("vcdk-toggle",{open:newState});this.dispatchEvent(event);const defaultPrevented=deprecatedEvent.defaultPrevented||event.defaultPrevented;if(!defaultPrevented){this.open=newState}}}render(){const{headerTitle,headerIcon}=this;return(0,lit.qy)`
       <details ?open=${this.open} part="details">
         <summary
           id="accordionID"
@@ -2042,14 +2042,14 @@
           aria-controls="accordionSectionID"
           aria-expanded=${this.open?"true":"false"}>
           <slot name="summary-start">
-            ${(0,n.z)(t,()=>r.qy`
+            ${(0,when.z)(headerIcon,()=>(0,lit.qy)`
                 <vcdk-system-icon
                   size=${24}
-                  icon=${t}></vcdk-system-icon>
+                  icon=${headerIcon}></vcdk-system-icon>
               `)}
           </slot>
           <slot name="title" class="title typography-subtitle1">
-            ${e}
+            ${headerTitle}
           </slot>
           <slot name="summary-end"></slot>
           <vcdk-system-icon
@@ -2064,4 +2064,5 @@
           id="accordionSectionID"
           aria-labelledby="accordionID"></slot>
       </details>
-    `}};h.styles=[o.IT.subtitle1,d],c([(0,s.MZ)({type:String})],h.prototype,"headerTitle",void 0),c([(0,s.MZ)({type:String})],h.prototype,"headerIcon",void 0),c([(0,s.MZ)({type:Boolean,reflect:!0})],h.prototype,"open",void 0),h=c([(0,a.E)("vcdk-accordion")],h)}}]);
+    `}};Accordion.styles=[typography_styles.IT.subtitle1,accordionStyles];__decorate([(0,decorators.MZ)({type:String})],Accordion.prototype,"headerTitle",void 0);__decorate([(0,decorators.MZ)({type:String})],Accordion.prototype,"headerIcon",void 0);__decorate([(0,decorators.MZ)({type:Boolean,reflect:true})],Accordion.prototype,"open",void 0);Accordion=__decorate([(0,custom_element.E)("vcdk-accordion")],Accordion)}}]);
+//# sourceMappingURL=vcdk.js.map

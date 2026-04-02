@@ -230,7 +230,9 @@ function buildSubNavigation(main, head) {
 function buildAutoBlocks(main, head) {
   try {
     buildHeroBlock(main);
-    buildSubNavigation(main, head);
+    if (head) {
+      buildSubNavigation(main, head);
+    }
 
     buildCtaList(main);
   } catch (error) {
@@ -777,12 +779,14 @@ function decorateConfigurator(main) {
  * @param {Element} head The header element
  */
 export function decorateMain(main, head) {
-  const pageStyle = head.querySelector('[name="style"]')?.content;
-  if (pageStyle) {
-    pageStyle
-      .split(',')
-      .map((style) => toClassName(style.trim()))
-      .forEach((style) => main.classList.add(style));
+  if (head) {
+    const pageStyle = head.querySelector('[name="style"]')?.content;
+    if (pageStyle) {
+      pageStyle
+        .split(',')
+        .map((style) => toClassName(style.trim()))
+        .forEach((style) => main.classList.add(style));
+    }
   }
   moveClassToHtmlEl('redesign-v2');
   // hopefully forward compatible button decoration
