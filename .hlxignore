@@ -7,5 +7,5 @@ package.json
 package-lock.json
 placeholder.json
 test/*
-blocks/*
-scripts/*
+blocks/**/*.js
+scripts/**/*.js
