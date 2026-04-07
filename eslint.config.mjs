@@ -42,6 +42,10 @@ export default defineConfig([
     ...mainConfig,
   },
   {
+    files: ['webpack.config.js'],
+    languageOptions: { globals: globals.node },
+  },
+  {
     ...mainConfig,
     languageOptions: { globals: globals.node },
     files: ['e2e/**/*.js'],

@@ -4,8 +4,8 @@
   "version": "59.0.0",
   "description": "Volvo Trucks North America",
   "engines": {
-    "node": ">=20.19.5 <23",
-    "npm": ">=10.8.2"
+    "node": ">=24.14.1 <25",
+    "npm": ">=11.11.0"
   },
   "scripts": {
     "build": "webpack --config ./webpack.config.js",
