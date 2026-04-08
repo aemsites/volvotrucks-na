@@ -34,7 +34,7 @@ const enableSingleOpenBehavior = (block) => {
 
   items.forEach((item) => {
     item.addEventListener('vcdk-toggle', () => {
-      const willOpen = !item.open;
+      const willOpen = item.open;
       if (!willOpen) {return;}
 
       items.forEach((other) => {

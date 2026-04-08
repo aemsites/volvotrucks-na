@@ -70,8 +70,8 @@
     "webpack-cli": "^7.0.2"
   },
   "dependencies": {
-    "@volvo/vcdk": "^9.14.7",
-    "@volvo/vcdk-assets": "1.1.0",
-    "@volvo/vcdk-tokens": "1.1.0"
+    "@volvo/vcdk": "^10.14.0",
+    "@volvo/vcdk-assets": "2.4.0",
+    "@volvo/vcdk-tokens": "2.4.0"
   }
 }
