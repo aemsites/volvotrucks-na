@@ -1,424 +1,200 @@
-import { loadScript } from '../../scripts/aem.js';
-import { TOOLS_CONFIGS } from '../../scripts/common.js';
+import { simplifiedReadBlockConfig } from '../../scripts/common.js';
 
-const missingKeyMessage = 'MissingKey';
-const { GOOGLE_API_KEY: apiKey = missingKeyMessage } = TOOLS_CONFIGS;
+/**
+ * Maps authored block config rows to the dealer locator component's mount options.
+ * TODO: Consider refactoring this block to load/map all dealer locator mount
+ * options from a JSON config file instead of hardcoding option extraction in
+ * JS.
+ *
+ * Block config rows are read verbatim by `simplifiedReadBlockConfig` — there is
+ * no key normalization. The first column of each row in the authored document
+ * must use the exact camelCase key names listed below.
+ *
+ * Authorable block config keys (all optional unless noted):
+ *
+ * Core:
+ * - `apiBaseUrl`: Dealer search endpoint. Mandatory at runtime — the widget
+ *   logs a console error when missing.
+ * - `contactFormPostUrl`: Pardot form handler endpoint. When present, a
+ *   `contactFormSubmitHandler` is wired internally using the JSONP /
+ *   script-tag pattern (same approach as the v2-custom-form block). The
+ *   form handler must be configured to redirect success to
+ *   `/blocks/dealer-locator/responses/success.js` and error to
+ *   `/blocks/dealer-locator/responses/error.js`. When omitted, the
+ *   contact-form CTA and modal are hidden by the widget.
+ * - `contactFormSubmitHandler`: Custom JS submit handler
+ *   `(payload) => Promise<boolean> | boolean`. Return `true` for success,
+ *   `false` for error. Takes priority over `contactFormPostUrl` and also
+ *   enables the contact-form CTA/modal. **Not authorable via block config**
+ *   (function type); must be set programmatically if needed.
+ * - `initialQuery`: Prefills the search field on first render.
+ * - `googleMapsApiKey`: Google Maps browser API key. Mandatory for map
+ *   rendering unless a page-level meta tag provides it:
+ *   `<meta name="google-maps-api-key" content="...">`
+ * - `showAllDealersOnLoad`: Authored as `"true"` or `"false"`. Default: `false`.
+ *   When `true`, all dealers are shown on the map before the user submits a
+ *   search; after search, only in-radius dealers are shown.
+ * - `showDistanceOnCard`: Authored as `"true"` or `"false"`. Default: `true`.
+ *   When `false`, the distance from search center to dealer is hidden on dealer
+ *   cards.
+ * - `showBrandFilter`: Authored as `"true"` or `"false"`. Default: `true`.
+ *   When `false`, the brand filter (All/Volvo/Mack) is hidden;
+ *
+ * Radius slider:
+ * - `rangeMin`: Minimum selectable radius in miles. Default: `25`.
+ * - `rangeMax`: Maximum selectable radius in miles. Default: `2000`.
+ * - `rangeInitialValue`: Pre-selected radius on first render. Default: `100`.
+ *
+ * Map:
+ * - `mapDefaultLat`: Default map center latitude before search/geolocation.
+ *   Only applied when paired with `mapDefaultLng`.
+ * - `mapDefaultLng`: Default map center longitude before search/geolocation.
+ *   Only applied when paired with `mapDefaultLat`.
+ * - `mapDefaultZoom`: Initial zoom level. Default: `4`.
+ * - `mapMinZoom`: Minimum zoom allowed in map controls. Default: `2`.
+ * - `mapMaxZoom`: Maximum zoom allowed in map controls. Default: `18`.
+ * - `scrollZoom`: Enables scroll-wheel zoom on the map. Authored as `"true"`
+ *   or `"false"`. Defaults to `true`. When `false`, the page scrolls normally
+ *   over the map; Ctrl+scroll still zooms the map.
+ *
+ * Numeric values (`rangeMin`, `rangeMax`, `rangeInitialValue`, `mapDefaultZoom`,
+ * `mapMinZoom`, `mapMaxZoom`, `mapDefaultLat`, `mapDefaultLng`) are coerced to
+ * numbers by `simplifiedReadBlockConfig`; the widget also sanitizes them before
+ * use so invalid values fall back to widget defaults.
+ *
+ * Locale / theme:
+ * - `locale`: BCP 47 locale tag controlling UI language and distance units.
+ *   Default: `"en-US"`. Supported: `"en-US"`, `"en-CA"`, `"es-419"`, `"fr-CA"`.
+ * - `theme`: Visual theme applied to the widget. Default: `"volvo"`. Brand
+ *   aliases (`volvo`, `mack`, `renault`) resolve to the light variant. Full IDs:
+ *   `volvo-light`, `volvo-dark`, `mack-light`, `mack-dark`, `renault-light`,
+ *   `renault-dark`. Invalid values fall back to `volvo-light`.
+ */
+
+/**
+ * Returns a contactFormSubmitHandler compatible with the dealer locator widget
+ * that submits form data to a Pardot form handler via the JSONP / script-tag
+ * pattern.
+ *
+ * Pardot must be configured to redirect:
+ *   - success → /blocks/dealer-locator/responses/success.js
+ *   - error   → /blocks/dealer-locator/responses/error.js
+ *
+ * Both response files call window.showResult({ result: 'success'|'error' }),
+ * which resolves the Promise returned here.
+ *
+ * @param {string} postUrl - Pardot form handler endpoint URL
+ * @returns {(payload: object) => Promise<boolean>}
+ */
+function makeContactFormSubmitHandler(postUrl) {
+  return function contactFormSubmitHandler(payload) {
+    return new Promise((resolve) => {
+      const timeout = setTimeout(() => {
+        delete window.showResult;
+        resolve(false);
+      }, 15000);
+
+      window.showResult = function showResult({ result }) {
+        clearTimeout(timeout);
+        delete window.showResult;
+        resolve(result === 'success');
+      };
+
+      const params = new URLSearchParams({ ...payload, callback: 'showResult' });
+      const script = document.createElement('script');
+      script.src = `${postUrl}?${params.toString()}`;
+      script.addEventListener('error', () => {
+        clearTimeout(timeout);
+        delete window.showResult;
+        resolve(false);
+      });
+      document.head.appendChild(script);
+    });
+  };
+}
+
+function toMountOptions(cfg) {
+  const options = {
+    apiBaseUrl: cfg.apiBaseUrl || undefined,
+    contactFormSubmitHandler: cfg.contactFormPostUrl ? makeContactFormSubmitHandler(cfg.contactFormPostUrl) : undefined,
+    initialQuery: cfg.initialQuery || undefined,
+    locale: cfg.locale || undefined,
+    theme: cfg.theme || undefined,
+    // Prefer an authored key, otherwise fall back to a page-level meta contract.
+    googleMapsApiKey: cfg.googleMapsApiKey || document.querySelector('meta[name="google-maps-api-key"]')?.content || undefined,
+  };
+
+  if (cfg.showAllDealersOnLoad === 'true') {
+    options.showAllDealersOnLoad = true;
+  } else if (cfg.showAllDealersOnLoad === 'false') {
+    options.showAllDealersOnLoad = false;
+  }
+
+  if (cfg.showDistanceOnCard === 'true') {
+    options.showDistanceOnCard = true;
+  } else if (cfg.showDistanceOnCard === 'false') {
+    options.showDistanceOnCard = false;
+  }
+
+  if (cfg.showBrandFilter === 'true') {
+    options.showBrandFilter = true;
+  } else if (cfg.showBrandFilter === 'false') {
+    options.showBrandFilter = false;
+  }
+
+  const { rangeMin, rangeMax, rangeInitialValue } = cfg;
+  if (rangeMin !== undefined || rangeMax !== undefined || rangeInitialValue !== undefined) {
+    options.range = {
+      ...(rangeMin !== undefined ? { min: rangeMin } : {}),
+      ...(rangeMax !== undefined ? { max: rangeMax } : {}),
+      ...(rangeInitialValue !== undefined ? { initialValue: rangeInitialValue } : {}),
+    };
+  }
+
+  const { mapDefaultLat: lat, mapDefaultLng: lng, mapDefaultZoom: defaultZoom, mapMinZoom: minZoom, mapMaxZoom: maxZoom } = cfg;
+  let scrollZoom;
+  if (cfg.scrollZoom === 'false') {
+    scrollZoom = false;
+  } else if (cfg.scrollZoom === 'true') {
+    scrollZoom = true;
+  }
+
+  if (
+    (lat !== undefined && lng !== undefined) ||
+    defaultZoom !== undefined ||
+    minZoom !== undefined ||
+    maxZoom !== undefined ||
+    scrollZoom !== undefined
+  ) {
+    options.map = {
+      ...(lat !== undefined && lng !== undefined ? { defaultCenter: { lat, lng } } : {}),
+      ...(defaultZoom !== undefined ? { defaultZoom } : {}),
+      ...(minZoom !== undefined ? { minZoom } : {}),
+      ...(maxZoom !== undefined ? { maxZoom } : {}),
+      ...(scrollZoom !== undefined ? { scrollZoom } : {}),
+    };
+  }
+
+  return options;
+}
 
 export default async function decorate(block) {
-    const datasource = block.textContent.trim();
-    if (!apiKey || apiKey === missingKeyMessage) {
-        console.error(
-            'The block is wrongly set up or is missing the %cGOOGLE_API_KEY%c in the %cTOOLS_CONFIGS',
-            'color: red;',
-            'color: initial;',
-            'color: red;',
-        );
-    } else {
-        window.locatorConfig = {
-            apiKey,
-            consolidateFilters: true,
-            selectedBrand: 'volvo',
-            dataSource: datasource,
-            amenities: [
-                'Appointments Accepted',
-                'Bilingual Service',
-                'Driver Lounge',
-                'Free Pickup and Delivery',
-                'Hotel Shuttle',
-                'Internet Service',
-                'Laundry',
-                'Showers',
-                'Telephones',
-                'Trailer Parking',
-                'Video Games',
-            ],
-        };
-    }
+  const [{ mount }] = await Promise.all([
+    import(/* webpackChunkName: "dealer-locator-vendor" */ '@volvo/vg-dealer-locator/dist/vg-dealer-locator.es.js'),
+    import(/* webpackChunkName: "dealer-locator-vendor" */ '@volvo/vg-dealer-locator/dist/vg-dealer-locator.css'),
+  ]);
 
-    loadScript('/blocks/dealer-locator/vendor/jquery.min.js', { type: 'text/javascript', charset: 'UTF-8' }).then(() => {
-        // these scripts depend on jquery:
-        loadScript('/blocks/dealer-locator/sidebar-maps.js', { type: 'text/javascript', charset: 'UTF-8' });
-        loadScript('/blocks/dealer-locator/my-dealer.js', { type: 'text/javascript', charset: 'UTF-8' });
-    });
+  const cfg = simplifiedReadBlockConfig(block);
 
-    loadScript('/blocks/dealer-locator/vendor/moment.js', { type: 'text/javascript', charset: 'UTF-8' }).then(() => {
-        loadScript('/blocks/dealer-locator/vendor/moment-timezone.min.js', { type: 'text/javascript', charset: 'UTF-8' });
-    });
+  const mountEl = document.createElement('div');
+  mountEl.className = 'dealer-locator__mount';
 
-    block.innerHTML = `<input id="hoverText" value="Please unselect the selected option to click this option" hidden/>
-<div class="wrapper">
-    <div class="mobile-main-header">
-        <div class="panel-header">
-            <input type="text" id="location2" placeholder="Enter City, State, or Zip Code"/>
-            <div class="search-container">
-                <button type="button" id="search" onclick="$.fn.setAddress2();">
-                    <img src="/blocks/dealer-locator/images/search.svg"/>
-                </button>
-            </div>
-            <div class="filter-container">
-                <button type="button" onclick="$.fn.switchSidebarPane('sidebar-filter');">
-                    <div style="width:44px;">
-                        <div class="icon"><img src="/blocks/dealer-locator/images/filter.svg"/></div>
-                    </div>
-                </button>
-            </div>
-            <div class="geo-container">
-                <button type="button" id="search" onclick="$.fn.setLocation();"><img
-                        src="/blocks/dealer-locator/images/location.svg"/></button>
-            </div>
+  block.textContent = '';
+  block.append(mountEl);
 
-        </div>
-    </div>
-    <div id="map"></div>
-    <div class="map-geo-container">
-        <button type="button" id="search" onclick="$.fn.setLocation();"><img
-                src="/blocks/dealer-locator/images/location.svg"/></button>
-    </div>
-    <div class="sidebar" style="left:0px;">
-        <div class="row main-header">
-            <div class="panel-header">
-                <input type="text" id="location" placeholder="Enter City, State, or Zip Code"/>
-                <div class="search-container">
-                    <button type="button" id="search" onclick="$.fn.setAddress();">
-                        <img src="/blocks/dealer-locator/images/search.svg"/>
-                    </button>
-                </div>
-                <div class="filter-container">
-                    <button type="button" onclick="$.fn.switchSidebarPane('sidebar-filter');">
-                        <div style="width:44px;">
-                            <div class="icon"><img src="/blocks/dealer-locator/images/filter.svg"/></div>
-                        </div>
-                    </button>
-                </div>
-                <div class="geo-container">
-                    <button type="button" id="search" onclick="$.fn.setLocation();"><img
-                            src="/blocks/dealer-locator/images/location.svg"/></button>
-                </div>
+  if (block.__dealerLocatorUnmount) {
+    block.__dealerLocatorUnmount();
+  }
 
-            </div>
-        </div>
-        <div class="row legend-header">
-
-
-            <div class="sidebar-legend">
-                 <span id="dealer-tag">
-                 <div class="dealer" id="filterDealer">
-                     <div>
-                     <img src="/blocks/dealer-locator/images/volvo-pin-dealer.svg" class="legend-icon"/> 
-                     <span>Dealer</span>
-                      </div>
-                 </div>
-                     </span>
-                <span id="uptime-tag">
-                 <div class="uptime-dealer" id="filterUptime">
-                     <div>
-                     <img src="/blocks/dealer-locator/images/volvo-pin-uptime.svg" class="legend-icon"/> <span>Certified Uptime Dealer</span>
-                </div>
-                         </div>
-                     </span>
-                <span id="electric-tag">
-                 <div class="electric-dealer" id="filterElectricDealer">
-                     <div>
-                     <img src="/blocks/dealer-locator/images/bolt.svg" class="legend-icon"/> <span>Certified Electric Dealer</span>
-                 </div>
-                     </div>
-                      </span>
-                <div class="mobile-dealer" id="filterDealerMobile">
-                    <div>
-                        <img src="/blocks/dealer-locator/images/volvo-pin-dealer.svg" class="legend-icon"/>
-                        <span>Dealer</span>
-                    </div>
-                </div>
-                <div class="mobile-uptime-dealer" id="filterUptimeMobile">
-                    <div>
-                        <img src="/blocks/dealer-locator/images/volvo-pin-uptime.svg" class="legend-icon"/> <span>Certified Uptime</span>
-                    </div>
-                </div>
-                <div class="mobile-electric-dealer" id="filterElectricDealerMobile">
-                    <div>
-                        <img src="/blocks/dealer-locator/images/bolt.svg" class="legend-icon"/>
-                        <span>Certified Electric</span>
-                    </div>
-                </div>
-
-            </div>
-        </div>
-        <div class="sidebar-content">
-            <div class="go-back" style="display:none;">
-                <button type="button" class="tooltip" id="cancel">Back</button>
-            </div>
-            <div class="loading-overlay">
-                <div class="loading-msg">
-                    <p>One moment while we gather nearby dealers</p>
-                </div>
-            </div>
-            <div class="waiting-overlay">
-                <p>Start finding nearby dealers by providing a location above.</p>
-            </div>
-        </div>
-    </div>
-
-    <a href="javascript:void(0);" class="slider-arrow hide"><i class="fa fa-angle-left"></i></a>
-
-
-</div>
-<div id="sidebar-pins" style="display: none;">
-    <div class="row" style="height:100%;">
-
-        <div class="scroller">
-            <p class="no-dealer-text" style="display: none;">No Dealers Found</p>
-            <div class="nearby-pins"></div>
-        </div>
-    </div>
-    <div class="panel-footer">Loading...</div>
-</div>
-<div id="sidebar-pin" style="display: none;">
-    <div class="pin-header">
-        <div class="pin-details-header">
-            <img id="head-marker" class="pin-header-img" src=""/>
-            <div id="title"></div>
-
-
-        </div>
-        <div id="type"></div>
-
-        <div class="dealer-details-header">
-            <div class="detail detail-website">
-                <a target="_blank">
-                    <img src="/blocks/dealer-locator/images/Globe-4.png"/>
-                    Website
-                </a>
-            </div>
-
-            <div class="detail detail-direction">
-                <a id="directions"">
-                    <img src="/blocks/dealer-locator/images/google-maps.svg"/>
-                    Google Maps
-                </a>
-            </div>
-            <div class="detail detail-call">
-
-            </div>
-            <div class="detail detail-share">
-
-                <a id="share" class="accordion">
-                    <img src="/blocks/dealer-locator/images/Share-2.png"/>
-                    SHARE
-                </a>
-
-                <div class="accordion-panel">
-                    <input type="text" id="share-link" value="" onclick="this.select();"/>
-                </div>
-            </div>
-            <div class="detail-email">
-
-            </div>
-        </div>
-    </div>
-    <div class="row pin-content">
-        <div class="scroller">
-            <div class="pin-container">
-
-
-                <ul class="pin-details">
-                    <li>
-                        <img src="/blocks/dealer-locator/images/Map.png"/>
-                        <div id="title2"></div>
-                        <br/>
-                        <div id="address1">
-                            <div></div>
-                        </div>
-                        <br/>
-                        <div id="address2">
-                            <div></div>
-                        </div>
-                        <br/>
-                        <div id="city-state-zip">
-                            <div></div>
-                        </div>
-                        <div class="controls">
-                            <i class="tooltip fa fa-copy" id="clipboard-address" data-clipboard=""
-                               onclick="$.fn.copyToClipboard(this);"><span class="tooltiptext copy">Copy address</span></i>
-                        </div>
-                    </li>
-                    <li id="hours">
-                        <img src="/blocks/dealer-locator/images/Clock.png"/>
-                        <div></div>
-                    </li>
-                    <li>
-                        <img src="/blocks/dealer-locator/images/Globe.png"/>
-                        <div id="website">No website available</div>
-                        <div class="controls">
-                            <i class="tooltip fa fa-external-link" id="open-website" onclick=""><span
-                                    class="tooltiptext link">Open website</span></i>
-                        </div>
-                    </li>
-                    <li>
-                        <img src="/blocks/dealer-locator/images/Mail.png"/>
-                        <div id="email">No email available</div>
-                    </li>
-
-
-                    <li id="details" class="accordion-panel"></li>
-                </ul>
-                <div class="header-title header-driver-title">Driver Amenitites</div>
-                <ul id="drivers">
-                </ul>
-                <div class="header-title header-services-title">Truck Services</div>
-                <ul id="services">
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-<div id="nearbyPinDetails" style="display: none;">
-    <div class="panel-card">
-        <div class="panel-container">
-            <article class="teaser">
-                <div class="marker-main">
-                    <img id="marker" src=""/>
-                </div>
-                <div class="dealerPanelContainer">
-                    <div class="teaser-top" onclick="$.fn.switchSidebarPane('sidebar-pin', this);">
-                        <div class="heading">
-                            <p></p>
-                        </div>
-                        <div class="info">
-                            <div class="hours"></div>
-                        </div>
-                        <div class="left">
-                            <div class="address"></div>
-                            <div class="city"></div>
-                            <div class="phone"></div>
-                        </div>
-                    </div>
-                    <div class="teaser-bottom">
-                        <div class="right">
-                            <div class="website">
-                                <a href="" target="_blank" rel="noopener"></a>
-                            </div>
-                        </div>
-                        <div class="right">
-                            <div class="direction">
-                                <a href="" id="direction" onclick="$.fn.switchSidebarPane('sidebar-direction-list', this);return false;"></a>
-                            </div>
-                        </div>
-                        <div class="right">
-                            <div class="call"></div>
-                        </div>
-                        <div class="right">
-                            <div class="more" onclick="$.fn.switchSidebarPane('sidebar-pin', this);">
-                                <a>More</a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="teaser-services">
-                    </div>
-                </div>
-            </article>
-        </div>
-    </div>
-</div>
-<div id="sidebar-filter" style="display: none;">
-    <div class="row" style="padding-top: 25px;">
-        <div class="panel-card result-item">
-            <div class="panel-container">
-                <span class="header-title">Filter By Distance</span>
-                <ul>
-                    <li>
-                        <div>
-                            <input name=range-filter class=range-filter type=range id=range value=75 list=steplist
-                                   max=100 min=25 step=25 onchange="$.fn.radiusChange();"/>
-                            <datalist id=steplist class=sliderticks>
-                                <option>25</option>
-                                <option>50</option>
-                                <option>75</option>
-                                <option>100</option>
-                            </datalist>
-                        </div>
-                    </li>
-                </ul>
-            </div>
-        </div>
-        <div class="panel-card result-item">
-            <div class="panel-container">
-                <span class="header-title">Filter By Service</span>
-                <ul id="filter-options">
-
-                    <li>
-                        <label for=all>All Dealers
-                            <input name=type-filter type=checkbox id=all value="All Dealers" checked=checked/>
-                            <span class="checkmark"></span>
-                        </label>
-                    </li>
-                    <li>
-                        <label for=rental-leasing>Rental &amp; Leasing
-                            <input name=type-filter type=checkbox id=rental-leasing value=Leasing/>
-                            <span class="checkmark"></span>
-                        </label>
-                    </li>
-
-                </ul>
-            </div>
-        </div>
-    </div>
-</div>
-
-<div id="sidebar-select-pins" style="display: none;">
-    <div class="row">
-        <span class="header-title">Advanced Routing</span>
-        <p>Click any <i><span id="filter"></span> Dealer</i> on the map to add it to your route. When done, click
-            <strong>Calculate Route</strong> below.</p>
-        <p>
-        <div class="go-back-pin">
-            <button type="button">Calculate Route</button>
-            <button type="button">Back to Directions</button>
-        </div>
-        </p>
-        <div class="scroller">
-            <div class="nearby-select"></div>
-        </div>
-    </div>
-</div>
-<div id="sidebar-select-pin" style="display: none;">
-    <div class="panel-card">
-        <div class="panel-container">
-            <article class="teaser">
-
-                <div style="width: 15%;">
-                    <i class="fa fa-close tooltip" onclick="$.fn.removeWaypoint(this)"><span
-                            class="tooltiptext removepin">Remove from route</span></i>
-                </div>
-                <div style="width: 80%;">
-                    <div class="teaser-top">
-                        <div class="heading">
-                            <p></p>
-                        </div>
-                        <div class="info">
-                            <div class="hours"></div>
-                            <div class="distance"></div>
-                        </div>
-                    </div>
-                    <div class="teaser-bottom">
-                        <div class="left">
-                            <div class="address"></div>
-                            <div class="city"></div>
-                            <div class="phone"></div>
-                        </div>
-                        <div class="right">
-                            <div class="website">
-                                <a href="" target="_blank" rel="noopener"></a>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="teaser-services">
-
-                    </div>
-                </div>
-            </article>
-        </div>
-    </div>
-</div>
-<div id="locator-snackbar"></div>
-</div> `;
+  block.__dealerLocatorUnmount = mount(mountEl, toMountOptions(cfg));
 }

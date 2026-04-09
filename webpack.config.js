@@ -2,12 +2,12 @@
 const path = require('path');
 
 const TerserPlugin = require('terser-webpack-plugin');
+const CssMinimizerPlugin = require('css-minimizer-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const webpack = require('webpack');
 
-const isProd = process.env.PROD === 'true';
-const enableSourceMaps = !isProd;
+const enableSourceMaps = process.env.SOURCEMAPS === 'true';
 
 // List of files to ignore
 const ignoreFiles = [
@@ -36,12 +36,8 @@ if (enableSourceMaps) {
 
 module.exports = {
   mode: 'production',
-  devtool: enableSourceMaps ? 'source-map' : false,
 
-  entry: {
-    main: './scripts/entrypoint.js',
-    'page-404': './scripts/404-entrypoint.js',
-  },
+  entry: './scripts/entrypoint.js',
 
   output: {
     path: path.resolve(__dirname, 'dist'),
@@ -68,13 +64,18 @@ module.exports = {
         test: /\.(css)$/,
         use: [MiniCssExtractPlugin.loader, 'css-loader'],
       },
+      {
+        test: /\.(svg|png|jpg|jpeg|gif|webp)$/i,
+        type: 'asset/resource',
+      },
     ],
   },
 
-  plugins, 
+  plugins,
 
   optimization: {
     usedExports: true,
+    moduleIds: 'deterministic',
     splitChunks: {
       cacheGroups: {
         vcdk: {
@@ -87,7 +88,7 @@ module.exports = {
         },
         default: {
           name: 'main',
-          chunks: (chunk) => chunk.name !== 'page-404',
+          chunks: 'all',
           minSize: 100, // Allow splitting for files of all sizes
           minChunks: 2,
         },
@@ -98,11 +99,15 @@ module.exports = {
       new TerserPlugin({
         extractComments: false,
         terserOptions: {
-          compress: isProd,
-          mangle: isProd,
+          compress: {
+            passes: 2,
+            drop_console: false,
+          },
+          mangle: true,
           format: { comments: false },
         },
       }),
+      new CssMinimizerPlugin(),
     ],
   },
 

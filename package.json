@@ -4,15 +4,15 @@
   "version": "60.0.0",
   "description": "Volvo Trucks North America",
   "engines": {
-    "node": ">=20.19.5 <23",
-    "npm": ">=10.8.2"
+    "node": ">=24.14.1 <25",
+    "npm": ">=11.11.0"
   },
   "scripts": {
     "build": "webpack --config ./webpack.config.js",
     "build:dev": "cross-env PROD=false webpack --config ./webpack.config.js",
     "watch": "cross-env PROD=false webpack --watch --config ./webpack.config.js",
     "start": "run-p dev watch",
-    "dev": "aem up",
+    "dev": "aem up --url https://main--volvotrucks-us--volvogroup.aem.page/",
     "dev:ca": "aem up --url https://main--volvotrucks-ca--volvogroup.aem.page/en-ca/",
     "dev:mx": "aem up --url https://main--volvotrucks-mx--volvogroup.aem.page",
     "lint:js": "eslint .",
@@ -48,7 +48,8 @@
     "@types/node": "^24.10.0",
     "cheerio": "^1.1.2",
     "copyfiles": "^2.4.1",
-    "css-loader": "^7.1.2",
+    "css-loader": "^7.1.3",
+    "css-minimizer-webpack-plugin": "^7.0.4",
     "cross-env": "^10.1.0",
     "eslint": "^9.38.0",
     "eslint-config-prettier": "^10.1.8",
@@ -69,8 +70,9 @@
     "webpack-cli": "^6.0.1"
   },
   "dependencies": {
-    "@volvo/vcdk": "^9.14.7",
-    "@volvo/vcdk-assets": "1.1.0",
-    "@volvo/vcdk-tokens": "1.1.0"
+    "@volvo/vcdk": "^10.14.0",
+    "@volvo/vcdk-assets": "2.4.0",
+    "@volvo/vcdk-tokens": "2.4.0",
+    "@volvo/vg-dealer-locator": "file:./packages/volvo-vg-dealer-locator-0.0.8.tgz"
   }
 }
