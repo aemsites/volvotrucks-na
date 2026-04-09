@@ -868,3 +868,54 @@ export function pushToDataLayer(data) {
   window.dataLayer = window.dataLayer || [];
   window.dataLayer.push(data);
 }
+
+/**
+ * Converts a value to a number if it represents a finite numeric string.
+ * Returns `undefined` for empty, null, undefined, or non-numeric values.
+ * @param {*} value
+ * @returns {number|undefined}
+ */
+export function asNumber(value) {
+  if (value === undefined || value === null || value === '') {
+    return undefined;
+  }
+  const n = Number(value);
+  return Number.isFinite(n) ? n : undefined;
+}
+
+/**
+ * Extracts the config from a block as a plain key/value map of raw text strings.
+ *
+ * Simplified variant of `readBlockConfig` from `scripts/aem.js`. The differences are:
+ * - Keys are stored as-is (raw `textContent`), without running through `toClassName()`, so
+ *   casing and special characters are preserved.
+ * - Values are always the raw `textContent` of the second column — there is no special-case
+ *   handling for `<a>` (href), `<img>` (src), or `<p>` (per-paragraph text/arrays). This
+ *   means the returned values are always plain strings, never arrays or URLs extracted from
+ *   elements.
+ * - If a value is a numeric string (e.g. `"42"` or `"3.14"`), it is coerced to a `number`
+ *   via {@link asNumber}. Non-numeric strings are kept as-is.
+ *
+ * Use this function when config keys must be compared verbatim and values are known to be
+ * plain text. Use `readBlockConfig` when keys need to be CSS-safe identifiers or when values
+ * may contain links or images.
+ *
+ * @param {Element} block The block element
+ * @returns {Record<string, string|number>} The block config — values are numbers when the
+ *   authored text is a valid finite number, strings otherwise.
+ */
+export function simplifiedReadBlockConfig(block) {
+  const config = {};
+  block.querySelectorAll(':scope > div').forEach((row) => {
+    if (row.children) {
+      const cols = [...row.children];
+      if (cols[1]) {
+        const name = cols[0].textContent;
+        const raw = row.children[1].textContent;
+        const numeric = asNumber(raw);
+        config[name] = numeric !== undefined ? numeric : raw;
+      }
+    }
+  });
+  return config;
+}
