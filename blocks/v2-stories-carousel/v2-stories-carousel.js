@@ -1,5 +1,5 @@
-import { createOptimizedPicture, getMetadata, decorateIcons } from '../../scripts/aem.js';
-import { createElement, getDateFromTimestamp, MAGAZINE_CONFIGS, extractObjectFromArray, getTextLabel, toPathKey } from '../../scripts/common.js';
+import { createOptimizedPicture, getMetadata } from '../../scripts/aem.js';
+import { createElement, decorateIcons, getDateFromTimestamp, MAGAZINE_CONFIGS, extractObjectFromArray, getTextLabel, toPathKey } from '../../scripts/common.js';
 import { fetchMagazineArticles, fetchRecommendedArticles } from '../../scripts/services/magazine.service.js';
 import { smoothScrollHorizontal } from '../../scripts/motion-helper.js';
 
