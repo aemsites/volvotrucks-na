@@ -1,0 +1,60 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>Offline | Volvo Trucks</title>
+    <meta name="theme-color" content="#141414" />
+    <style>
+      :root {
+        color-scheme: light;
+      }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: grid;
+        place-items: center;
+        background: linear-gradient(135deg, #f5f6f7 0%, #e6e8ea 100%);
+        color: #141414;
+        font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
+      }
+
+      main {
+        max-width: 32rem;
+        margin: 1.5rem;
+        padding: 2rem;
+        border-radius: 0.75rem;
+        background: #fff;
+        box-shadow: 0 12px 24px rgb(0 0 0 / 10%);
+      }
+
+      h1 {
+        margin-top: 0;
+        font-size: 1.5rem;
+      }
+
+      p {
+        line-height: 1.5;
+      }
+
+      button {
+        margin-top: 1rem;
+        border: 0;
+        border-radius: 0.375rem;
+        background: #141414;
+        color: #fff;
+        padding: 0.625rem 0.875rem;
+        cursor: pointer;
+      }
+    </style>
+  </head>
+  <body>
+    <main>
+      <h1>You are offline</h1>
+      <p>This page is unavailable right now because your device is not connected to the internet.</p>
+      <p>Reconnect and try again.</p>
+      <button type="button" onclick="window.location.reload()">Retry</button>
+    </main>
+  </body>
+</html>

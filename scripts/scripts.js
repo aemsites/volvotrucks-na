@@ -40,6 +40,7 @@ import {
 } from './video-helper.js';
 
 import { validateCountries } from './validate-countries.js';
+import { initPWA } from './pwa.js';
 
 let modal;
 
@@ -914,6 +915,8 @@ async function loadLazy(doc) {
   }
 
   loadCSS(`${window.hlx.codeBasePath}/styles/lazy-styles.css`);
+
+  initPWA();
 
   import('../tools/sidekick/aem-genai-variations.js');
 }
