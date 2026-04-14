@@ -9,4 +9,5 @@ placeholder.json
 test/*
 blocks/**/*.js
 !blocks/dealer-locator/**
+!blocks/v2-custom-form/responses/**
 scripts/**/*.js
