@@ -81,19 +81,38 @@ const buildFilterElement = () =>
     <form class="${blockName}__filter">
       <fieldset class="${blockName}__fieldset">
         <div class="${blockName}__filter-dropdown">
-          ${filterDefault} <span class="${blockName}__filter-dropdown-icon">
-            <span class="icon icon-chevron-down"></span>
+          ${filterDefault}
+          <span class="${blockName}__filter-dropdown-icon">
+            <vcdk-system-icon
+              icon="chevron-down"
+              class="${blockName}__dropdown-icon"
+              size="24"
+              icon-set="auto"
+              aria-hidden="true">
+            </vcdk-system-icon>
           </span>
         </div>
         <div class="${blockName}__filter-input">
           <div id="autosuggest-magazine"  aria-expanded="false" class="${blockName}__input-container">
-            <span class="icon icon-search-icon"></span>
+            <vcdk-system-icon
+              icon="search"
+              class="${blockName}__search-icon"
+              size="24"
+              icon-set="auto"
+              aria-hidden="true">
+            </vcdk-system-icon>
             <input aria-haspopup="listbox" autocomplete="off" aria-autocomplete="list" 
               aria-controls="autosuggest-autosuggest__results" type="text" id="search"
               name="search" placeholder="${searchPlaceholder}" />
             <label for="search" class="${blockName}__input-label">${searchPlaceholder}</label>
             <button type="button" class="${blockName}__clear-button" aria-label="${clearPlaceholder}">${clearPlaceholder}</button>
-            <span class="icon icon-close"></span>
+            <vcdk-system-icon
+              icon="close"
+              class="${blockName}__close-icon"
+              size="24"
+              icon-set="auto"
+              aria-hidden="true">
+            </vcdk-system-icon>
           </div>
           <div id="autosuggest-autosuggest__results" class="autosuggest__results-container">
             <div aria-labelledby="autosuggest-magazine" class="autosuggest__results"> 
@@ -304,7 +323,7 @@ const initializeSearchHandlers = (searchContainer) => {
     formElement.addEventListener('submit', submitSearchTerm);
 
     // Find the close icon and add its collapse functionality
-    const closeIcon = searchContainer.querySelector('.icon-close');
+    const closeIcon = searchContainer.querySelector(`.${blockName}__close-icon`);
     if (closeIcon) {
       addCloseHandler(closeIcon);
     }
@@ -318,7 +337,7 @@ const decorateArticleSearch = async (block) => {
   filter.querySelector(`.${blockName}__filter-list-wrapper`).append(filterList);
   block.prepend(filter);
   addDropdownHandler(block.querySelector(`.${blockName}__filter-dropdown`));
-  addCloseHandler(block.querySelector('.icon-close'));
+  addCloseHandler(block.querySelector(`.${blockName}__close-icon`));
   const filterContainer = block.querySelector(`.${blockName}__filter-container`);
   if (filterContainer) {
     initializeSearchHandlers(filterContainer);
