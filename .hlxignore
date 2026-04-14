@@ -8,4 +8,5 @@ package-lock.json
 placeholder.json
 test/*
 blocks/**/*.js
+!blocks/dealer-locator/**
 scripts/**/*.js
