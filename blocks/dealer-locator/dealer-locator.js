@@ -300,14 +300,14 @@ export default async function decorate(block) {
                         </div>
                         <div class="right">
                             <div class="direction">
-                                <a href="" id="direction" onclick="$.fn.switchSidebarPane('sidebar-direction-list', this);return false;"></a>
+                                <a href="" id="direction"></a>
                             </div>
                         </div>
                         <div class="right">
                             <div class="call"></div>
                         </div>
                         <div class="right">
-                            <div class="more" onclick="$.fn.switchSidebarPane('sidebar-pin', this);">
+                            <div class="more">
                                 <a>More</a>
                             </div>
                         </div>
