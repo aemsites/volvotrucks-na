@@ -1,18 +1,26 @@
+
+  .vcdk-mode-dark {
+    color-scheme: dark;
+  }
+
+:root, :host {
+  --vcdk-density-normal: 1;
+  --vcdk-density-compact: 0.625;
+}
 /**
- * Do not edit directly
- * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ * Do not edit directly, this file was auto-generated.
  */
 
 :root, :host, .vcdk-theme-volvo {
   --vcdk-color-bg: #ffffff;
   --vcdk-color-bg-base: #f7f7f7;
   --vcdk-color-bg-button-marketing: #2a609d;
-  --vcdk-color-bg-button-marketing-hover: #4781c4;
+  --vcdk-color-bg-button-marketing-hover: #376fb0;
   --vcdk-color-bg-button-marketing-pressed: #234d7d;
   --vcdk-color-bg-button-primary: #212121;
   --vcdk-color-bg-button-primary-hover: #333333;
   --vcdk-color-bg-button-primary-pressed: #3d3d3d;
-  --vcdk-color-bg-button-secondary: rgba(255, 255, 255, 0);
+  --vcdk-color-bg-button-secondary: rgba(20, 20, 20, 0.01);
   --vcdk-color-bg-button-secondary-hover: rgba(20, 20, 20, 0.04);
   --vcdk-color-bg-button-secondary-pressed: rgba(20, 20, 20, 0.12);
   --vcdk-color-bg-button-tertiary: rgba(255, 255, 255, 0);
@@ -40,7 +48,7 @@
   --vcdk-color-bg-info: #2a609d;
   --vcdk-color-bg-info-subtle: #d5e6ff;
   --vcdk-color-bg-inverse: #212121;
-  --vcdk-color-bg-notification-badge: #bf2012;
+  --vcdk-color-bg-notification-badge: #2a609d;
   --vcdk-color-bg-pressed: #ededed;
   --vcdk-color-bg-renault-brand-element: rgba(255, 255, 255, 0);
   --vcdk-color-bg-scrim: rgba(20, 20, 20, 0.6);
@@ -156,8 +164,7 @@
   --vcdk-color-text-warning: #ad5100;
 }
 /**
- * Do not edit directly
- * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ * Do not edit directly, this file was auto-generated.
  */
 
 :root, :host, .vcdk-theme-volvo {
@@ -307,30 +314,28 @@
   --vcdk-typography-caption-2-italic-style: italic;
 }
 /**
- * Do not edit directly
- * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ * Do not edit directly, this file was auto-generated.
  */
 
-:root, :host, .vcdk-theme-volvo {
-  --vcdk-spacing-1: 2px;
-  --vcdk-spacing-2: 4px;
-  --vcdk-spacing-3: 6px;
-  --vcdk-spacing-4: 8px;
-  --vcdk-spacing-5: 12px;
-  --vcdk-spacing-6: 16px;
-  --vcdk-spacing-7: 20px;
-  --vcdk-spacing-8: 24px;
-  --vcdk-spacing-9: 32px;
-  --vcdk-spacing-10: 40px;
-  --vcdk-spacing-11: 48px;
-  --vcdk-spacing-12: 64px;
-  --vcdk-spacing-13: 80px;
-  --vcdk-spacing-14: 96px;
-  --vcdk-spacing-15: 128px;
+:root, :host, .vcdk-theme-volvo, .vcdk-density {
+  --vcdk-spacing-1: calc(var(--vcdk-density, 1) * 0.125rem);
+  --vcdk-spacing-2: calc(var(--vcdk-density, 1) * 0.25rem);
+  --vcdk-spacing-3: calc(var(--vcdk-density, 1) * 0.375rem);
+  --vcdk-spacing-4: calc(var(--vcdk-density, 1) * 0.5rem);
+  --vcdk-spacing-5: calc(var(--vcdk-density, 1) * 0.75rem);
+  --vcdk-spacing-6: calc(var(--vcdk-density, 1) * 1rem);
+  --vcdk-spacing-7: calc(var(--vcdk-density, 1) * 1.25rem);
+  --vcdk-spacing-8: calc(var(--vcdk-density, 1) * 1.5rem);
+  --vcdk-spacing-9: calc(var(--vcdk-density, 1) * 2rem);
+  --vcdk-spacing-10: calc(var(--vcdk-density, 1) * 2.5rem);
+  --vcdk-spacing-11: calc(var(--vcdk-density, 1) * 3rem);
+  --vcdk-spacing-12: calc(var(--vcdk-density, 1) * 4rem);
+  --vcdk-spacing-13: calc(var(--vcdk-density, 1) * 5rem);
+  --vcdk-spacing-14: calc(var(--vcdk-density, 1) * 6rem);
+  --vcdk-spacing-15: calc(var(--vcdk-density, 1) * 8rem);
 }
 /**
- * Do not edit directly
- * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ * Do not edit directly, this file was auto-generated.
  */
 
 :root, :host, .vcdk-theme-volvo {
@@ -341,8 +346,7 @@
   --vcdk-radius-circular: 99px;
 }
 /**
- * Do not edit directly
- * Generated on Wed, 06 Aug 2025 13:33:16 GMT
+ * Do not edit directly, this file was auto-generated.
  */
 
 :root, :host, .vcdk-theme-volvo {
@@ -354,8 +358,58 @@
   --vcdk-motion-duration-large: 320ms;
 }
 /**
- * Do not edit directly
- * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ * Do not edit directly, this file was auto-generated.
+ */
+
+:root, :host, .vcdk-theme-volvo {
+  --vcdk-blur-secondary-button: 24px;
+}
+
+:root, :host {
+  --vcdk-z-index-zero: 0;
+  --vcdk-z-index-over-input: 1;
+  --vcdk-z-index-switch-thumb: 2;
+  --vcdk-z-index-switch-input: 3;
+  --vcdk-z-index-time-picker-popover: 15;
+  --vcdk-z-index-search-popover: 20;
+  --vcdk-z-index-drawer: 50;
+  --vcdk-z-index-bottom-navigation: 50;
+  --vcdk-z-index-banner: 60;
+  --vcdk-z-index-modal-backdrop: 90;
+  --vcdk-z-index-modal: 100;
+  --vcdk-z-index-tooltip: 1000;
+  --vcdk-z-index-dropdown-popover: 1100;
+  --vcdk-z-index-context-menu: 1200;
+  --vcdk-z-index-context-sub-menu: 1210;
+  --vcdk-z-index-datepicker-overlay: 1300;
+  --vcdk-z-index-calendar-overlay: 1305;
+  --vcdk-z-index-snackbar: 1310;
+  --vcdk-shadow-one:
+    0px 0.2px 2px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2)),
+    0px 1px 2px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2));
+  --vcdk-shadow-two:
+    0px 0.2px 2px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2)),
+    0px 2px 4px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2));
+  --vcdk-shadow-four:
+    0px 0.3px 2px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2)),
+    0px 3px 8px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2));
+  --vcdk-shadow-eight:
+    0px 0.6px 3px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2)),
+    0px 8px 16px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2));
+  --vcdk-shadow-sixteen:
+    0px 1px 4px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2)),
+    0px 16px 32px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2));
+}
+  .vcdk-mode-dark {
+    color-scheme: dark;
+  }
+
+:root, :host {
+  --vcdk-density-normal: 1;
+  --vcdk-density-compact: 0.625;
+}
+/**
+ * Do not edit directly, this file was auto-generated.
  */
 
 .vcdk-theme-volvo.vcdk-mode-dark {
@@ -367,7 +421,7 @@
   --vcdk-color-bg-button-primary: #ffffff;
   --vcdk-color-bg-button-primary-hover: #e1e1e1;
   --vcdk-color-bg-button-primary-pressed: #a9a9a9;
-  --vcdk-color-bg-button-secondary: rgba(255, 255, 255, 0);
+  --vcdk-color-bg-button-secondary: rgba(255, 255, 255, 0.01);
   --vcdk-color-bg-button-secondary-hover: rgba(255, 255, 255, 0.1);
   --vcdk-color-bg-button-secondary-pressed: rgba(255, 255, 255, 0.2);
   --vcdk-color-bg-button-tertiary: rgba(255, 255, 255, 0);
@@ -395,7 +449,7 @@
   --vcdk-color-bg-info: #61a0e8;
   --vcdk-color-bg-info-subtle: #1a3554;
   --vcdk-color-bg-inverse: #ffffff;
-  --vcdk-color-bg-notification-badge: #ff6b54;
+  --vcdk-color-bg-notification-badge: #61a0e8;
   --vcdk-color-bg-pressed: #333333;
   --vcdk-color-bg-renault-brand-element: rgba(255, 255, 255, 0);
   --vcdk-color-bg-scrim: rgba(20, 20, 20, 0.6);
@@ -511,8 +565,7 @@
   --vcdk-color-text-warning: #ffb54d;
 }
 /**
- * Do not edit directly
- * Generated on Wed, 06 Aug 2025 13:33:16 GMT
+ * Do not edit directly, this file was auto-generated.
  */
 
 .vcdk-theme-volvo.vcdk-mode-dark {
@@ -662,30 +715,28 @@
   --vcdk-typography-caption-2-italic-style: italic;
 }
 /**
- * Do not edit directly
- * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ * Do not edit directly, this file was auto-generated.
  */
 
-.vcdk-theme-volvo.vcdk-mode-dark {
-  --vcdk-spacing-1: 2px;
-  --vcdk-spacing-2: 4px;
-  --vcdk-spacing-3: 6px;
-  --vcdk-spacing-4: 8px;
-  --vcdk-spacing-5: 12px;
-  --vcdk-spacing-6: 16px;
-  --vcdk-spacing-7: 20px;
-  --vcdk-spacing-8: 24px;
-  --vcdk-spacing-9: 32px;
-  --vcdk-spacing-10: 40px;
-  --vcdk-spacing-11: 48px;
-  --vcdk-spacing-12: 64px;
-  --vcdk-spacing-13: 80px;
-  --vcdk-spacing-14: 96px;
-  --vcdk-spacing-15: 128px;
+.vcdk-theme-volvo.vcdk-mode-dark, .vcdk-density {
+  --vcdk-spacing-1: calc(var(--vcdk-density, 1) * 0.125rem);
+  --vcdk-spacing-2: calc(var(--vcdk-density, 1) * 0.25rem);
+  --vcdk-spacing-3: calc(var(--vcdk-density, 1) * 0.375rem);
+  --vcdk-spacing-4: calc(var(--vcdk-density, 1) * 0.5rem);
+  --vcdk-spacing-5: calc(var(--vcdk-density, 1) * 0.75rem);
+  --vcdk-spacing-6: calc(var(--vcdk-density, 1) * 1rem);
+  --vcdk-spacing-7: calc(var(--vcdk-density, 1) * 1.25rem);
+  --vcdk-spacing-8: calc(var(--vcdk-density, 1) * 1.5rem);
+  --vcdk-spacing-9: calc(var(--vcdk-density, 1) * 2rem);
+  --vcdk-spacing-10: calc(var(--vcdk-density, 1) * 2.5rem);
+  --vcdk-spacing-11: calc(var(--vcdk-density, 1) * 3rem);
+  --vcdk-spacing-12: calc(var(--vcdk-density, 1) * 4rem);
+  --vcdk-spacing-13: calc(var(--vcdk-density, 1) * 5rem);
+  --vcdk-spacing-14: calc(var(--vcdk-density, 1) * 6rem);
+  --vcdk-spacing-15: calc(var(--vcdk-density, 1) * 8rem);
 }
 /**
- * Do not edit directly
- * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ * Do not edit directly, this file was auto-generated.
  */
 
 .vcdk-theme-volvo.vcdk-mode-dark {
@@ -696,8 +747,7 @@
   --vcdk-radius-circular: 99px;
 }
 /**
- * Do not edit directly
- * Generated on Wed, 06 Aug 2025 13:33:16 GMT
+ * Do not edit directly, this file was auto-generated.
  */
 
 .vcdk-theme-volvo.vcdk-mode-dark {
@@ -708,22 +758,68 @@
   --vcdk-motion-duration-medium: 240ms;
   --vcdk-motion-duration-large: 320ms;
 }
-
 /**
- * Do not edit directly
- * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ * Do not edit directly, this file was auto-generated.
+ */
+
+.vcdk-theme-volvo.vcdk-mode-dark {
+  --vcdk-blur-secondary-button: 24px;
+}
+
+:root, :host {
+  --vcdk-z-index-zero: 0;
+  --vcdk-z-index-over-input: 1;
+  --vcdk-z-index-switch-thumb: 2;
+  --vcdk-z-index-switch-input: 3;
+  --vcdk-z-index-time-picker-popover: 15;
+  --vcdk-z-index-search-popover: 20;
+  --vcdk-z-index-drawer: 50;
+  --vcdk-z-index-bottom-navigation: 50;
+  --vcdk-z-index-banner: 60;
+  --vcdk-z-index-modal-backdrop: 90;
+  --vcdk-z-index-modal: 100;
+  --vcdk-z-index-tooltip: 1000;
+  --vcdk-z-index-dropdown-popover: 1100;
+  --vcdk-z-index-context-menu: 1200;
+  --vcdk-z-index-context-sub-menu: 1210;
+  --vcdk-z-index-datepicker-overlay: 1300;
+  --vcdk-z-index-calendar-overlay: 1305;
+  --vcdk-z-index-snackbar: 1310;
+  --vcdk-shadow-one:
+    0px 0.2px 2px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2)),
+    0px 1px 2px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2));
+  --vcdk-shadow-two:
+    0px 0.2px 2px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2)),
+    0px 2px 4px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2));
+  --vcdk-shadow-four:
+    0px 0.3px 2px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2)),
+    0px 3px 8px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2));
+  --vcdk-shadow-eight:
+    0px 0.6px 3px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2)),
+    0px 8px 16px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2));
+  --vcdk-shadow-sixteen:
+    0px 1px 4px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2)),
+    0px 16px 32px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2));
+}
+
+:root, :host {
+  --vcdk-density-normal: 1;
+  --vcdk-density-compact: 0.625;
+}
+/**
+ * Do not edit directly, this file was auto-generated.
  */
 
 :root, :host, .vcdk-theme-volvo {
   --vcdk-color-bg: #ffffff;
   --vcdk-color-bg-base: #f7f7f7;
   --vcdk-color-bg-button-marketing: #2a609d;
-  --vcdk-color-bg-button-marketing-hover: #4781c4;
+  --vcdk-color-bg-button-marketing-hover: #376fb0;
   --vcdk-color-bg-button-marketing-pressed: #234d7d;
   --vcdk-color-bg-button-primary: #212121;
   --vcdk-color-bg-button-primary-hover: #333333;
   --vcdk-color-bg-button-primary-pressed: #3d3d3d;
-  --vcdk-color-bg-button-secondary: rgba(255, 255, 255, 0);
+  --vcdk-color-bg-button-secondary: rgba(20, 20, 20, 0.01);
   --vcdk-color-bg-button-secondary-hover: rgba(20, 20, 20, 0.04);
   --vcdk-color-bg-button-secondary-pressed: rgba(20, 20, 20, 0.12);
   --vcdk-color-bg-button-tertiary: rgba(255, 255, 255, 0);
@@ -751,7 +847,7 @@
   --vcdk-color-bg-info: #2a609d;
   --vcdk-color-bg-info-subtle: #d5e6ff;
   --vcdk-color-bg-inverse: #212121;
-  --vcdk-color-bg-notification-badge: #bf2012;
+  --vcdk-color-bg-notification-badge: #2a609d;
   --vcdk-color-bg-pressed: #ededed;
   --vcdk-color-bg-renault-brand-element: rgba(255, 255, 255, 0);
   --vcdk-color-bg-scrim: rgba(20, 20, 20, 0.6);
@@ -867,8 +963,7 @@
   --vcdk-color-text-warning: #ad5100;
 }
 /**
- * Do not edit directly
- * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ * Do not edit directly, this file was auto-generated.
  */
 
 :root, :host, .vcdk-theme-volvo {
@@ -1018,30 +1113,28 @@
   --vcdk-typography-caption-2-italic-style: italic;
 }
 /**
- * Do not edit directly
- * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ * Do not edit directly, this file was auto-generated.
  */
 
-:root, :host, .vcdk-theme-volvo {
-  --vcdk-spacing-1: 2px;
-  --vcdk-spacing-2: 4px;
-  --vcdk-spacing-3: 6px;
-  --vcdk-spacing-4: 8px;
-  --vcdk-spacing-5: 12px;
-  --vcdk-spacing-6: 16px;
-  --vcdk-spacing-7: 20px;
-  --vcdk-spacing-8: 24px;
-  --vcdk-spacing-9: 32px;
-  --vcdk-spacing-10: 40px;
-  --vcdk-spacing-11: 48px;
-  --vcdk-spacing-12: 64px;
-  --vcdk-spacing-13: 80px;
-  --vcdk-spacing-14: 96px;
-  --vcdk-spacing-15: 128px;
+:root, :host, .vcdk-theme-volvo, .vcdk-density {
+  --vcdk-spacing-1: calc(var(--vcdk-density, 1) * 0.125rem);
+  --vcdk-spacing-2: calc(var(--vcdk-density, 1) * 0.25rem);
+  --vcdk-spacing-3: calc(var(--vcdk-density, 1) * 0.375rem);
+  --vcdk-spacing-4: calc(var(--vcdk-density, 1) * 0.5rem);
+  --vcdk-spacing-5: calc(var(--vcdk-density, 1) * 0.75rem);
+  --vcdk-spacing-6: calc(var(--vcdk-density, 1) * 1rem);
+  --vcdk-spacing-7: calc(var(--vcdk-density, 1) * 1.25rem);
+  --vcdk-spacing-8: calc(var(--vcdk-density, 1) * 1.5rem);
+  --vcdk-spacing-9: calc(var(--vcdk-density, 1) * 2rem);
+  --vcdk-spacing-10: calc(var(--vcdk-density, 1) * 2.5rem);
+  --vcdk-spacing-11: calc(var(--vcdk-density, 1) * 3rem);
+  --vcdk-spacing-12: calc(var(--vcdk-density, 1) * 4rem);
+  --vcdk-spacing-13: calc(var(--vcdk-density, 1) * 5rem);
+  --vcdk-spacing-14: calc(var(--vcdk-density, 1) * 6rem);
+  --vcdk-spacing-15: calc(var(--vcdk-density, 1) * 8rem);
 }
 /**
- * Do not edit directly
- * Generated on Wed, 06 Aug 2025 13:33:15 GMT
+ * Do not edit directly, this file was auto-generated.
  */
 
 :root, :host, .vcdk-theme-volvo {
@@ -1052,8 +1145,7 @@
   --vcdk-radius-circular: 99px;
 }
 /**
- * Do not edit directly
- * Generated on Wed, 06 Aug 2025 13:33:16 GMT
+ * Do not edit directly, this file was auto-generated.
  */
 
 :root, :host, .vcdk-theme-volvo {
@@ -1064,6 +1156,48 @@
   --vcdk-motion-duration-medium: 240ms;
   --vcdk-motion-duration-large: 320ms;
 }
+/**
+ * Do not edit directly, this file was auto-generated.
+ */
 
+:root, :host, .vcdk-theme-volvo {
+  --vcdk-blur-secondary-button: 24px;
+}
+
+:root, :host {
+  --vcdk-z-index-zero: 0;
+  --vcdk-z-index-over-input: 1;
+  --vcdk-z-index-switch-thumb: 2;
+  --vcdk-z-index-switch-input: 3;
+  --vcdk-z-index-time-picker-popover: 15;
+  --vcdk-z-index-search-popover: 20;
+  --vcdk-z-index-drawer: 50;
+  --vcdk-z-index-bottom-navigation: 50;
+  --vcdk-z-index-banner: 60;
+  --vcdk-z-index-modal-backdrop: 90;
+  --vcdk-z-index-modal: 100;
+  --vcdk-z-index-tooltip: 1000;
+  --vcdk-z-index-dropdown-popover: 1100;
+  --vcdk-z-index-context-menu: 1200;
+  --vcdk-z-index-context-sub-menu: 1210;
+  --vcdk-z-index-datepicker-overlay: 1300;
+  --vcdk-z-index-calendar-overlay: 1305;
+  --vcdk-z-index-snackbar: 1310;
+  --vcdk-shadow-one:
+    0px 0.2px 2px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2)),
+    0px 1px 2px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2));
+  --vcdk-shadow-two:
+    0px 0.2px 2px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2)),
+    0px 2px 4px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2));
+  --vcdk-shadow-four:
+    0px 0.3px 2px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2)),
+    0px 3px 8px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2));
+  --vcdk-shadow-eight:
+    0px 0.6px 3px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2)),
+    0px 8px 16px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2));
+  --vcdk-shadow-sixteen:
+    0px 1px 4px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2)),
+    0px 16px 32px 0px var(--vcdk-color-bg-shadow, rgba(0, 0, 0, 0.2));
+}
 
 /*# sourceMappingURL=vcdk.css.map*/
