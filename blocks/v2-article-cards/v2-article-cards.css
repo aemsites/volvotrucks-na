@@ -89,12 +89,6 @@
   gap: 8px;
 }
 
-.v2-article-cards--dynamic-articles .v2-article-cards__texts-wrapper .v2-article-cards__card-button::after {
-  content: url('../../icons/arrow-right.svg');
-  height: 24px;
-  width: 24px;
-}
-
 @media (min-width: 744px) {
   .v2-article-cards-wrapper {
     --section-div-padding: 24px 32px;

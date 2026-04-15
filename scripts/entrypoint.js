@@ -5,6 +5,7 @@
 import '@volvo/vcdk/button';
 import '@volvo/vcdk/accordion';
 import '@volvo/vcdk/dropdown';
+import '@volvo/vcdk/system-icon';
 
 import '@volvo/vcdk/themes/volvo/semantic.css';
 import '@volvo/vcdk/themes/volvo/semantic-light.css';

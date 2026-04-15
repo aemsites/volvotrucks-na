@@ -136,12 +136,7 @@ ul.v2-content-carousel__arrowcontrols {
   border-radius: 4px;
 }
 
-.v2-content-carousel__button .icon svg {
-  width: 48px;
-  height: 48px;
-}
-
-.v2-content-carousel__button:disabled .icon svg {
+.v2-content-carousel__button:disabled vcdk-system-icon::part(svg) {
   color: var(--c-grey-2);
 }
 

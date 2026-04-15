@@ -135,15 +135,13 @@
   padding: 20px 0;
 }
 
-.header__link-accordion::after {
-  content: '';
-  background: url('/icons/chevron-down.svg') no-repeat;
-  width: 24px;
-  height: 24px;
+.header__link-accordion-icon {
+  flex-shrink: 0;
   transition: transform var(--duration-small) var(--easing-standard);
+  pointer-events: none;
 }
 
-.header__menu-open > .header__link-accordion::after {
+.header__menu-open > .header__link-accordion .header__link-accordion-icon {
   transform: rotate(-180deg);
 }
 
@@ -353,7 +351,7 @@
   .header__overview-link,
   .header__action-link.header__hamburger-menu,
   .header__actions-list::after,
-  .header__link-accordion::after,
+  .header__link-accordion-icon,
   .icon.icon-user + .header__action-link-text,
   .header__action-item--close-menu,
   .header__close-menu {

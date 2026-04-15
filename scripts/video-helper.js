@@ -339,12 +339,14 @@ export function addSoundcloudShowHandler(link) {
 
 export function addPlayIcon(parent) {
   const playButton = document.createRange().createContextualFragment(`
-    <span class="icon icon-play-video">
-      <svg viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="36" cy="36" r="30" fill="white"/>
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M49.3312 35.9998L29.3312 24.4528L29.3312 47.5468L49.3312 35.9998ZM44.3312 35.9998L31.8312 28.7829L31.8312 43.2167L44.3312 35.9998Z" fill="#141414"/>
-      </svg>
-    </span>`);
+    <vcdk-system-icon
+      class="icon-play-video"
+      icon="play"
+      size="24"
+      icon-set="auto"
+      aria-hidden="true">
+    </vcdk-system-icon>
+  `);
 
   parent.appendChild(playButton);
 }
@@ -383,19 +385,21 @@ export function setPlaybackControls(container) {
   });
 
   const videoControls = document.createRange().createContextualFragment(`
-    <span class="icon icon-pause-video">
-      <svg width="27" height="27" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="36" cy="36" r="30" fill="white"/>
-          <rect x="28.25" y="24.45" width="2.75" height="23.09" fill="#141414"/>
-          <rect x="41" y="24.45" width="2.75" height="23.09" fill="#141414"/>
-      </svg>
-    </span>
-    <span class="icon icon-play-video">
-      <svg width="27" height="27" viewBox="0 0 72 72" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="36" cy="36" r="30" fill="white"/>
-        <path fill-rule="evenodd" clip-rule="evenodd" d="M49.3312 35.9998L29.3312 24.4528L29.3312 47.5468L49.3312 35.9998ZM44.3312 35.9998L31.8312 28.7829L31.8312 43.2167L44.3312 35.9998Z" fill="#141414"/>
-      </svg>
-    </span>`);
+    <vcdk-system-icon
+      class="icon-pause-video"
+      icon="pause"
+      size="16"
+      icon-set="auto"
+      aria-hidden="true">
+    </vcdk-system-icon>
+    <vcdk-system-icon
+      class="icon-play-video"
+      icon="play"
+      size="16"
+      icon-set="auto"
+      aria-hidden="true">
+    </vcdk-system-icon>
+  `);
 
   playPauseButton.append(...videoControls.children);
   container.appendChild(playPauseButton);
@@ -674,19 +678,25 @@ export const createVideo = (link, className = '', videoParams = {}, configs = {}
   return container;
 };
 
-const getMuteSvg = () => `<svg width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
-    <circle cx="16.335" cy="16.335" r="13.335" fill="white"/>
-    <path fill-rule="evenodd" clip-rule="evenodd"
-          d="M9.887 10.181a.5.5 0 0 0-.707.708l12.934 12.928a.5.5 0 0 0 .706-.707L9.887 10.182Zm6.05 1.997a.5.5 0 0 0-.851-.357l-.56.553-.309.306-.099.098-.027.027-.007.007-.002.002.348.353-.348-.353a.5.5 0 1 0 .703.711l-.35-.353.35.353.002-.002.007-.008.028-.027.098-.097.016-.016v.738a.5.5 0 1 0 1 0v-1.935Zm-4.358 3.239h-.992v3.332h1.54c.238 0 .483.064.693.152.211.09.426.218.594.382l.002.002-.351.356.351-.355h.002l.004.005.017.017.064.063.231.229.728.719.474.47v-2.071a.5.5 0 1 1 1 0v3.27a.5.5 0 0 1-.853.354c-.186-.186-.777-.771-1.324-1.312l-.728-.719-.23-.229-.065-.063-.017-.016-.003-.003a.953.953 0 0 0-.284-.177.855.855 0 0 0-.305-.074h-1.936a.614.614 0 0 1-.604-.61v-4.112c0-.319.254-.61.604-.61h1.388a.5.5 0 0 1 0 1Zm8.418-2.332a.5.5 0 1 0-.42.908 3.406 3.406 0 0 1 1.983 3.088c0 .873-.33 1.666-.872 2.268a.5.5 0 1 0 .743.67 4.374 4.374 0 0 0 1.13-2.938c0-1.78-1.06-3.3-2.564-3.996Zm-1.787 2.23a.5.5 0 0 1 .662-.249 2.209 2.209 0 0 1 1.299 2.018 2.2 2.2 0 0 1-.342 1.183.5.5 0 1 1-.845-.535 1.2 1.2 0 0 0 .186-.648c0-.496-.29-.916-.711-1.107a.5.5 0 0 1-.249-.662Z"
-          fill="#141414"/>
-</svg>`;
+const getMuteIconMarkup = () => `
+  <vcdk-system-icon
+    class="icon-mute"
+    icon="sound-mute"
+    size="24"
+    icon-set="auto"
+    aria-hidden="true">
+  </vcdk-system-icon>
+`;
 
-const getUnmuteSvg = () => `<svg width="32" height="32" fill="none" xmlns="http://www.w3.org/2000/svg">
-        <circle cx="16.335" cy="16.335" r="13.335" fill="white"/>
-        <path fill-rule="evenodd" clip-rule="evenodd"
-              d="M16.284 11.633a.5.5 0 0 1 .306.46v9.811a.5.5 0 0 1-.853.354c-.186-.186-.777-.771-1.324-1.312l-.727-.719-.232-.229-.064-.063-.017-.016-.003-.003a.957.957 0 0 0-.284-.177.855.855 0 0 0-.305-.074H10.84a.613.613 0 0 1-.604-.61v-4.112c0-.064.012-.126.034-.182a.604.604 0 0 1 .576-.428h1.936c.07 0 .18-.022.305-.075a.956.956 0 0 0 .283-.174l.004-.004.017-.017.064-.063.231-.23.728-.72 1.327-1.313a.5.5 0 0 1 .544-.104Zm-2.565 2.808.352.355-.003.003a1.94 1.94 0 0 1-.594.381c-.21.089-.455.153-.693.153h-1.546v3.332h1.546c.238 0 .483.064.693.152.211.09.426.218.594.382l.002.002-.351.356.351-.355.002.001.004.004.017.017.064.063.231.229.728.719.474.47V13.29l-.474.47-.727.72-.231.23-.064.063-.017.016-.005.004v.002h-.001l-.352-.355Zm4.82-1.198a.5.5 0 0 1 .663-.244 4.406 4.406 0 0 1 2.563 3.996c0 1.78-1.06 3.299-2.563 3.995a.5.5 0 1 1-.42-.907 3.406 3.406 0 0 0 1.983-3.088c0-1.37-.815-2.547-1.983-3.088a.5.5 0 0 1-.244-.664Zm-.456 1.735a.5.5 0 1 0-.413.911 1.215 1.215 0 0 1-.004 2.216.5.5 0 1 0 .421.907 2.215 2.215 0 0 0 1.295-2.016c0-.901-.532-1.67-1.299-2.018Z"
-              fill="#141414"/>
-    </svg>`;
+const getUnmuteIconMarkup = () => `
+  <vcdk-system-icon
+    class="icon-unmute"
+    icon="sound-medium"
+    size="24"
+    icon-set="auto"
+    aria-hidden="true">
+  </vcdk-system-icon>
+`;
 
 /**
  * Adds mute controls to a given section.
@@ -694,16 +704,16 @@ const getUnmuteSvg = () => `<svg width="32" height="32" fill="none" xmlns="http:
  * @returns {void}
  */
 export const addMuteControls = (section) => {
-  const muteSvg = getMuteSvg();
-  const unmuteSvg = getUnmuteSvg();
+  const muteIconMarkup =  getMuteIconMarkup();
+  const unmuteIconMarkup = getUnmuteIconMarkup();
 
   const controls = createElement('button', {
     props: { type: 'button', class: 'v2-video__mute-controls' },
   });
 
   const iconsHTML = document.createRange().createContextualFragment(`
-    <span class="icon icon-mute">${muteSvg}</span>
-    <span class="icon icon-unmute">${unmuteSvg}</span>
+    ${muteIconMarkup}
+    ${unmuteIconMarkup}
   `);
 
   controls.append(...iconsHTML.children);

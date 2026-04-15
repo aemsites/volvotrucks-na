@@ -84,9 +84,23 @@ export default function decorate(block) {
       props: { 'aria-expanded': false },
     });
     viewAllButton.innerHTML = `
-      <span class="icon icon-plus"></span>
-      <span class="icon icon-minus"></span>
-      <span class="${blockName}__button-text">${getTextLabel('v2_resource_gallery:view_all')}</span>
+      <vcdk-system-icon
+        class="${blockName}__icon-plus"
+        icon="plus"
+        size="24"
+        icon-set="auto"
+        aria-hidden="true">
+      </vcdk-system-icon>
+      <vcdk-system-icon
+        class="${blockName}__icon-minus"
+        icon="minus"
+        size="24"
+        icon-set="auto"
+        aria-hidden="true">
+      </vcdk-system-icon>
+      <span class="${blockName}__button-text">
+        ${getTextLabel('v2_resource_gallery:view_all')}
+      </span>
     `;
 
     decorateIcons(viewAllButton);

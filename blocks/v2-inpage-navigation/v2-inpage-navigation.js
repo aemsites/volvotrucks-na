@@ -446,7 +446,14 @@ export default async function decorate(block) {
   sectionTitle.innerText = inPageTitle;
 
   const listCloseButton = createElement('button', { classes: `${blockName}__items-close` });
-  const closeIcon = createElement('span', { classes: ['icon', 'icon-close'] });
+  const closeIcon = createElement('vcdk-system-icon', {
+    props: {
+      icon: 'close',
+      size: '24',
+      'icon-set': 'auto',
+      'aria-hidden': 'true',
+    },
+  });
 
   listCloseButton.appendChild(closeIcon);
   listContainer.appendChild(listCloseButton);
@@ -471,7 +478,15 @@ export default async function decorate(block) {
     list.appendChild(listItem);
   });
 
-  const dropdownArrowIcon = createElement('span', { classes: ['icon', 'icon-chevron-down'] });
+  const dropdownArrowIcon = createElement('vcdk-system-icon', {
+    classes: `${blockName}__filter-dropdown-icon`,
+    props: {
+      icon: 'chevron-down',
+      size: '24',
+      'icon-set': 'auto',
+      'aria-hidden': 'true',
+    },
+  });
 
   selectedItemWrapper.append(selectedItem);
   selectedItemWrapper.appendChild(dropdownArrowIcon);

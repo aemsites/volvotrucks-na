@@ -57,6 +57,15 @@
   min-width: 64px;
 }
 
+.press-releases__search-bar button vcdk-system-icon {
+ display: flex;
+ justify-content: center;
+}
+
+.press-releases__search-bar button vcdk-system-icon::part(svg) {
+  color: var(--c-white);
+}
+
 .press-releases__no-results-message {
   font-size: var(--body-font-size-m);
   text-align: center;
