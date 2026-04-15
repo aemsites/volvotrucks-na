@@ -1,0 +1,1 @@
+{"version":3,"file":"442.js","mappings":"8OAAe,SAASA,SAASC,OAE/BA,MAAMC,UAAY,EACpB,C","sources":["webpack:///./templates/cookies/cookies.js"],"sourcesContent":["export default function decorate(block) {\n  // Cookies template - placeholder for cookie notices and settings\n  block.innerHTML = '';\n}\n"],"names":["decorate","block","innerHTML"],"sourceRoot":""}
