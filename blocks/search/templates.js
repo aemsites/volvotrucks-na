@@ -20,7 +20,12 @@ export const getMainTemplate = (PLACEHOLDERS) => {
           </div>
           <span>
             <button type="submit" class="btn text-primary search-close-button">
-              <span class="fa fa-search search-icon"></span>
+              <vcdk-system-icon
+                icon="search"
+                size="24"
+                icon-set="auto"
+                aria-hidden="true">
+              </vcdk-system-icon>
             </button>
           </span>
         </div>
@@ -184,7 +189,16 @@ export const getFacetsTemplate = (facets) => {
       <div class="sf-sidebar-container">
         <div class="sf-mobile-header">
           <div class="sf-mobile-header-text">Filter By</div>
-          <button type="button" class="btn btn-custom text-primary search-close-button fa fa-close">
+          <button
+            type="button"
+            class="btn btn-custom text-primary search-close-button"
+            aria-label="Close">
+            <vcdk-system-icon
+              icon="close"
+              size="24"
+              icon-set="auto"
+              aria-hidden="true">
+            </vcdk-system-icon>
           </button>
         </div>
         <div class="sf-sidebar">

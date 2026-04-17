@@ -17,8 +17,6 @@ const context = require.context(
   /^[^/]+\/[^/]+\.js$/, // Adjust as needed
 );
 
-/* eslint-env browser */
-
 function sampleRUM(checkpoint, data) {
   const timeShift = () => (window.performance ? window.performance.now() : Date.now() - window.hlx.rum.firstReadTime);
   try {

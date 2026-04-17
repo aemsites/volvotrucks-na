@@ -34,12 +34,17 @@ const mainConfig = {
     ],
     quotes: ['error', 'single'],
     'no-constant-binary-expression': 'error',
+    'no-useless-assignment': 'off',
   },
 };
 
 export default defineConfig([
   {
     ...mainConfig,
+  },
+  {
+    files: ['webpack.config.js'],
+    languageOptions: { globals: globals.node },
   },
   {
     ...mainConfig,

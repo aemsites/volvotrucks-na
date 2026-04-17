@@ -267,12 +267,29 @@ const Select = function (el, options = [], placeholder, onChangeCallback) {
   }
 };
 
+Select.prototype.appendChevronIcon = function appendChevronIcon() {
+  if (!this.buttonEl.querySelector('vcdk-system-icon')) {
+    const icon = createElement('vcdk-system-icon', {
+      classes: `${componentName}__icon`,
+      props: {
+        icon: 'chevron-down',
+        size: '24',
+        'icon-set': 'auto',
+        'aria-hidden': 'true',
+      },
+    });
+
+    this.buttonEl.appendChild(icon);
+  }
+};
+
 /**
  * Initialize the select component.
  */
 Select.prototype.init = function init() {
   // select first option by default
-  this.buttonEl.innerHTML = getOptionLabel(this.placeholder || this.options[0]);
+  this.buttonEl.innerHTML = `<span class="${componentName}__button-text">${getOptionLabel(this.placeholder || this.options[0])}</span>`;
+  this.appendChevronIcon();
 
   // add event listeners
   this.buttonEl.addEventListener('blur', this.onButtonBlur.bind(this));
@@ -317,7 +334,23 @@ Select.prototype.createOption = function createOption(option, index) {
   }
 
   this.options[index] = normalizedOption;
-  optionEl.innerText = getOptionLabel(normalizedOption);
+  optionEl.innerHTML = `
+    <span class="${componentName}__option-text">
+      ${getOptionLabel(normalizedOption)}
+    </span>
+  `;
+
+  const checkIcon = createElement('vcdk-system-icon', {
+    classes: `${componentName}__option-check`,
+    props: {
+      icon: 'check',
+      size: '24',
+      'icon-set': 'auto',
+      'aria-hidden': 'true',
+    },
+  });
+
+  optionEl.appendChild(checkIcon);
 
   optionEl.addEventListener('click', (event) => {
     event.stopPropagation();
@@ -498,7 +531,8 @@ Select.prototype.selectOption = function selectOption(index) {
 
   // update displayed value
   const selected = this.options[index];
-  this.buttonEl.innerHTML = getOptionLabel(selected);
+  this.buttonEl.innerHTML = `<span class="${componentName}__button-text">${getOptionLabel(selected)}</span>`;
+  this.appendChevronIcon();
 
   // this updates the value of the select that gets inputed in the forms
   const selectHtml = this.el.closest(`.${componentName}`).querySelector('select');

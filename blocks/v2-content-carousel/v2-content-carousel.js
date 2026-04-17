@@ -426,12 +426,22 @@ const createArrowControls = (carousel, isInteractive) => {
   const arrows = document.createRange().createContextualFragment(`
     <li>
       <button aria-label="Previous" class="${blockName}__button ${blockName}__button-prev">
-        <span class="icon icon-arrow-left" aria-hidden="true" />
+        <vcdk-system-icon
+          icon="arrow-left"
+          size="48"
+          icon-set="auto"
+          aria-hidden="true">
+        </vcdk-system-icon>
       </button>
     </li>
     <li>
       <button aria-label="Next" class="${blockName}__button ${blockName}__button-next">
-        <span class="icon icon-arrow-right" aria-hidden="true" />
+        <vcdk-system-icon
+          icon="arrow-right"
+          size="48"
+          icon-set="auto"
+          aria-hidden="true">
+        </vcdk-system-icon>
       </button>
     </li>
   `);

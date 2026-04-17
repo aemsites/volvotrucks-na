@@ -35,7 +35,12 @@ export function fetchAutosuggest(term, autosuggestEle, rowEle, func, showSearchI
           let suggestionContent = `<b>${val}</b>`;
           if (showSearchIcon) {
             suggestionContent = `
-              <span class="icon icon-search-icon"></span>
+              <vcdk-system-icon
+                icon="search"
+                size="24"
+                icon-set="auto"
+                aria-hidden="true">
+              </vcdk-system-icon>
               <span>${val.replaceAll(term, `<b>${term}</b>`)}</span>
             `;
           }
