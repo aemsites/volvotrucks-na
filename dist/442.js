@@ -1,2 +1,2 @@
-"use strict";(self["webpackChunkvolvotrucks_na"]=self["webpackChunkvolvotrucks_na"]||[]).push([[442],{4442:(__unused_webpack_module,__webpack_exports__,__webpack_require__)=>{__webpack_require__.d(__webpack_exports__,{default:()=>decorate});function decorate(block){block.innerHTML=""}}}]);
+"use strict";(self["webpackChunkvolvotrucks_na"]=self["webpackChunkvolvotrucks_na"]||[]).push([[442],{4442(__unused_webpack_module,__webpack_exports__,__webpack_require__){__webpack_require__.d(__webpack_exports__,{default:()=>decorate});function decorate(block){block.innerHTML=""}}}]);
 //# sourceMappingURL=442.js.map
