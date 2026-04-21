@@ -819,12 +819,12 @@ async function loadEager(doc) {
   const main = doc.querySelector('main');
   const { head } = doc;
 
+  await placeholdersReady;
+
   if (!disableHeader) {
     const header = doc.querySelector('header');
     header && loadHeader(header);
   }
-
-  await placeholdersReady;
 
   if (main) {
     decorateMain(main, head);
