@@ -1,5 +1,5 @@
-import { createOptimizedPicture, getMetadata, decorateIcons } from '../../scripts/aem.js';
-import { createElement, getDateFromTimestamp, MAGAZINE_CONFIGS, extractObjectFromArray, getTextLabel, toPathKey } from '../../scripts/common.js';
+import { createOptimizedPicture, getMetadata } from '../../scripts/aem.js';
+import { createElement, decorateIcons, getDateFromTimestamp, MAGAZINE_CONFIGS, extractObjectFromArray, getTextLabel, toPathKey } from '../../scripts/common.js';
 import { fetchMagazineArticles, fetchRecommendedArticles } from '../../scripts/services/magazine.service.js';
 import { smoothScrollHorizontal } from '../../scripts/motion-helper.js';
 
@@ -87,12 +87,22 @@ const createArrowControls = (carousel) => {
   arrowControlsContainer.innerHTML = `
     <li>
       <button class="${blockName}-arrowbutton ${blockName}-arrowbutton--left" aria-label="${arrowLeftButtonLabel}">
-        <span class="icon icon-arrow-left"></span>
+        <vcdk-system-icon
+          icon="arrow-left"
+          size="48"
+          icon-set="auto"
+          aria-hidden="true">
+        </vcdk-system-icon>
       </button>
     </li>
     <li>
       <button class="${blockName}-arrowbutton ${blockName}-arrowbutton--right" aria-label="${arrowRightButtonLabel}">
-        <span class="icon icon-arrow-right"></span>
+        <vcdk-system-icon
+          icon="arrow-right"
+          size="48"
+          icon-set="auto"
+          aria-hidden="true">
+        </vcdk-system-icon>
       </button>
     </li>
   `;
@@ -141,7 +151,15 @@ const buildStoryCard = (entry) => {
   const dateOptions = DATE_OPTIONS ? extractObjectFromArray(JSON.parse(DATE_OPTIONS)) : {};
   const formattedDate = getDateFromTimestamp(publishDate, dateOptions);
 
-  const svgArrowRight = createElement('span', { classes: ['icon', 'icon-arrow-right'] });
+  const svgArrowRight = createElement('vcdk-system-icon', {
+    classes: `${blockName}__arrow-icon`,
+    props: {
+      icon: 'arrow-right',
+      size: '24',
+      'icon-set': 'auto',
+      'aria-hidden': 'true',
+    },
+  });
   const cardFragment = document.createRange().createContextualFragment(`
     <a href="${url}">
       ${pictureTag}

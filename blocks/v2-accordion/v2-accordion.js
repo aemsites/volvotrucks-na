@@ -34,14 +34,9 @@ const enableSingleOpenBehavior = (block) => {
 
   items.forEach((item) => {
     item.addEventListener('vcdk-toggle', () => {
-      const willOpen = !item.open;
-      if (!willOpen) {return;}
-
-      items.forEach((other) => {
-        if (other !== item && other.open) {
-          other.open = false;
-        }
-      });
+      if (!item.open) {return;}
+      items.filter((other) => other !== item && other.open)
+        .forEach((other) => { other.open = false; });
     });
   });
 };

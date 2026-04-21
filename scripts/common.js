@@ -1,4 +1,5 @@
 import { loadCSS, getMetadata } from './aem.js';
+import { systemIconUrl } from '@volvo/vcdk-assets';
 
 /**
  * Default locale used when resolving placeholders.
@@ -307,10 +308,26 @@ export async function decorateIcons(element) {
       const iconName = Array.from(span.classList)
         .find((c) => c.startsWith('icon-'))
         .substring(5);
+
+      //merge into one line after migrating al the icons to the system with the naming convention: {type}_{iconId}
+      const iconNameParts = iconName.split('_');
+      const [iconId, type] = iconNameParts;
+      
+      const iconSvgUrl = systemIconUrl({
+        brand: 'volvo',
+        type,
+        iconId,
+      });
+
       if (!ICONS_CACHE[iconName]) {
         ICONS_CACHE[iconName] = true;
         try {
-          const response = await fetch(`${window.hlx.codeBasePath}/icons/${iconName}.svg`);
+          // TODO
+          // after migrating, add one type as a default to dont need to be added every time
+          // remove the conditional after migrating all the icons to the system with the naming convention: {type}_{iconId}
+          // iconSvgUrl will be only valid for icons following the naming convention, for the rest of the icons we will keep using the old url construction method until all of them is changed to the new naming convention.
+          const corectUrlBuild = iconNameParts.length >= 2 ? iconSvgUrl : `${window.hlx.codeBasePath}/icons/${iconName}.svg`;
+          const response = await fetch(corectUrlBuild);
           if (!response.ok) {
             ICONS_CACHE[iconName] = false;
             return;

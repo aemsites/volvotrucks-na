@@ -278,16 +278,22 @@ const createArrowControls = (carousel, block) => {
   const arrows = document.createRange().createContextualFragment(`
     <li>
       <button aria-label="Previous">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M15.6276 3.03255C15.8458 3.20171 15.8856 3.51578 15.7165 3.73404L9.31099 11.9992L15.7165 20.2643C15.8856 20.4826 15.8458 20.7967 15.6276 20.9658C15.4093 21.135 15.0952 21.0952 14.9261 20.8769L8.2832 12.3055C8.14348 12.1252 8.14348 11.8732 8.2832 11.6929L14.9261 3.12147C15.0952 2.90321 15.4093 2.86339 15.6276 3.03255Z" fill="currentColor"/>
-        </svg>
+        <vcdk-system-icon
+          icon="arrow-left"
+          size="24"
+          icon-set="auto"
+          aria-hidden="true">
+        </vcdk-system-icon>
       </button>
     </li>
     <li>
       <button aria-label="Next">
-        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <path fill-rule="evenodd" clip-rule="evenodd" d="M8.37245 20.9674C8.15418 20.7983 8.11437 20.4842 8.28353 20.266L14.689 12.0008L8.28353 3.73567C8.11437 3.5174 8.15418 3.20333 8.37245 3.03418C8.59072 2.86502 8.90479 2.90483 9.07394 3.1231L15.7168 11.6945C15.8565 11.8748 15.8565 12.1268 15.7168 12.3071L9.07394 20.8785C8.90479 21.0968 8.59072 21.1366 8.37245 20.9674Z" fill="currentColor"/>
-        </svg>
+        <vcdk-system-icon
+          icon="arrow-right"
+          size="24"
+          icon-set="auto"
+          aria-hidden="true">
+        </vcdk-system-icon>
       </button>
     </li>
   `);

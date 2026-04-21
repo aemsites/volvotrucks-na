@@ -31,8 +31,21 @@ const parsePressRelease = (item) => {
 const renderSearchBar = () => {
   const searchBar = createElement('div', { classes: `${blockName}__search-bar` });
   searchBar.innerHTML = `
-    <input type="text" name="search" autocomplete="off" placeholder="${getTextLabel('press_releases:search_placeholder')}"/>
-    <button type="submit"><i class="fa fa-search"></i></button>`;
+    <input
+      type="text"
+      name="search"
+      autocomplete="off"
+      placeholder="${getTextLabel('press_releases:search_placeholder')}"
+    />
+    <button type="submit" aria-label="${getTextLabel('press_releases:search_placeholder')}">
+      <vcdk-system-icon
+        icon="search"
+        size="24"
+        icon-set="auto"
+        aria-hidden="true">
+      </vcdk-system-icon>
+    </button>
+  `;
   return searchBar;
 };
 

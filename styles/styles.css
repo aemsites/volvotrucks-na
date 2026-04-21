@@ -882,13 +882,20 @@ a.button.text-link-with-video {
 }
 
 .icon-play-video,
-.icon-pause-video {
+.icon-pause-video,
+.icon-mute,
+.icon-unmute {
   position: absolute;
   top: 50%;
   right: 50%;
   transform: translate(50%, -50%);
-  width: 48px;
-  height: 48px;
+  width: 32px;
+  height: 32px;
+  background: white;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 
 .link-with-video .icon-play-video svg,

@@ -90,7 +90,14 @@ const renderArticleCard = (article) => {
     const newButton = document.createRange().createContextualFragment(`
       <div class="button-container ${blockName}__card-button">
         <a class="button tertiary">
-          ${getTextLabel('v2_article_cards:read_more')}
+          <span>${getTextLabel('v2_article_cards:read_more')}</span>
+          <vcdk-system-icon
+            class="${blockName}__card-button-icon"
+            icon="arrow-right"
+            size="24"
+            icon-set="auto"
+            aria-hidden="true">
+          </vcdk-system-icon>
         </a>
       </div>
     `);
