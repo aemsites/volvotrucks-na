@@ -402,7 +402,6 @@ function MyDealer() {
           $('.openfindadealer').parent().addClass('extraWide');
         }
       } else if ($brand === '-volvo') {
-        // Capitalize each word if city contains spaces
         if (splitCity.length > 0) {
           $('.openfindadealer').text(splitCity.join(' ') + ', ' + dealer.dealerState);
         } else {
