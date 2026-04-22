@@ -6,6 +6,7 @@ const { GOOGLE_API_KEY: apiKey = missingKeyMessage } = TOOLS_CONFIGS;
 
 export default async function decorate(block) {
     const datasource = block.textContent.trim();
+
     if (!apiKey || apiKey === missingKeyMessage) {
         console.error(
             'The block is wrongly set up or is missing the %cGOOGLE_API_KEY%c in the %cTOOLS_CONFIGS',
