@@ -219,8 +219,6 @@ export default async function decorate(block) {
     <div class="row pin-content">
         <div class="scroller">
             <div class="pin-container">
-
-
                 <ul class="pin-details">
                     <li>
                         <img src="/blocks/dealer-locator/images/Map.png"/>
@@ -258,8 +256,6 @@ export default async function decorate(block) {
                         <img src="/blocks/dealer-locator/images/Mail.png"/>
                         <div id="email">No email available</div>
                     </li>
-
-
                     <li id="details" class="accordion-panel"></li>
                 </ul>
                 <div class="header-title header-driver-title">Driver Amenitites</div>
@@ -277,7 +273,7 @@ export default async function decorate(block) {
         <div class="panel-container">
             <article class="teaser">
                 <div class="marker-main">
-                    <img id="marker" src=""/>
+                    <img id="marker" src="" />
                 </div>
                 <div class="dealerPanelContainer">
                     <div class="teaser-top" onclick="$.fn.switchSidebarPane('sidebar-pin', this);">
@@ -345,7 +341,6 @@ export default async function decorate(block) {
             <div class="panel-container">
                 <span class="header-title">Filter By Service</span>
                 <ul id="filter-options">
-
                     <li>
                         <label for=all>All Dealers
                             <input name=type-filter type=checkbox id=all value="All Dealers" checked=checked/>
