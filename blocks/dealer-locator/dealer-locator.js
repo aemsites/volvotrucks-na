@@ -161,7 +161,6 @@ export default async function decorate(block) {
 
     <a href="javascript:void(0);" class="slider-arrow hide"><i class="fa fa-angle-left"></i></a>
 
-
 </div>
 <div id="sidebar-pins" style="display: none;">
     <div class="row" style="height:100%;">
