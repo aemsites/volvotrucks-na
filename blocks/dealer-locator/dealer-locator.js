@@ -6,6 +6,7 @@ const { GOOGLE_API_KEY: apiKey = missingKeyMessage } = TOOLS_CONFIGS;
 
 export default async function decorate(block) {
     const datasource = block.textContent.trim();
+
     if (!apiKey || apiKey === missingKeyMessage) {
         console.error(
             'The block is wrongly set up or is missing the %cGOOGLE_API_KEY%c in the %cTOOLS_CONFIGS',
@@ -160,7 +161,6 @@ export default async function decorate(block) {
 
     <a href="javascript:void(0);" class="slider-arrow hide"><i class="fa fa-angle-left"></i></a>
 
-
 </div>
 <div id="sidebar-pins" style="display: none;">
     <div class="row" style="height:100%;">
@@ -218,8 +218,6 @@ export default async function decorate(block) {
     <div class="row pin-content">
         <div class="scroller">
             <div class="pin-container">
-
-
                 <ul class="pin-details">
                     <li>
                         <img src="/blocks/dealer-locator/images/Map.png"/>
@@ -257,8 +255,6 @@ export default async function decorate(block) {
                         <img src="/blocks/dealer-locator/images/Mail.png"/>
                         <div id="email">No email available</div>
                     </li>
-
-
                     <li id="details" class="accordion-panel"></li>
                 </ul>
                 <div class="header-title header-driver-title">Driver Amenitites</div>
@@ -276,7 +272,7 @@ export default async function decorate(block) {
         <div class="panel-container">
             <article class="teaser">
                 <div class="marker-main">
-                    <img id="marker" src=""/>
+                    <img id="marker" src="" />
                 </div>
                 <div class="dealerPanelContainer">
                     <div class="teaser-top" onclick="$.fn.switchSidebarPane('sidebar-pin', this);">
@@ -300,14 +296,14 @@ export default async function decorate(block) {
                         </div>
                         <div class="right">
                             <div class="direction">
-                                <a href="" id="direction" onclick="$.fn.switchSidebarPane('sidebar-direction-list', this);return false;"></a>
+                                <a href="" id="direction"></a>
                             </div>
                         </div>
                         <div class="right">
                             <div class="call"></div>
                         </div>
                         <div class="right">
-                            <div class="more" onclick="$.fn.switchSidebarPane('sidebar-pin', this);">
+                            <div class="more">
                                 <a>More</a>
                             </div>
                         </div>
@@ -344,7 +340,6 @@ export default async function decorate(block) {
             <div class="panel-container">
                 <span class="header-title">Filter By Service</span>
                 <ul id="filter-options">
-
                     <li>
                         <label for=all>All Dealers
                             <input name=type-filter type=checkbox id=all value="All Dealers" checked=checked/>
