@@ -245,15 +245,19 @@ const buildMenuContent = (menuData, navEl) => {
           });
       }
 
-      // disabling scroll when menu is open
-      document.body.classList[isExpanded ? 'add' : 'remove']('disable-scroll');
-      document.querySelectorAll('footer, main').forEach((elmt) => {
-        if (isExpanded) {
-          elmt.setAttribute('inert', 'inert');
-        } else {
-          elmt.removeAttribute('inert');
-        }
-      });
+      // disabling scroll when menu is open - only for top-level nav items on desktop
+      // on mobile the hamburger handler manages disable-scroll exclusively
+      // inner accordions (category headings) must never touch disable-scroll
+      if (desktopMQ.matches && menuEl.classList.contains(`${blockClass}__main-nav-item`)) {
+        document.body.classList[isExpanded ? 'add' : 'remove']('disable-scroll');
+        document.querySelectorAll('footer, main').forEach((elmt) => {
+          if (isExpanded) {
+            elmt.setAttribute('inert', 'inert');
+          } else {
+            elmt.removeAttribute('inert');
+          }
+        });
+      }
     };
     // creating overview link - visible only on mobile
     createOverviewLink(tabName, accordionContentWrapper);
