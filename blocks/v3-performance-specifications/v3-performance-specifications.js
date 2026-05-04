@@ -317,9 +317,9 @@ export default async function decorate(block) {
     const torqueDropdown = block.querySelector(`[data-uuid='dropdown-${uuid}'] .${blockName}__torque-dropdown`);
 
     // Torque dropdown just updates the chart/specs based on the current selection
-    torqueDropdown.addEventListener('change', () => updateChartAndSpecs(block));
+    torqueDropdown.addEventListener('vcdk-dropdown-change', () => updateChartAndSpecs(block));
     // Power dropdown updates the active ratings, filters torque options, and then updates the chart/specs
-    powerDropdown.addEventListener('change', (e) => {
+    powerDropdown.addEventListener('vcdk-dropdown-change', (e) => {
         e.preventDefault();
         const powerValue = e.target.value;
         updateTorqueOptions(torqueDropdown, powerValue);
