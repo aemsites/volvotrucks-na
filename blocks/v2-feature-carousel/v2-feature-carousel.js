@@ -1,4 +1,4 @@
-import { createElement, removeEmptyTags } from '../../scripts/common.js';
+import { createElement } from '../../scripts/common.js';
 
 const blockname = 'v2-feature-carousel';
 
@@ -16,6 +16,4 @@ export default function decorate(block) {
     el.append(textwrapper);
     text.remove();
   });
-
-  removeEmptyTags(block);
 }
